@@ -1,8 +1,6 @@
 @extends('admin.layout.app')
 @section('title', 'Manage Frenchise')
 @section('content')
-
-
 @php
 $i = ($users->currentpage() - 1) * $users->perPage() + 1;
 
@@ -40,19 +38,16 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
           {{$user->name}}
         </td>
         <!-- <td>
-
-
-
           {{$user->address->first()['addressdetails']['address']}}, {{$user->address->first()['addressdetails']['city']}}
           , {{$user->address->first()['addressdetails']['state']}},{{$user->address->first()['addressdetails']['pin']}}, {{$user->address->first()['addressdetails']['landmark']}}
         </td> -->
-
         <td>
-            <a href="{{route('manage-frenchise.edit',encrypt( $user->id))}}"><button type="button" class="btn btn-primary"><i class="fa fa-edit"></i></button></a>
+            <a href="{{route('manage-frenchise.edit', encrypt( $user->id))}}"><button type="button" class="btn btn-primary"><i class="fa fa-edit"></i></button></a>
+            <a href="{{route('manage-frenchise.destroy', encrypt( $user->id))}}" id="delete" data-token="{{csrf_token()}}"><button type="button" class="btn btn-danger"><i class="fa fa-trash"></i></button></a>
         </td>
       </tr>
       @php
-      $i++;
+        $i++;
       @endphp
       @endforeach
     </tbody>
@@ -67,23 +62,49 @@ No Records Found
 
 @endsection
 @section('js')
+<script src="{{asset('js/bootbox.js')}}"></script>
 <script>
 $(document).ready(function(){
 
-  $(document).on('click', '.save', function(e){
+  $(document).on('click', '#delete', function(e){
     e.preventDefault();
-    $.ajax({
-      url: $('#basicInfo').attr('action'),
-      type:$('#basicInfo').attr('method'),
-      data:$('#basicInfo').serializeArray(),
-      success: function(){
+          bootbox.confirm({
+          title: "Confirm",
+          message: "Do you want to delete the Franchise? This cannot be undone.",
+          buttons: {
+              cancel: {
+                  label: '<i class="fa fa-times"></i> Cancel'
+              },
+              confirm: {
+                  label: '<i class="fa fa-check"></i> Confirm'
+              }
+          },
+          callback: function (result) {
+              if(result){
+                $('body').waitMe();
 
-      },
-      error:function(){
 
-      }
-    })
+                $.ajax({
+                  url: $('#delete').attr('href'),
+                  type:"post",
+                  data:{
+                    '_method':"delete", '_token':$('#delete').data('token')
+                  },
+                  headers:{
+                    'X-CSRF-TOKEN':$('meta[name="csrf-token"]').attr('content'),
+                    'method':'delete'
+                  },
+                  success: function(){
+                    $('body').waitMe("hide");
+                    window.location.reload()
+                  },
+                })
+              }
+          }
+      });
+
   })
+
 
   $(document).on('click', '.email_edit', function(e){
     e.preventDefault();

@@ -101,7 +101,8 @@ class FranchiseController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
-    {
-        //
+    {     $delete = User::where(['id'=>decrypt($id)])->delete();
+          $delete = UserAddress::where(['user_id'=>decrypt($id)])->delete();
+          return response()->json(["message"=>"Frenchise deleted!"], 200);
     }
 }

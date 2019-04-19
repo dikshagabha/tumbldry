@@ -83,7 +83,7 @@
     </div>
     @include('admin.layout.header')
     <div class="content">
-      <div class="container-fluid">
+      <div class="container-fluid"  style="background-color:white;">
             @yield('content')
         </div>
     </div>
@@ -145,8 +145,6 @@
 ============================================ -->
 <script src="{{asset('js/main.js')}}"></script>
 
-<script src="{{asset('js/heartcode-canvasloader.js')}}"></script>
-
 <script src="{{asset('js/waitMe.js')}}"></script>
 <script src="{{asset('js/pnotify.custom.min.js')}}"></script>
 
@@ -168,6 +166,9 @@ function error(message="Something went wrong"){
 $(document).ready(function(){
 
   $.ajaxSetup({
+    headers:{
+      'X-CSRF-TOKEN':$('meta[name="csrf-token"]').attr('content')
+    },
     error: function(data, status){
       if(data.status==422){
         $('body').waitMe('hide');

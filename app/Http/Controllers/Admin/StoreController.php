@@ -99,6 +99,8 @@ class StoreController extends Controller
      */
     public function destroy($id)
     {
-        //
+      $delete = User::where(['id'=>decrypt($id)])->delete();
+      $delete = UserAddress::where(['user_id'=>decrypt($id)])->delete();
+      return response()->json(["message"=>"Store deleted!"], 200);
     }
 }

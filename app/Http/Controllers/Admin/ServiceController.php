@@ -78,7 +78,7 @@ class ServiceController extends Controller
    * @param  int  $id
    * @return \Illuminate\Http\Response
    */
-  public function update(Request $request, $id)
+  public function update(StoreServiceRequest $request, $id)
   {
     $user = Service::where('id', $id)->update(['name'=>$request->input('name'), 'description'=>$request->input('description')]);
     $insertData=[];
@@ -97,6 +97,8 @@ class ServiceController extends Controller
    */
   public function destroy($id)
   {
-      //
+    $delete = Service::where(['id'=>decrypt($id)])->delete();
+    $delete = ServicePrice::where(['service_id'=>decrypt($id)])->delete();
+    return response()->json(["message"=>"Service deleted!"], 200);
   }
 }

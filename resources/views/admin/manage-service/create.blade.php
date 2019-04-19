@@ -1,5 +1,5 @@
 @extends('admin.layout.app')
-@section('title', 'Manage Frenchise')
+@section('title', 'Manage Service')
 
 @section('content')
 @section('css')
