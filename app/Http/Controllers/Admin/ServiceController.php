@@ -40,7 +40,8 @@ class ServiceController extends Controller
    */
   public function store(StoreServiceRequest $request)
   {
-    $user = Service::create(['name'=>$request->input('name'), 'description'=>$request->input('description')]);
+    $user = Service::create(['name'=>$request->input('name'), 'description'=>$request->input('description'),
+   'type'=>$request->input('type')]);
     $insertData=[];
     foreach ($request->input('price') as $key => $value) {
       ServicePrice::create(["service_id"=>$user->id, 'parameter'=>$request->input('parameter')[$key], 'value'=>$value ]);
@@ -80,7 +81,8 @@ class ServiceController extends Controller
    */
   public function update(StoreServiceRequest $request, $id)
   {
-    $user = Service::where('id', $id)->update(['name'=>$request->input('name'), 'description'=>$request->input('description')]);
+    $user = Service::where('id', $id)->update(
+      ['name'=>$request->input('name'), 'description'=>$request->input('description'), 'type'=>$request->input('type') ]);
     $insertData=[];
     ServicePrice::where('service_id', $id)->delete();
     foreach ($request->input('price') as $key => $value) {

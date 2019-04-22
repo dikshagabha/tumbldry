@@ -27,6 +27,7 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
         <th>Name</th>
         <th>Description</th>
         <th>Parameters</th>
+        <th>Type</th>
         <th>Options</th>
       </tr>
     </thead>
@@ -41,7 +42,7 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
           {{$user->name}}
         </td>
         <td>
-          @if($user->description) {{$user->description}} @else N/A @endif
+          @if($user->description) {{ substr($user->description, 0, 50) }}.. @else -- @endif
         </td>
         <td>
           @foreach($user->serviceprices as $prices)
@@ -49,8 +50,15 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
           @endforeach
         </td>
         <td>
-            <a href="{{route('manage-service.edit', $user->id )}}"><button type="button" class="btn btn-primary"><i class="fa fa-edit"></i></button></a>
-            <a href="{{route('manage-service.destroy', encrypt( $user->id))}}" id="delete" data-token="{{csrf_token()}}">
+          @if($user->type==1) 
+            Basic Service
+          @else
+            Additional Service
+          @endif
+        </td>
+        <td>
+            <a href="{{route('manage-service.edit', $user->id )}}" title="edit"><button type="button" class="btn btn-primary"><i class="fa fa-edit"></i></button></a>
+            <a href="{{route('manage-service.destroy', encrypt( $user->id))}}" id="delete" data-token="{{csrf_token()}}" title="delete">
               <button type="button" class="btn btn-danger"><i class="fa fa-trash"></i></button>
             </a>
         </td>

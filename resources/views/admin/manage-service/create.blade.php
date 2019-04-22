@@ -33,6 +33,18 @@
               </div>
             </div>
           </div>
+          <div class="form-group-inner">
+           <div class="row">
+                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                  <label class="login2 pull-right pull-right-pro">Service Type</label>
+                </div>
+                <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+                    <input type="radio" name="type" value="1" id="basic"> <label for="basic">Basic Service</label><br>
+                    <input type="radio" name="type" value="2" id="additional"> <label for="additional">Additional Service</label><br>
+                  <span class="error" id="type_error"></span>
+                </div>
+              </div>
+          </div>
           <div class="price_wrap">
 
           <div class="form-group-inner" id="add_here">
@@ -135,7 +147,7 @@ $(document).ready(function(){
         if (data.status==422) {
           var errors = data.responseJSON;
           for (var key in errors.errors) {
-              if (key=="name" || key=="description") {
+              if (key=="name" || key=="description"|| key=="type") {
                   $("#"+key+"_error").html(errors.errors[key][0])
               }
               else if(key.includes('parameter')){

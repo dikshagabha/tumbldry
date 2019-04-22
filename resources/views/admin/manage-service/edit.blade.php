@@ -33,6 +33,19 @@
               </div>
             </div>
           </div>
+
+          <div class="form-group-inner">
+           <div class="row">
+                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                  <label class="login2 pull-right pull-right-pro">Service Type</label>
+                </div>
+                <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+                    <input type="radio" name="type" value="1" id="basic" @if($service->type==1) checked @endif> <label for="basic">Basic Service</label><br>
+                    <input type="radio" name="type" value="2" id="additional" @if($service->type==2) checked @endif> <label for="additional">Additional Service</label><br>
+                  <span class="error" id="type_error"></span>
+                </div>
+              </div>
+          </div>
           <div class="price_wrap">
 
           <div class="form-group-inner" id="add_here">
@@ -49,7 +62,6 @@
                  <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
                     <button class="btn btn-success" id='add_new'><i class="fa fa-plus" ></i></button>
                  </div>
-
                </div>
              </div>
              @if($service->serviceprices->count()>1)

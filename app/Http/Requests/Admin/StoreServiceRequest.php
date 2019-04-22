@@ -26,6 +26,7 @@ class StoreServiceRequest extends FormRequest
         return [
           'name'=>['bail', 'required', 'string', 'min:2', 'max:100'],
           'description'=>['bail', 'nullable','string', 'min:2', 'max:200'],
+          'type'=>['bail', 'required','numeric', 'min:0', 'max:2'],
           'parameter'=>['bail', 'required', 'array', 'min:1'],
           'parameter.*'=>['bail', 'required', 'string', 'min:1', 'max:50'],
           'price'=>['bail', 'required', 'array', 'min:1'],
