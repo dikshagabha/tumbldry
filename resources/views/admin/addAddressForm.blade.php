@@ -39,12 +39,13 @@
        <label class="login2 pull-right pull-right-pro">Pin</label>
      </div>
      <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
-       <select class="form-control" id="pinchange" data-url="{{route('getPinDetails')}}" placeholder="Select A Pin" name="pin">
+       <input type="text" name="pin" class="form-control" maxlength="10">
+       <!-- <select class="form-control" id="pinchange" data-url="{{route('getPinDetails')}}" placeholder="Select A Pin" name="pin">
          <option></option>
          @foreach($locations as $location)
          <option value="{{$location->pincode}}"> {{$location->pincode}}</option>
          @endforeach
-       </select>
+       </select> -->
        <span class="error" id="pin_error"></span>
        <!-- <input type="text" class="form-control" name="pin" value=""/> -->
      </div>

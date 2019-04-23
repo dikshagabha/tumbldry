@@ -16,8 +16,8 @@
              <label class="login2 pull-right pull-right-pro">Name</label>
            </div>
            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
-             <input type="text" class="form-control" name="name"  value=""/>
-             <span class="error" id="name_error"></span>
+             <input type="text" class="form-control" name="store_name" maxlength="100" value=""/>
+             <span class="error" id="store_name_error"></span>
            </div>
          </div>
        </div>
@@ -34,12 +34,65 @@
                   <option value="{{$add->id}}"> {{$add->address}}, {{$add->state}},  {{$add->city}}, {{$add->pin}}</option>
                 @endforeach
               </select>
+              <span class="error" id="address_id_error"></span>
             </div>
             <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
               <button type="button" class="btn btn-primary" id="add_address" data-url="{{route('admin.addAddress')}}">Add Address</button>
             </div>
           </div>
         </div>
+
+        <div class="form-group-inner">
+          <div class="row">
+              <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                <label class="login2 pull-right pull-right-pro">Contact Person:</label>
+              </div>
+              <div class="col-lg-9 col-md-9 col-sm-9 col-xs-10">
+                  <div class="col-lg-3 col-md-3 col-sm-3 col-xs-5">
+                    <label class="login2 pull-right pull-right-pro">Name</label>
+                  </div>
+                  <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+                    <input type="text" class="form-control" name="name" maxlength="50" value=""/>
+                    <span class="error" id="name_error"></span>
+                  </div>
+              </div>           
+            </div>
+        </div>
+        <div class="form-group-inner">
+          <div class="row">
+              <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                <label class="login2 pull-right pull-right-pro"></label>
+              </div>
+              <div class="col-lg-9 col-md-9 col-sm-9 col-xs-10">
+                  <div class="col-lg-3 col-md-3 col-sm-3 col-xs-5">
+                    <label class="login2 pull-right pull-right-pro">Email</label>
+                    
+                  </div>
+                  <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+                    <input type="text" class="form-control" name="email" maxlength="50" value=""/>
+                    <span class="error" id="email_error"></span>
+                  </div>
+              </div>           
+            </div>
+        </div>
+        <div class="form-group-inner">
+          <div class="row">
+              <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                <label class="login2 pull-right pull-right-pro"></label>
+              </div>
+              <div class="col-lg-9 col-md-9 col-sm-9 col-xs-10">
+                  <div class="col-lg-3 col-md-3 col-sm-3 col-xs-5">
+                    <label class="login2 pull-right pull-right-pro">Phone Number</label>
+                  </div>
+                  <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+                    <input type="text" class="form-control" name="phone_number" maxlength="15" value=""/>
+                    <span class="error" id="phone_number_error"></span>
+                  </div>
+              </div>           
+            </div>
+        </div>
+
+          
          <div class="form-group-inner">
            <div class="row">
              <div class="col-lg-3 col-md-3 col-sm-3">
@@ -52,6 +105,8 @@
              </div>
             </div>
           </div>
+
+
       </div>
    </div>
 </form>

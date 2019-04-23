@@ -22,7 +22,10 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
     <thead>
       <tr>
         <th>S No</th>
-        <th>Name</th>
+        <th>Frenchise Name</th>
+        <th>Contact Person Name</th>
+        <th>Contact Person Email</th>
+        <th>Contact Person Phone Number</th>
         <!-- <th>Address</th> -->
         <th>Options</th>
       </tr>
@@ -35,7 +38,16 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
           {{$i}}
         </td>
         <td>
+          {{$user->store_name}}
+        </td>
+        <td>
           {{$user->name}}
+        </td>
+        <td>
+          {{$user->email}}
+        </td>
+        <td>
+          {{$user->phone_number}}
         </td>
         <!-- <td>
           {{$user->address->first()['addressdetails']['address']}}, {{$user->address->first()['addressdetails']['city']}}

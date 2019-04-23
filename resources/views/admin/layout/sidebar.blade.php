@@ -25,7 +25,7 @@
                     <li class="active">
                         <a class="" href="{{route('manage-frenchise.index')}}">
                          <span class="fa fa-handshake-o"></span>
-                         <span class="mini-click-non">Manage Frenchise</span>
+                         <span class="mini-click-non">Frenchise</span>
                         </a>
                         <!-- <ul class="submenu-angle" aria-expanded="true">
                             <li><a title="Dashboard v.1" href="index.html"><span class="mini-sub-pro">Dashboard v.1</span></a></li>
@@ -40,7 +40,7 @@
                     <li class="active">
                         <a class="" href="{{route('manage-store.index')}}">
                          <span class="fa fa-user"></span>
-                         <span class="mini-click-non">Manage Store</span>
+                         <span class="mini-click-non">Store</span>
                         </a>
                         <!-- <ul class="submenu-angle" aria-expanded="true">
                             <li><a title="Dashboard v.1" href="index.html"><span class="mini-sub-pro">Dashboard v.1</span></a></li>
@@ -53,7 +53,7 @@
                     <li class="active">
                         <a class="" href="{{route('manage-service.index')}}">
                          <span class="fa fa-briefcase"></span>
-                         <span class="mini-click-non">Manage Service</span>
+                         <span class="mini-click-non">Service</span>
                         </a>
                         <!-- <ul class="submenu-angle" aria-expanded="true">
                             <li><a title="Dashboard v.1" href="index.html"><span class="mini-sub-pro">Dashboard v.1</span></a></li>

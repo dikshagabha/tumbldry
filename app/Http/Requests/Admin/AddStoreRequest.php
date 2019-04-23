@@ -26,23 +26,21 @@ class AddStoreRequest extends FormRequest
       if ($this->method()=="PUT") {
         $id = decrypt($this->route('manage_store'));
         return [
-          'name'=>['required', 'string', 'min:2', 'max:100'],
-          'address_id'=>['required', 'numeric'],
-          'email'=>['required', 'email','unique:users,email,'.$id, 'min:2', 'max:100'],
-          'store_name'=>['nullable','string', 'min:2', 'max:100'],
-          'phone_number'=>['numeric', 'unique:users,phone_number,'.$id, 'min:2', 'max:9999999999'],
+          'name'=>['bail','required', 'string', 'min:2', 'max:100'],
+          'address_id'=>['bail','required', 'numeric'],
+          'email'=>['bail','required', 'email','unique:users,email,'.$id, 'min:2', 'max:100'],
+          'store_name'=>['bail','nullable','string', 'min:2', 'max:100'],
+          'phone_number'=>['bail','numeric', 'unique:users,phone_number,'.$id, 'min:2', 'max:9999999999'],
         ];
       }else{
         return [
-          'name'=>['required', 'string', 'min:2', 'max:100'],
-          'address_id'=>['required', 'numeric'],
-          'email'=>['required', 'email','unique:users,email', 'min:2', 'max:100'],
-          'store_name'=>['nullable','string', 'min:2', 'max:100'],
-          'phone_number'=>['numeric', 'unique:users,phone_number','min:2', 'max:9999999999'],
+          'name'=>['bail','required', 'string', 'min:2', 'max:100'],
+          'address_id'=>['bail','required', 'numeric'],
+          'email'=>['bail','required', 'email','unique:users,email', 'min:2', 'max:100'],
+          'store_name'=>['bail','nullable','string', 'min:2', 'max:100'],
+          'phone_number'=>['bail','numeric', 'required',  'unique:users,phone_number','min:2', 'max:9999999999'],
         ];
       }
-
-
     }
 
     public function messages()
@@ -50,6 +48,7 @@ class AddStoreRequest extends FormRequest
       return [
 
         'address_id.required'=>"Please select an address.",
+        
       ];
     }
 }

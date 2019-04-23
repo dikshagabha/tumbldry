@@ -35,7 +35,7 @@ class AddAddressRequest extends FormRequest
         public function messages()
         {
           return [
-            'pin.required'=>"Please select a pin.",
+            'pin.required'=>"Please enter a pin.",
           ];
         }
     
