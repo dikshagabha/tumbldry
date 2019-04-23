@@ -150,6 +150,7 @@
 
 <script>
 function success(message=""){
+  PNotify.removeAll() 
   new PNotify({
     title: 'Success!',
     text: message,
@@ -157,6 +158,7 @@ function success(message=""){
   });
 }
 function error(message="Something went wrong"){
+  PNotify.removeAll() 
   new PNotify({
     title: 'Error!',
     text: message,

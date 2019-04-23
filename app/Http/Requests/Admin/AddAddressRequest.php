@@ -28,7 +28,9 @@ class AddAddressRequest extends FormRequest
           'state'=>['required', 'string', 'min:2', 'max:50'],
           'city'=>['required', 'string', 'min:2', 'max:50'],
           'pin'=>['required', 'numeric'],
-          'location_id'=>['required', 'numeric']
+          'landmark'=>['bail','nullable','string', 'min:2', 'max:100'],
+          'latitude'=>['bail','nullable','string', 'min:2', 'max:50'],
+          'longitude'=>['bail','nullable','string', 'min:2', 'max:50'],
         ];
       }
 

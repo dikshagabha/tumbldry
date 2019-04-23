@@ -72,7 +72,9 @@ class FranchiseController extends Controller
     public function edit($id)
     {
 
-      $user = User::where("id", decrypt($id))->with("address")->first();
+      $user = User::where("id", decrypt($id))->with(["address"=>function($q){
+        $q->with('addressdetails');
+      }])->first();
       $address = Address::get();
       return view('admin.manage-franchise.edit', compact('address', 'user', 'id'));
 

@@ -28,16 +28,25 @@
               <label class="login2 pull-right pull-right-pro">Address</label>
             </div>
             <div class="col-lg-7 col-md-7 col-sm-7 col-xs-10">
-              <select name="address_id" class="form-control" id="address_select">
+              <span id="added_address">
+                {{$user->address->first()['addressdetails']['address']}}, {{$user->address->first()['addressdetails']['state']}}, {{$user->address->first()['addressdetails']['city']}}, 
+                {{$user->address->first()['addressdetails']['pin']}}
+              </span>
+              <!-- <select name="address_id" class="form-control" id="address_select">
                 @foreach($address as $add)
                   <option value="{{$add->id}}" @if($add->id==$user->address->first()['address_id']) selected @endif>
                     {{$add->address}}, {{$add->state}},  {{$add->city}}, {{$add->pin}}
                   </option>
                 @endforeach
-              </select>
+              </select> -->
+              <input type="hidden" name="address_id" id="address_id" val="{{$user->address->first()['addressdetails']['id'] }}">
+              <span class="error" id="address_id_error"></span>
             </div>
+
             <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
-              <button type="button" class="btn btn-primary" id="add_address" data-url="{{route('admin.addAddress')}}">Add Address</button>
+             
+              <button type="button" class="btn btn-primary" id="add_address" data-url="{{route('admin.editAddress', ['id'=>$user->address->first()['addressdetails']['id']])}}">Edit Address</button>
+
             </div>
           </div>
         </div>
@@ -122,7 +131,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" id="add_new_address">Add Address</button>
+        <button type="button" class="btn btn-primary" id="add_new_address">Save</button>
       </div>
     </div>
 
@@ -134,8 +143,8 @@
 <script src="{{asset('js/chosen/chosen.jquery.min.js')}}"></script>
 <script>
 $(document).ready(function(){
-  $("#address_select").chosen();
-  $(document).on('click', '#add_address', function(e){
+  //$("#address_select").chosen();
+    $(document).on('click', '#add_address', function(e){
     e.preventDefault();
     $('body').waitMe();
     $.ajax({
@@ -148,9 +157,22 @@ $(document).ready(function(){
         $('#addressModal').modal('show');
         //$("#pinchange").chosen();
       },
-      error:function(){
+      
+    })
+  })
 
-      }
+  $(document).on('click', '#edit_address', function(e){
+    e.preventDefault();
+    $('body').waitMe();
+    $.ajax({
+      url: $('#edit_address').attr('data-url'),
+      type:'get',
+      dataType:'html',
+      success: function(data){
+        $('#addressForm').html(data);
+        $('body').waitMe('hide');
+        $('#addressModal').modal('show');
+      },
     })
   })
 
@@ -164,14 +186,20 @@ $(document).ready(function(){
       data: $('#formAddress').serializeArray(),
       dataType:'json',
       success: function(data){
-        success("New Address Added!");
+        success(data.message);
+        $('#formAddress')[0].reset();
         $('#addressModal').modal('hide');
-
+        
+        $('#added_address').html(data.address.address+', '+data.address.city+', '+data.address.state+', '+data.address.pin);
+        $("#address_id").val(data.address.id);
+        $('#edit_address').attr('data-url', data.url);
+        $('#edit_address').show();
         $('body').waitMe('hide');
-        window.location.reload();
+
       }
     })
   })
+
 
   $(document).on('click', '#add_frenchise', function(e){
     e.preventDefault();
