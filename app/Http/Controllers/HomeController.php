@@ -53,12 +53,14 @@ class HomeController extends Controller
 
       public function addAddress(Request $request)
       {
-        $locations = Location::get();
-        return view('admin.addAddressForm', compact('locations'));
+        //$locations = Location::get();
+        return view('admin.addAddressForm');
+        //return response()->json(['data'=>view('admin.test')->render()], 200);
       }
 
       public function postAddAddress(AddAddressRequest $request)
       {
+
         $add = Address::create($request->only('address', 'city', 'state', 'pin', 'landmark', 'latitude', 'longitude', 'location_id'));
         if ($add) {
           return response()->json(["message"=>"Address Added", 'address'=>$add, 'url'=>route('admin.editAddress', ["id"=>$add->id])], 200);

@@ -36,6 +36,8 @@ Route::prefix('admin')->group(function () {
       'manage-store' => 'Admin\StoreController',
       'manage-service' => 'Admin\ServiceController'
     ]);
+    
+    Route::post('/add-store/{id}', 'Admin\StoreController@saveSession')->name('admin.store.add');
     // Address Routes
     Route::get('/address', 'HomeController@addAddress')->name('admin.addAddress');
     Route::post('/address', 'HomeController@postAddAddress')->name('admin.postAddAddress');
