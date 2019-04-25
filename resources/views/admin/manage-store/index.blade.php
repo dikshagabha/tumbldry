@@ -2,10 +2,8 @@
 @section('title', 'Manage Store')
 @section('content')
 
-
 @php
 $i = ($users->currentpage() - 1) * $users->perPage() + 1;
-
 @endphp
 <br>
 <div class="container-fluid">
@@ -28,7 +26,6 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
         <th>Email</th>
         <th>Phone Number</th>
         <th>Store Name</th>
-        <!-- <th>Address</th> -->
         <th>Options</th>
       </tr>
     </thead>
@@ -51,14 +48,12 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
         <td>
           {{$user->store_name}}
         </td>
-        <!-- <td>
-
-          {{$user->address->first()['addressdetails']['address']}}, {{$user->address->first()['addressdetails']['city']}}
-          ,{{$user->address->first()['addressdetails']['state']}},{{$user->address->first()['addressdetails']['pin']}}, {{$user->address->first()['addressdetails']['landmark']}}
-        </td> -->
         <td>
             <a href="{{route('manage-store.edit',encrypt( $user->id))}}" title="edit">
               <button type="button" class="btn btn-primary"><i class="fa fa-edit"></i></button>
+            </a>
+            <a href="{{route('manage-store.show',encrypt( $user->id))}}" class="view" title="view">
+              <button type="button" class="btn btn-info "><i class="fa fa-eye"></i></button>
             </a>
             <a href="{{route('manage-store.destroy', encrypt( $user->id))}}" id="delete" data-token="{{csrf_token()}}" title="delete"> 
               <button type="button" class="btn btn-danger"><i class="fa fa-trash"></i></button>
@@ -77,6 +72,26 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
 No Records Found
 </div>
 @endif
+</div>
+<div id="addressModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Store Details</h4>
+      </div>
+      <div class="modal-body">
+        <div id="details">
+         
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
 </div>
 @endsection
 @section('js')
@@ -123,13 +138,20 @@ $(document).ready(function(){
   })
 
 
-  $(document).on('click', '.email_edit', function(e){
+  $(document).on('click', '.view', function(e){
     e.preventDefault();
+    $('body').waitMe();
+    $.ajax({
+      url: $('.view').attr('href'),
+      type:"get",
+      success: function(data){
+        $('body').waitMe("hide");        
+        $('#details').html(data);
+        $("#addressModal").modal('show');
+      },
+    })
   })
-
 })
 </script>
-<!-- <script src="https://maps.googleapis.com/maps/api/js?key=2&libraries=places&callback=initMap"
-        async defer></script> -->
 
 @endsection

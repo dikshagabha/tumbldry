@@ -6,91 +6,14 @@
   <link rel="stylesheet" href="{{ asset('css/chosen/bootstrap-chosen.css') }}">
 @endsection
 <br>
-<form action="{{route('manage-store.update', $id)}}" method="put"  id="addFrenchise">
-  @csrf
-<div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
-  <div class="all-form-element-inner">
-    <div class="form-group-inner">
-      <div class="row">
-           <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-             <label class="login2 pull-right pull-right-pro">Name</label>
-           </div>
-           <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
-             <input type="text" class="form-control" name="name"  value="{{$user->name}}"/>
-             <span class="error" id="name_error"></span>
-           </div>
-         </div>
-       </div>
+<!-- <form action="{{route('manage-store.update', $id)}}" method="put"  id="addFrenchise"> -->
 
-     <div class="form-group-inner">
-       <div class="row">
-            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-              <label class="login2 pull-right pull-right-pro">Address</label>
-            </div>
-            <div class="col-lg-7 col-md-7 col-sm-7 col-xs-10">
-              <select name="address_id" class="form-control" id="address_select">
-                @foreach($address as $add)
-                  <option value="{{$add->id}}" @if($add->id==$user->address->first()['address_id']) selected @endif>
-                    {{$add->address}}, {{$add->state}},  {{$add->city}}, {{$add->pin}}
-                  </option>
-                @endforeach
-              </select>
-            </div>
-            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
-              <button type="button" class="btn btn-primary" id="add_address" data-url="{{route('admin.addAddress')}}">Add Address</button>
-            </div>
-          </div>
-        </div>
-        <div class="form-group-inner">
-          <div class="row">
-               <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                 <label class="login2 pull-right pull-right-pro">Email</label>
-               </div>
-               <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
-                 <input type="text" class="form-control" name="email"  value="{{$user->email}}"/>
-                 <span class="error" id="email_error"></span>
-               </div>
-             </div>
-           </div>
+{{ Form::model($user, ['route'=> array('manage-store.update', $id) , 'method'=>'put', 'id'=>'addFrenchise',
+                        'images'=>true]) }}
 
-           <div class="form-group-inner">
-             <div class="row">
-                  <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                    <label class="login2 pull-right pull-right-pro">Store Name</label>
-                  </div>
-                  <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
-                    <input type="text" class="form-control" name="store_name"  value="{{$user->store_name}}"/>
-                    <span class="error" id="store_name_error"></span>
-                  </div>
-                </div>
-              </div>
+  @include('admin.manage-store.form')
 
-              <div class="form-group-inner">
-                <div class="row">
-                     <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                       <label class="login2 pull-right pull-right-pro">Phone Number</label>
-                     </div>
-                     <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
-                       <input type="text" class="form-control" name="phone_number"  value="{{$user->phone_number}}"/>
-                       <span class="error" id="phone_number_error"></span>
-                     </div>
-                   </div>
-                 </div>
-         <div class="form-group-inner">
-           <div class="row">
-             <div class="col-lg-3 col-md-3 col-sm-3">
-            </div>
-             <div class="col-lg-3 col-md-3 col-sm-3">
-              <a href="{{route('manage-frenchise.index')}}"> <button type="button" class="btn">Cancel</button> </a>
-             </div>
-             <div class="col-lg-5 col-md-5 col-sm-5">
-               <button type="submit" class="btn btn-primary" id="add_frenchise" >Edit Store</button>
-             </div>
-            </div>
-          </div>
-      </div>
-   </div>
-</form>
+{{Form::close()}}
 
 <div id="addressModal" class="modal fade" role="dialog">
   <div class="modal-dialog">
@@ -118,7 +41,22 @@
 <script src="{{asset('js/chosen/chosen.jquery.min.js')}}"></script>
 <script>
 $(document).ready(function(){
-  $("#address_select").chosen();
+  $('#collapseTwo, #collapseThree, #collapseFour, #collapseFive , #collapseSix').addClass('show');
+  $('.1, .2, .3, .4, .5, .6').prop('disabled', false);
+
+  if ($('#leased_property_type').attr("checked") == 'checked') {
+    $(".lease_data").show()
+  }
+  $('input[type=radio][name=property_type]').change(function() {
+    if (this.value == 1) {
+        $(".lease_data").show()
+    }
+    else if (this.value == 2) {
+         $(".lease_data").hide()
+    }
+  });
+
+  $(".next").hide();
   $(document).on('click', '#add_address', function(e){
     e.preventDefault();
     $('body').waitMe();
@@ -160,12 +98,20 @@ $(document).ready(function(){
   $(document).on('click', '#add_frenchise', function(e){
     e.preventDefault();
     $('body').waitMe();
-    $(".error").html("")
+
+    var form = $('#addFrenchise')[0];
+
+    var data = new FormData(form);
+
+    console.log(data.values())
+    $(".error").html("");
     $.ajax({
       url: $('#addFrenchise').attr('action'),
-      type: $('#addFrenchise').attr('method'),
-      data: $('#addFrenchise').serializeArray(),
-      dataType:'json',
+      type:'post',
+      data: data,
+      cache: false,
+      processData: false,  
+      contentType: false,      
       success: function(data){
         success(data.message);
         window.location=data.redirectTo;

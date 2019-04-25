@@ -22,9 +22,7 @@ class StoreController extends Controller
      */
     public function index()
     {
-      $users = User::where('role', 3)->with(['address'=> function($q){
-        $q->with('addressdetails')->first();
-      }])->paginate(10);
+      $users = User::where('role', 3)->latest()->paginate(10);
 
       return view('admin.manage-store.index', compact('users'));
     }
@@ -55,9 +53,6 @@ class StoreController extends Controller
 
         $user = User::create(['name'=>$request->input('name'), 'role'=>3, 'email'=> $request->input('email')
                             , 'phone_number'=> $request->input('phone_number'), 'store_name'=> $request->input('store_name')]);
-
-        $add = UserAddress::create(['user_id'=>$user->id, 'address_id'=>$request->input('address_id')]);
-
         $machines =  UserMachines::create([
                                           'user_id'=>$user->id,
                                           'machine_count'=>$request->input('machine_count'),
@@ -89,6 +84,17 @@ class StoreController extends Controller
                                           'pan_card_number'=>$request->input('pan_card_number'),
                                           'id_proof_number'=>$request->input('id_proof_number'),
                                           ]);
+
+        $address =  Address::create([
+                                      'address'=>$request->input('address') ,
+                                      'user_id'=>$user->id,
+                                      'city'=>$request->input('city'),
+                                      'state'=>$request->input('state'),
+                                      'pin'=>$request->input('pin'),
+                                      'latitude'=>$request->input('latitude') ,
+                                      'longitude'=>$request->input('longitude'),
+                                      'landmark'=>$request->input('landmark'),
+                                      ]);
         $img_array =['user_id'=>$user->id];
 
          foreach (['address_proof', 'gst_certificate', 'bank_passbook', 'cheque', 'pan', 'id_proof',
@@ -116,9 +122,6 @@ class StoreController extends Controller
         return response()->json(["message"=>$e->getMessage()], 400);
           return $e->getMessage();
       }
-      
-      
-      return response()->json(["message"=>"Store Added", 'redirectTo'=>route('manage-store.index')], 200);
     }
 
     /**
@@ -129,7 +132,11 @@ class StoreController extends Controller
      */
     public function show($id)
     {
-        //
+       $id = decrypt($id);
+
+       $user = User::where("id", $id)->first();
+
+       return view("admin.manage-store.show", compact('user'));
     }
 
     /**
@@ -140,7 +147,10 @@ class StoreController extends Controller
      */
     public function edit($id)
     {
-      $user = User::where("id", decrypt($id))->with("address")->first();
+      $user = User::where("id", decrypt($id))->first();
+
+      // /dd($user->machine_count);
+
       $address = Address::get();
       return view('admin.manage-store.edit', compact('address', 'user', 'id'));
     }
@@ -154,12 +164,50 @@ class StoreController extends Controller
      */
     public function update(AddStoreRequest $request, $id)
     {
-      $user = User::where('id', decrypt($id))->update(['name'=>$request->input('name'), 'email'=>$request->input('email'), 'phone_number'=>$request->input('phone_number'),
+     try {
+        DB::beginTransaction();
+        $id = decrypt($id);
+       
+        $user = User::where('id', $id)->update(['name'=>$request->input('name'), 'email'=>$request->input('email'), 'phone_number'=>$request->input('phone_number'),
                                                        'store_name'=>$request->input('store_name')]);
-      $delete = UserAddress::where(['user_id'=>decrypt($id)])->delete();
-      $add =  UserAddress::create(['user_id'=>decrypt($id), 'address_id'=>$request->input('address_id')]);
+        
+       
+        $machines =  UserMachines::where('user_id', $id)->update(
+          $request->only(['machine_count','boiler_count', 'machine_type', 'boiler_type', 'iron_count']));
+        $property =  UserProperty::where('user_id', $id)->update(
+          $request->only(['property_type','store_size', 'store_rent','landlord_number', 'landlord_name', 'rent_enhacement_percent', 'rent_enhacement']));
 
-      return response()->json(["message"=>"Store Updated", "redirectTo"=>route('manage-store.index')], 200);
+        $account =  UserAccount::where('user_id', $id)->update(
+          $request->only(['account_number','bank_name','branch_code','ifsc_code', 'gst_number', 'pan_card_number', 'id_proof_number']));
+
+        $account =  Address::where('user_id', $id)->update(
+          $request->only(['address','city','state','pin', 'latitude', 'longitude', 'landmark']));
+
+        $img_array =[];
+
+         foreach (['address_proof', 'gst_certificate', 'bank_passbook', 'cheque', 'pan', 'id_proof',
+                    'loi_copy', 'agreement_copy', 'rent_agreement', 'transaction_details'] as $key => $value)
+         {  
+          if($request->file($value))
+             {
+
+                $image = $request->file($value);
+                $name=$image->getClientOriginalName().time().$user->id;
+                $image->move(public_path().'/uploaded_images/', $name);   
+                array_push($img_array, [$value=>$name]);
+                       
+             }
+         }
+
+         
+         $images =  UserImages::where('user_id', $id)->update($img_array);
+        DB::commit();
+        return response()->json(["message"=>"Store Updated", 'redirectTo'=>route('manage-store.index')], 200);
+      }
+      catch (\Exception $e) {
+        return response()->json(["message"=>$e->getMessage()], 400);
+      }
+      
     }
 
     /**
@@ -171,7 +219,6 @@ class StoreController extends Controller
     public function destroy($id)
     {
       $delete = User::where(['id'=>decrypt($id)])->delete();
-      $delete = UserAddress::where(['user_id'=>decrypt($id)])->delete();
       return response()->json(["message"=>"Store deleted!"], 200);
     }
 
@@ -185,19 +232,45 @@ class StoreController extends Controller
           //'address_id'=>['bail','required', 'numeric'],
           'store_name' => 'bail|required|min:2|max:50|string',
           'phone_number' => 'bail|required|unique:users,phone_number|min:2|max:999999999',
+
         ]);
 
         $request->session()->put('store_data', $request->only("address_id", 'email', 'name', 'store_name', 'phone_number'));
         return response()->json(["message"=>'Data stored temporarly'], 200);
      }
-     else if($id==2){
-      $validatedData = $request->validate([
+      else if($id==2){
+        $validatedData = $request->validate([
           'email' => 'bail|required|unique:users,email',
           'name' => 'bail|required|min:2|max:50|string',
           //'address_id'=>['bail','required', 'numeric'],
           'store_name' => 'bail|required|min:2|max:50|string',
           'phone_number' => 'bail|required|unique:users,phone_number|min:2|max:999999999',
           
+          'address'=>'bail|required|string|min:2|max:50',
+          'city'=>'bail|required|string|min:2|max:50',
+          'state'=>'bail|required|string|min:2|max:50',
+          'pin'=>'bail|required|numeric|min:2|max:999999',
+          'latitude'=>'bail|required|numeric|min:-180|max:180',
+          'longitude'=>'bail|required|numeric|min:-180|max:180',
+          'landmark'=>'bail|required|string|min:2|max:200',
+
+        ]);
+      }
+     else if($id==3){
+      $validatedData = $request->validate([
+          'email' => 'bail|required|unique:users,email',
+          'name' => 'bail|required|min:2|max:50|string',
+          //'address_id'=>['bail','required', 'numeric'],
+          'store_name' => 'bail|required|min:2|max:50|string',
+          'phone_number' => 'bail|required|unique:users,phone_number|min:2|max:999999999',
+           'address'=>'bail|required|string|min:2|max:50',
+          'city'=>'bail|required|string|min:2|max:50',
+          'state'=>'bail|required|string|min:2|max:50',
+          'pin'=>'bail|required|numeric|min:2|max:999999',
+          'latitude'=>'bail|required|numeric|min:-180|max:180',
+          'longitude'=>'bail|required|numeric|min:-180|max:180',
+          'landmark'=>'bail|required|string|min:2|max:200',
+
           'machine_count'=>'bail|required|numeric|min:1|max:9999',
           'boiler_count'=>'bail|required|numeric|min:1|max:9999',
           'machine_type'=>'bail|required|string|min:1|max:500',
@@ -209,7 +282,7 @@ class StoreController extends Controller
         return response()->json(["message"=>'Data stored temporarly'], 200);
      }
 
-     else if($id==3){
+     else if($id==4){
       $validatedData = $request->validate([
           'email' => 'bail|required|unique:users,email',
           'name' => 'bail|required|min:2|max:50|string',
@@ -217,6 +290,15 @@ class StoreController extends Controller
           'store_name' => 'bail|required|min:2|max:50|string',
           'phone_number' => 'bail|required|unique:users,phone_number|min:2|max:999999999',
           
+          'address'=>'bail|required|string|min:2|max:50',
+          'city'=>'bail|required|string|min:2|max:50',
+          'state'=>'bail|required|string|min:2|max:50',
+          'pin'=>'bail|required|numeric|min:2|max:999999',
+          'latitude'=>'bail|required|numeric|min:-180|max:180',
+          'longitude'=>'bail|required|numeric|min:-180|max:180',
+          'landmark'=>'bail|required|string|min:2|max:200',
+
+
           'machine_count'=>'bail|required|numeric|min:1|max:9999',
           'boiler_count'=>'bail|required|numeric|min:1|max:9999',
           'machine_type'=>'bail|required|string|min:1|max:500',
@@ -242,7 +324,15 @@ class StoreController extends Controller
       $validatedData = $request->validate([
           'email' => 'bail|required|unique:users,email',
           'name' => 'bail|required|min:2|max:50|string',
-          //'address_id'=>['bail','required', 'numeric'],
+
+          'address'=>'bail|required|string|min:2|max:50',
+          'city'=>'bail|required|string|min:2|max:50',
+          'state'=>'bail|required|string|min:2|max:50',
+          'pin'=>'bail|required|numeric|min:2|max:999999',
+          'latitude'=>'bail|required|numeric|min:-180|max:180',
+          'longitude'=>'bail|required|numeric|min:-180|max:180',
+          'landmark'=>'bail|required|string|min:2|max:200',
+
           'store_name' => 'bail|required|min:2|max:50|string',
           'phone_number' => 'bail|required|unique:users,phone_number|min:2|max:999999999',
           'machine_count'=>'bail|required|numeric|min:1|max:9999',

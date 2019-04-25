@@ -278,3 +278,6 @@ textarea {
         page-break-after: avoid;
     }
 }
+
+.table-modal
+{word-break: break-word;}
