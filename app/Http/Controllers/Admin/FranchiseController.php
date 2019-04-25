@@ -45,7 +45,7 @@ class FranchiseController extends Controller
     {
       $user = User::create(['name'=>$request->input('name'),'store_name'=>$request->input('store_name'),'email'=>$request->input('email'),'phone_number'=>$request->input('phone_number'), 'role'=>2]);
 
-      $add = UserAddress::create(['user_id'=>$user->id, 'address_id'=>$request->input('address_id')]);
+      //$add = UserAddress::create(['user_id'=>$user->id, 'address_id'=>$request->input('address_id')]);
 
       return response()->json(["message"=>"Frenchise Added", "redirectTo"=>route('manage-frenchise.index')], 200);
     }
@@ -87,8 +87,8 @@ class FranchiseController extends Controller
     {
       $user = User::where('id', decrypt($id))->update(['name'=>$request->input('name'), 
                             'store_name'=>$request->input('store_name'),'email'=>$request->input('email'),'phone_number'=>$request->input('phone_number')]);
-      $delete = UserAddress::where(['user_id'=>decrypt($id)])->delete();
-      $add = UserAddress::create(['user_id'=>decrypt($id), 'address_id'=>$request->input('address_id')]);
+      //$delete = UserAddress::where(['user_id'=>decrypt($id)])->delete();
+      //$add = UserAddress::create(['user_id'=>decrypt($id), 'address_id'=>$request->input('address_id')]);
 
       return response()->json(["message"=>"Frenchise Updated", "redirectTo"=>route('manage-frenchise.index')], 200);
     }
@@ -101,7 +101,7 @@ class FranchiseController extends Controller
      */
     public function destroy($id)
     {     $delete = User::where(['id'=>decrypt($id)])->delete();
-          $delete = UserAddress::where(['user_id'=>decrypt($id)])->delete();
+        //  $delete = UserAddress::where(['user_id'=>decrypt($id)])->delete();
           return response()->json(["message"=>"Frenchise deleted!"], 200);
     }
 }
