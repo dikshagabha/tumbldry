@@ -32,13 +32,13 @@
                 
               </span>
            
-              <input type="hidden" name="address_id" id="address_id" val="{{$user->address->first()['addressdetails']['id'] }}">
+              <input type="hidden" name="address_id" id="address_id" val="">
               <span class="error" id="address_id_error"></span>
             </div>
 
             <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
              
-              <button type="button" class="btn btn-primary" id="add_address" data-url="{{route('admin.editAddress', ['id'=>$user->address->first()['addressdetails']['id']])}}">Edit Address</button>
+              <button type="button" class="btn btn-primary" id="add_address">Edit Address</button>
 
             </div>
           </div>
