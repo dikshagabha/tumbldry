@@ -17,9 +17,7 @@ class FranchiseController extends Controller
      */
     public function index()
     {
-        $users = User::where('role', 2)->with(['address'=> function($q){
-          $q->with('addressdetails')->first();
-        }])->paginate(10);
+        $users = User::where('role', 2)->paginate(10);
 
 
         return view('admin.manage-franchise.index', compact('users'));
@@ -72,9 +70,7 @@ class FranchiseController extends Controller
     public function edit($id)
     {
 
-      $user = User::where("id", decrypt($id))->with(["address"=>function($q){
-        $q->with('addressdetails');
-      }])->first();
+      $user = User::where("id", decrypt($id))->first();
       $address = Address::get();
       return view('admin.manage-franchise.edit', compact('address', 'user', 'id'));
 

@@ -27,7 +27,7 @@ class StoreFrenchiseRequest extends FormRequest
             $id = decrypt($this->route('manage_frenchise'));
             return [
               'store_name'=>['bail', 'required', 'string', 'min:2', 'max:100'],
-              'address_id'=>['bail','required', 'numeric'],
+              //'address_id'=>['bail','required', 'numeric'],
               'email'=>['bail','required', 'email','unique:users,email,'.$id, 'min:2', 'max:100'],
               'name'=>['bail', 'required', 'string', 'min:2', 'max:100'],
               'phone_number'=>['bail','numeric', 'unique:users,phone_number,'.$id, 'min:2', 'max:9999999999'],
@@ -35,7 +35,7 @@ class StoreFrenchiseRequest extends FormRequest
         }
         return [
               'store_name'=>['bail', 'required', 'string', 'min:2', 'max:100'],
-              'address_id'=>['bail','required', 'numeric'],
+              //'address_id'=>['bail','required', 'numeric'],
               'email'=>['bail','required', 'email','unique:users,email', 'min:2', 'max:100'],
               'name'=>['bail','required', 'string', 'min:2', 'max:100'],
               'phone_number'=>['bail', 'required', 'numeric', 'unique:users,phone_number','min:2', 'max:9999999999'],

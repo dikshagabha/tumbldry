@@ -26,7 +26,7 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
         <th>Contact Person Name</th>
         <th>Contact Person Email</th>
         <th>Contact Person Phone Number</th>
-        <!-- <th>Address</th> -->
+       
         <th>Options</th>
       </tr>
     </thead>
@@ -49,10 +49,7 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
         <td>
           {{$user->phone_number}}
         </td>
-        <!-- <td>
-          {{$user->address->first()['addressdetails']['address']}}, {{$user->address->first()['addressdetails']['city']}}
-          , {{$user->address->first()['addressdetails']['state']}},{{$user->address->first()['addressdetails']['pin']}}, {{$user->address->first()['addressdetails']['landmark']}}
-        </td> -->
+       
         <td>
             <a href="{{route('manage-frenchise.edit', encrypt( $user->id))}}" title="edit"><button type="button" class="btn btn-primary"><i class="fa fa-edit"></i></button></a>
             <a href="{{route('manage-frenchise.destroy', encrypt( $user->id))}}" id="delete" data-token="{{csrf_token()}}" title="delete"><button type="button" class="btn btn-danger"><i class="fa fa-trash"></i></button></a>
