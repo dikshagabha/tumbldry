@@ -21,7 +21,7 @@
            </div>
          </div>
        </div>
-
+<!-- 
      <div class="form-group-inner">
        <div class="row">
             <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
@@ -29,16 +29,9 @@
             </div>
             <div class="col-lg-7 col-md-7 col-sm-7 col-xs-10">
               <span id="added_address">
-                {{$user->address->first()['addressdetails']['address']}}, {{$user->address->first()['addressdetails']['state']}}, {{$user->address->first()['addressdetails']['city']}}, 
-                {{$user->address->first()['addressdetails']['pin']}}
+                
               </span>
-              <!-- <select name="address_id" class="form-control" id="address_select">
-                @foreach($address as $add)
-                  <option value="{{$add->id}}" @if($add->id==$user->address->first()['address_id']) selected @endif>
-                    {{$add->address}}, {{$add->state}},  {{$add->city}}, {{$add->pin}}
-                  </option>
-                @endforeach
-              </select> -->
+           
               <input type="hidden" name="address_id" id="address_id" val="{{$user->address->first()['addressdetails']['id'] }}">
               <span class="error" id="address_id_error"></span>
             </div>
@@ -49,7 +42,7 @@
 
             </div>
           </div>
-        </div>
+        </div> -->
 
         <div class="form-group-inner">
           <div class="row">

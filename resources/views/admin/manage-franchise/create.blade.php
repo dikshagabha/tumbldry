@@ -21,7 +21,7 @@
            </div>
          </div>
        </div>
-
+<!-- 
      <div class="form-group-inner">
        <div class="row">
             <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
@@ -31,13 +31,7 @@
 
               <span  id="added_address">
                 
-              </span>
-              <!-- <select name="address_id" class="form-control" id="address_select">
-                <option></option>
-                @foreach($address as $add)
-                  <option value="{{$add->id}}"> {{$add->address}}, {{$add->state}},  {{$add->city}}, {{$add->pin}}</option>
-                @endforeach
-              </select> -->
+            
               <input type="hidden" name="address_id" id="address_id">
               <span class="error" id="address_id_error"></span>
             </div>
@@ -46,7 +40,7 @@
               <button type="button" class="btn btn-primary" id="edit_address" style="display: none;">Edit Address</button>
             </div>
           </div>
-        </div>
+        </div> -->
 
         <div class="form-group-inner">
           <div class="row">
