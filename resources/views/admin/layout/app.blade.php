@@ -7,6 +7,7 @@
     <title>@yield('title')| TumbleDry</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <!-- favicon
 		============================================ -->
     <link rel="shortcut icon" type="image/x-icon" href="img/favicon.ico">
@@ -83,7 +84,7 @@
     </div>
     @include('admin.layout.header')
     <div class="content">
-      <div class="container-fluid">
+      <div class="container-fluid"  style="background-color:white;">
             @yield('content')
         </div>
     </div>
@@ -145,13 +146,12 @@
 ============================================ -->
 <script src="{{asset('js/main.js')}}"></script>
 
-<script src="{{asset('js/heartcode-canvasloader.js')}}"></script>
-
 <script src="{{asset('js/waitMe.js')}}"></script>
 <script src="{{asset('js/pnotify.custom.min.js')}}"></script>
 
 <script>
 function success(message=""){
+  PNotify.removeAll() 
   new PNotify({
     title: 'Success!',
     text: message,
@@ -159,6 +159,7 @@ function success(message=""){
   });
 }
 function error(message="Something went wrong"){
+  PNotify.removeAll() 
   new PNotify({
     title: 'Error!',
     text: message,
@@ -168,6 +169,9 @@ function error(message="Something went wrong"){
 $(document).ready(function(){
 
   $.ajaxSetup({
+    headers:{
+      'X-CSRF-TOKEN':$('meta[name="csrf-token"]').attr('content')
+    },
     error: function(data, status){
       if(data.status==422){
         $('body').waitMe('hide');

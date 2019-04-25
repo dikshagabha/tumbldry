@@ -1,5 +1,5 @@
 @extends('admin.layout.app')
-@section('title', 'Manage Frenchise')
+@section('title', 'Manage Service')
 @section('content')
 
 
@@ -27,6 +27,7 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
         <th>Name</th>
         <th>Description</th>
         <th>Parameters</th>
+        <th>Type</th>
         <th>Options</th>
       </tr>
     </thead>
@@ -41,7 +42,7 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
           {{$user->name}}
         </td>
         <td>
-          @if($user->description) {{$user->description}} @else N/A @endif
+          @if($user->description) {{ substr($user->description, 0, 50) }}.. @else -- @endif
         </td>
         <td>
           @foreach($user->serviceprices as $prices)
@@ -49,7 +50,17 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
           @endforeach
         </td>
         <td>
-            <a href="{{route('manage-service.edit', $user->id )}}"><button type="button" class="btn btn-primary"><i class="fa fa-edit"></i></button></a>
+          @if($user->type==1) 
+            Basic Service
+          @else
+            Additional Service
+          @endif
+        </td>
+        <td>
+            <a href="{{route('manage-service.edit', $user->id )}}" title="edit"><button type="button" class="btn btn-primary"><i class="fa fa-edit"></i></button></a>
+            <a href="{{route('manage-service.destroy', encrypt( $user->id))}}" id="delete" data-token="{{csrf_token()}}" title="delete">
+              <button type="button" class="btn btn-danger"><i class="fa fa-trash"></i></button>
+            </a>
         </td>
       </tr>
       @php
@@ -68,22 +79,47 @@ No Records Found
 
 @endsection
 @section('js')
+<script src="{{asset('js/bootbox.js')}}"></script>
 <script>
 $(document).ready(function(){
-
-  $(document).on('click', '.save', function(e){
+  $(document).on('click', '#delete', function(e){
     e.preventDefault();
-    $.ajax({
-      url: $('#basicInfo').attr('action'),
-      type:$('#basicInfo').attr('method'),
-      data:$('#basicInfo').serializeArray(),
-      success: function(){
 
-      },
-      error:function(){
+          bootbox.confirm({
+          title: "Confirm",
+          message: "Do you want to delete the service? This cannot be undone.",
+          buttons: {
+              cancel: {
+                  label: '<i class="fa fa-times"></i> Cancel'
+              },
+              confirm: {
+                  label: '<i class="fa fa-check"></i> Confirm'
+              }
+          },
+          callback: function (result) {
+              if(result){
+                $('body').waitMe();
 
-      }
-    })
+
+                $.ajax({
+                  url: $('#delete').attr('href'),
+                  type:"post",
+                  data:{
+                    '_method':"delete", '_token':$('#delete').data('token')
+                  },
+                  headers:{
+                    'X-CSRF-TOKEN':$('meta[name="csrf-token"]').attr('content'),
+                    'method':'delete'
+                  },
+                  success: function(){
+                    $('body').waitMe("hide");
+                    window.location.reload()
+                  },
+                })
+              }
+          }
+      });
+
   })
 
   $(document).on('click', '.email_edit', function(e){
