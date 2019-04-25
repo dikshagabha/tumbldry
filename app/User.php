@@ -16,7 +16,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'store_name', 'phone_number', 'role'
+        'name', 'email', 'password', 'store_name', 'phone_number', 'role', 'user_id'
     ];
 
     /**
@@ -61,6 +61,11 @@ class User extends Authenticatable
     public function account()
     {
         return $this->hasOne('App\Model\UserAccount', 'user_id', 'id');
+    }
+
+    public function parent()
+    {
+        return $this->hasOne('App\User', 'id', 'user_id');
     }
 
 
@@ -195,10 +200,19 @@ class User extends Authenticatable
         }
         return '';
     }
-     public function getLandmarkAttribute()
+    
+    public function getLandmarkAttribute()
     {
         if ($this->addresses()->count()) {
             return $this->addresses()->first()->landmark; 
+        }
+        return '';
+    }
+
+    public function getParentNameAttribute()
+    {
+        if ($this->parent()->count()) {
+            return $this->parent()->first()->name; 
         }
         return '';
     }

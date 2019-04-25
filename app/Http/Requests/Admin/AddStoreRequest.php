@@ -31,7 +31,7 @@ class AddStoreRequest extends FormRequest
           'email'=>['bail','required', 'email','unique:users,email,'.$id, 'min:2', 'max:100'],
           'store_name'=>['bail','nullable','string', 'min:2', 'max:100'],
           'phone_number'=>['bail','numeric', 'unique:users,phone_number,'.$id, 'min:2', 'max:9999999999'],
-
+          'user_id'=>['bail', 'numeric'],
           'address'=>'bail|required|string|min:2|max:50',
           'city'=>'bail|required|string|min:2|max:50',
           'state'=>'bail|required|string|min:2|max:50',

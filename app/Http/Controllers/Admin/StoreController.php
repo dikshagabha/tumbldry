@@ -34,8 +34,12 @@ class StoreController extends Controller
      */
     public function create()
     {
-      $address = Address::get();
-      return view('admin.manage-store.create', compact('address'));
+      //$address = Address::get();
+
+      $users = User::where('role', 2)->pluck('name', 'id');
+      //$users[0]='Select a Frenchise';
+      
+      return view('admin.manage-store.create', compact('users'));
     }
 
     /**
@@ -52,7 +56,7 @@ class StoreController extends Controller
         DB::beginTransaction();
 
         $user = User::create(['name'=>$request->input('name'), 'role'=>3, 'email'=> $request->input('email')
-                            , 'phone_number'=> $request->input('phone_number'), 'store_name'=> $request->input('store_name')]);
+                            , 'phone_number'=> $request->input('phone_number'), 'store_name'=> $request->input('store_name'), 'user_id'=>$request->input('user_id')]);
         $machines =  UserMachines::create([
                                           'user_id'=>$user->id,
                                           'machine_count'=>$request->input('machine_count'),
@@ -135,6 +139,7 @@ class StoreController extends Controller
        $id = decrypt($id);
 
        $user = User::where("id", $id)->first();
+       //dd($user);
 
        return view("admin.manage-store.show", compact('user'));
     }
@@ -148,11 +153,9 @@ class StoreController extends Controller
     public function edit($id)
     {
       $user = User::where("id", decrypt($id))->first();
+      $users = User::where('role', 2)->pluck('name', 'id');
 
-      // /dd($user->machine_count);
-
-      $address = Address::get();
-      return view('admin.manage-store.edit', compact('address', 'user', 'id'));
+      return view('admin.manage-store.edit', compact('address', 'user', 'id', 'users'));
     }
 
     /**
@@ -168,7 +171,7 @@ class StoreController extends Controller
         DB::beginTransaction();
         $id = decrypt($id);
        
-        $user = User::where('id', $id)->update(['name'=>$request->input('name'), 'email'=>$request->input('email'), 'phone_number'=>$request->input('phone_number'),
+        $user = User::where('id', $id)->update(['name'=>$request->input('name'), 'email'=>$request->input('email'), 'phone_number'=>$request->input('phone_number'),'user_id'=>$request->input('user_id'),
                                                        'store_name'=>$request->input('store_name')]);
         
        
@@ -229,7 +232,7 @@ class StoreController extends Controller
          $validatedData = $request->validate([
           'email' => 'bail|required|unique:users,email',
           'name' => 'bail|required|min:2|max:50|string',
-          //'address_id'=>['bail','required', 'numeric'],
+          'user_id'=>['bail', 'numeric'],
           'store_name' => 'bail|required|min:2|max:50|string',
           'phone_number' => 'bail|required|unique:users,phone_number|min:2|max:999999999',
 
@@ -242,7 +245,7 @@ class StoreController extends Controller
         $validatedData = $request->validate([
           'email' => 'bail|required|unique:users,email',
           'name' => 'bail|required|min:2|max:50|string',
-          //'address_id'=>['bail','required', 'numeric'],
+          'user_id'=>['bail', 'numeric'],
           'store_name' => 'bail|required|min:2|max:50|string',
           'phone_number' => 'bail|required|unique:users,phone_number|min:2|max:999999999',
           
@@ -260,7 +263,7 @@ class StoreController extends Controller
       $validatedData = $request->validate([
           'email' => 'bail|required|unique:users,email',
           'name' => 'bail|required|min:2|max:50|string',
-          //'address_id'=>['bail','required', 'numeric'],
+          'user_id'=>['bail', 'numeric'],
           'store_name' => 'bail|required|min:2|max:50|string',
           'phone_number' => 'bail|required|unique:users,phone_number|min:2|max:999999999',
            'address'=>'bail|required|string|min:2|max:50',
@@ -286,7 +289,7 @@ class StoreController extends Controller
       $validatedData = $request->validate([
           'email' => 'bail|required|unique:users,email',
           'name' => 'bail|required|min:2|max:50|string',
-          //'address_id'=>['bail','required', 'numeric'],
+          'user_id'=>['bail', 'numeric'],
           'store_name' => 'bail|required|min:2|max:50|string',
           'phone_number' => 'bail|required|unique:users,phone_number|min:2|max:999999999',
           
@@ -324,7 +327,7 @@ class StoreController extends Controller
       $validatedData = $request->validate([
           'email' => 'bail|required|unique:users,email',
           'name' => 'bail|required|min:2|max:50|string',
-
+          'user_id'=>['bail', 'numeric'],
           'address'=>'bail|required|string|min:2|max:50',
           'city'=>'bail|required|string|min:2|max:50',
           'state'=>'bail|required|string|min:2|max:50',

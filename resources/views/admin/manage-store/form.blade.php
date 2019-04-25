@@ -63,6 +63,17 @@
                  </div>
             </div>
 
+            <div class="form-group-inner">
+              <div class="row">
+                   <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                     <label class="login2 pull-right pull-right-pro">Frenchise</label>
+                   </div>
+                   <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+                     {{Form::select('user_id', $users, null, ['id'=>'parent','placeholder'=>'Select a Frenchise', 'class' => 'form-control'])}}
+                     <span class="error" id="user_id_error"></span>
+                   </div>
+                 </div>
+            </div>
             
             <br>
            <div class="form-group-inner">

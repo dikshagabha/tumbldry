@@ -17,6 +17,10 @@ Basic Information
 		<td>Phone Number</td>
 		<td>{{$user->phone_number}}</td>
 	</tr>
+	<tr>
+		<td>Frenchise Name</td>
+		<td>{{$user->parent_name}}</td>
+	</tr>
 </table>
 Address Information
 <table class="table table-bordered">
