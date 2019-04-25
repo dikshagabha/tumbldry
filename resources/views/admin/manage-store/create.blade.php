@@ -46,7 +46,7 @@
 <script src="{{asset('js/jquery.accordion-wizard.min.js')}}"></script>
 <script>
 $(document).ready(function(){
-
+	$('#parent').chosen();
 
   function sendRequest(url, current){
     var form = $('#addFrenchise')[0];

@@ -232,10 +232,9 @@ class StoreController extends Controller
          $validatedData = $request->validate([
           'email' => 'bail|required|unique:users,email',
           'name' => 'bail|required|min:2|max:50|string',
-          'user_id'=>['bail', 'numeric'],
+          'user_id'=>['bail', 'nullable', 'numeric'],
           'store_name' => 'bail|required|min:2|max:50|string',
           'phone_number' => 'bail|required|unique:users,phone_number|min:2|max:999999999',
-
         ]);
 
         $request->session()->put('store_data', $request->only("address_id", 'email', 'name', 'store_name', 'phone_number'));
@@ -245,7 +244,7 @@ class StoreController extends Controller
         $validatedData = $request->validate([
           'email' => 'bail|required|unique:users,email',
           'name' => 'bail|required|min:2|max:50|string',
-          'user_id'=>['bail', 'numeric'],
+          'user_id'=>['bail','nullable', 'numeric'],
           'store_name' => 'bail|required|min:2|max:50|string',
           'phone_number' => 'bail|required|unique:users,phone_number|min:2|max:999999999',
           
@@ -263,7 +262,7 @@ class StoreController extends Controller
       $validatedData = $request->validate([
           'email' => 'bail|required|unique:users,email',
           'name' => 'bail|required|min:2|max:50|string',
-          'user_id'=>['bail', 'numeric'],
+          'user_id'=>['bail','nullable', 'numeric'],
           'store_name' => 'bail|required|min:2|max:50|string',
           'phone_number' => 'bail|required|unique:users,phone_number|min:2|max:999999999',
            'address'=>'bail|required|string|min:2|max:50',
@@ -289,7 +288,7 @@ class StoreController extends Controller
       $validatedData = $request->validate([
           'email' => 'bail|required|unique:users,email',
           'name' => 'bail|required|min:2|max:50|string',
-          'user_id'=>['bail', 'numeric'],
+          'user_id'=>['bail','nullable', 'numeric'],
           'store_name' => 'bail|required|min:2|max:50|string',
           'phone_number' => 'bail|required|unique:users,phone_number|min:2|max:999999999',
           
@@ -327,7 +326,7 @@ class StoreController extends Controller
       $validatedData = $request->validate([
           'email' => 'bail|required|unique:users,email',
           'name' => 'bail|required|min:2|max:50|string',
-          'user_id'=>['bail', 'numeric'],
+          'user_id'=>['bail', 'nullable', 'numeric'],
           'address'=>'bail|required|string|min:2|max:50',
           'city'=>'bail|required|string|min:2|max:50',
           'state'=>'bail|required|string|min:2|max:50',

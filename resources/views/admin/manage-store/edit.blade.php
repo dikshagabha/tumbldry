@@ -44,6 +44,8 @@ $(document).ready(function(){
   $('#collapseTwo, #collapseThree, #collapseFour, #collapseFive , #collapseSix').addClass('show');
   $('.1, .2, .3, .4, .5, .6').prop('disabled', false);
 
+	$('#parent').chosen();
+
   if ($('#leased_property_type').attr("checked") == 'checked') {
     $(".lease_data").show()
   }
