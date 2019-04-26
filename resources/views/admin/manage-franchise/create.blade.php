@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Manage Frenchise')
+@section('title', 'Manage Franchise')
 
 @section('content')
 @section('css')
@@ -91,7 +91,7 @@
                     <a href="{{route('manage-frenchise.index')}}"> <button type="button" class="btn">Cancel</button> </a>
                    </div>
                    <div class="col-lg-5 col-md-5 col-sm-5">
-                     <button type="submit" class="btn btn-primary" id="add_frenchise" >Add Frenchise</button>
+                     <button type="submit" class="btn btn-primary" id="add_frenchise" >Add Franchise</button>
                    </div>
                   </div>
                 </div>

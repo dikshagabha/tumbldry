@@ -243,8 +243,9 @@
                       <label class="login2 pull-right pull-right-pro">Type of Machines</label>
                     </div>
                    <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
-                     {!! Form::text('machine_type',null,array('class' => 'form-control', 'maxlength'=>"50")) !!}
-                      <span class="error" id="machine_type_error"></span>
+
+                    {{Form::select('machine_type', $machines, null, ['id'=>'parent','placeholder'=>'Select a Machine Type', 'class' => 'form-control'])}}
+                     <span class="error" id="machine_type_error"></span>
                     </div>
                  </div>
             </div>
@@ -269,8 +270,9 @@
                       <label class="login2 pull-right pull-right-pro">Type of Boiler</label>
                     </div>
                    <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
-                       
-                     {!! Form::text('boiler_type',null,array('class' => 'form-control', 'maxlength'=>"50")) !!}
+                      
+                      {{Form::select('boiler_type', $boiler, null, ['id'=>'parent','placeholder'=>'Select a Boiler Type', 'class' => 'form-control'])}}
+                     
                       <span class="error" id="boiler_type_error"></span>
                     </div>
                     

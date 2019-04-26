@@ -18,7 +18,7 @@ class FranchiseController extends Controller
     public function index()
     {
         $activePage = 'frenchise';
-        $titlePage  = 'Frenchise Details';
+        $titlePage  = 'Franchise Details';
         $users = User::where('role', 2)->paginate(10);
 
 
@@ -34,7 +34,7 @@ class FranchiseController extends Controller
     public function create()
     {
         $activePage = 'frenchise';
-        $titlePage  = 'Create Frenchise';
+        $titlePage  = 'Create Franchise';
         $address = Address::get();
         return view('admin.manage-franchise.create', compact('address', 'titlePage', 'activePage'));
     }
@@ -76,7 +76,7 @@ class FranchiseController extends Controller
     public function edit($id)
     {
         $activePage = 'frenchise';
-        $titlePage  = 'Create Frenchise';
+        $titlePage  = 'Create Franchise';
 
       $user = User::where("id", decrypt($id))->first();
       $address = Address::get();

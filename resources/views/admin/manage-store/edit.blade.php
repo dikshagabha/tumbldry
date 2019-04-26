@@ -26,7 +26,7 @@
 
     </div>
   </div>
-</div>w
+</div>
 <div id="addressModal" class="modal fade" role="dialog">
   <div class="modal-dialog">
 

@@ -11,6 +11,7 @@ use App\Model\UserAccount;
 use App\Model\UserProperty;
 use App\Model\UserMachines;
 use App\Model\UserImages;
+use App\Model\StoreFields;
 use DB;
 use App\Http\Requests\Admin\AddStoreRequest;
 class StoreController extends Controller
@@ -40,9 +41,12 @@ class StoreController extends Controller
       $titlePage  = 'Create Store';
 
       $users = User::where('role', 2)->pluck('name', 'id');
-      //$users[0]='Select a Frenchise';
       
-      return view('admin.manage-store.create', compact('users', 'activePage', 'titlePage'));
+      $fields = StoreFields::get();
+      $machines = $fields->where('type', 1)->pluck('name', 'id');
+      $boiler = $fields->where('type', 2)->pluck('name', 'id');
+
+      return view('admin.manage-store.create', compact('users', 'activePage', 'titlePage', 'machines', 'boiler'));
     }
 
     /**
@@ -142,7 +146,11 @@ class StoreController extends Controller
        $id = decrypt($id);
 
        $user = User::where("id", $id)->first();
-       return view("admin.manage-store.show", compact('user'));
+       //$data =UserMachines::where('id', 32)->with('boiler')->first();
+       $data = StoreFields::whereIn('id', [$user->machine_type, $user->boiler_type])->get();
+
+       //dd($data);
+       return view("admin.manage-store.show", compact('user', 'data'));
     }
 
     /**
@@ -155,10 +163,15 @@ class StoreController extends Controller
     {
       $activePage = 'store';
       $titlePage  = 'Edit Store';
+
       $user = User::where("id", decrypt($id))->first();
       $users = User::where('role', 2)->pluck('name', 'id');
 
-      return view('admin.manage-store.edit', compact('address', 'user', 'id', 'users', 'activePage', 'titlePage'));
+      $fields = StoreFields::get();
+      $machines = $fields->where('type', 1)->pluck('name', 'id');
+      $boiler = $fields->where('type', 2)->pluck('name', 'id');
+
+      return view('admin.manage-store.edit', compact('address', 'user', 'id', 'users', 'activePage', 'titlePage', 'machines', 'boiler'));
     }
 
     /**
@@ -236,8 +249,8 @@ class StoreController extends Controller
           'email' => 'bail|required|unique:users,email',
           'name' => 'bail|required|min:2|max:50|string',
           'user_id'=>['bail', 'nullable', 'numeric'],
-          'store_name' => 'bail|required|min:2|max:50|string',
-          'phone_number' => 'bail|required|unique:users,phone_number|min:2|max:999999999',
+          'store_name' => 'bail|nullable|min:2|max:50|string',
+          'phone_number' => 'bail|nullable|unique:users,phone_number|min:2|max:999999999',
         ]);
 
         $request->session()->put('store_data', $request->only("address_id", 'email', 'name', 'store_name', 'phone_number'));
@@ -247,17 +260,19 @@ class StoreController extends Controller
         $validatedData = $request->validate([
           'email' => 'bail|required|unique:users,email',
           'name' => 'bail|required|min:2|max:50|string',
-          'user_id'=>['bail','nullable', 'numeric'],
-          'store_name' => 'bail|required|min:2|max:50|string',
-          'phone_number' => 'bail|required|unique:users,phone_number|min:2|max:999999999',
           
-          'address'=>'bail|required|string|min:2|max:50',
-          'city'=>'bail|required|string|min:2|max:50',
-          'state'=>'bail|required|string|min:2|max:50',
+          'user_id'=>['bail','nullable', 'numeric'],
+          'store_name' => 'bail|nullable|min:2|max:50|string',
+          'phone_number' => 'bail|nullable|unique:users,phone_number|min:2|max:999999999',
+          
+          'address'=>'bail|nullable|string|min:2|max:50',
+          'city'=>'bail|nullable|string|min:2|max:50',
+          'state'=>'bail|nullable|string|min:2|max:50',
+          
           'pin'=>'bail|required|numeric|min:2|max:999999',
-          'latitude'=>'bail|required|numeric|min:-180|max:180',
-          'longitude'=>'bail|required|numeric|min:-180|max:180',
-          'landmark'=>'bail|required|string|min:2|max:200',
+          'latitude'=>'bail|nullable|numeric|min:-180|max:180',
+          'longitude'=>'bail|nullable|numeric|min:-180|max:180',
+          'landmark'=>'bail|nullable|string|min:2|max:200',
 
         ]);
       }
@@ -266,21 +281,23 @@ class StoreController extends Controller
           'email' => 'bail|required|unique:users,email',
           'name' => 'bail|required|min:2|max:50|string',
           'user_id'=>['bail','nullable', 'numeric'],
-          'store_name' => 'bail|required|min:2|max:50|string',
-          'phone_number' => 'bail|required|unique:users,phone_number|min:2|max:999999999',
-           'address'=>'bail|required|string|min:2|max:50',
-          'city'=>'bail|required|string|min:2|max:50',
-          'state'=>'bail|required|string|min:2|max:50',
-          'pin'=>'bail|required|numeric|min:2|max:999999',
-          'latitude'=>'bail|required|numeric|min:-180|max:180',
-          'longitude'=>'bail|required|numeric|min:-180|max:180',
-          'landmark'=>'bail|required|string|min:2|max:200',
+          'store_name' => 'bail|nullable|min:2|max:50|string',
+          'phone_number' => 'bail|nullable|unique:users,phone_number|min:2|max:999999999',
+           
+           'address'=>'bail|nullable|string|min:2|max:50',
+          'city'=>'bail|nullable|string|min:2|max:50',
+          'state'=>'bail|nullable|string|min:2|max:50',
+          
+          'pin'=>'bail|nullable|numeric|min:2|max:999999',
+          'latitude'=>'bail|nullable|numeric|min:-180|max:180',
+          'longitude'=>'bail|nullable|numeric|min:-180|max:180',
+          'landmark'=>'bail|nullable|string|min:2|max:200',
 
-          'machine_count'=>'bail|required|numeric|min:1|max:9999',
-          'boiler_count'=>'bail|required|numeric|min:1|max:9999',
-          'machine_type'=>'bail|required|string|min:1|max:500',
-          'boiler_type'=>'bail|required|string|min:1|max:500',
-          'iron_count'=>'bail|required|numeric|min:1|max:9999',
+          'machine_count'=>'bail|nullable|numeric|min:1|max:9999',
+          'boiler_count'=>'bail|nullable|numeric|min:1|max:9999',
+          'machine_type'=>'bail|nullable|string|min:1|max:500',
+          'boiler_type'=>'bail|nullable|string|min:1|max:500',
+          'iron_count'=>'bail|nullable|numeric|min:1|max:9999',
         ]);
 
         $request->session()->put('store_data', $request->only("address_id", 'email', 'name', 'store_name', 'phone_number', 'machine_count','machine_type', 'boiler_type', 'boiler_count'));
@@ -291,24 +308,25 @@ class StoreController extends Controller
       $validatedData = $request->validate([
           'email' => 'bail|required|unique:users,email',
           'name' => 'bail|required|min:2|max:50|string',
-          'user_id'=>['bail','nullable', 'numeric'],
-          'store_name' => 'bail|required|min:2|max:50|string',
-          'phone_number' => 'bail|required|unique:users,phone_number|min:2|max:999999999',
           
-          'address'=>'bail|required|string|min:2|max:50',
-          'city'=>'bail|required|string|min:2|max:50',
-          'state'=>'bail|required|string|min:2|max:50',
-          'pin'=>'bail|required|numeric|min:2|max:999999',
-          'latitude'=>'bail|required|numeric|min:-180|max:180',
-          'longitude'=>'bail|required|numeric|min:-180|max:180',
-          'landmark'=>'bail|required|string|min:2|max:200',
+          'user_id'=>['bail','nullable', 'numeric'],
+          'store_name' => 'bail|nullable|min:2|max:50|string',
+          'phone_number' => 'bail|nullable|unique:users,phone_number|min:2|max:999999999',
+          
+          'address'=>'bail|nullable|string|min:2|max:50',
+          'city'=>'bail|nullable|string|min:2|max:50',
+          'state'=>'bail|nullable|string|min:2|max:50',
+          'pin'=>'bail|nullable|numeric|min:2|max:999999',
+          'latitude'=>'bail|nullable|numeric|min:-180|max:180',
+          'longitude'=>'bail|nullable|numeric|min:-180|max:180',
+          'landmark'=>'bail|nullable|string|min:2|max:200',
 
 
-          'machine_count'=>'bail|required|numeric|min:1|max:9999',
-          'boiler_count'=>'bail|required|numeric|min:1|max:9999',
-          'machine_type'=>'bail|required|string|min:1|max:500',
-          'boiler_type'=>'bail|required|string|min:1|max:500',
-          'iron_count'=>'bail|required|numeric|min:1|max:9999',
+          'machine_count'=>'bail|nullable|numeric|min:1|max:9999',
+          'boiler_count'=>'bail|nullable|numeric|min:1|max:9999',
+          'machine_type'=>'bail|nullable|string|min:1|max:500',
+          'boiler_type'=>'bail|nullable|string|min:1|max:500',
+          'iron_count'=>'bail|nullable|numeric|min:1|max:9999',
           
           'property_type'=>'bail|required|numeric|min:1|max:2',
           'store_size'=>'bail|required_if:property_type,1|nullable|numeric|min:1|max:9999',
@@ -329,22 +347,24 @@ class StoreController extends Controller
       $validatedData = $request->validate([
           'email' => 'bail|required|unique:users,email',
           'name' => 'bail|required|min:2|max:50|string',
+          
           'user_id'=>['bail', 'nullable', 'numeric'],
-          'address'=>'bail|required|string|min:2|max:50',
-          'city'=>'bail|required|string|min:2|max:50',
-          'state'=>'bail|required|string|min:2|max:50',
-          'pin'=>'bail|required|numeric|min:2|max:999999',
-          'latitude'=>'bail|required|numeric|min:-180|max:180',
-          'longitude'=>'bail|required|numeric|min:-180|max:180',
-          'landmark'=>'bail|required|string|min:2|max:200',
+          'address'=>'bail|nullable|string|min:2|max:50',
+          'city'=>'bail|nullable|string|min:2|max:50',
+          'state'=>'bail|nullable|string|min:2|max:50',
+          'pin'=>'bail|nullable|numeric|min:2|max:999999',
+          'latitude'=>'bail|nullable|numeric|min:-180|max:180',
+          'longitude'=>'bail|nullable|numeric|min:-180|max:180',
+          'landmark'=>'bail|nullable|string|min:2|max:200',
 
-          'store_name' => 'bail|required|min:2|max:50|string',
-          'phone_number' => 'bail|required|unique:users,phone_number|min:2|max:999999999',
-          'machine_count'=>'bail|required|numeric|min:1|max:9999',
-          'boiler_count'=>'bail|required|numeric|min:1|max:9999',
-          'machine_type'=>'bail|required|string|min:1|max:500',
-          'boiler_type'=>'bail|required|string|min:1|max:500',
-          'iron_count'=>'bail|required|numeric|min:1|max:9999',
+          'store_name' => 'bail|nullable|min:2|max:50|string',
+          'phone_number' => 'bail|nullable|unique:users,phone_number|min:2|max:999999999',
+          'machine_count'=>'bail|nullable|numeric|min:1|max:9999',
+          'boiler_count'=>'bail|nullable|numeric|min:1|max:9999',
+          'machine_type'=>'bail|nullable|string|min:1|max:500',
+          'boiler_type'=>'bail|nullable|string|min:1|max:500',
+          'iron_count'=>'bail|nullable|numeric|min:1|max:9999',
+          
           'property_type'=>'bail|required|numeric|min:1|max:2',
           'store_size'=>'bail|required_if:property_type,1|nullable|numeric|min:1|max:9999',
           'store_rent'=>'bail|required_if:property_type,1|nullable|numeric|min:1|max:9999',
@@ -372,5 +392,12 @@ class StoreController extends Controller
         return response()->json(["message"=>'Data stored temporarly'], 200);
      }
 
+    }
+
+    public function status(Request $request, $id)
+    {
+      $delete = User::where(['id'=>$id])->update($request->only('status'));
+
+      return response()->json(["message"=>"Store updated!"], 200);
     }
 }

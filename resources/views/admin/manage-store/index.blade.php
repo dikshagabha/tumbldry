@@ -30,6 +30,7 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
         <th>Email</th>
         <th>Phone Number</th>
         <th>Store Name</th>
+        <th>Status</th>
         <th>Options</th>
       </tr>
     </thead>
@@ -51,6 +52,17 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
         </td>
         <td>
           {{$user->store_name}}
+        </td>
+        <td>
+          @if($user->status==0)
+            <a href="{{route('manage-store.status', $user->id)}}" class="status" data-status="1">
+              <span class="badge badge-warning">Inactive</span>
+            </a>
+          @else
+            <a href="{{route('manage-store.status', $user->id)}}" class="status" data-status="0">
+              <span class="badge badge-success">Active</span>
+            </a>
+          @endif
         </td>
         <td>
             <a href="{{route('manage-store.edit',encrypt( $user->id))}}" title="edit">
@@ -142,7 +154,48 @@ $(document).ready(function(){
               }
           }
       });
+  })
 
+  $(document).on('click', '.status', function(e){
+    e.preventDefault();
+    current = $(this);
+    if (current.data('status')==1) 
+    {
+      message = "Are you sure you want to activate this user?"
+    }
+    else{
+      message = "Are you sure you want to inactivate this user?"
+    }
+          bootbox.confirm({
+          title: "Confirm",
+          message: message,
+          buttons: {
+              cancel: {
+                  label: '<i class="fa fa-times"></i> Cancel'
+              },
+              confirm: {
+                  label: '<i class="fa fa-check"></i> Confirm'
+              }
+          },
+          callback: function (result) {
+              if(result){
+                $('body').waitMe();
+
+
+                $.ajax({
+                  url: current.attr('href'),
+                  type:"post",
+                  data:{
+                    'status':current.data('status')
+                  },
+                  success: function(){
+                    $('body').waitMe("hide");
+                    window.location.reload()
+                  },
+                })
+              }
+          }
+      });
   })
 
 

@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Manage Frenchise')
+@section('title', 'Manage Franchise')
 @section('content')
 @php
 $i = ($users->currentpage() - 1) * $users->perPage() + 1;
@@ -14,7 +14,7 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
             <div class="col-md-9">
             </div>
             <div class="col-md-3">
-              <a href="{{route('manage-frenchise.create')}}"><button class="btn btn-danger">Add New Frenchise</button></a>
+              <a href="{{route('manage-frenchise.create')}}"><button class="btn btn-danger">Add New Franchise</button></a>
             </div>
           </div>
             <br>

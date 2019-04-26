@@ -30,6 +30,14 @@
           </ul>
         </div>
       </li> -->
+      <li class="nav-item{{ $activePage == 'frenchise' ? ' active' : '' }}">
+        <a class="nav-link" href="{{ route('manage-frenchise.index') }}">
+           <i class="material-icons">assessment</i>
+          <p>{{ __('Franchise') }}</p>
+          
+        </a>
+      </li>
+
       <li class="nav-item{{ $activePage == 'store' ? ' active' : '' }}">
         <a class="nav-link" href="{{ route('manage-store.index') }}">
           <i class="material-icons">accessibility</i>
@@ -37,20 +45,14 @@
         </a>
       </li>
 
-      <li class="nav-item{{ $activePage == 'frenchise' ? ' active' : '' }}">
-              <a class="nav-link" href="{{ route('manage-frenchise.index') }}">
-                 <i class="material-icons">assessment</i>
-                <p>{{ __('Frenchise') }}</p>
-                
-              </a>
-            </li>
+      
       <li class="nav-item{{ $activePage == 'service' ? ' active' : '' }}">
-              <a class="nav-link" href="{{ route('manage-service.index') }}">
-                 <i class="material-icons">build</i>
-                <p>{{ __('Service') }}</p>
-                
-              </a>
-            </li>      
+        <a class="nav-link" href="{{ route('manage-service.index') }}">
+           <i class="material-icons">build</i>
+          <p>{{ __('Service') }}</p>
+          
+        </a>
+      </li>      
     </ul>
   </div>
 </div>
