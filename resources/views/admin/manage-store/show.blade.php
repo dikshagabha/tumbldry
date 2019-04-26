@@ -61,7 +61,11 @@ Machines Information
 	</tr>
 	<tr>
 		<td class="table-modal">Type of Machines</td>
-		<td class="table-modal">{{$data->where('type', 1)->first()->name}}</td>
+		<td class="table-modal">@if($data->where('type', 1)->count())
+							{{$data->where('type', 1)->first()->name}}
+							@else
+								--
+							@endif</td>
 	</tr>
 	<tr>
 		<td class="table-modal">Count of Boiler</td>
@@ -69,7 +73,11 @@ Machines Information
 	</tr>
 	<tr>
 		<td class="table-modal">Type of Boiler</td>
-		<td class="table-modal">{{$data->where('type', 2)->first()->name}}</td>
+		<td class="table-modal">@if($data->where('type',2 )->count())
+							{{$data->where('type', 2)->first()->name}}
+							@else
+								--
+							@endif</td>
 	</tr>
 	<tr>
 		<td class="table-modal">Count of Ironing Tables</td>

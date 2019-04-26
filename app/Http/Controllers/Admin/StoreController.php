@@ -250,7 +250,7 @@ class StoreController extends Controller
           'name' => 'bail|required|min:2|max:50|string',
           'user_id'=>['bail', 'nullable', 'numeric'],
           'store_name' => 'bail|nullable|min:2|max:50|string',
-          'phone_number' => 'bail|nullable|unique:users,phone_number|min:2|max:999999999',
+          'phone_number' => 'bail|required|unique:users,phone_number|min:2|max:999999999',
         ]);
 
         $request->session()->put('store_data', $request->only("address_id", 'email', 'name', 'store_name', 'phone_number'));
@@ -263,7 +263,7 @@ class StoreController extends Controller
           
           'user_id'=>['bail','nullable', 'numeric'],
           'store_name' => 'bail|nullable|min:2|max:50|string',
-          'phone_number' => 'bail|nullable|unique:users,phone_number|min:2|max:999999999',
+          'phone_number' => 'bail|required|unique:users,phone_number|min:2|max:999999999',
           
           'address'=>'bail|nullable|string|min:2|max:50',
           'city'=>'bail|nullable|string|min:2|max:50',
@@ -282,7 +282,7 @@ class StoreController extends Controller
           'name' => 'bail|required|min:2|max:50|string',
           'user_id'=>['bail','nullable', 'numeric'],
           'store_name' => 'bail|nullable|min:2|max:50|string',
-          'phone_number' => 'bail|nullable|unique:users,phone_number|min:2|max:999999999',
+          'phone_number' => 'bail|required|unique:users,phone_number|min:2|max:999999999',
            
            'address'=>'bail|nullable|string|min:2|max:50',
           'city'=>'bail|nullable|string|min:2|max:50',
@@ -311,7 +311,7 @@ class StoreController extends Controller
           
           'user_id'=>['bail','nullable', 'numeric'],
           'store_name' => 'bail|nullable|min:2|max:50|string',
-          'phone_number' => 'bail|nullable|unique:users,phone_number|min:2|max:999999999',
+          'phone_number' => 'bail|required|unique:users,phone_number|min:2|max:999999999',
           
           'address'=>'bail|nullable|string|min:2|max:50',
           'city'=>'bail|nullable|string|min:2|max:50',
@@ -358,7 +358,7 @@ class StoreController extends Controller
           'landmark'=>'bail|nullable|string|min:2|max:200',
 
           'store_name' => 'bail|nullable|min:2|max:50|string',
-          'phone_number' => 'bail|nullable|unique:users,phone_number|min:2|max:999999999',
+          'phone_number' => 'bail|required|unique:users,phone_number|min:2|max:999999999',
           'machine_count'=>'bail|nullable|numeric|min:1|max:9999',
           'boiler_count'=>'bail|nullable|numeric|min:1|max:9999',
           'machine_type'=>'bail|nullable|string|min:1|max:500',

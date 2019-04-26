@@ -31,8 +31,9 @@ class AddStoreRequest extends FormRequest
           'email'=>['bail','required', 'email','unique:users,email,'.$id, 'min:2', 'max:100'],
           
           'store_name'=>['bail','nullable','string', 'min:2', 'max:100'],
-          'phone_number'=>['bail','nullable','numeric', 'unique:users,phone_number,'.$id, 'min:2', 'max:9999999999'],
+          'phone_number'=>['bail','required','numeric', 'unique:users,phone_number,'.$id, 'min:2', 'max:9999999999'],
           'user_id'=>['bail','nullable', 'numeric'],
+          
           'address'=>'bail|nullable|string|min:2|max:50',
           'city'=>'bail|nullable|string|min:2|max:50',
           'state'=>'bail|nullable|string|min:2|max:50',
@@ -79,14 +80,24 @@ class AddStoreRequest extends FormRequest
         return [
           'email' => 'bail|required|unique:users,email',
           'name' => 'bail|required|min:2|max:50|string',
-          //'address_id'=>['bail','required', 'numeric'],
-          'store_name' => 'bail|required|min:2|max:50|string',
+          
+          'address'=>'bail|nullable|string|min:2|max:50',
+          'city'=>'bail|nullable|string|min:2|max:50',
+          'state'=>'bail|nullable|string|min:2|max:50',
+          'pin'=>'bail|nullable|numeric|min:2|max:999999',
+          'latitude'=>'bail|nullable|numeric|min:-180|max:180',
+          'longitude'=>'bail|nullable|numeric|min:-180|max:180',
+          'landmark'=>'bail|nullable|string|min:2|max:200',
+
+          'store_name' => 'bail|nullable|min:2|max:50|string',
           'phone_number' => 'bail|required|unique:users,phone_number|min:2|max:999999999',
-          'machine_count'=>'bail|required|numeric|min:1|max:9999',
-          'boiler_count'=>'bail|required|numeric|min:1|max:9999',
-          'machine_type'=>'bail|required|string|min:1|max:500',
-          'boiler_type'=>'bail|required|string|min:1|max:500',
-          'iron_count'=>'bail|required|numeric|min:1|max:9999',
+          'machine_count'=>'bail|nullable|numeric|min:1|max:9999',
+          'boiler_count'=>'bail|nullable|numeric|min:1|max:9999',
+          'machine_type'=>'bail|nullable|string|min:1|max:500',
+          'boiler_type'=>'bail|nullable|string|min:1|max:500',
+          'iron_count'=>'bail|nullable|numeric|min:1|max:9999',
+          
+
           'property_type'=>'bail|required|numeric|min:1|max:2',
           'store_size'=>'bail|required_if:property_type,1|nullable|numeric|min:1|max:9999',
           'store_rent'=>'bail|required_if:property_type,1|nullable|numeric|min:1|max:9999',
