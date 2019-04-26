@@ -1,154 +1,116 @@
-<!doctype html>
-<html  lang="en">
+@extends('layouts.app', ['class' => 'off-canvas-sidebar', 'activePage' => 'login', 'title' => __('Login')])
 
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Login</title>
-    <meta name="description" content="">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- favicon
-		============================================ -->
-    <link rel="shortcut icon" type="image/x-icon" href="img/favicon.ico">
-    <!-- Google Fonts
-		============================================ -->
-    <link href="https://fonts.googleapis.com/css?family=Play:400,700" rel="stylesheet">
-    <!-- Bootstrap CSS
-		============================================ -->
-    <link rel="stylesheet" href="{{asset('css/bootstrap.min.css')}}">
-    <!-- Bootstrap CSS
-		============================================ -->
-    <link rel="stylesheet" href="{{asset('css/font-awesome.min.css')}}">
-    <!-- owl.carousel CSS
-		============================================ -->
-    <link rel="stylesheet" href="{{asset('css/owl.carousel.css')}}">
-    <link rel="stylesheet" href="{{asset('css/owl.theme.css')}}">
-    <link rel="stylesheet" href="{{asset('css/owl.transitions.css')}}">
-    <!-- animate CSS
-		============================================ -->
-    <link rel="stylesheet" href="css/animate.css">
-    <!-- normalize CSS
-		============================================ -->
-    <link rel="stylesheet" href="{{asset('css/normalize.css')}}">
-    <!-- main CSS
-		============================================ -->
-    <link rel="stylesheet" href="{{asset('css/main.css')}}">
-    <!-- morrisjs CSS
-		============================================ -->
-    <link rel="stylesheet" href="{{asset('css/morrisjs/morris.css')}}">
-    <!-- mCustomScrollbar CSS
-		============================================ -->
-    <link rel="stylesheet" href="{{asset('css/scrollbar/jquery.mCustomScrollbar.min.css')}}">
-    <!-- metisMenu CSS
-		============================================ -->
-    <link rel="stylesheet" href="{{asset('css/metisMenu/metisMenu.min.css')}}">
-    <link rel="stylesheet" href="{{asset('css/metisMenu/metisMenu-vertical.css')}}">
-
-    <!-- forms CSS
-		============================================ -->
-    <link rel="stylesheet" href="{{asset('css/form/all-type-forms.css')}}">
-    <!-- style CSS
-		============================================ -->
-    <link rel="stylesheet" href="{{asset('css/style.css')}}">
-    <!-- responsive CSS
-		============================================ -->
-    <link rel="stylesheet" href="{{asset('css/responsive.css')}}">
-    <!-- modernizr JS
-		============================================ -->
-    <script src="{{asset('js/vendor/modernizr-2.8.3.min.js')}}"></script>
-
-</head>
-
-<body>
-    <div class="bgimage"></div>
-	<div class="error-pagewrap">
-		<div class="error-page-int">
-
-			<div class="content-error">
-				<div class="hpanel">
-                  <div class="panel-body">
-                    <div class="text-center m-b-md custom-login">
-                      <h3>STORE LOGIN</h3>
-                    </div>
-                        <form method="POST" action="{{ route('login') }}" id="loginForm">
-                          @csrf
-                            <div class="form-group">
-                                <label class="control-label" for="email">Email</label>
-                                <!-- <input type="text" placeholder="example@gmail.com" title="Please enter you email" required="" value="" name="username" id="username" class="form-control"> -->
-                                <input id="email" type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ old('email') }}" required autofocus>
-                                @if ($errors->has('email'))
-                                    <label class="invalid-feedback error" role="alert">
-                                        <strong>{{ $errors->first('email') }}</strong>
-                                    </label>
-                                @endif
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label" for="password">Password</label>
-                                <input id="password" type="password" title="Please enter your password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" required>
-
-                                @if ($errors->has('password'))
-                                    <label class="invalid-feedback error" role="alert">
-                                        <strong>{{ $errors->first('password') }}</strong>
-                                    </label>
-                                @endif
-                              </div>
-
-                            <div class="checkbox login-checkbox form-group">
-                              <label for="remember" class="control-label">
-                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input class="i-checks" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
-                                  {{ __('Remember Me') }}
-                              </label>
-
-                            </div>
-                            <div class="password">
-                            <!-- @if (Route::has('password.request'))
-                                <a  href="{{ route('password.request') }}">
-                                    {{ __('Forgot Your Password?') }}
-                                </a><br2>
-                            @endif -->
-                          </div>
-                            <!-- <button class="btn btn-success btn-block loginbtn">Login</button> -->
-                            <div style="text-align:center">
-                            <button type="submit" class="btn btn-primary">
-                                {{ __('Login') }}
-                            </button>
-                          </div>
-                        </form>
-
-
-                    </div>
-                </div>
-			</div>
-
-		</div>
+@section('content')
+<div class="container" style="height: auto;">
+  <div class="row align-items-center">
+    <div class="col-md-9 ml-auto mr-auto mb-3 text-center">
+      <h3> </h3>
     </div>
-</body>
+    <div class="col-lg-4 col-md-6 col-sm-8 ml-auto mr-auto">
+      <form class="form" method="POST" action="{{ route('login') }}" id="loginForm">
+        @csrf
 
-<script src="{{asset('js/jquery.min.js')}}"></script>
-<script>
-  $(document).ready(function(){
+        <div class="card card-login card-hidden mb-3">
+          <div class="card-header card-header-primary text-center">
+            <h4 class="card-title"><strong>{{ __('Login') }}</strong></h4>
+            <div class="social-line">
+              <!-- a href="#pablo" class="btn btn-just-icon btn-link btn-white">
+                <i class="fa fa-facebook-square"></i>
+              </a>
+              <a href="#pablo" class="btn btn-just-icon btn-link btn-white">
+                <i class="fa fa-twitter"></i>
+              </a>
+              <a href="#pablo" class="btn btn-just-icon btn-link btn-white">
+                <i class="fa fa-google-plus"></i>
+              </a> -->
+            </div>
+          </div>
+          <div class="card-body">
+            
+            <div class="bmd-form-group{{ $errors->has('email') ? ' has-danger' : '' }}">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">
+                    <i class="material-icons">email</i>
+                  </span>
+                </div>
+                <input type="email" name="email" class="form-control" placeholder="{{ __('Email...') }}" required>
+              </div>
+              <span class="error" id="email_error"></span>
+              @if ($errors->has('email'))
+                <div id="email-error" class="error text-danger pl-3" for="email" style="display: block;">
+                  <strong>{{ $errors->first('email') }}</strong>
+                </div>
+              @endif
+            </div>
+            <div class="bmd-form-group{{ $errors->has('password') ? ' has-danger' : '' }} mt-3">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">
+                    <i class="material-icons">lock_outline</i>
+                  </span>
+                </div>
+                <input type="password" name="password" id="password" class="form-control" placeholder="{{ __('Password...') }}"  required>
+              </div>
 
-  var header = $('.bgimage');
+              <span class="error" id="password_error"></span>
+              @if ($errors->has('password'))
+                <div id="password-error" class="error text-danger pl-3" for="password" style="display: block;">
+                  <strong>{{ $errors->first('password') }}</strong>
+                </div>
+              @endif
+            </div>
+            <div class="form-check mr-auto ml-3 mt-3">
+              <label class="form-check-label">
+                <input class="form-check-input" type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }}> {{ __('Remember me') }}
+                <span class="form-check-sign">
+                  <span class="check"></span>
+                </span>
+              </label>
+            </div>
+          </div>
+          <div class="card-footer justify-content-center">
+            <button type="submit" class="btn btn-primary btn-link btn-lg" id="login">{{ __('Login') }}</button>
+          </div>
+        </div>
+      </form>
+      <div class="row">
+        <div class="col-6">
+            <!-- @if (Route::has('password.request'))
+                <a href="{{ route('password.request') }}" class="text-light">
+                    <small>{{ __('Forgot password?') }}</small>
+                </a>
+            @endif -->
+        </div>
+        <div class="col-6 text-right">
+            
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+@endsection
 
-  var backgrounds = new Array(
-      'url({{asset("images/bg1.jpg")}})'
-    , 'url({{asset("images/bg2.jpg")}})'
-    , 'url({{asset("images/bg3.jpg")}})'
-  );
-console.log(backgrounds);
-  var current = 0;
+@push('js')
+<script type="text/javascript">
+    
+    // $(document).ready(function(){
+    //   $(document).on('click', '#login', function(e){
+    //     e.preventDefault();
+    //     $('body').waitMe();
+    //     $.ajax({
+    //       url: $("#loginForm").attr('action'),
+    //       type: $('#loginForm').attr('method'),
+    //       data: $('#loginForm').serializeArray(),
+    //       dataType:'json',
+    //       success: function(data){
+    //         success(data.message);
+    //         window.location=data.redirectTo;
+    //         $('body').waitMe('hide');
+    //       }
+    //     })
 
-  function nextBackground() {
-      current++;
-      current = current % backgrounds.length;
-      header.css('background-image', backgrounds[current]);
-  }
-  setInterval(nextBackground, 10000);
-
-  header.css('background-image', backgrounds[0]);
-  // header.css('background-size', 'cover');
-  // header.css('filter', 'blur(5px)');
-
-  });
+    //   })
+    // })
 </script>
-</html>
+@endpush

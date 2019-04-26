@@ -1,115 +1,109 @@
-@extends('admin.layout.app')
+@extends('layouts.app')
 @section('title', 'Manage Frenchise')
 
 @section('content')
 @section('css')
   <link rel="stylesheet" href="{{ asset('css/chosen/bootstrap-chosen.css') }}">
 @endsection
-<br>
-<form action="{{route('manage-frenchise.store')}}" method="post"  id="addFrenchise">
-  @csrf
-<div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
-  <div class="all-form-element-inner">
-    <div class="form-group-inner">
+
+
+<div class="content">
+    <div class="container-fluid">
       <div class="row">
-           <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-             <label class="login2 pull-right pull-right-pro">Name</label>
-           </div>
-           <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
-             <input type="text" class="form-control" name="store_name" maxlength="100" value=""/>
-             <span class="error" id="store_name_error"></span>
-           </div>
-         </div>
-       </div>
-<!-- 
-     <div class="form-group-inner">
-       <div class="row">
-            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-              <label class="login2 pull-right pull-right-pro">Address</label>
-            </div>
-            <div class="col-lg-7 col-md-7 col-sm-7 col-xs-10">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+          <div class="card card-stats">
+            <br>
+            <form action="{{route('manage-frenchise.store')}}" method="post"  id="addFrenchise">
+              @csrf
+              <div class="row">
 
-              <span  id="added_address">
+            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
+             
+                <div class="form-group-inner">
+                  <div class="row">
+                       <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                         <label class="login2 pull-right pull-right-pro">Name</label>
+                       </div>
+                       <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+                         <input type="text" class="form-control" name="store_name" maxlength="100" value=""/>
+                         <span class="error" id="store_name_error"></span>
+                       </div>
+                     </div>
+                   </div>
+
+                   <div class="form-group-inner">
+                  <div class="row">
+                       <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                         <label class="login2 pull-right pull-right-pro">Contact Person:</label>
+                       </div>
+                       <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+                         
+                       </div>
+                     </div>
+                   </div>
+
+
+                   <div class="form-group-inner">
+                  <div class="row">
+                       <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                         <label class="login2 pull-right pull-right-pro">Name</label>
+                       </div>
+                       <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+                         <input type="text" class="form-control" name="name" maxlength="50" value=""/>
+                          <span class="error" id="name_error"></span>
+                       </div>
+                     </div>
+                   </div>
+
+
+                   <div class="form-group-inner">
+                  <div class="row">
+                       <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                         <label class="login2 pull-right pull-right-pro">Email</label>
+                       </div>
+                       <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+                         <input type="text" class="form-control" name="email" maxlength="50" value=""/>
+                          <span class="error" id="email_error"></span>
+                       </div>
+                     </div>
+                   </div>
+
+                    <div class="form-group-inner">
+                  <div class="row">
+                       <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                         <label class="login2 pull-right pull-right-pro">Phone Number</label>
+                       </div>
+                       <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+                         <input type="text" class="form-control" name="phone_number" maxlength="50" value=""/>
+                          <span class="error" id="phone_number_error"></span>
+                       </div>
+                     </div>
+                   </div>
+
+             
+
                 
-            
-              <input type="hidden" name="address_id" id="address_id">
-              <span class="error" id="address_id_error"></span>
-            </div>
-            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
-              <button type="button" class="btn btn-primary" id="add_address" data-url="{{route('admin.addAddress')}}">Add Address</button>
-              <button type="button" class="btn btn-primary" id="edit_address" style="display: none;">Edit Address</button>
-            </div>
-          </div>
-        </div> -->
-
-        <div class="form-group-inner">
-          <div class="row">
-              <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                <label class="login2 pull-right pull-right-pro">Contact Person:</label>
+               <div class="form-group-inner">
+                 <div class="row">
+                   <div class="col-lg-3 col-md-3 col-sm-3">
+                  </div>
+                   <div class="col-lg-3 col-md-3 col-sm-3">
+                    <a href="{{route('manage-frenchise.index')}}"> <button type="button" class="btn">Cancel</button> </a>
+                   </div>
+                   <div class="col-lg-5 col-md-5 col-sm-5">
+                     <button type="submit" class="btn btn-primary" id="add_frenchise" >Add Frenchise</button>
+                   </div>
+                  </div>
+                </div>
               </div>
-              <div class="col-lg-9 col-md-9 col-sm-9 col-xs-10">
-                  <div class="col-lg-3 col-md-3 col-sm-3 col-xs-5">
-                    <label class="login2 pull-right pull-right-pro">Name</label>
-                  </div>
-                  <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
-                    <input type="text" class="form-control" name="name" maxlength="50" value=""/>
-                    <span class="error" id="name_error"></span>
-                  </div>
-              </div>           
             </div>
-        </div>
-        <div class="form-group-inner">
-          <div class="row">
-              <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                <label class="login2 pull-right pull-right-pro"></label>
-              </div>
-              <div class="col-lg-9 col-md-9 col-sm-9 col-xs-10">
-                  <div class="col-lg-3 col-md-3 col-sm-3 col-xs-5">
-                    <label class="login2 pull-right pull-right-pro">Email</label>
-                    
-                  </div>
-                  <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
-                    <input type="text" class="form-control" name="email" maxlength="50" value=""/>
-                    <span class="error" id="email_error"></span>
-                  </div>
-              </div>           
-            </div>
-        </div>
-        <div class="form-group-inner">
-          <div class="row">
-              <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                <label class="login2 pull-right pull-right-pro"></label>
-              </div>
-              <div class="col-lg-9 col-md-9 col-sm-9 col-xs-10">
-                  <div class="col-lg-3 col-md-3 col-sm-3 col-xs-5">
-                    <label class="login2 pull-right pull-right-pro">Phone Number</label>
-                  </div>
-                  <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
-                    <input type="text" class="form-control" name="phone_number" maxlength="15" value=""/>
-                    <span class="error" id="phone_number_error"></span>
-                  </div>
-              </div>           
-            </div>
-        </div>
-
-          
-         <div class="form-group-inner">
-           <div class="row">
-             <div class="col-lg-3 col-md-3 col-sm-3">
-            </div>
-             <div class="col-lg-3 col-md-3 col-sm-3">
-              <a href="{{route('manage-frenchise.index')}}"> <button type="button" class="btn">Cancel</button> </a>
-             </div>
-             <div class="col-lg-5 col-md-5 col-sm-5">
-               <button type="submit" class="btn btn-primary" id="add_frenchise" >Add Frenchise</button>
-             </div>
-            </div>
-          </div>
-
-
-      </div>
-   </div>
 </form>
+<br>
+</div>
+</div>
+</div>
+</div>
+</div>
 
 <div id="addressModal" class="modal fade" role="dialog">
   <div class="modal-dialog">
@@ -133,7 +127,7 @@
 </div>
 @endsection
 
-@section('js')
+@push('js')
 <script src="{{asset('js/chosen/chosen.jquery.min.js')}}"></script>
 <script>
 $(document).ready(function(){
@@ -237,4 +231,4 @@ $(document).ready(function(){
 <!-- <script src="https://maps.googleapis.com/maps/api/js?key=2&libraries=places&callback=initMap"
         async defer></script> -->
 
-@endsection
+@endpush

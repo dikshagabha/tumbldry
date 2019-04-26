@@ -14,7 +14,8 @@ class StoreUserSeed extends Seeder
         DB::table('users')->insert([
             'name' => str_random(6),
             'email' => 'test@yopmail.com',
-            'password' => bcrypt('test@123')
+            'password' => bcrypt('test@123'),
+            'role'=>1
         ]);
 
     }

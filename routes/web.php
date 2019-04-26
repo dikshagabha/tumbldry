@@ -24,6 +24,11 @@ Route::prefix('admin')->group(function () {
   Route::get('/', function () {
       return redirect()->route('login');
   });
+
+
+  Route::post('/admin-login', 'Auth\LoginController@adminLogin')->name('admin.login');
+
+
   Route::group(['middleware' => ['admin']], function () {
     Route::get('/home', 'HomeController@index')->name('home');
     Route::get('/dashboard', 'HomeController@index')->name('dashboard');
@@ -47,7 +52,7 @@ Route::prefix('admin')->group(function () {
     Route::get('/pin-details', 'HomeController@getPinDetails')->name('getPinDetails');
 
 
-    Route::post('/logout', 'Auth\LoginController@logout')->name('store.logout');
+    Route::post('/logout', 'Auth\LoginController@logout')->name('admin.logout');
 
   });
 

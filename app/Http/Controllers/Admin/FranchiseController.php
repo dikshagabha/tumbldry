@@ -17,10 +17,12 @@ class FranchiseController extends Controller
      */
     public function index()
     {
+        $activePage = 'frenchise';
+        $titlePage  = 'Frenchise Details';
         $users = User::where('role', 2)->paginate(10);
 
 
-        return view('admin.manage-franchise.index', compact('users'));
+        return view('admin.manage-franchise.index', compact('users', 'titlePage', 'activePage'));
 
     }
 
@@ -31,8 +33,10 @@ class FranchiseController extends Controller
      */
     public function create()
     {
+        $activePage = 'frenchise';
+        $titlePage  = 'Create Frenchise';
         $address = Address::get();
-        return view('admin.manage-franchise.create', compact('address'));
+        return view('admin.manage-franchise.create', compact('address', 'titlePage', 'activePage'));
     }
 
     /**
@@ -43,6 +47,8 @@ class FranchiseController extends Controller
      */
     public function store(StoreFrenchiseRequest $request)
     {
+       
+
       $user = User::create(['name'=>$request->input('name'),'store_name'=>$request->input('store_name'),'email'=>$request->input('email'),'phone_number'=>$request->input('phone_number'), 'role'=>2]);
 
       //$add = UserAddress::create(['user_id'=>$user->id, 'address_id'=>$request->input('address_id')]);
@@ -69,10 +75,12 @@ class FranchiseController extends Controller
      */
     public function edit($id)
     {
+        $activePage = 'frenchise';
+        $titlePage  = 'Create Frenchise';
 
       $user = User::where("id", decrypt($id))->first();
       $address = Address::get();
-      return view('admin.manage-franchise.edit', compact('address', 'user', 'id'));
+      return view('admin.manage-franchise.edit', compact('address', 'user', 'id', 'activePage', 'titlePage'));
 
     }
 

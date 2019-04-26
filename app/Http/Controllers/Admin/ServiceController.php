@@ -17,8 +17,10 @@ class ServiceController extends Controller
    */
   public function index()
   {
+      $activePage = 'service';
+      $titlePage  = 'Service Details';
       $users = Service::with('serviceprices')->paginate(10);
-      return view('admin.manage-service.index', compact('users'));
+      return view('admin.manage-service.index', compact('users', 'activePage', 'titlePage'));
 
   }
 

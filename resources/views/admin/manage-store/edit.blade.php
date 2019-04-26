@@ -1,20 +1,32 @@
-@extends('admin.layout.app')
+@extends('layouts.app')
 @section('title', 'Manage Store')
 
 @section('content')
 @section('css')
   <link rel="stylesheet" href="{{ asset('css/chosen/bootstrap-chosen.css') }}">
 @endsection
-<br>
-<!-- <form action="{{route('manage-store.update', $id)}}" method="put"  id="addFrenchise"> -->
 
-{{ Form::model($user, ['route'=> array('manage-store.update', $id) , 'method'=>'put', 'id'=>'addFrenchise',
-                        'images'=>true]) }}
 
-  @include('admin.manage-store.form')
+<div class="content">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+          <div class="card card-stats">
+        <!-- <form action="{{route('manage-store.update', $id)}}" method="put"  id="addFrenchise"> -->
 
-{{Form::close()}}
 
+      {{ Form::model($user, ['route'=> array('manage-store.update', $id) , 'method'=>'put', 'id'=>'addFrenchise',
+                              'images'=>true]) }}
+
+        @include('admin.manage-store.form')
+
+      {{Form::close()}}
+    </div>
+  </div>
+
+    </div>
+  </div>
+</div>w
 <div id="addressModal" class="modal fade" role="dialog">
   <div class="modal-dialog">
 
@@ -37,7 +49,7 @@
 </div>
 @endsection
 
-@section('js')
+@push('js')
 <script src="{{asset('js/chosen/chosen.jquery.min.js')}}"></script>
 <script>
 $(document).ready(function(){
@@ -147,4 +159,4 @@ $(document).ready(function(){
 <!-- <script src="https://maps.googleapis.com/maps/api/js?key=2&libraries=places&callback=initMap"
         async defer></script> -->
 
-@endsection
+@endpush

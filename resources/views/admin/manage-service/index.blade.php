@@ -1,23 +1,28 @@
-@extends('admin.layout.app')
+@extends('layouts.app')
 @section('title', 'Manage Service')
 @section('content')
 
 
 @php
 $i = ($users->currentpage() - 1) * $users->perPage() + 1;
-
 @endphp
-<br>
-<div class="container-fluid">
+
+
+<div class="content">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+          <div class="card card-stats">
+
 <div class="row">
   <div class="col-md-9">
   </div>
-  <div class="col-md-3">
-    <a href="{{route('manage-service.create')}}"><button class="btn btn-danger">Add New Service</button></a>
+  <div class="col-md-3"><!-- 
+    <a href="{{route('manage-service.create')}}"><button class="btn btn-danger">Add New Service</button></a> -->
   </div>
 </div>
 <br>
-<div class="row">
+
 @if($users->count())
 
 <table class="table table-striped">
@@ -57,7 +62,7 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
           @endif
         </td>
         <td>
-            <a href="{{route('manage-service.edit', $user->id )}}" title="edit"><button type="button" class="btn btn-primary"><i class="fa fa-edit"></i></button></a>
+            <!-- <a href="{{route('manage-service.edit', $user->id )}}" title="edit"><button type="button" class="btn btn-primary"><i class="fa fa-edit"></i></button></a> -->
             <a href="{{route('manage-service.destroy', encrypt( $user->id))}}" id="delete" data-token="{{csrf_token()}}" title="delete">
               <button type="button" class="btn btn-danger"><i class="fa fa-trash"></i></button>
             </a>
@@ -75,10 +80,13 @@ No Records Found
 @endif
 </div>
 </div>
+</div>
+</div>
+</div>
 
 
 @endsection
-@section('js')
+@push('js')
 <script src="{{asset('js/bootbox.js')}}"></script>
 <script>
 $(document).ready(function(){
@@ -131,4 +139,4 @@ $(document).ready(function(){
 <!-- <script src="https://maps.googleapis.com/maps/api/js?key=2&libraries=places&callback=initMap"
         async defer></script> -->
 
-@endsection
+@endpush

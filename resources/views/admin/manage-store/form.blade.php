@@ -12,7 +12,7 @@
       <div class="card-body">
         <div class="row">
            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
-          <div class="all-form-element-inner">
+          <div class="">
             <div class="form-group-inner">
               <div class="row">
                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
@@ -63,7 +63,7 @@
                  </div>
             </div>
 
-            <div class="form-group-inner">
+            <div class="">
               <div class="row">
                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
                      <label class="login2 pull-right pull-right-pro">Frenchise</label>
@@ -324,7 +324,7 @@
                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
                      <label class="login2 pull-right pull-right-pro">Property Type</label>
                    </div>
-                   <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+                   <div class="col-lg-2 col-md-2 col-sm-2 col-xs-1">
 
                     {!! Form::radio('property_type', '2', (isset($user) && $user->property_type==2)? true: false, ['id'=>'owned_property_type']) !!}
                     

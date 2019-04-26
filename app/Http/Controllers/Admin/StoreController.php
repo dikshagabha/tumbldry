@@ -22,9 +22,11 @@ class StoreController extends Controller
      */
     public function index()
     {
+      $activePage = 'store';
+      $titlePage  = 'Store Details';
       $users = User::where('role', 3)->latest()->paginate(10);
 
-      return view('admin.manage-store.index', compact('users'));
+      return view('admin.manage-store.index', compact('users', 'activePage', 'titlePage'));
     }
 
     /**
@@ -34,12 +36,13 @@ class StoreController extends Controller
      */
     public function create()
     {
-      //$address = Address::get();
+      $activePage = 'store';
+      $titlePage  = 'Create Store';
 
       $users = User::where('role', 2)->pluck('name', 'id');
       //$users[0]='Select a Frenchise';
       
-      return view('admin.manage-store.create', compact('users'));
+      return view('admin.manage-store.create', compact('users', 'activePage', 'titlePage'));
     }
 
     /**
@@ -139,8 +142,6 @@ class StoreController extends Controller
        $id = decrypt($id);
 
        $user = User::where("id", $id)->first();
-       //dd($user);
-
        return view("admin.manage-store.show", compact('user'));
     }
 
@@ -152,10 +153,12 @@ class StoreController extends Controller
      */
     public function edit($id)
     {
+      $activePage = 'store';
+      $titlePage  = 'Edit Store';
       $user = User::where("id", decrypt($id))->first();
       $users = User::where('role', 2)->pluck('name', 'id');
 
-      return view('admin.manage-store.edit', compact('address', 'user', 'id', 'users'));
+      return view('admin.manage-store.edit', compact('address', 'user', 'id', 'users', 'activePage', 'titlePage'));
     }
 
     /**
