@@ -76,7 +76,7 @@ class FranchiseController extends Controller
     public function edit($id)
     {
         $activePage = 'frenchise';
-        $titlePage  = 'Create Franchise';
+        $titlePage  = 'Edit Franchise';
 
       $user = User::where("id", decrypt($id))->first();
       $address = Address::get();
