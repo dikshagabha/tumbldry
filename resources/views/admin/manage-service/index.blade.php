@@ -3,85 +3,51 @@
 @section('content')
 
 
-@php
-$i = ($users->currentpage() - 1) * $users->perPage() + 1;
-@endphp
-
 
 <div class="content">
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12">
-          <div class="card card-stats">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-lg-12 col-md-12 col-sm-12">
+        <div class="card card-stats">
 
-<div class="row">
-  <div class="col-md-9">
+          <div class="row">
+            <div class="col-md-9">
+            </div>
+            <div class="col-md-3"><!-- 
+              <a href="{{route('manage-service.create')}}"><button class="btn btn-danger">Add New Service</button></a> -->
+            </div>
+          </div>
+          <br>
+          <div class="">
+            {{ Form::open(['method' => 'get', 'id' => 'store-search', 'name' => 'serach_form']) }}
+            <div class="form-group-inner">
+                <div class="row">
+                  <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
+                  </div>
+                     <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                      {{ Form::text('search', '', ['class' => 'form-control', 'placeholder' => 'Search by Name', 'maxlength'=>'50']) }}
+                     </div>
+                     <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                      {{ Form::select('sort_type', ['' => 'Select Type', '1' => 'Main', '0' => 'Addon'], null, ['class' => 'form-control', 'id' => 'sort_type']) }}
+                       
+                     </div>
+                     <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                      <button type="submit" id="search-button" class="btn btn-success margin-bottom-20">Filter</button>
+                    <button type="submit" id="reset-button" class="btn btn-danger margin-bottom-20">Reset</button>
+                     </div>
+                   </div>
+              </div>
+              {{ Form::close() }}
+          </div>
+
+          <div id="dataList">
+            
+           @include('admin.manage-service.list')
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
-  <div class="col-md-3"><!-- 
-    <a href="{{route('manage-service.create')}}"><button class="btn btn-danger">Add New Service</button></a> -->
-  </div>
-</div>
-<br>
-
-@if($users->count())
-
-<table class="table table-striped">
-    <thead>
-      <tr>
-        <th>S No</th>
-        <th>Name</th>
-        <!-- <th>Description</th>
-        <th>Parameters</th> -->
-        <th>Type</th>
-        <!-- <th>Options</th> -->
-      </tr>
-    </thead>
-    <tbody>
-
-@foreach($users as $user)
-      <tr>
-        <td>
-          {{$i}}
-        </td>
-        <td>
-          {{$user->name}}
-        </td>
-       <!--  <td>
-          @if($user->description) {{ substr($user->description, 0, 50) }}.. @else -- @endif
-        </td>
-        <td>
-          @foreach($user->serviceprices as $prices)
-            {{$prices->parameter}}(Rs {{$prices->value}})
-          @endforeach
-        </td> -->
-        <td>
-          @if($user->type==1) 
-           <span class="badge badge-primary"> MAIN </span>
-          @else
-           <span class="badge badge-info"> ADDON </span>
-          @endif
-        </td>
-        <!-- <td>
-             <a href="{{route('manage-service.edit', $user->id )}}" title="edit"><button type="button" class="btn btn-primary"><i class="fa fa-edit"></i></button></a> 
-            <a href="{{route('manage-service.destroy', encrypt( $user->id))}}" id="delete" data-token="{{csrf_token()}}" title="delete">
-              <button type="button" class="btn btn-danger"><i class="fa fa-trash"></i></button>
-            </a>
-        </td> -->
-      </tr>
-      @php
-      $i++;
-      @endphp
-      @endforeach
-    </tbody>
-</table>
-  {{$users->links()}}
-@else
-No Records Found
-@endif
-</div>
-</div>
-</div>
-</div>
 </div>
 
 
@@ -121,7 +87,19 @@ $(document).ready(function(){
                   },
                   success: function(){
                     $('body').waitMe("hide");
-                    window.location.reload()
+                    if($('#dataList tr').length<=2)
+                    {
+                    var current_page = $(".pagination").find('.active').text()-1;
+                    
+                    load_listings(location.href+'?page='+current_page);
+                    }
+
+                    else
+                    {
+                    
+                    var current_page = $(".pagination").find('.active').text();
+                    load_listings(location.href+'?page='+current_page, 'serach_form');
+                    }
                   },
                 })
               }
@@ -130,9 +108,35 @@ $(document).ready(function(){
 
   })
 
-  $(document).on('click', '.email_edit', function(e){
-    e.preventDefault();
-  })
+  $(document).on("click","#reset-button",function(e) {
+      e.preventDefault();
+      $('body').waitMe();
+      //$('#export_csv').removeClass('apply_filter');
+      // Reset Search Form fields
+      $('#store-search')[0].reset();
+      //check current active page
+      var current_page = 1;
+      // reload the list
+      load_listings(location.href+'?page='+current_page);
+      //stopLoader("body");
+    });
+
+  // Search by name
+    $(document).on("click","#search-button",function(e) {
+      e.preventDefault();
+      $('body').waitMe();
+      //$('#export_csv').addClass('apply_filter');
+      //check current active page
+      var current_page = $(".pagination").find('.active').text();
+      // reload the list
+      load_listings(location.href, 'serach_form');
+      //stopLoader("body");
+    });
+
+    $(document).on("click",".pagination li a",function(e) {
+      e.preventDefault();
+      load_listings($(this).attr('href'));
+    });
 
 })
 </script>

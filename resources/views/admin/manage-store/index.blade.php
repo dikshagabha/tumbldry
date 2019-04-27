@@ -40,7 +40,7 @@
                   {{ Form::close() }}
               </div>
 
-<br>
+              <br>
               <div id="dataList">
                 
                @include('admin.manage-store.list')

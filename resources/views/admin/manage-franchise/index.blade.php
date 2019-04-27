@@ -1,10 +1,7 @@
 @extends('layouts.app')
 @section('title', 'Manage Franchise')
 @section('content')
-@php
-$i = ($users->currentpage() - 1) * $users->perPage() + 1;
 
-@endphp
 <div class="content">
     <div class="container-fluid">
       <div class="row">
@@ -18,56 +15,34 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
             </div>
           </div>
             <br>
-            <!-- <div class="row"> -->
-          @if($users->count())
+             <div class="">
+                {{ Form::open(['method' => 'get', 'id' => 'store-search', 'name' => 'serach_form']) }}
+                <div class="form-group-inner">
+                    <div class="row">
+                      <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
+                      </div>
+                         <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                          {{ Form::text('search', '', ['class' => 'form-control', 'placeholder' => 'Search by Name or E-mail or Phone', 'maxlength'=>'50']) }}
+                         </div>
+                         <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                          {{ Form::select('sort_type', ['' => 'Select Status', '1' => 'Active', '0' => 'Inactive'], null, ['class' => 'form-control', 'id' => 'sort_type']) }}
+                           
+                         </div>
+                         <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                          <button type="submit" id="search-button" class="btn btn-success margin-bottom-20">Filter</button>
+                        <button type="submit" id="reset-button" class="btn btn-danger margin-bottom-20">Reset</button>
+                         </div>
+                       </div>
+                  </div>
+                  {{ Form::close() }}
+              </div>
+            <br>
+              <div id="dataList">
+                
+               @include('admin.manage-franchise.list')
+              </div>
+            </div>
 
-          <table class="table table-striped">
-              <thead>
-                <tr>
-                  <th>S No</th>
-                  <th>Frenchise Name</th>
-                  <th>Contact Person Name</th>
-                  <th>Contact Person Email</th>
-                  <th>Contact Person Phone Number</th>
-                 
-                  <th>Options</th>
-                </tr>
-              </thead>
-              <tbody>
-
-          @foreach($users as $user)
-                <tr>
-                  <td>
-                    {{$i}}
-                  </td>
-                  <td>
-                    {{$user->store_name}}
-                  </td>
-                  <td>
-                    {{$user->name}}
-                  </td>
-                  <td>
-                    {{$user->email}}
-                  </td>
-                  <td>
-                    {{$user->phone_number}}
-                  </td>
-                 
-                  <td>
-                      <a href="{{route('manage-frenchise.edit', encrypt( $user->id))}}" title="edit"><button type="button" class="btn btn-primary"><i class="fa fa-edit"></i></button></a>
-                      <a href="{{route('manage-frenchise.destroy', encrypt( $user->id))}}" id="delete" data-token="{{csrf_token()}}" title="delete"><button type="button" class="btn btn-danger"><i class="fa fa-trash"></i></button></a>
-                  </td>
-                </tr>
-                @php
-                  $i++;
-                @endphp
-                @endforeach
-              </tbody>
-          </table>
-            {{$users->links()}}
-          @else
-          No Records Found
-          @endif
           <!-- </div> -->
         </div>
       </div>
@@ -112,7 +87,19 @@ $(document).ready(function(){
                   },
                   success: function(){
                     $('body').waitMe("hide");
-                    window.location.reload()
+                    if($('#dataList tr').length<=2)
+                    {
+                    var current_page = $(".pagination").find('.active').text()-1;
+                    
+                    load_listings(location.href+'?page='+current_page);
+                    }
+
+                    else
+                    {
+                    
+                    var current_page = $(".pagination").find('.active').text();
+                    load_listings(location.href+'?page='+current_page, 'serach_form');
+                    }
                   },
                 })
               }
@@ -122,9 +109,81 @@ $(document).ready(function(){
   })
 
 
-  $(document).on('click', '.email_edit', function(e){
+  $(document).on('click', '.status', function(e){
     e.preventDefault();
+    current = $(this);
+    if (current.data('status')==1) 
+    {
+      message = "Are you sure you want to activate this user?"
+    }
+    else{
+      message = "Are you sure you want to inactivate this user?"
+    }
+          bootbox.confirm({
+          title: "Confirm",
+          message: message,
+          buttons: {
+              cancel: {
+                  label: '<i class="fa fa-times"></i> Cancel'
+              },
+              confirm: {
+                  label: '<i class="fa fa-check"></i> Confirm'
+              }
+          },
+          callback: function (result) {
+              if(result){
+                $('body').waitMe();
+
+
+                $.ajax({
+                  url: current.attr('href'),
+                  type:"post",
+                  data:{
+                    'status':current.data('status')
+                  },
+                  success: function(){
+                    $('body').waitMe("hide");
+                    
+                    var current_page = $(".pagination").find('.active').text();
+                    console.log(location.href+'?page='+current_page);
+                    load_listings(location.href+'?page='+current_page, 'serach_form');
+                    //window.location.reload()
+                  },
+                })
+              }
+          }
+      });
   })
+// Ajax base Pagination
+    $(document).on("click",".pagination li a",function(e) {
+      e.preventDefault();
+      load_listings($(this).attr('href'));
+    });
+
+     $(document).on("click","#reset-button",function(e) {
+      e.preventDefault();
+      $('body').waitMe();
+      //$('#export_csv').removeClass('apply_filter');
+      // Reset Search Form fields
+      $('#store-search')[0].reset();
+      //check current active page
+      var current_page = 1;
+      // reload the list
+      load_listings(location.href+'?page='+current_page);
+      //stopLoader("body");
+    });
+
+  // Search by name
+    $(document).on("click","#search-button",function(e) {
+      e.preventDefault();
+      $('body').waitMe();
+      //$('#export_csv').addClass('apply_filter');
+      //check current active page
+      var current_page = $(".pagination").find('.active').text();
+      // reload the list
+      load_listings(location.href, 'serach_form');
+      //stopLoader("body");
+    });
 
 })
 </script>

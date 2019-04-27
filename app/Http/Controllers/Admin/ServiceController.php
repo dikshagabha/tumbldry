@@ -15,11 +15,22 @@ class ServiceController extends Controller
    *
    * @return \Illuminate\Http\Response
    */
-  public function index()
+  public function index(Request $request)
   {
       $activePage = 'service';
       $titlePage  = 'Service Details';
-      $users = Service::with('serviceprices')->paginate(10);
+      $users = Service::with('serviceprices')
+                ->when($request->filled('search'), 
+                function($query) use($request) {
+                    $query->where('name', 'like', '%' . $request->input('search') . '%');
+                  })
+                ->when(($request->filled('sort_type') && in_array($request->input('sort_type'), [0, 1])), function($query) use($request) {
+                $query->where('type', $request->input('sort_type'));
+               })->paginate(10);
+
+      if ($request->ajax()) {
+        return view('admin.manage-service.list', compact('users', 'activePage', 'titlePage'));
+      }
       return view('admin.manage-service.index', compact('users', 'activePage', 'titlePage'));
 
   }

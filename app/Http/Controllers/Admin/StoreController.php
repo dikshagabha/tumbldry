@@ -28,13 +28,13 @@ class StoreController extends Controller
       $users = User::where('role', 3)
               ->when($request->filled('search'), 
                 function($query) use($request) {
-                    $query->where('name', 'like', '%' . $request->input('search') . '%')
+                  $query->where(function($q) use($request) {
+                    $q->where('name', 'like', '%' . $request->input('search') . '%')
                           ->orWhere('email', 'like', '%' . $request->input('search') . '%')
                           ->orWhere('phone_number', 'like', '%' . $request->input('search') . '%');
                     
-                  })
-
-                ->when(($request->filled('sort_type') && in_array($request->input('sort_type'), [0, 1])), function($query) use($request) {
+                  });
+                })->when(($request->filled('sort_type') && in_array($request->input('sort_type'), [0, 1])), function($query) use($request) {
                 $query->where('status', $request->input('sort_type'));
                })
                ->latest()->paginate(10);
@@ -56,7 +56,7 @@ class StoreController extends Controller
       $activePage = 'store';
       $titlePage  = 'Create Store';
 
-      $users = User::where('role', 2)->pluck('name', 'id');
+      $users = User::where(['role'=>2, 'status'=>1])->pluck('store_name', 'id');
       
       $fields = StoreFields::get();
       $machines = $fields->where('type', 1)->pluck('name', 'id');
@@ -181,7 +181,7 @@ class StoreController extends Controller
       $titlePage  = 'Edit Store';
 
       $user = User::where("id", decrypt($id))->first();
-      $users = User::where('role', 2)->pluck('name', 'id');
+      $users = User::where(['role'=>2, 'status'=>1])->pluck('store_name', 'id');
 
       $fields = StoreFields::get();
       $machines = $fields->where('type', 1)->pluck('name', 'id');
