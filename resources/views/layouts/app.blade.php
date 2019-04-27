@@ -82,6 +82,32 @@
 <script src="{{asset('js/waitMe.js')}}"></script>
 <script src="{{asset('js/pnotify.custom.min.js')}}"></script>
         <script type="text/javascript">
+
+            function load_listings(url, filter_form_name) {
+                let data = {};
+                // check if the element is not specified
+                if(typeof filter_form_name !== 'undefined') {
+                  data = $("form[name="+filter_form_name+"]").serialize();
+                }
+
+                // send the ajax request for the url
+                $.ajax({
+                  async: false,
+                  type : 'get',
+                  url : url,
+                  data : data,
+                  dataType : 'html',
+                  success : function(data) {
+                    $('body').waitMe('hide');
+                    $("#dataList").empty();
+                    $("#dataList").html(data);
+                  },
+                  error : function(response) {
+                    error("Unable to fetch the list");
+                  }
+                });
+              }
+
           function success(message=""){
               PNotify.removeAll() 
               new PNotify({

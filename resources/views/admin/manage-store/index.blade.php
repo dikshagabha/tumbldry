@@ -2,9 +2,6 @@
 @section('title', 'Manage Store')
 @section('content')
 
-@php
-$i = ($users->currentpage() - 1) * $users->perPage() + 1;
-@endphp
 
 <div class="content">
     <div class="container-fluid">
@@ -20,77 +17,38 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
                   <a href="{{route('manage-store.create')}}"><button class="btn btn-danger">Add New Store</button></a>
                 </div>
               </div>
-@if($users->count())
+              <br>
+               <div class="">
+                {{ Form::open(['method' => 'get', 'id' => 'store-search', 'name' => 'serach_form']) }}
+                <div class="form-group-inner">
+                    <div class="row">
+                      <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
+                      </div>
+                         <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                          {{ Form::text('search', '', ['class' => 'form-control', 'placeholder' => 'Search by Name or E-mail or Phone', 'maxlength'=>'50']) }}
+                         </div>
+                         <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                          {{ Form::select('sort_type', ['' => 'Select Status', '1' => 'Active', '0' => 'Inactive'], null, ['class' => 'form-control', 'id' => 'sort_type']) }}
+                           
+                         </div>
+                         <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                          <button type="submit" id="search-button" class="btn btn-success margin-bottom-20">Filter</button>
+                        <button type="submit" id="reset-button" class="btn btn-danger margin-bottom-20">Reset</button>
+                         </div>
+                       </div>
+                  </div>
+                  {{ Form::close() }}
+              </div>
 
-<table class="table table-striped">
-    <thead>
-      <tr>
-        <th>S No</th>
-        <th>Name</th>
-        <th>Email</th>
-        <th>Phone Number</th>
-        <th>Store Name</th>
-        <th>Status</th>
-        <th>Options</th>
-      </tr>
-    </thead>
-    <tbody>
-
-@foreach($users as $user)
-      <tr>
-        <td>
-          {{$i}}
-        </td>
-        <td>
-          {{$user->name}}
-        </td>
-        <td>
-          {{$user->email}}
-        </td>
-        <td>
-          {{$user->phone_number}}
-        </td>
-        <td>
-          {{$user->store_name}}
-        </td>
-        <td>
-          @if($user->status==0)
-            <a href="{{route('manage-store.status', $user->id)}}" class="status" data-status="1">
-              <span class="badge badge-warning">Inactive</span>
-            </a>
-          @else
-            <a href="{{route('manage-store.status', $user->id)}}" class="status" data-status="0">
-              <span class="badge badge-success">Active</span>
-            </a>
-          @endif
-        </td>
-        <td>
-            <a href="{{route('manage-store.edit',encrypt( $user->id))}}" title="edit">
-              <button type="button" class="btn btn-primary"><i class="fa fa-edit"></i></button>
-            </a>
-            <a href="{{route('manage-store.show',encrypt( $user->id))}}" class="view" title="view">
-              <button type="button" class="btn btn-info "><i class="fa fa-eye"></i></button>
-            </a>
-            <a href="{{route('manage-store.destroy', encrypt( $user->id))}}" id="delete" data-token="{{csrf_token()}}" title="delete"> 
-              <button type="button" class="btn btn-danger"><i class="fa fa-trash"></i></button>
-            </a>
-        </td>
-      </tr>
-      @php
-      $i++;
-      @endphp
-      @endforeach
-    </tbody>
-</table>
-
-{{$users->links()}}
-@else
-No Records Found
-@endif
-</div>
-</div>
-</div>
-</div>
+<br>
+              <div id="dataList">
+                
+               @include('admin.manage-store.list')
+              </div>
+            </div>
+        </div>
+      </div>
+    </div>
 </div>
 <div id="addressModal" class="modal fade" role="dialog">
   <div class="modal-dialog">
@@ -118,6 +76,11 @@ No Records Found
 <script src="{{asset('js/bootbox.js')}}"></script>
 <script>
 $(document).ready(function(){
+  var current_page = $(".pagination").find('.active').text();
+   
+
+  
+
   $(document).on('click', '#delete', function(e){
     e.preventDefault();
           bootbox.confirm({
@@ -134,7 +97,8 @@ $(document).ready(function(){
           callback: function (result) {
               if(result){
                 $('body').waitMe();
-
+                //console.log($('#dataList tr').length)
+                
 
                 $.ajax({
                   url: $('#delete').attr('href'),
@@ -148,13 +112,51 @@ $(document).ready(function(){
                   },
                   success: function(){
                     $('body').waitMe("hide");
-                    window.location.reload()
+                    if($('#dataList tr').length<=2)
+                    {
+                    var current_page = $(".pagination").find('.active').text()-1;
+                    
+                    load_listings(location.href+'?page='+current_page);
+                    }
+
+                    else
+                    {
+                    
+                    var current_page = $(".pagination").find('.active').text();
+                    load_listings(location.href+'?page='+current_page, 'serach_form');
+                    }
+                    //window.location.reload()
                   },
                 })
               }
           }
       });
   })
+
+  $(document).on("click","#reset-button",function(e) {
+      e.preventDefault();
+      $('body').waitMe();
+      //$('#export_csv').removeClass('apply_filter');
+      // Reset Search Form fields
+      $('#store-search')[0].reset();
+      //check current active page
+      var current_page = 1;
+      // reload the list
+      load_listings(location.href+'?page='+current_page);
+      //stopLoader("body");
+    });
+
+  // Search by name
+    $(document).on("click","#search-button",function(e) {
+      e.preventDefault();
+      $('body').waitMe();
+      //$('#export_csv').addClass('apply_filter');
+      //check current active page
+      var current_page = $(".pagination").find('.active').text();
+      // reload the list
+      load_listings(location.href, 'serach_form');
+      //stopLoader("body");
+    });
 
   $(document).on('click', '.status', function(e){
     e.preventDefault();
@@ -190,14 +192,22 @@ $(document).ready(function(){
                   },
                   success: function(){
                     $('body').waitMe("hide");
-                    window.location.reload()
+                    
+                    var current_page = $(".pagination").find('.active').text();
+                    console.log(location.href+'?page='+current_page);
+                    load_listings(location.href+'?page='+current_page, 'serach_form');
+                    //window.location.reload()
                   },
                 })
               }
           }
       });
   })
-
+// Ajax base Pagination
+    $(document).on("click",".pagination li a",function(e) {
+      e.preventDefault();
+      load_listings($(this).attr('href'));
+    });
 
   $(document).on('click', '.view', function(e){
     e.preventDefault();
