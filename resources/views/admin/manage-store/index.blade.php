@@ -145,9 +145,8 @@ $(document).ready(function(){
       load_listings(location.href+'?page='+current_page);
       //stopLoader("body");
     });
-
-  // Search by name
-    $(document).on("click","#search-button",function(e) {
+  
+  $(document).on("click","#search-button",function(e) {
       e.preventDefault();
       $('body').waitMe();
       //$('#export_csv').addClass('apply_filter');
@@ -166,7 +165,7 @@ $(document).ready(function(){
       message = "Are you sure you want to activate this user?"
     }
     else{
-      message = "Are you sure you want to inactivate this user?"
+      message = "Are you sure you want to deactivate this user?"
     }
           bootbox.confirm({
           title: "Confirm",
@@ -203,11 +202,11 @@ $(document).ready(function(){
           }
       });
   })
-// Ajax base Pagination
-    $(document).on("click",".pagination li a",function(e) {
-      e.preventDefault();
-      load_listings($(this).attr('href'));
-    });
+  
+  $(document).on("click",".pagination li a",function(e) {
+    e.preventDefault();
+    load_listings($(this).attr('href'));
+  });
 
   $(document).on('click', '.view', function(e){
     e.preventDefault();

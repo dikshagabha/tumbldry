@@ -53,6 +53,11 @@ Route::prefix('admin')->group(function () {
 
     Route::get('/pin-details', 'HomeController@getPinDetails')->name('getPinDetails');
 
+    // Rate Cards
+    Route::get('/rate-card', 'Admin\RateCardController@getRateCard')->name('admin.getRateCard');
+    Route::get('/rate-card-form', 'Admin\RateCardController@getRateCardForm')->name('admin.getRateCardForm');
+    Route::post('/rate-card-form', 'Admin\RateCardController@postRateCardForm')->name('admin.postRateCardForm');
+
 
     Route::post('/logout', 'Auth\LoginController@logout')->name('admin.logout');
 

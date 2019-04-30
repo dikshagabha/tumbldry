@@ -146,6 +146,7 @@ class StoreController extends Controller
         return response()->json(["message"=>"Store Added", 'redirectTo'=>route('manage-store.index')], 200);
       }
       catch (\Exception $e) {
+        DB::rollback();
         return response()->json(["message"=>$e->getMessage()], 400);
           return $e->getMessage();
       }
@@ -240,6 +241,7 @@ class StoreController extends Controller
         return response()->json(["message"=>"Store Updated", 'redirectTo'=>route('manage-store.index')], 200);
       }
       catch (\Exception $e) {
+         DB::rollback();
         return response()->json(["message"=>$e->getMessage()], 400);
       }
       

@@ -13,7 +13,8 @@
     <ul class="nav">
       <li class="nav-item{{ $activePage == 'dashboard' ? ' active' : '' }}">
         <a class="nav-link" href="{{ route('home') }}">
-          <i class="material-icons">dashboard</i>
+          <i><img style="width:25px" src="{{ asset('images/icons/dashboard.png') }}"></i>
+          <!-- <i class="material-icons">dashboard</i> -->
             <p>{{ __('Dashboard') }}</p>
         </a>
       </li>
@@ -32,7 +33,8 @@
       </li> -->
       <li class="nav-item{{ $activePage == 'frenchise' ? ' active' : '' }}">
         <a class="nav-link" href="{{ route('manage-frenchise.index') }}">
-           <i class="material-icons">assessment</i>
+          <i><img style="width:25px" src="{{ asset('images/icons/franchise.png') }}"></i>
+           <!-- <i class="material-icons">assessment</i> -->
           <p>{{ __('Franchise') }}</p>
           
         </a>
@@ -40,7 +42,8 @@
 
       <li class="nav-item{{ $activePage == 'store' ? ' active' : '' }}">
         <a class="nav-link" href="{{ route('manage-store.index') }}">
-          <i class="material-icons">accessibility</i>
+          <!-- <i class="material-icons">accessibility</i> -->
+          <i><img style="width:25px" src="{{ asset('images/icons/store.png') }}"></i>
             <p>{{ __('Store') }}</p>
         </a>
       </li>
@@ -48,11 +51,54 @@
       
       <li class="nav-item{{ $activePage == 'service' ? ' active' : '' }}">
         <a class="nav-link" href="{{ route('manage-service.index') }}">
-           <i class="material-icons">build</i>
+            <i><img style="width:25px" src="{{ asset('images/icons/service.png') }}"></i>
           <p>{{ __('Service') }}</p>
           
         </a>
-      </li>      
+      </li> 
+
+      <!-- <li class="nav-item{{ $activePage == 'rate-card' ? ' active' : '' }}">
+        <a class="nav-link" href="{{ route('admin.getRateCard') }}">
+           <i class="material-icons">money</i>
+          <p>{{ __('Rate Card') }}</p>
+          
+        </a>
+      </li>  --> 
+
+      <li class="nav-item {{ ($activePage == 'rate-card') ? ' active' : '' }}">
+        <a class="nav-link" data-toggle="collapse" href="#laravelExample" aria-expanded="false">
+          <i><img style="width:25px" src="{{ asset('images/icons/coins.png') }}"></i>
+          <p>{{ __('Rate Card') }}
+            <b class="caret"></b>
+          </p>
+        </a>
+        <div class="collapse show" id="laravelExample">
+          <ul class="nav">
+            <li>
+              <a class="nav-link" href="{{ route('admin.getRateCard', ['type'=>1]) }}">
+                 <i><img style="width:25px" src="{{ asset('images/icons/dry-clean.png') }}"></i>
+                <p>{{ __('Dry Clean') }}</p>
+                
+              </a>
+            </li>
+            <li>
+              <a class="nav-link" href="{{ route('admin.getRateCard', ['type'=>2]) }}">
+                 <i><img style="width:25px" src="{{ asset('images/icons/laundary.png') }}"></i>
+                <p>{{ __('Laundry') }}</p>
+                
+              </a>
+            </li>
+
+            <li>
+              <a class="nav-link" href="{{ route('admin.getRateCard', ['type'=>3]) }}">
+                <i><img style="width:25px" src="{{ asset('images/icons/car.png') }}"></i>
+                <p>{{ __('Car Clean') }}</p>
+                
+              </a>
+            </li>
+          </ul>
+        </div>
+      </li>   
     </ul>
   </div>
 </div>

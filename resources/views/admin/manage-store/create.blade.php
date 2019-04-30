@@ -4,6 +4,7 @@
 @section('content')
 @section('css')
   <link rel="stylesheet" href="{{ asset('css/chosen/bootstrap-chosen.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/jcf.css') }}">
   <!-- <style type="text/css">
     div[data-acc-content] { display: none;  }
   </style> -->
@@ -69,8 +70,15 @@
 @push('js')
 <script src="{{asset('js/chosen/chosen.jquery.min.js')}}"></script>
 <script src="{{asset('js/jquery.accordion-wizard.min.js')}}"></script>
+
+<script src="{{asset('js/jcf/jcf.js')}}"></script>
+<script src="{{asset('js/jcf/jcf.radio.js')}}"></script>
+<script src="{{asset('js/jcf/jcf.file.js')}}"></script>
+
 <script>
 $(document).ready(function(){
+
+  jcf.replaceAll();
 	$('#parent').chosen();
 
   function sendRequest(url, current){
@@ -86,14 +94,12 @@ $(document).ready(function(){
       processData: false,  // Important!
       contentType: false,
       
-      success: function(data){
-       
-        console.log('.'+(current.data('id')+1));
+      success: function(data){       
         $('.'+(current.data('id')+1)).prop("disabled", false);
         $('.'+(current.data('id')+1)).trigger('click');
          $('body').waitMe('hide');
          current.hide();
-      }  
+        }  
       })   
   }
 
@@ -137,41 +143,6 @@ $(document).ready(function(){
       }
     })
   })
-
-  // $(document).on('change', '#pinchange', function(e){
-  //   e.preventDefault();
-  //   $('body').waitMe();
-  //   $.ajax({
-  //     url: $('#pinchange').attr('data-url'),
-  //     type:'get',
-  //     data:{'id': $('#pinchange').val()},
-  //     dataType:'json',
-  //     success: function(data){
-  //       $('#state').val(data.state);
-  //       $('#city').val(data.city);
-  //       $('#location_id').val(data.location_id);
-  //       $('body').waitMe('hide');
-  //     },
-  //   })
-  // })
-
-  // $(document).on('click', '#add_address, #edit_address', function(e){
-  //   e.preventDefault();
-  //   $('body').waitMe();
-  //   current = $(this);
-  //   $.ajax({
-  //     url: current.attr('data-url'),
-  //     type:'get',
-  //     dataType:'html',
-  //     success: function(data){
-  //       $('.addressForm').html(data);
-  //       $('body').waitMe('hide');
-  //       $('#addressModal').modal('show');
-  //     },
-      
-  //   })
-  // })
-
 })
 </script>
 <!-- <script src="https://maps.googleapis.com/maps/api/js?key=2&libraries=places&callback=initMap"
