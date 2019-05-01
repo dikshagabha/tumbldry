@@ -15,6 +15,12 @@ class CreatePickupRequestsTable extends Migration
     {
         Schema::create('pickup_requests', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->integer('customer_id');
+            $table->integer('store_id');
+            $table->integer('status')->default(1)->nullable();
+            $table->integer('address')->nullable();
+             $table->integer('request_mode')->default(1);
+
             $table->timestamps();
         });
     }
