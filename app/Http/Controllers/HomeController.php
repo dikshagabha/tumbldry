@@ -8,6 +8,11 @@ use App\Model\Location;
 use App\Model\Service;
 use App\Model\Address;
 use App\User;
+
+use App\Model\ServicePrice;
+
+use App\Model\Items;
+
 use App\Http\Requests\Admin\AddAddressRequest;
 class HomeController extends Controller
 {
@@ -33,7 +38,44 @@ class HomeController extends Controller
     {
        $user = User::get();
        $service = Service::count();
-        return view('admin.dashboard', compact('user', 'service'));
+
+        $cities = Location::groupBy('city_name')->selectRaw('city_name')->orderBy('city_name', 'asc')->pluck('city_name', 'city_name');
+
+        $cities['global']='Global';
+
+        $types = [1=>"Dry Clean", 2=>"Laundary", 3=>'Car Clean'];
+      
+        return view('admin.dashboard', compact('user', 'service', 'cities', 'types' ));
+    }
+
+    public function getServices(Request $request)
+    {
+      $service = Service::where('form_type', $request->type)->pluck('name', 'id');
+      return response()->json(["message"=>"Data Recieved", 'service'=>$service], 200);
+    }
+
+    public function getRate(Request $request)
+    {
+      
+      $validatedData = $request->validate([
+          'city' => 'bail|required|string',
+          'service' => 'bail|required|numeric',
+          ]);
+      
+      $prices = ServicePrice::where(['location'=>$request->input('city'), 
+                                      'service_id'=>$request->input('service')])->paginate(5);
+      
+      
+      $type = $request->input('type');
+      
+      $edit = $prices->count();
+
+      if ($request->ajax()) 
+      {
+        return view("admin.rates-table", compact('type', 'prices', 'edit'));
+      }
+      return response()->json(["message"=>"Data Recieved", 'prices'=>view("admin.rates-table",
+                            compact('type', 'prices'))->render()], 200);
     }
 
     public function editProfile()

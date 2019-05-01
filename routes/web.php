@@ -58,7 +58,9 @@ Route::prefix('admin')->group(function () {
     Route::get('/rate-card-form', 'Admin\RateCardController@getRateCardForm')->name('admin.getRateCardForm');
     Route::post('/rate-card-form', 'Admin\RateCardController@postRateCardForm')->name('admin.postRateCardForm');
 
-
+    Route::get('/services', 'HomeController@getServices')->name('admin.getServices');
+    Route::post('/services', 'HomeController@getRate')->name('admin.getRate');
+    
     Route::post('/logout', 'Auth\LoginController@logout')->name('admin.logout');
 
   });

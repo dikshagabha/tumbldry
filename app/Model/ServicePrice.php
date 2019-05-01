@@ -14,6 +14,10 @@ class ServicePrice extends Model
 
     public function getItemNameAttribute()
     {
-        return $this->item_details()->first()->name; //some logic to return numbers
+    	if ($this->item_details()->count()) {
+    		return $this->item_details()->first()->name;
+    	}
+
+        return "N/A";
     }
 }

@@ -1,5 +1,8 @@
 @extends('layouts.app', ['activePage' => 'dashboard', 'titlePage' => __('Dashboard')])
-
+@section('title', 'Home')
+@section('css')
+  <link rel="stylesheet" href="{{ asset('css/chosen/bootstrap-chosen.css') }}">
+@endsection
 @section('content')
   <div class="content">
     <div class="container-fluid">
@@ -8,12 +11,12 @@
           <div class="card card-stats">
             <div class="card-header card-header-warning card-header-icon">
               <div class="card-icon">
-                <i class="material-icons">accessibility</i>
+                <i><img style="width:40px" src="{{ asset('images/icons/store.png') }}"></i>
+           
               </div>
               <p class="card-category">Stores</p>
               <h3 class="card-title">
                 {{$user->where('role', 3)->count()}}
-                
               </h3>
                 
             </div>
@@ -30,7 +33,8 @@
           <div class="card card-stats">
             <div class="card-header card-header-warning card-header-icon">
               <div class="card-icon">
-                <i class="material-icons">assessment</i>
+                <i><img style="width:40px" src="{{ asset('images/icons/franchise.png') }}"></i>
+           
               </div>
               <p class="card-category">Frenchises</p>
               <h3 class="card-title">
@@ -47,13 +51,14 @@
             </div>
           </div>
         </div>
-
-
+      
+      
         <div class="col-lg-3 col-md-6 col-sm-6">
           <div class="card card-stats">
             <div class="card-header card-header-warning card-header-icon">
               <div class="card-icon">
-                <i class="material-icons">build</i>
+                <i><img style="width:40px" src="{{ asset('images/icons/service.png') }}"></i>
+           
               </div>
               <p class="card-category">Services</p>
               <h3 class="card-title">
@@ -70,7 +75,64 @@
             </div>
           </div>
         </div>
+      </div>
+      <div class="row" id="rate_search">
+        <div class="col-md-12">
+          <div class="card card-chart">
+            <div class="card-header card-header-success">
+              
+            </div>
+            <div class="card-body">
+              <h4 class="card-title">Search Rates..</h4>
+              <div class="card-category">
+                {{Form::open(['route'=>'admin.getRate', 'id'=>'rateForm'])}}
 
+                  <div class="row">
+                    <!-- <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
+                    </div> -->
+                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+
+                        {{ Form::select('type',  $types, null, ['class' => 'form-control', 'placeholder' => 'Select Type', 'id' => 'select_type', 'data-url'=>route('admin.getServices')]) }}
+                        <span class="error" id="type_error"></span>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+
+                        {{ Form::select('city',  $cities, null, ['class' => 'form-control', 'placeholder' => 'Select City',
+                        'id' => 'select_city']) }}
+                        <span class="error" id="city_error"></span>
+                    </div>
+
+                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+
+                        {{ Form::select('service',  [], null,['class' => 'form-control', 'placeholder' => 'Select Service',
+                        'id' => 'select_service',  'maxlength'=>'50']) }}
+                        <span class="error" id="service_error"></span>
+                    </div>
+                     <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+
+                        {{ Form::submit('Submit', ['class' => 'btn btn-warning',
+                        'id' => 'search_rate', 'data-url'=>route('admin.getRate')]) }}
+                        <span class="error" id="city_error"></span>
+                    </div>
+                  </div>                
+                {{Form::close()}}
+
+                <div id="dataList">
+
+                  
+                </div>
+
+              </div>
+            </div>
+            
+            <div class="card-footer">
+              <div class="stats">
+                <!-- <i class="material-icons">access_time</i> updated 4 minutes ago -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
         <!-- 
         <div class="col-lg-3 col-md-6 col-sm-6">
           <div class="card card-stats">
@@ -464,15 +526,75 @@
        -->  
         <!-- </div>
       </div> -->
-    </div>
+    
   </div>
 @endsection
 
 @push('js')
+
+<script src="{{asset('js/chosen/chosen.jquery.min.js')}}"></script>
   <script>
-    // $(document).ready(function() {
-    //   // Javascript method's body can be found in assets/js/demos.js
-    //   md.initDashboardPageCharts();
-    // });
+    $(document).ready(function() {
+      $('#select_type').chosen();
+      $('#select_city').chosen();
+      $('#select_service').chosen();
+     $(document).on('change', '#select_type', function(e){
+      e.preventDefault(); 
+        
+        $(".error").html("");
+        $('body').waitMe();
+
+        $.ajax({
+          url:$('#select_type').data('url'),
+          data:{'type': $('#select_type').val()},
+          type:'get',
+          success: function(data){
+            $('#select_service').html("");
+            
+            
+            $.each(data.service, function(key, value) {   
+               $('#select_service')
+                   .append($("<option></option>")
+                              .attr("value", key)
+                              .text(value)); 
+            });
+            $('#select_service').trigger('chosen:updated')
+            $('body').waitMe('hide');
+          }
+        })
+         });
+
+    $(document).on('click', '#search_rate', function(e){
+      e.preventDefault();        
+        $(".error").html("");
+        $('body').waitMe();
+
+        $.ajax({
+          url:$('#rateForm').attr('action'),
+          data:$('#rateForm').serializeArray(),
+          type:'post',
+          success: function(data){
+            $('#dataList').html(data);
+            $('body').waitMe('hide');
+          }
+        })
+         }); 
+
+    $(document).on("click",".pagination li a",function(e) {
+        e.preventDefault();
+        //load_listings($(this).attr('href'), 'form_data');
+        url = $(this).attr('href');
+        $.ajax({
+          url:url,
+          data:$('#rateForm').serializeArray(),
+          type:'post',
+          success: function(data){
+            $('#dataList').html(data);
+            $('body').waitMe('hide');
+          }
+        })
+
+      });
+    });
   </script>
 @endpush

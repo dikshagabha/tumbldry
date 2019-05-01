@@ -62,7 +62,7 @@ class RateCardController extends Controller
         
         $prices = ServicePrice::where(['location'=>$request->input('city'), 
                     'service_id'=>$request->input('service')])
-                    ->get();
+                    ->paginate(5);
         $edit = $prices->count();
 
         $type = $request->input('type');
@@ -75,6 +75,7 @@ class RateCardController extends Controller
                return view('admin.rate-card.global-quantity', compact('city', 'items', 'prices', 'edit'));
 
             }
+            
             return view('admin.rate-card.global-price', compact('city', 'items', 'prices', 'edit'));
         }
     	
@@ -84,7 +85,7 @@ class RateCardController extends Controller
     public function postRateCardForm(StoreRateCard $request)
     {
 
-        try{
+        //try{
         DB::beginTransaction();
 
         $global_price = ServicePrice::where(['location'=>'global', 'service_id'=>$request->input('service')])->get();
@@ -137,7 +138,9 @@ class RateCardController extends Controller
                     $price = $value->value + ($value->value * ($request->input('bsp')/100)); 
                 }else
                 {
-                    $price = $value->value - ($value->value * ($request->input('bsp')/100)); 
+                    //print_r($value->value);
+                    $price = $value->value - ($value->value * ($request->input('bsp')/100));
+                    //$price=0; 
                 }
                array_push($insertData, [
                 "location"=>$request->input('city'), "service_id"=>$request->input('service'), "quantity"=>$value->quantity, "service_id"=>$request->input('service'), "parameter"=>$value->parameter, "value"=>$price,'bsp'=> $request->input('bsp'), 'service_type'=> $request->input('type'),
@@ -150,10 +153,10 @@ class RateCardController extends Controller
         $insert = ServicePrice::insert($insertData);
         
         DB::commit();
-        return response()->json(["message"=>"Rate Card Successfully Inserted !", ], 200);
-        }catch (\Exception $e) {
-            DB::rollback();
-            return response()->json(["message"=>$e->getMessage()], 400);
-        }
+        // return response()->json(["message"=>"Rate Card Successfully Inserted !", ], 200);
+        // }catch (\Exception $e) {
+        //     DB::rollback();
+        //     return response()->json(["message"=>$e->getMessage()], 400);
+        // }
     }
 }
