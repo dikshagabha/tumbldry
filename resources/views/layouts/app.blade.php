@@ -17,6 +17,8 @@
     <link href="{{ asset('material') }}/css/material-dashboard.css?v=2.1.1" rel="stylesheet" />
     <!-- CSS Just for demo purpose, don't include it in your project -->
     <link href="{{ asset('material') }}/demo/demo.css" rel="stylesheet" />
+    <link rel="stylesheet" href="{{asset('css/waitMe.css')}}">
+    <link rel="stylesheet" href="{{asset('css/pnotify.custom.min.css')}}">
     </head>
     <style type="text/css">
       .error{
@@ -79,8 +81,8 @@
         <script src="{{ asset('material') }}/demo/demo.js"></script>
         <script src="{{ asset('material') }}/js/settings.js"></script>
         
-<script src="{{asset('js/waitMe.js')}}"></script>
-<script src="{{asset('js/pnotify.custom.min.js')}}"></script>
+        <script src="{{asset('js/waitMe.js')}}"></script>
+        <script src="{{asset('js/pnotify.custom.min.js')}}"></script>
         <script type="text/javascript">
 
             function load_listings(url, filter_form_name) {

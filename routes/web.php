@@ -39,7 +39,8 @@ Route::prefix('admin')->group(function () {
     Route::resources([
       'manage-frenchise' => 'Admin\FranchiseController',
       'manage-store' => 'Admin\StoreController',
-      'manage-service' => 'Admin\ServiceController'
+      'manage-service' => 'Admin\ServiceController',
+      'pickup-request' => 'Admin\PickupController'
     ]);
     
     Route::post('/store/status/{id}', 'Admin\StoreController@status')->name('manage-store.status');

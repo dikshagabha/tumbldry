@@ -58,7 +58,7 @@ class RateCardController extends Controller
           ]);
 
         $city =  $request->input('city');
-        $items = Items::where("type", $request->input('type'))->get();
+        $items = Items::where("type", $request->input('type'))->paginate(10);
         
         $prices = ServicePrice::where(['location'=>$request->input('city'), 
                     'service_id'=>$request->input('service')])
@@ -85,7 +85,7 @@ class RateCardController extends Controller
     public function postRateCardForm(StoreRateCard $request)
     {
 
-        //try{
+        try{
         DB::beginTransaction();
 
         $global_price = ServicePrice::where(['location'=>'global', 'service_id'=>$request->input('service')])->get();
@@ -153,10 +153,10 @@ class RateCardController extends Controller
         $insert = ServicePrice::insert($insertData);
         
         DB::commit();
-        // return response()->json(["message"=>"Rate Card Successfully Inserted !", ], 200);
-        // }catch (\Exception $e) {
-        //     DB::rollback();
-        //     return response()->json(["message"=>$e->getMessage()], 400);
-        // }
+        return response()->json(["message"=>"Rate Card Successfully Inserted !", ], 200);
+        }catch (\Exception $e) {
+            DB::rollback();
+            return response()->json(["message"=>$e->getMessage()], 400);
+        }
     }
 }

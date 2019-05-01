@@ -57,13 +57,7 @@
         </a>
       </li> 
 
-      <!-- <li class="nav-item{{ $activePage == 'rate-card' ? ' active' : '' }}">
-        <a class="nav-link" href="{{ route('admin.getRateCard') }}">
-           <i class="material-icons">money</i>
-          <p>{{ __('Rate Card') }}</p>
-          
-        </a>
-      </li>  --> 
+      
 
       <li class="nav-item {{ ($activePage == 'rate-card') ? ' active' : '' }}">
         <a class="nav-link" data-toggle="collapse" href="#laravelExample" aria-expanded="false">
@@ -72,7 +66,7 @@
             <b class="caret"></b>
           </p>
         </a>
-        <div class="collapse show" id="laravelExample">
+        <div class="collapse" id="laravelExample">
           <ul class="nav">
             <li>
               <a class="nav-link" href="{{ route('admin.getRateCard', ['type'=>1]) }}">
@@ -98,6 +92,14 @@
             </li>
           </ul>
         </div>
+      </li>  
+
+      <li class="nav-item{{ $activePage == 'pickup-request' ? ' active' : '' }}">
+        <a class="nav-link" href="{{ route('pickup-request.index') }}">
+           <i class="material-icons">money</i>
+          <p>{{ __('Pickup Request') }}</p>
+          
+        </a>
       </li>   
     </ul>
   </div>

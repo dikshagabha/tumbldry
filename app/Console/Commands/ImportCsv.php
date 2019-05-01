@@ -53,7 +53,7 @@ class ImportCsv extends Command
             $item = Items::create(['name'=>$vals[1], 'type'=> 1]);
 
             $price = ServicePrice::create(['location'=>'global', 'value'=>$vals[2], 'service_id'=>$id,
-                                                   'parameter'=>$item->id, 'service_type'=1]);
+                                                   'parameter'=>$item->id, 'service_type'=>1]);
         }
 
     }
