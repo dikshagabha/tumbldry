@@ -25,7 +25,7 @@ class StoreServicesSeed extends Seeder
             ['name' => 'Shoe Cleaning',
                         'type'=>1, 'form_type'=>0],
             ['name' => 'Car Wash',
-                        'type'=>1, 'form_type'=>0],
+                        'type'=>1, 'form_type'=>3],
             ['name' => 'Sofa Cleaning',
                         'type'=>1, 'form_type'=>0],
             ['name' => 'Home Cleaning',
