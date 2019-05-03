@@ -78,8 +78,7 @@ Route::prefix('store')->group(function () {
      Route::group(['middleware' => ['store']], function () {
          Route::get('/home', 'Store\HomeController@index')->name('store.home');
 
-         Route::get('/customer-details/{id}', 'Store\HomeController@getcustomerdetails')->name('getcustomerdetails');
-         Route::get('/address-details/{id}', 'Store\HomeController@getaddressdetails')->name('getaddressdetails');
+         
       });
       Route::post('/notifications/read-all', 'Store\NotificationsController@markRead')->name('notifications.mark-read');
     
@@ -120,3 +119,7 @@ Route::prefix('store')->group(function () {
 
   });
 });
+
+
+Route::get('/customer-details/{id}', 'Store\HomeController@getcustomerdetails')->name('getcustomerdetails');
+Route::get('/address-details/{id}', 'Store\HomeController@getaddressdetails')->name('getaddressdetails');

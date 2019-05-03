@@ -21,18 +21,18 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
                 {{$i}}
               </td>
               <td>
-
-                {{$user->customer_email}}
+                <a href="{{route('getcustomerdetails', $user->customer_id)}}" id="getCustomer">
+                {{$user->customer_email}}</a>
                 
               </td>
               <td>
-                  {{$user->store_email}}
+                 <a href="{{route('getcustomerdetails', $user->store_id)}}" id="getCustomer">
+                  {{$user->store_email}}</a>
                 
               </td>
-		<td>
+		            <td>
                   {{$user->service_name}}
-
-              </td>
+                </td>
 
             </tr>
             @php
