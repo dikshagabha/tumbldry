@@ -35,10 +35,10 @@
             <form id="logout-form" action="{{ route('admin.logout') }}" method="POST" style="display: none;">
                 @csrf
             </form>
-            @include('layouts.page_templates.auth')
+            @include('store.layouts.page_templates.auth')
         @endauth
         @guest()
-            @include('layouts.page_templates.guest')
+            @include('store.layouts.page_templates.guest')
         @endguest
      
         <!--   Core JS Files   -->
@@ -87,8 +87,50 @@
         
         <script src="{{asset('js/waitMe.js')}}"></script>
         <script src="{{asset('js/pnotify.custom.min.js')}}"></script>
-        <script type="text/javascript">
 
+        <script src="https://js.pusher.com/4.4/pusher.min.js"></script>
+        <script>
+
+          $(document).ready(function(){
+
+          var pusher = new Pusher("{{env('PUSHER_APP_KEY')}}", {
+            cluster: 'ap2',
+            forceTLS: true
+          });
+
+         var channel = pusher.subscribe('my-channel');
+          channel.bind('notification', function(data) {
+              $(".notif-count").text(parseInt($(".notif-count").text())+1);
+              $(".dropdown-menu").prepend("<a class='dropdown-item' href='#'>"+data.message+"</a>");
+
+              load_listings(location.href);
+              //alert(JSON.stringify(data));
+            });
+
+          $(document).click("#navbarDropdownMenuLink", function(e){
+            e.preventDefault();
+            //$(".notif-count").text(0);
+            url = $('#navbarDropdownMenuLink').attr('href');
+            console.log(url);
+            $.ajax({
+                  async: false,
+                  type : 'post',
+                  url : url,
+                 // data : data,
+                 // dataType : 'html',
+                  success : function(data) {
+
+                    $(".notif-count").text(0);
+                  },
+                });
+
+            })
+          });
+         
+      </script>
+
+        <script type="text/javascript">
+            
             function load_listings(url, filter_form_name) {
                 let data = {};
                 // check if the element is not specified
@@ -122,7 +164,8 @@
                 type: 'success'
               });
             }
-            function error(message="Something went wrong"){
+            
+            function error(message){
               PNotify.removeAll() 
               new PNotify({
                 title: 'Error!',
@@ -147,7 +190,9 @@
                   }
                   else{
                      $('body').waitMe('hide');
-                     error();
+                     if (data.message) {error(data.message);}
+                     else {error("Something went wrong")}
+                     
                   }
                 }
               })

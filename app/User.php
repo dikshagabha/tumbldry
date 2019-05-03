@@ -8,8 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
-    use Notifiable;
-
+    //use Notifiable;
     /**
      * The attributes that are mass assignable.
      *
@@ -37,7 +36,8 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    protected $appends = ['machine_count'];
+    protected $appends = ['address', 'city', 'state', 'pin', 'latitude', 'longitude', 'landmark',
+                            'address_id'];
 
     // public function address(){
     //   return $this->hasMany('App\Model\UserAddress', 'user_id', 'id');
@@ -46,6 +46,11 @@ class User extends Authenticatable
     public function addresses()
     {
         return $this->hasOne('App\Model\Address', 'user_id', 'id');
+    }
+
+     public function notifications()
+    {
+        return $this->hasMany('App\Model\Notification', 'to_id', 'id');
     }
 
     public function machines()
@@ -162,6 +167,14 @@ class User extends Authenticatable
     {
         if ($this->addresses()->count()) {
             return $this->addresses()->first()->address; 
+        }
+        return '';
+    }
+
+    public function getAddressIdAttribute()
+    {
+        if ($this->addresses()->count()) {
+            return $this->addresses()->first()->id; 
         }
         return '';
     }

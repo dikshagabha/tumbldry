@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class UpdateUsersTableStatus extends Migration
+class AlterPickupRequest extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class UpdateUsersTableStatus extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->integer('status')->default(0);
+        Schema::table('pickup_requests', function (Blueprint $table) {
+            $table->integer('service')->default(0)->nullable();
         });
     }
 
@@ -25,8 +25,8 @@ class UpdateUsersTableStatus extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('status');
+        Schema::table('pickup_requests', function (Blueprint $table) {
+            $table->dropColumn('service');
         });
     }
 }
