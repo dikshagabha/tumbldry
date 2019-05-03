@@ -16,9 +16,9 @@ class LoginController extends Controller
 
     	$titlePage  = "Login";
 
-    	if (Auth::check()) {
-    		return redirect()->route('store.home');
-    	}
+    	// if (Auth::check()) {
+    	// 	return redirect()->route('store.home');
+    	// }
     	return view('store.auth.login', compact('titlePage'));
     }
 
@@ -29,14 +29,9 @@ class LoginController extends Controller
 
     	$credentials = $Request->only('email', 'password');
         $credentials['role'] = 3;
-
-        //print_r(Auth::logout());die;
-    	if (Auth::attempt($credentials, true)
-    		) {
-    			// $authUser =User::where($credentials)->first();
-       //  		Auth::login($authUser, true);
-    		 //$Request->session()->put('current_user',Auth::user());
-    		// Session::put('initial_login', '1');
+        $credentials['status'] = 1;
+    	if (Auth::attempt($credentials)) 
+        {
     		return response()->json(["message"=>"User Authenicated", "redirectTo"=>route('store.home')], 200);
     	}
 

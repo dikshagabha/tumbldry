@@ -107,10 +107,10 @@
               //alert(JSON.stringify(data));
             });
 
-          $(document).click("#navbarDropdownMenuLink", function(e){
+          $(document).on('click', ".notifications", function(e){
             e.preventDefault();
             //$(".notif-count").text(0);
-            url = $('#navbarDropdownMenuLink').attr('href');
+            url = $(this).attr('href');
             console.log(url);
             $.ajax({
                   async: false,

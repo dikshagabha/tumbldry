@@ -30,7 +30,7 @@
           </a>
         </li> -->
         <li class="nav-item dropdown">
-          <a class="nav-link"  id="navbarDropdownMenuLink" href="{{route('notifications.mark-read')}}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <a class="nav-link notifications"  id="navbarDropdownMenuLink" href="{{route('notifications.mark-read')}}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <i class="material-icons">notifications</i>
             <span class="notification">(<span class="notif-count" >{{Auth::user()->notifications()->where('read_at', 'null')->count()}}</span>)</span>
             <p class="d-lg-none d-md-block">

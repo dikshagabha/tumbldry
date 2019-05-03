@@ -67,14 +67,18 @@ Route::prefix('admin')->group(function () {
 
 Route::prefix('store')->group(function () {
 
+   Route::group(['middleware' => 'guest'], function () {
+        Route::get('/login', 'Store\LoginController@getLogin')->name('store.login');
+        Route::post('/login', 'Store\LoginController@postLogin')->name('store.login');
+
+      });
+
   Route::group(['middleware' => ['web', 'checkPrefix']], function () {
       Route::get('/', function () {
           return redirect()->route('store.login');
       });
-      Route::get('/login', 'Store\LoginController@getLogin')->name('store.login');
-      Route::post('/login', 'Store\LoginController@postLogin')->name('store.login');
 
-
+     
      Route::group(['middleware' => ['store']], function () {
          Route::get('/home', 'Store\HomeController@index')->name('store.home');
 
@@ -121,5 +125,5 @@ Route::prefix('store')->group(function () {
 });
 
 
-Route::get('/customer-details/{id}', 'Store\HomeController@getcustomerdetails')->name('getcustomerdetails');
+Route::get('/customer-details/{id?}', 'Store\HomeController@getcustomerdetails')->name('getcustomerdetails');
 Route::get('/address-details/{id}', 'Store\HomeController@getaddressdetails')->name('getaddressdetails');

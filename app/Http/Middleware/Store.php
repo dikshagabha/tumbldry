@@ -16,7 +16,10 @@ class Store
     public function handle($request, Closure $next)
     {
       if (Auth::check()) {
-          return $next($request);
+          if (Auth::user()->status == 1) {
+            return $next($request);
+          }
+          Auth::logout();
       }
       return redirect()->route('store.login');
     }

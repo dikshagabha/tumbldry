@@ -7,7 +7,9 @@
       <h3> </h3>
     </div>
     <div class="col-lg-4 col-md-6 col-sm-8 ml-auto mr-auto">
-      <form class="form" method="POST" action="{{ route('store.login') }}" id="loginForm">
+      <!-- <form class="form" method="POST" action="{{ route('store.login') }}" id="loginForm">
+ -->
+ {{Form::open(['route'=>'store.login', 'id'=>'loginForm', 'method'=>'post'])}}
         @csrf
 
         <div class="card card-login card-hidden mb-3">
@@ -37,11 +39,11 @@
                 <input type="email" name="email" class="form-control" placeholder="{{ __('Email...') }}" required>
               </div>
               <span class="error" id="email_error"></span>
-              @if ($errors->has('email'))
+              <!-- @if ($errors->has('email'))
                 <div id="email-error" class="error text-danger pl-3" for="email" style="display: block;">
                   <strong>{{ $errors->first('email') }}</strong>
                 </div>
-              @endif
+              @endif -->
             </div>
             <div class="bmd-form-group{{ $errors->has('password') ? ' has-danger' : '' }} mt-3">
               <div class="input-group">
@@ -54,11 +56,11 @@
               </div>
 
               <span class="error" id="password_error"></span>
-              @if ($errors->has('password'))
+             <!--  @if ($errors->has('password'))
                 <div id="password-error" class="error text-danger pl-3" for="password" style="display: block;">
                   <strong>{{ $errors->first('password') }}</strong>
                 </div>
-              @endif
+              @endif -->
             </div>
             <div class="form-check mr-auto ml-3 mt-3">
               <label class="form-check-label">
@@ -98,6 +100,8 @@
       $(document).on('click', '#login', function(e){
         e.preventDefault();
         $('body').waitMe();
+        $(".error").html("");
+        console.log($('#loginForm').serializeArray());
         $.ajax({
           url: $("#loginForm").attr('action'),
           type: $('#loginForm').attr('method'),
