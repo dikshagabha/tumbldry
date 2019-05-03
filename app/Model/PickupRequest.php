@@ -13,6 +13,12 @@ class PickupRequest extends Model
         return $this->hasOne('App\User', 'id', 'customer_id');
     }
 
+    public function service()
+    {
+     	return $this->hasOne('App\Model\Service', 'id', 'service');
+    }
+
+
     public function customer_address()
     {
         return $this->hasOne('App\Model\Address', 'id', 'address');
@@ -27,6 +33,12 @@ class PickupRequest extends Model
     {
         return $this->customer()->first()->email; //some logic to return numbers
     }
+
+    public function getServiceNameAttribute()
+    {
+     	return $this->service()->first()->name; //some logic to return numbers
+    }
+
 
     public function getCustomerPhoneAttribute()
     {

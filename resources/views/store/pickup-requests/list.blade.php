@@ -11,7 +11,9 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
               <th>Customer Phone Number</th>
               <th>Customer Name</th>
               <th>Customer Address</th>
-            </tr>
+             <th> Service </th>
+  
+	</tr>
           </thead>
           <tbody>
 
@@ -33,7 +35,11 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
                 </a>
                 
               </td>          
-            </tr>
+           
+	<td>
+               	{{$user->service_name}}
+              </td>
+	 </tr>
             @php
             $i++;
             @endphp

@@ -115,7 +115,7 @@ class PickupController extends Controller
                     ORDER BY distance limit 100"; 
 
           $address = Address::whereRaw($whereRaw)
-                      ->select($query)->pluck('user_id');
+                      ->select($query)->pluck('user_id')->toArray();
         }
 
 
