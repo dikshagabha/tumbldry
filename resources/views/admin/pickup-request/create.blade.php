@@ -121,7 +121,8 @@ $(document).ready(function(){
             $("#latitude").val("").prop('readonly', false);
            $("#longitude").val("").prop('readonly', false);
            $("#landmark").val("").prop('readonly', false);
-
+           $("#customer_id").val("");
+           $("#address_id").val("");
         }
         $('body').waitMe('hide');
       }
@@ -143,7 +144,7 @@ $(document).ready(function(){
       data: data,    
       success: function(data){
         success(data.message);
-        //window.location=data.redirectTo;
+        window.location=data.redirectTo;
         $('body').waitMe('hide');
       }
     })

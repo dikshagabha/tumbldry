@@ -30,7 +30,7 @@ class HomeController extends Controller
     public function getcustomerdetails(Request $Request, $id)
     {
        
-        $user = User::where("id", $id)->where("role", 4)->first();
+        $user = User::where("id", $id)->first();
 
         return view('store.customer_details_modal', compact('user'));
     }

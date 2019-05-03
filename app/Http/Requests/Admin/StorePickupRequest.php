@@ -36,10 +36,10 @@ class StorePickupRequest extends FormRequest
             'customer_id'=>['bail','nullable', 'numeric'],
             'address_id'=>['bail','nullable', 'numeric'],
             
-            'address'=>'bail|nullable|string|min:2|max:50',
+            'address'=>'bail|required|string|min:2|max:50',
             'city'=>'bail|nullable|string|min:2|max:50',
             'state'=>'bail|nullable|string|min:2|max:50',
-            'pin'=>'bail|nullable|numeric|min:2|max:999999',
+            'pin'=>'bail|required|numeric|min:2|max:999999',
             'latitude'=>'bail|nullable|numeric|min:-180|max:180',
             'longitude'=>'bail|nullable|numeric|min:-180|max:180',
             'landmark'=>'bail|nullable|string|min:2|max:200',
@@ -57,10 +57,13 @@ class StorePickupRequest extends FormRequest
           
           'user_id'=>['bail','nullable', 'numeric'],
           
-          'address'=>'bail|nullable|string|min:2|max:50',
+          'address'=>'bail|required|string|min:2|max:50',
+          
           'city'=>'bail|nullable|string|min:2|max:50',
           'state'=>'bail|nullable|string|min:2|max:50',
-          'pin'=>'bail|nullable|numeric|min:2|max:999999',
+          
+          'pin'=>'bail|required|numeric|min:2|max:999999',
+          
           'latitude'=>'bail|nullable|numeric|min:-180|max:180',
           'longitude'=>'bail|nullable|numeric|min:-180|max:180',
           'landmark'=>'bail|nullable|string|min:2|max:200',

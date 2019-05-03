@@ -55,7 +55,7 @@
     <!-- Modal content-->
     <div class="modal-content">
       <div class="modal-header">
-         <h4 class="modal-title">Store Details</h4>
+         <h4 class="modal-title">User Details</h4>
         <button type="button" class="close" data-dismiss="modal">&times;</button>
        
       </div>
@@ -213,6 +213,21 @@ $(document).ready(function(){
     $('body').waitMe();
     $.ajax({
       url: $('.view').attr('href'),
+      type:"get",
+      success: function(data){
+        $('body').waitMe("hide");        
+        $('#details').html(data);
+        $("#addressModal").modal('show');
+      },
+    })
+  })
+
+  $(document).on('click', '#getCustomer, #getStore', function(e){
+    e.preventDefault();
+    $('body').waitMe();
+    url = $(this).attr('href');
+    $.ajax({
+      url: url,
       type:"get",
       success: function(data){
         $('body').waitMe("hide");        

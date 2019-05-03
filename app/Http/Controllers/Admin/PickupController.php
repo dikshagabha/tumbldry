@@ -92,8 +92,11 @@ class PickupController extends Controller
 
         $pin = $request->input('pin');
 
-        $address = Address::where('pin', $pin)->first();
+        $address = Address::where('pin', $pin)->pluck('user_id')->toArray();
 
+        
+
+        //dd($request->input('pin'));
         if (!$address) {
           $origLat = $request->input('latitude');
           $origLon = $request->input('longitude');
@@ -111,15 +114,17 @@ class PickupController extends Controller
                     and ($origLat+($dist/69)) 
                     ORDER BY distance limit 100"; 
 
-          $address = Address::whereRaw($whereRaw)->select($query)->first();
+          $address = Address::whereRaw($whereRaw)
+                      ->select($query)->pluck('user_id');
         }
-        
 
+
+        $address = User::where(['role'=> 3])->whereIn('id', $address)->first();
         $pickup = PickupRequest::create(['customer_id'=>$request->input('customer_id'),
                                 'address'=>$request->input('address_id'),
-                                 'store_id'=>$address->user_id, 
+                                 'store_id'=>$address->id, 
                                 'request_mode'=>1, 'status'=>1, 'service'=>$request->input('service')]);
-        if ($address->user_id) {
+        if ($address->id) {
           // Send Notification to store
 
           $options = array(

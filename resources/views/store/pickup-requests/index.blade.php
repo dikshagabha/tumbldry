@@ -142,6 +142,8 @@ $(document).ready(function(){
       },
     })
   })
+
+  
 })
 </script>
 
