@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Manage Store')
+@section('title', 'Pickup Request')
 
 @section('content')
 @section('css')

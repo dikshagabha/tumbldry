@@ -96,7 +96,7 @@
 
       <li class="nav-item{{ $activePage == 'pickup-request' ? ' active' : '' }}">
         <a class="nav-link" href="{{ route('pickup-request.index') }}">
-           <i class="material-icons">money</i>
+          <i><img style="width:25px" src="{{ asset('images/icons/pickup.png') }}"></i>
           <p>{{ __('Pickup Request') }}</p>
           
         </a>

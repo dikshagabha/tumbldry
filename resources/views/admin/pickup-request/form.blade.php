@@ -52,7 +52,7 @@
                </div>
                <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
                 {!! Form::select('service', $services, null,array('class' => 'form-control', "placeholder"=>"Select Service", "id"=>"service")) !!}
-                <span class="error" id="email_error"></span>
+                <span class="error" id="service_error"></span>
                </div>
           </div>
         </div>
@@ -77,7 +77,7 @@
                      <label class="login2 pull-right pull-right-pro">Address</label>
                    </div>
                    <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
-                     {!! Form::text('address', null, array('class' => 'form-control', 'maxlength'=>"50", 'id'=>"address")) !!}
+                     {!! Form::text('address', null, array('class' => 'form-control', 'maxlength'=>"50", 'id'=>"address", "placeholder"=>"Address")) !!}
                      <span class="error" id="address_error"></span>
                    </div>
                  </div>
@@ -88,7 +88,7 @@
                       <label class="login2 pull-right pull-right-pro">City</label>
                     </div>
                    <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
-                     {!! Form::text('city',null,array('class' => 'form-control', 'maxlength'=>"50", 'id'=>"city")) !!}
+                     {!! Form::text('city',null,array('class' => 'form-control', 'maxlength'=>"50", 'id'=>"city", "placeholder"=>"City")) !!}
                       <span class="error" id="city_error"></span>
                     </div>
                  </div>
@@ -101,7 +101,7 @@
                     </div>
                     <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
                        
-                     {!! Form::text('state',null,array('class' => 'form-control', 'maxlength'=>"50", 'id'=>"state")) !!}
+                     {!! Form::text('state',null,array('class' => 'form-control', 'maxlength'=>"50", 'id'=>"state", "placeholder"=>"State")) !!}
                       <span class="error" id="state_error"></span>
                     </div>
                     
@@ -115,7 +115,7 @@
                     </div>
                    <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
                        
-                     {!! Form::text('pin',null,array('class' => 'form-control', 'maxlength'=>"6", 'id'=>"pin")) !!}
+                     {!! Form::text('pin',null,array('class' => 'form-control', 'maxlength'=>"6", 'id'=>"pin", "placeholder"=>"Pin")) !!}
                       <span class="error" id="pin_error"></span>
                     </div>
                     
@@ -128,7 +128,7 @@
                     </div>
                    <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
                        
-                     {!! Form::text('latitude',null,array('class' => 'form-control', 'maxlength'=>"10", 'id'=>"latitude")) !!}
+                     {!! Form::text('latitude',null,array('class' => 'form-control', 'maxlength'=>"10", 'id'=>"latitude", "placeholder"=>"Latitude")) !!}
                       <span class="error" id="latitude_error"></span>
                     </div>
                     
@@ -141,7 +141,7 @@
                     </div>
                    <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
                        
-                     {!! Form::text('longitude',null,array('class' => 'form-control', 'maxlength'=>"10", 'id'=>"longitude")) !!}
+                     {!! Form::text('longitude',null,array('class' => 'form-control', 'maxlength'=>"10", 'id'=>"longitude", "placeholder"=>"Longitude")) !!}
                       <span class="error" id="longitude_error"></span>
                     </div>
                   </div>
@@ -153,7 +153,7 @@
                     </div>
                    <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
                        
-                     {!! Form::textarea('landmark',null,array('class' => 'form-control', 'maxlength'=>"200", 'id'=>"landmark")) !!}
+                     {!! Form::textarea('landmark',null,array('class' => 'form-control', 'maxlength'=>"200", 'id'=>"landmark", "placeholder"=>"Landmark")) !!}
                       <span class="error" id="landmark_error"></span>
                     </div>
                     
