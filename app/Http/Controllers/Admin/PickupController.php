@@ -119,14 +119,18 @@ class PickupController extends Controller
         }
 
 
-        $address = User::where(['role'=> 3])->whereIn('id', $address)->first();
+        $address = User::where(['role'=> 3, 'status'=>1])->whereIn('id', $address)->first();
+        $id=null;
+        if ($address) {
+          $id=$address->id;
+        }
         $pickup = PickupRequest::create(['customer_id'=>$request->input('customer_id'),
                                 'address'=>$request->input('address_id'),
                                  'store_id'=>$address->id, 
                                 'request_mode'=>1, 'status'=>1, 'service'=>$request->input('service')]);
-        if ($address->id) {
+        if ($id) {
           // Send Notification to store
-
+          not::dispatch($pickup, 1);
           $options = array(
               'cluster' => 'ap2',
               'useTLS' => true
@@ -140,9 +144,7 @@ class PickupController extends Controller
 
 
             $data['message'] = $request->input('name')." has requested a pickup.";
-            $pusher->trigger('my-channel', 'notification', $data);
-
-            not::dispatch($pickup, 1);
+            $pusher->trigger('my-channel', 'notification', $data);            
         }
         
 
