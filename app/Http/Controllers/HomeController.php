@@ -136,4 +136,20 @@ class HomeController extends Controller
         $locations = Location::where('pincode', $request->input('id'))->first();
         return response()->json(['message'=>'data found!', 'state'=>$locations->state_name, 'city'=>$locations->city_name, 'location_id'=>$locations->id], 200);
       }
+
+      public function findUser(Request $request)
+      {
+        
+        $validatedData = $request->validate([
+          'phone_number' => 'bail|required|numeric|min:2|max:9999999999',
+          ]);
+
+        $customer = User::where('phone_number', 'like', '%'.$request->input('phone_number').'%')->first();
+        
+        if ($customer) {
+          return response()->json(["message"=>"User Found!!", "user" => $customer], 200);
+        }
+          return response()->json(["message"=>"User Not Found!!"], 400);
+
+      }
 }

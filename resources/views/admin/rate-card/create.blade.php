@@ -9,9 +9,14 @@
 
 <div class="content">
   <div class="container-fluid">
+
     <div class="row">
       <div class="col-lg-12 col-md-12 col-sm-12">
         <div class="card card-stats">
+
+          <div class="row">            
+            <a href = "{{route('admin.getBlankExcel')}}" ><button id="export" data-url="{{route('admin.getBlankExcel')}}" class="btn btn-link">Demo Excel</button></a>
+          </div>
           <br>
           {{Form::open(['route'=>'admin.postRateCardForm', 'method'=>'post', 'id'=>'addFrenchise', 'name'=>'form_data'])}}
           

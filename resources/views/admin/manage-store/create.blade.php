@@ -71,6 +71,8 @@
 <script src="{{asset('js/chosen/chosen.jquery.min.js')}}"></script>
 <script src="{{asset('js/jquery.accordion-wizard.min.js')}}"></script>
 
+<script src="{{asset('js/jquery.mask.js')}}"></script>
+
 <script src="{{asset('js/jcf/jcf.js')}}"></script>
 <script src="{{asset('js/jcf/jcf.radio.js')}}"></script>
 <script src="{{asset('js/jcf/jcf.file.js')}}"></script>
@@ -80,7 +82,6 @@ $(document).ready(function(){
 
   jcf.replaceAll();
 	$('#parent').chosen();
-
   function sendRequest(url, current){
     var form = $('#addFrenchise')[0];
 

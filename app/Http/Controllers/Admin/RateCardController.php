@@ -159,4 +159,10 @@ class RateCardController extends Controller
             return response()->json(["message"=>$e->getMessage()], 400);
         }
     }
+
+    public function getBlankExcel(Request $request)
+    {
+        $file_path = public_path('excel/demo.xlsx');
+        return response()->download($file_path);
+    }
 }

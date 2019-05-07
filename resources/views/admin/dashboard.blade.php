@@ -112,7 +112,10 @@
 
                         {{ Form::submit('Submit', ['class' => 'btn btn-warning',
                         'id' => 'search_rate', 'data-url'=>route('admin.getRate')]) }}
-                        <span class="error" id="city_error"></span>
+
+                        {{ Form::button('Reset', ['class' => 'btn btn-danger reset',
+                         'data-type'=>1]) }}
+                       
                     </div>
                   </div>                
                 {{Form::close()}}
@@ -122,6 +125,100 @@
                   
                 </div>
 
+              </div>
+            </div>
+            
+            <div class="card-footer">
+              <div class="stats">
+                <!-- <i class="material-icons">access_time</i> updated 4 minutes ago -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="row" id="rate_search">
+        <div class="col-md-12">
+          <div class="card card-chart">
+            <div class="card-header card-header-success">
+              
+            </div>
+            <div class="card-body">
+              <h4 class="card-title">Search User..</h4>
+              <div class="card-category">
+                {{Form::open(['route'=>'admin.findUser', 'id'=>'customerForm'])}}
+
+                  <div class="row">                    
+                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                        {{ Form::text('phone_number',  null,['class' => 'form-control', 'placeholder' => 'Phone Number']) }}
+                        <span class="error" id="phone_number_error"></span>
+                    </div>                    
+                     <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                        {{ Form::submit('Submit', ['class' => 'btn btn-warning',
+                        'id' => 'search_customer', 'data-url'=>route('admin.getRate')]) }}
+
+                        {{ Form::button('Reset', ['class' => 'btn btn-danger reset', 'data-type'=>2]) }}
+                  
+                    </div>
+                  </div>                
+                {{Form::close()}}
+
+                <div id="UserList" style="display: none" >
+
+
+                    Basic Information
+                    <table class="table table-bordered">
+                      <tr>
+                        <td width="50%">Name</td>
+                        <td id="name"></td>
+                      </tr>
+                      <tr>
+                        <td>Email</td>
+                        <td id="email"></td>
+                      </tr>
+                      <tr>
+                        <td>Phone Number</td>
+                        <td id="phone_number"></td>
+                      </tr> 
+
+                      <tr>
+                        <td>Role</td>
+                        <td id="role_type"></td>
+                      </tr>                    
+                    </table>
+                    Address Information
+                    <table class="table table-bordered">
+                      <tr>
+                        <td width="50%" class="table-modal">Address</td>
+                        <td class="table-modal" id="address"></td>
+                      </tr>
+                      <tr>
+                        <td class="table-modal">City</td>
+                        <td class="table-modal" id="city"></td>
+                      </tr>
+                      <tr>
+                        <td class="table-modal">State</td>
+                        <td class="table-modal" id="state"></td>
+                      </tr>
+                      <tr>
+                        <td class="table-modal">Pin</td>
+                        <td class="table-modal" id="pin"></td>
+                      </tr>
+                      <tr>
+                        <td class="table-modal">Latitude</td>
+                        <td class="table-modal" id="latitude"></td>
+                      </tr>
+                      <tr>
+                        <td class="table-modal">Longitude</td>
+                        <td class="table-modal" id="longitude"></td>
+                      </tr>
+                      <tr>
+                        <td class="table-modal">Landmark</td>
+                        <td class="table-modal" id="landmark"></td>
+                      </tr>
+                    </table>
+                </div>
               </div>
             </div>
             
@@ -564,6 +661,26 @@
         })
          });
 
+     $(document).on('click', '.reset', function (e) {
+      e.preventDefault();        
+        $(".error").html("");
+        $('body').waitMe();
+
+        type = $(this).data('type');
+
+        if (type==1) 
+        {
+          $('#rateForm')[0].reset();
+          $("#dataList").hide();
+        }
+        else{
+          $('#customerForm')[0].reset();
+          $("#Userist").hide();
+        }
+
+         $('body').waitMe('hide');
+     })
+
     $(document).on('click', '#search_rate', function(e){
       e.preventDefault();        
         $(".error").html("");
@@ -575,8 +692,36 @@
           type:'post',
           success: function(data){
             $('#dataList').html(data);
+            $("#dataList").show();
             $('body').waitMe('hide');
           }
+        })
+         }); 
+
+    $(document).on('click', '#search_customer', function(e){
+      e.preventDefault();        
+        $(".error").html("");
+        $('body').waitMe();
+        $('#UserList').hide();
+        $.ajax({
+          url:$('#customerForm').attr('action'),
+          data:$('#customerForm').serializeArray(),
+          type:'post',
+          dataType:"json",
+          success: function(data){
+            if (data.user) 
+            {
+
+              for(key in data.user)
+              {
+                $("#"+key).html(data.user[key]);
+              }
+            }
+
+            $('#UserList').show();
+            $('body').waitMe('hide');
+          },
+         
         })
          }); 
 

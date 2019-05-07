@@ -5,8 +5,9 @@ namespace App;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+ use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class User extends Authenticatable
+class User extends Authenticatable implements JWTSubject
 {
     //use Notifiable;
     /**
@@ -37,11 +38,19 @@ class User extends Authenticatable
     ];
 
     protected $appends = ['address', 'city', 'state', 'pin', 'latitude', 'longitude', 'landmark',
-                            'address_id'];
+                            'address_id', 'role_type'];
 
     // public function address(){
     //   return $this->hasMany('App\Model\UserAddress', 'user_id', 'id');
     // }
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+    public function getJWTCustomClaims()
+    {
+        return [];
+    }
 
     public function addresses()
     {
@@ -74,93 +83,152 @@ class User extends Authenticatable
     }
 
 
+    public function getRoleTypeAttribute()
+    {
+        if($this->role==1)
+        {
+            return "Admin";
+        };
+        if($this->role==2)
+        {
+            return "Franchise";
+        };
+        if($this->role==3)
+        {
+            return "Store";
+        };
+        if($this->role==4)
+        {
+            return "Customer";
+        }; 
+    }
+
     public function getMachineTypeAttribute()
     {
-        return $this->machines()->first()->machine_type; //some logic to return numbers
+        if ($this->machines()->count()) {
+            return $this->machines()->first()->machine_type;
+        }
+        return "--";
     }
+
     public function getMachineCountAttribute()
     {
+        if ($this->machines()->count()) 
         return $this->machines()->first()->machine_count; //some logic to return numbers
+
+        return "--";
     }
 
     public function getBoilerCountAttribute()
     {
+        if ($this->machines()->count()) 
         return $this->machines()->first()->boiler_count; //some logic to return numbers
+        return "--";
     }
 
     public function getBoilerTypeAttribute()
     {
+        if ($this->machines()->count()) 
         return $this->machines()->first()->boiler_type; //some logic to return numbers
+        return "--";
     }
 
     public function getIronCountAttribute()
     {
+        if ($this->machines()->count())
         return $this->machines()->first()->iron_count; //some logic to return numbers
+        return "--";
     }
 
 
     public function getPropertyTypeAttribute()
     {
+        if ($this->properties()->count())
         return $this->properties()->first()->property_type; //some logic to return numbers
+        return "--";
     }
     public function getStoreSizeAttribute()
     {
+         if ($this->properties()->count())
         return $this->properties()->first()->store_size; //some logic to return numbers
+        return "--";
     }
 
     public function getStoreRentAttribute()
     {
+         if ($this->properties()->count())
         return $this->properties()->first()->store_rent; //some logic to return numbers
+        return "--";
     }
 
     public function getRentEnhacementAttribute()
     {
+         if ($this->properties()->count())
         return $this->properties()->first()->rent_enhacement; //some logic to return numbers
+        return "--";
     }
 
     public function getRentEnhacementPercentAttribute()
     {
+         if ($this->properties()->count())
         return $this->properties()->first()->rent_enhacement_percent; //some logic to return numbers
+        return "--";
     }
 
     public function getLandlordNameAttribute()
     {
+         if ($this->properties()->count())
         return $this->properties()->first()->landlord_name; //some logic to return numbers
+        return "--";
     }
 
     public function getLandlordNumberAttribute()
     {
+         if ($this->properties()->count())
         return $this->properties()->first()->landlord_number; //some logic to return numbers
+        return "--";
     }
 
     public function getAccountNumberAttribute()
     {
+         if ($this->account()->count())
         return $this->account()->first()->account_number; //some logic to return numbers
+        return "--";
     }
 
     public function getBankNameAttribute()
     {
+         if ($this->account()->count())
         return $this->account()->first()->bank_name; //some logic to return numbers
+        return "--";
     }
 
     public function getBranchCodeAttribute()
     {
+         if ($this->account()->count())
         return $this->account()->first()->branch_code; //some logic to return numbers
+        return "--";
     }
 
     public function getIfscCodeAttribute()
     {
+         if ($this->account()->count())
         return $this->account()->first()->ifsc_code; //some logic to return numbers
+        return "--";
     }
 
     public function getPanCardNumberAttribute()
     {
+         if ($this->account()->count())
         return $this->account()->first()->pan_card_number; //some logic to return numbers
+        return "--";
     }
 
     public function getIdProofNumberAttribute()
     {
+         if ($this->account()->count())
         return $this->account()->first()->id_proof_number; //some logic to return numbers
+        return "--";
     }
 
      public function getAddressAttribute()
@@ -168,7 +236,7 @@ class User extends Authenticatable
         if ($this->addresses()->count()) {
             return $this->addresses()->first()->address; 
         }
-        return '';
+        return '--';
     }
 
     public function getAddressIdAttribute()
@@ -176,42 +244,42 @@ class User extends Authenticatable
         if ($this->addresses()->count()) {
             return $this->addresses()->first()->id; 
         }
-        return '';
+        return "--";
     }
      public function getPinAttribute()
     {
         if ($this->addresses()->count()) {
             return $this->addresses()->first()->pin; 
         }
-        return '';
+        return "--";
     }
      public function getCityAttribute()
     {
         if ($this->addresses()->count()) {
             return $this->addresses()->first()->city; 
         }
-        return '';//some logic to return numbers
+        return "--";///some logic to return numbers
     }
      public function getStateAttribute()
     {
         if ($this->addresses()->count()) {
             return $this->addresses()->first()->state; 
         }
-        return ''; //some logic to return numbers
+        return "--"; //some logic to return numbers
     }
      public function getLatitudeAttribute()
     {
         if ($this->addresses()->count()) {
             return $this->addresses()->first()->latitude; 
         }
-        return '';
+        return "--";
     }
      public function getLongitudeAttribute()
     {
         if ($this->addresses()->count()) {
             return $this->addresses()->first()->longitude; 
         }
-        return '';
+        return "--";
     }
     
     public function getLandmarkAttribute()
@@ -219,7 +287,7 @@ class User extends Authenticatable
         if ($this->addresses()->count()) {
             return $this->addresses()->first()->landmark; 
         }
-        return '';
+        return "--";
     }
 
     public function getParentNameAttribute()
@@ -227,7 +295,7 @@ class User extends Authenticatable
         if ($this->parent()->count()) {
             return $this->parent()->first()->name; 
         }
-        return '';
+        return "--";
     }
 
 

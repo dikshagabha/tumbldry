@@ -53,6 +53,8 @@
 <script src="{{asset('js/chosen/chosen.jquery.min.js')}}"></script>
 <script>
 $(document).ready(function(){
+
+  
   $('#collapseTwo, #collapseThree, #collapseFour, #collapseFive , #collapseSix').addClass('show');
   $('.1, .2, .3, .4, .5, .6').prop('disabled', false);
 

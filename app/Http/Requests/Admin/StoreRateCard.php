@@ -30,11 +30,11 @@ class StoreRateCard extends FormRequest
               'city' => 'bail|required|string',
               'service' => 'bail|required|string',
               'parameter'=>['bail', 'required', 'array', 'min:1'],
-                    'parameter.*'=>['bail', 'required', 'string', 'min:1', 'max:50'],
-                    'price'=>['bail', 'required', 'array', 'min:1'],
-                    'price.*'=>['bail', 'required', 'numeric', 'min:1', 'max:999999'],
-                    'quantity'=>['bail', 'required', 'array', 'min:1'],
-                    'quantity.*'=>['bail', 'required', 'numeric', 'min:1', 'max:999999'],
+              'parameter.*'=>['bail', 'required', 'string', 'min:1', 'max:50'],
+               'price'=>['bail', 'array', 'min:1', 'nullable'],
+               'price.*'=>['bail', 'numeric', 'min:1', 'max:999999', 'nullable'],
+                    'quantity'=>['bail', 'array', 'min:0', 'nullable'],
+                    'quantity.*'=>['bail', 'numeric', 'min:0', 'max:999999', 'nullable'],
                 ];
             }
 
@@ -51,10 +51,10 @@ class StoreRateCard extends FormRequest
             return [
               'city' => 'bail|required|string',
               'service' => 'bail|required|string',
-              'parameter'=>['bail', 'required', 'array', 'min:1'],
-              'parameter.*'=>['bail', 'required', 'string', 'min:1', 'max:50'],
-              'price'=>['bail', 'required', 'array', 'min:1'],
-              'price.*'=>['bail', 'required', 'numeric', 'min:1', 'max:999999'],
+              'parameter'=>['bail',  'array', 'min:1'],
+              'parameter.*'=>['bail',  'string', 'min:1', 'max:50'],
+              'price'=>['bail',  'array', 'min:1'],
+              'price.*'=>['bail', 'numeric', 'min:1', 'max:999999'],
             ];
           };
 

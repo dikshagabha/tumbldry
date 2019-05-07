@@ -17,7 +17,7 @@ class CreateServicePricesTable extends Migration
             $table->bigIncrements('id');
             $table->integer('service_id');
             $table->string('parameter');
-            $table->string('value');
+            $table->string('value')->nullable();
             $table->integer('status')->default(1);      
             $table->timestamps();
         });

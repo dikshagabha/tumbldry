@@ -24,7 +24,7 @@
                     <div class="row">
                       <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
                       </div>
-                         <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                         <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
                           {{ Form::text('search', '', ['class' => 'form-control', 'placeholder' => 'Search by Name or E-mail or Phone', 'maxlength'=>'50']) }}
                          </div>
                          <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">

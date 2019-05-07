@@ -86,10 +86,12 @@
         <script src="{{ asset('material') }}/js/settings.js"></script>
         
         <script src="{{asset('js/waitMe.js')}}"></script>
+        <script src="{{asset('js/jquery.mask.js')}}"></script>
         <script src="{{asset('js/pnotify.custom.min.js')}}"></script>
-        <script type="text/javascript">
 
-            function load_listings(url, filter_form_name) {
+
+        <script type="text/javascript">
+          function load_listings(url, filter_form_name) {
                 let data = {};
                 // check if the element is not specified
                 if(typeof filter_form_name !== 'undefined') {
@@ -113,6 +115,11 @@
                   }
                 });
               }
+          
+          $(document).ready(function(){
+            //$('input[name="phone_number"]').mask('00/00/0000');
+            
+            
 
           function success(message=""){
               PNotify.removeAll() 
@@ -130,12 +137,12 @@
                 type: 'error'
               });
             }
-            $(document).ready(function(){
 
               $.ajaxSetup({
                 headers:{
                   'X-CSRF-TOKEN':$('meta[name="csrf-token"]').attr('content')
                 },
+               
                 error: function(data, status){
                   if(data.status==422){
                     $('body').waitMe('hide');
@@ -147,7 +154,14 @@
                   }
                   else{
                      $('body').waitMe('hide');
-                     error();
+                        errors = data.responseJSON;
+
+                        if(errors.hasOwnProperty('message')) {
+                            error(errors.message);
+                        }
+                        else {
+                            error('Something went wrong!');
+                        }
                   }
                 }
               })

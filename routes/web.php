@@ -54,10 +54,14 @@ Route::prefix('admin')->group(function () {
     Route::get('/rate-card', 'Admin\RateCardController@getRateCard')->name('admin.getRateCard');
     Route::get('/rate-card-form', 'Admin\RateCardController@getRateCardForm')->name('admin.getRateCardForm');
     Route::post('/rate-card-form', 'Admin\RateCardController@postRateCardForm')->name('admin.postRateCardForm');
+    
+    Route::get('/excel-download', 'Admin\RateCardController@getBlankExcel')->name('admin.getBlankExcel');
 
     Route::get('/services', 'HomeController@getServices')->name('admin.getServices');
     Route::post('/services', 'HomeController@getRate')->name('admin.getRate');
-    Route::post('/find-store', 'Admin\PickupController@findCustomer')->name('admin.findCustomer');
+    
+    Route::post('/find-customer', 'Admin\PickupController@findCustomer')->name('admin.findCustomer');
+    Route::post('/find-user', 'HomeController@findUser')->name('admin.findUser');
     
     Route::post('/logout', 'Auth\LoginController@logout')->name('admin.logout');
 
@@ -84,41 +88,7 @@ Route::prefix('store')->group(function () {
 
          
       });
-      Route::post('/notifications/read-all', 'Store\NotificationsController@markRead')->name('notifications.mark-read');
-    
-  //   Route::get('/home', 'HomeController@index')->name('home');
-  //   Route::get('/dashboard', 'HomeController@index')->name('dashboard');
-  //   // Edit Profile Routes
-  //   Route::get('/edit-profile', 'HomeController@editProfile')->name('store.editProfile');
-  //   Route::post('/edit-profile', 'HomeController@postEditProfile')->name('store.postEditProfile');
-
-  //   Route::resources([
-  //     'manage-frenchise' => 'Admin\FranchiseController',
-  //     'manage-store' => 'Admin\StoreController',
-  //     'manage-service' => 'Admin\ServiceController',
-  //     'pickup-request' => 'Admin\PickupController'
-  //   ]);
-    
-  //   Route::post('/store/status/{id}', 'Admin\StoreController@status')->name('manage-store.status');
-
-  //   Route::post('/add-store/{id}', 'Admin\StoreController@saveSession')->name('admin.store.add');
-  //   // Address Routes
-  //   Route::get('/address', 'HomeController@addAddress')->name('admin.addAddress');
-  //   Route::post('/address', 'HomeController@postAddAddress')->name('admin.postAddAddress');
-  //   Route::get('/edit-address', 'HomeController@editAddress')->name('admin.editAddress');
-  //   Route::post('/edit-address', 'HomeController@postEditAddress')->name('admin.postEditAddress');
-
-  //   Route::get('/pin-details', 'HomeController@getPinDetails')->name('getPinDetails');
-
-  //   // Rate Cards
-  //   Route::get('/rate-card', 'Admin\RateCardController@getRateCard')->name('admin.getRateCard');
-  //   Route::get('/rate-card-form', 'Admin\RateCardController@getRateCardForm')->name('admin.getRateCardForm');
-  //   Route::post('/rate-card-form', 'Admin\RateCardController@postRateCardForm')->name('admin.postRateCardForm');
-
-  //   Route::get('/services', 'HomeController@getServices')->name('admin.getServices');
-  //   Route::post('/services', 'HomeController@getRate')->name('admin.getRate');
-  //   Route::post('/find-store', 'Admin\PickupController@findCustomer')->name('admin.findCustomer');
-    
+      Route::post('/notifications/read-all', 'Store\NotificationsController@markRead')->name('notifications.mark-read');   
     Route::post('/logout', 'Store\LoginController@logout')->name('store.logout');
 
   });

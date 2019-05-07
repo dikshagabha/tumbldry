@@ -172,7 +172,9 @@ $(document).ready(function(){
     headers:{
       'X-CSRF-TOKEN':$('meta[name="csrf-token"]').attr('content')
     },
+    
     error: function(data, status){
+      console.log('error');
       if(data.status==422){
         $('body').waitMe('hide');
         var errors = data.responseJSON;
@@ -180,10 +182,19 @@ $(document).ready(function(){
           console.log(errors.errors[key][0])
             $("#"+key+"_error").html(errors.errors[key][0])
           }
-      }
-      else{
-         $('body').waitMe('hide');
-         error();
+      }else if(data.status==400){
+        $('body').waitMe('hide');
+        errors = data.responseJSON;
+
+        if (errors) {
+          if(errors.hasOwnProperty('message')) {
+              error(errors.message);
+          }
+        }
+          
+        else {
+            error('Something went wrong!');
+        }
       }
     }
   })
