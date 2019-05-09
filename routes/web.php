@@ -86,9 +86,15 @@ Route::prefix('store')->group(function () {
      Route::group(['middleware' => ['store']], function () {
          Route::get('/home', 'Store\HomeController@index')->name('store.home');
 
-         
+         Route::resources([
+            'manage-runner' => 'Store\RunnerController',
+          ]);
       });
-      Route::post('/notifications/read-all', 'Store\NotificationsController@markRead')->name('notifications.mark-read');   
+
+      Route::post('/runner/status/{id}', 'Store\RunnerController@status')->name('manage-runner.status');
+      Route::post('/notifications/read-all', 'Store\NotificationsController@markRead')->name('notifications.mark-read'); 
+
+      Route::post('/runner/assign-runner', 'Store\RunnerController@assignRunner')->name('store.assign-runner'); 
     Route::post('/logout', 'Store\LoginController@logout')->name('store.logout');
 
   });

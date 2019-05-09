@@ -18,7 +18,8 @@ class AddStoreSeed extends Seeder
             'email' => 'teststore@yopmail.com',
             'password' => bcrypt('test@123'),
             'role'=>3,
-            'phone_number'=>"1231231234"
+            'phone_number'=>"1231231234",
+            'api_token'=>Str::random(60)api_token
         ]);
 
 

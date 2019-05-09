@@ -8,15 +8,16 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
           <thead>
             <tr>
               <th>S No</th>
-              <th>Customer Phone Number</th>
-              <th>Customer Name</th>
-              <th>Customer Address</th>
-             <th> Service </th>
-  
-	</tr>
+              <th>Phone Number</th>
+              <th width="10%">Name</th>
+              <th width="20%">Address</th>
+              <th>Service</th>
+              <th>Status</th>
+              <th width="20%">AssignedTo</th>
+              <!-- <th>Runner</th> -->
+            </tr>
           </thead>
           <tbody>
-
       @foreach($users as $user)
             <tr>
               <td>
@@ -29,17 +30,26 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
                 {{$user->customer_name}}
               </td>              
               <td>
-
                 <a href="{{route('getaddressdetails', $user->address)}}" id="getAddress">
                   {{$user->customer_address_string}}
-                </a>
-                
-              </td>          
-           
-	<td>
+                </a>  
+              </td>
+              <td>
                	{{$user->service_name}}
               </td>
-	 </tr>
+              
+              <td>
+                {{$user->status_text}}
+              </td>
+
+              <!-- <td>
+                {{$user->runner_name}}
+              </td> -->
+
+              <td>
+                {{Form::select("runner_id",$runners, $user->assigned_to, ["class"=>"runner_select form-control", 'placeholder'=>"Select Runner", 'href'=>route('store.assign-runner'), 'data-id'=>$user->id ])}}
+              </td>
+	           </tr>
             @php
             $i++;
             @endphp

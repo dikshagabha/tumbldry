@@ -89,23 +89,40 @@
         <script src="{{asset('js/pnotify.custom.min.js')}}"></script>
 
         <script src="https://js.pusher.com/4.4/pusher.min.js"></script>
+        @auth()
+          <script type="text/javascript">
+            $(document).ready(function(){
+
+              user_id = "{{Auth::user()->id}}";
+              var pusher = new Pusher("{{env('PUSHER_APP_KEY')}}", {
+                cluster: 'ap2',
+                forceTLS: true
+              });
+
+             var channel = pusher.subscribe('my-channel');
+              channel.bind('notification'+user_id, function(data) {
+                  $(".notif-count").text(parseInt($(".notif-count").text())+1);
+                  $(".dropdown-menu").prepend("<a class='dropdown-item' href='#'>"+data.message+"</a>");
+                  load_listings(location.href);
+                });
+            })
+          </script>
+        @endauth
         <script>
 
           $(document).ready(function(){
 
-          var pusher = new Pusher("{{env('PUSHER_APP_KEY')}}", {
-            cluster: 'ap2',
-            forceTLS: true
-          });
+         //  var pusher = new Pusher("{{env('PUSHER_APP_KEY')}}", {
+         //    cluster: 'ap2',
+         //    forceTLS: true
+         //  });
 
-         var channel = pusher.subscribe('my-channel');
-          channel.bind('notification', function(data) {
-              $(".notif-count").text(parseInt($(".notif-count").text())+1);
-              $(".dropdown-menu").prepend("<a class='dropdown-item' href='#'>"+data.message+"</a>");
-
-              load_listings(location.href);
-              //alert(JSON.stringify(data));
-            });
+         // var channel = pusher.subscribe('my-channel');
+         //  channel.bind('notification'+user_id, function(data) {
+         //      $(".notif-count").text(parseInt($(".notif-count").text())+1);
+         //      $(".dropdown-menu").prepend("<a class='dropdown-item' href='#'>"+data.message+"</a>");
+         //      load_listings(location.href);
+         //    });
 
           $(document).on('click', ".notifications", function(e){
             e.preventDefault();

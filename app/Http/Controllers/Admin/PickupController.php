@@ -141,7 +141,7 @@ class PickupController extends Controller
 
 
             $data['message'] = $request->input('name')." has requested a pickup.";
-            $pusher->trigger('my-channel', 'notification', $data);            
+            $pusher->trigger('my-channel', 'notification'.$request->input('customer_id'), $data);            
         }
         
 

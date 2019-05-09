@@ -6,7 +6,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
  use Tymon\JWTAuth\Contracts\JWTSubject;
-
+use Illuminate\Database\Eloquent\SoftDeletes;
 class User extends Authenticatable implements JWTSubject
 {
     //use Notifiable;
@@ -15,6 +15,8 @@ class User extends Authenticatable implements JWTSubject
      *
      * @var array
      */
+
+    use SoftDeletes;
     protected $fillable = [
         'name', 'email', 'password', 'store_name', 'phone_number', 'role', 'user_id'
     ];
@@ -100,6 +102,11 @@ class User extends Authenticatable implements JWTSubject
         if($this->role==4)
         {
             return "Customer";
+        }; 
+
+        if($this->role==5)
+        {
+            return "Runner";
         }; 
     }
 

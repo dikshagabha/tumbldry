@@ -21,6 +21,10 @@ class HomeRepository extends BaseRepository
      * @return string
      *  Return the model
      */
+    public function model()
+    {
+        //return YourModel::class;
+    }
     public static function store($request)
     {
 	    try {

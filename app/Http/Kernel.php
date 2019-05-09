@@ -40,8 +40,7 @@ class Kernel extends HttpKernel
         ],
 
         'api' => [
-            'throttle:60,1',
-            'bindings',
+            'bindings'
         ],
     ];
 
@@ -65,6 +64,7 @@ class Kernel extends HttpKernel
         'admin' => \App\Http\Middleware\Admin::class,
         'store' => \App\Http\Middleware\Store::class,
         'checkPrefix' => \App\Http\Middleware\checkPrefix::class,
+        'jwtcustom' => \App\Http\Middleware\JwtAuthCustom::class,
     ];
 
     /**

@@ -1,8 +1,10 @@
 @extends('store.layouts.app')
 @section('title', 'Manage Pickup Requests')
+@section("css")
+<link rel="stylesheet" type="text/css" href="{{asset('css/chosen/bootstrap-chosen.css')}}">
+<link rel="stylesheet" type="text/css" href="{{asset('css/jcf.css')}}">
+@endsection
 @section('content')
-
-
 <div class="content">
     <div class="container-fluid">
       <div class="row">
@@ -45,13 +47,15 @@
 @endsection
 @push('js')
 
-<script type="text/template">
-  
-
-</script>
+<script src="{{asset('js/jcf/jcf.js')}}"></script>
+<script src="{{asset('js/jcf/jcf.select.js')}}"></script>
 <script src="{{asset('js/bootbox.js')}}"></script>
+<script src="{{asset('js/chosen/chosen.jquery.min.js')}}"></script>
 <script>
 $(document).ready(function(){
+  //$('.runner_select').chosen();
+ 
+
   var current_page = $(".pagination").find('.active').text(); 
   $(document).on("click","#reset-button",function(e) {
       e.preventDefault();
@@ -75,6 +79,31 @@ $(document).ready(function(){
       // reload the list
       load_listings(location.href, 'serach_form');
       //stopLoader("body");
+    });
+
+  $(document).on("change",".runner_select",function(e) {
+      e.preventDefault();
+      
+      current = $(this);
+      console.log(current.val());
+      if (current.val() ) 
+      {
+        $('body').waitMe();
+        $.ajax({
+              url: current.attr('href'),
+              data:{ 'assigned_to':current.val(), 'id':current.data('id') },
+              type:"post",
+              success: function(data){
+                $('body').waitMe("hide");      
+                success(data.message);          
+                //$('.runner_select').trigger("chosen:updated");
+                //$('.runner_select').chosen("destroy").chosen();
+                var current_page = $(".pagination").find('.active').text();
+                load_listings(location.href+'?page='+current_page, 'serach_form');
+                //window.location.reload()
+              },
+            })
+      }     
     });
 
   $(document).on('click', '.status', function(e){

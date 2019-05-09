@@ -39,11 +39,13 @@
           </a>
           <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
 
-
-            @foreach(Auth::user()->notifications as $notifications)
-              <a class="dropdown-item @if($notifications->read_at==null) font-weight-bold @endif" href="#">{{ $notifications->message }}</a>
-            @endforeach
-            
+            @if(Auth::user()->notifications)    
+              @foreach(Auth::user()->notifications as $notifications)
+                <a class="dropdown-item @if($notifications->read_at==null) font-weight-bold @endif" href="#">{{ $notifications->message }}</a>
+              @endforeach
+            @else
+              <a class="dropdown-item" href="#">No Notifications</a>
+            @endif
           </div>
         </li>
         <li class="nav-item dropdown">

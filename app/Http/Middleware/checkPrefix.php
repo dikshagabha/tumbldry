@@ -16,6 +16,7 @@ class checkPrefix
      */
     public function handle($request, Closure $next)
     {
+        //dd("dfkldsf");
 
         $prefix = ($request->route()->getPrefix());
 
@@ -28,6 +29,8 @@ class checkPrefix
 
             Auth::logout();
         }
+
+
 
         return $next($request);
     }

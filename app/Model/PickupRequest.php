@@ -6,16 +6,32 @@ use Illuminate\Database\Eloquent\Model;
 
 class PickupRequest extends Model
 {
-    protected $fillable = ['customer_id', 'store_id', 'address', 'request_mode', 'status', 'service'];
+    protected $fillable = ['customer_id', 'store_id', 'address', 'request_mode', 'status', 'service', 'assigned_to'];
 
     public function customer()
     {
         return $this->hasOne('App\User', 'id', 'customer_id');
     }
 
+    public function getStatusTextAttribute()
+    {
+        if ($this->status==1) {
+            return "Pending";
+        }
+
+         if ($this->status==2) {
+            return "Assigned";
+        }
+    }
+
     public function service()
     {
      	return $this->hasOne('App\Model\Service', 'id', 'service');
+    }
+
+    public function runner()
+    {
+        return $this->hasOne('App\User', 'id', 'assigned_to');
     }
 
 
@@ -27,6 +43,14 @@ class PickupRequest extends Model
     public function store()
     {
         return $this->hasOne('App\User', 'id', 'store_id');
+    }
+
+    public function getRunnerNameAttribute()
+    {
+        if ($this->runner()->count()) {
+            return $this->runner()->first()->name;
+        }
+         return " -- ";//some logic to return numbers
     }
 
     public function getCustomerEmailAttribute()

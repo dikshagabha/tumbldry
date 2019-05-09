@@ -13,6 +13,22 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+Route::middleware('auth:api')->get('/user', 'Api\Runner\AuthController@register');
+
+Route::middleware('auth:api')->get('/v1/runner/register', 'Api\Runner\AuthController@register');
+
+Route::group([
+	'middleware'=>'auth:api',
+    'namespace' => 'Api\Runner',
+    'prefix' => 'v1/runner'
+
+], function ($router) {
+	
+    Route::post('login', 'AuthController@login');
+    Route::post('register', 'AuthController@register');
+
+    Route::post('pickup-jobs', 'getPickupJobs@getPickupJobs');
+    // Route::post('refresh', 'AuthController@refresh');
+    // Route::post('me', 'AuthController@me');
+
 });

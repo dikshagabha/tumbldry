@@ -18,6 +18,14 @@
             <p>{{ __('Dashboard') }}</p>
         </a>
       </li>
+
+      <li class="nav-item{{ $activePage == 'runner' ? ' active' : '' }}">
+        <a class="nav-link" href="{{ route('manage-runner.index') }}">
+          <i><img style="width:25px" src="{{ asset('images/icons/runer.png') }}"></i>
+          <!-- <i class="material-icons">dashboard</i> -->
+            <p>{{ __('Runner') }}</p>
+        </a>
+      </li>
       
   </div>
 </div>

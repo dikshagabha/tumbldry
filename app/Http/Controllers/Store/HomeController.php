@@ -19,12 +19,13 @@ class HomeController extends Controller
     	$activePage = 'dashboard';
     	$titlePage = "Dashboard";
      	
+        $runners = User::where(['role'=>5, 'status'=>1])->where('user_id', Auth::user()->id)->pluck('name', 'id');
     	$users = PickupRequest::where('store_id', Auth::user()->id)->latest()->paginate(10);
     	if ($Request->ajax()) {
-    		return view('store.pickup-requests.list', compact('users', 'activePage', 'titlePage'));
+    		return view('store.pickup-requests.list', compact('users', 'activePage', 'titlePage', 'runners'));
     	}
     	
-    	return view('store.pickup-requests.index', compact('users', 'activePage', 'titlePage'));
+    	return view('store.pickup-requests.index', compact('users', 'activePage', 'titlePage', 'runners'));
     }
 
     public function getcustomerdetails(Request $Request, $id)
