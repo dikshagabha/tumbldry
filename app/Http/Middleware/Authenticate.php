@@ -19,11 +19,10 @@ class Authenticate extends Middleware
            // return route('login');
             //return $next($request);
         }
-        dd("Asdjsd");
         if ($request->ajax()) {
             return response('Unauthorized.', 401);
         } else {
-            return "redirect()->guest('login')";
+            return redirect()->guest('login');
         }
     }
 

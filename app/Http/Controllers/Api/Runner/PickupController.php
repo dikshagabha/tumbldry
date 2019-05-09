@@ -28,7 +28,7 @@ class PickupController extends Controller
     public function getPickupJobs(Request $request)
     {
     	
-    	$response = PickupPickupRepository::getPickupJobs($request, $user);
+    	$response = PickupPickupRepository::getPickupJobs($request, $this->user);
         $http_status = $response['http_status'];
         unset($response['http_status']);
         return response()->json($response, $http_status);
