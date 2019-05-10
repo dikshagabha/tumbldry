@@ -15,8 +15,6 @@ use Illuminate\Http\Request;
 
 Route::middleware('auth:api')->get('/user', 'Api\Runner\AuthController@register');
 
-Route::middleware('auth:api')->get('/v1/runner/register', 'Api\Runner\AuthController@register');
-
 Route::group([
 	'middleware'=>'auth:api',
     'namespace' => 'Api\Runner',

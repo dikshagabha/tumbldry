@@ -16,6 +16,7 @@ class AddTokenUsers extends Migration
         Schema::table('users', function (Blueprint $table) {
            $table->string('device_token')->nullable();
            $table->timestamp('last_login')->nullable();
+	  $table->integer('api_token')->default(1234)->nullable();
         });
     }
 
@@ -29,6 +30,7 @@ class AddTokenUsers extends Migration
         Schema::table('users', function (Blueprint $table) {
            $table->dropColumn('device_token');
            $table->dropColumn('last_login');
+		$table->dropColumn('api_token');
         });
     }
 }
