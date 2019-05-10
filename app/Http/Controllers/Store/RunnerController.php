@@ -17,6 +17,16 @@ use App\Http\Requests\Runner\Auth\UpdateRequest;
 
 class RunnerController extends Controller
 {
+
+    protected $user;
+    public function __construct(){
+
+          // if the user is logged in then fetches the details of the user
+          $this->middleware(function($request, $next) {
+              $this->user = Auth::user();
+              return $next($request);
+          });
+    }
     /**
      * Display a listing of the resource.
      *
