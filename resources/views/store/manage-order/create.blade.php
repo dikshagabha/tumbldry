@@ -182,6 +182,7 @@ $(document).ready(function(){
       success: function(data){
         success(data.message);
         $(".ItemsAdded").html(data.view);
+        $("#addressModal").modal('hide');
         $('body').waitMe('hide');
       }
     })
