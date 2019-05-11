@@ -19,6 +19,7 @@ class CreateOrderItemsTable extends Migration
             $table->string('item')->nullable();
             $table->integer('service_id')->nullable();
             $table->integer('item_id')->nullable();
+            $table->integer('order_id')->nullable();
             $table->integer('quantity')->nullable();
             $table->integer('status')->default(1);
             $table->softDeletes();
