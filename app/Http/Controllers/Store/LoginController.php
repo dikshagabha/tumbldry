@@ -30,6 +30,7 @@ class LoginController extends Controller
     	$credentials = $Request->only('email', 'password');
         $credentials['role'] = 3;
         $credentials['status'] = 1;
+        
     	if (Auth::attempt($credentials)) 
         {
     		return response()->json(["message"=>"User Authenicated", "redirectTo"=>route('store.home')], 200);

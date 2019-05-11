@@ -1,7 +1,5 @@
 @extends('store.layouts.app')
 @section('title', 'Manage Runner')
-
-@section('content')
 @section('css')
   <link rel="stylesheet" href="{{ asset('css/chosen/bootstrap-chosen.css') }}">
   <link rel="stylesheet" href="{{ asset('css/jcf.css') }}">
@@ -9,6 +7,8 @@
     div[data-acc-content] { display: none;  }
   </style> -->
 @endsection
+@section('content')
+
 
 <div class="content">
     <div class="container-fluid">

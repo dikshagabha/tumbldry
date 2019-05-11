@@ -69,11 +69,11 @@ Route::prefix('admin')->group(function () {
 });
 
 
-Route::prefix('store')->group(function () {
+Route::prefix('store')->namespace('Store')->group(function () {
 
    Route::group(['middleware' => 'guest'], function () {
-        Route::get('/login', 'Store\LoginController@getLogin')->name('store.login');
-        Route::post('/login', 'Store\LoginController@postLogin')->name('store.login');
+        Route::get('/login', 'LoginController@getLogin')->name('store.login');
+        Route::post('/login', 'LoginController@postLogin')->name('store.login');
 
       });
 
@@ -84,18 +84,26 @@ Route::prefix('store')->group(function () {
 
      
      Route::group(['middleware' => ['store']], function () {
-         Route::get('/home', 'Store\HomeController@index')->name('store.home');
+         Route::get('/home', 'HomeController@index')->name('store.home');
 
          Route::resources([
-            'manage-runner' => 'Store\RunnerController',
+            'manage-runner' => 'RunnerController',
           ]);
       });
+      
+      Route::get('/create-order/{id}', 'OrderController@create')->name('store.create-order');
+      Route::post('/create-order/{id}', 'OrderController@store')->name('store.create-order');
+      
+      Route::get('/get-items', 'OrderController@getItems')->name('store.get-items');
+      Route::post('/add-items-session', 'OrderController@addItemSession')->name('store.addItemSession');
+      Route::post('/delete-items-session', 'OrderController@deleteItemSession')->name('store.deleteItemSession');
 
-      Route::post('/runner/status/{id}', 'Store\RunnerController@status')->name('manage-runner.status');
-      Route::post('/notifications/read-all', 'Store\NotificationsController@markRead')->name('notifications.mark-read'); 
 
-      Route::post('/runner/assign-runner', 'Store\RunnerController@assignRunner')->name('store.assign-runner'); 
-    Route::post('/logout', 'Store\LoginController@logout')->name('store.logout');
+      Route::post('/runner/status/{id}', 'RunnerController@status')->name('manage-runner.status');
+      Route::post('/notifications/read-all', 'NotificationsController@markRead')->name('notifications.mark-read'); 
+
+      Route::post('/runner/assign-runner', 'RunnerController@assignRunner')->name('store.assign-runner'); 
+    Route::post('/logout', 'LoginController@logout')->name('store.logout');
 
   });
 });

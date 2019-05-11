@@ -207,7 +207,9 @@
                   }
                   else{
                      $('body').waitMe('hide');
-                     if (data.message) {error(data.message);}
+                     
+                     if (data.responseJSON) {error(data.responseJSON.message);}
+                     
                      else {error("Something went wrong")}
                      
                   }

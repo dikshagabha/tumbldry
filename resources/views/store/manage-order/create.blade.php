@@ -1,70 +1,112 @@
-@extends('layouts.app')
-@section('title', 'Pickup Request')
+@extends('store.layouts.app')
+@section('title', 'Create order')
 
-@section('content')
 @section('css')
   <link rel="stylesheet" href="{{ asset('css/chosen/bootstrap-chosen.css') }}">
-  <link rel="stylesheet" href="{{ asset('css/jcf.css') }}">
-  <!-- <style type="text/css">
-    div[data-acc-content] { display: none;  }
-  </style> -->
+  <link rel="stylesheet" href="{{ asset('css/jquery.typeahead.min.css') }}">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+ 
 @endsection
+
+@section('content')
+
 
 <div class="content">
     <div class="container-fluid">
       <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">
           <div class="card card-stats">
+            <div class="card-body">
+            <!-- <form action="{{route('store.create-order',$id)}}" method="post"  id="addFrenchise" enctype="multipart/form-data"> -->
+             
+                  @csrf
+                  @include('store.manage-order.form')
 
-<form action="{{route('pickup-request.store')}}" method="post"  id="addFrenchise" enctype="multipart/form-data">
- <br>
-  @csrf
-  @include('store.manage-order.create')
+                 <div class="ItemsAdded">
 
-   <div class="row">
-     <div class="col-lg-3 col-md-3 col-sm-3">
-     </div>
-     <div class="col-lg-3 col-md-3 col-sm-3">
-      <a href="{{route('pickup-request.index')}}">
-        <button type="button" class="btn btn-default" data-url="{{route('pickup-request.index')}}">Cancel</button>
-      </a>
+                 </div>
+               
+               <div class="row">
+                 
+                 <div class="col-lg-3 col-md-3 col-sm-3">
+                  <a href="{{route('store.home')}}">
+                    <button type="button" class="btn btn-default" data-id="5">Cancel</button>
+                  </a>
+                  </div>
+                 <div class="col-lg-7 col-md-7 col-sm-7">
+                    <button type="button" class="btn btn-warning" id="add_frenchise">Create</button>
+                 </div>
+                </div>
+            </form>
+          </div>
+        
+</div>
+  </div>
+
+    </div>
+  </div>
+</div>
+
+<div id="addressModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        
+        <h4 class="modal-title">Add Item</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
       </div>
-     <div class="col-lg-5 col-md-5 col-sm-5">
-       <a href="{{route('pickup-request.store')}}" id="add_frenchise">
-          
-          <button type="submit" class="btn btn-success">Save</button>
-       </a>
-     </div>
+      <div class="modal-body">
+        <div id="addressForm">
+             @include('store.manage-order.add-item-form')
+            
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="add_new_address">Save</button>
+      </div>
     </div>
-</form>
 
-</div>
-  </div>
-
-    </div>
   </div>
 </div>
+
 @endsection
 
 @push('js')
 <script src="{{asset('js/chosen/chosen.jquery.min.js')}}"></script>
+<script src="{{asset('js/jquery.typeahead.min.js')}}"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
 
 <script>
-$(document).ready(function(){
 
-  //jcf.replaceAll();
-	$('#service').chosen();
-
+ 
+$(document).ready(function(){ 
   
 
-  $('input[type=radio][name=property_type]').change(function() {
-    if (this.value == 1) {
-        $(".lease_data").show()
-    }
-    else if (this.value == 2) {
-         $(".lease_data").hide()
-    }
-});
+  var path = "{{ route('store.get-items') }}";  
+  $.typeahead({
+        input: '.js-typeahead-country_v1',
+        source: {
+          ajax:
+          function (query) {
+              data={'query':query};
+              return {
+                  url:  "{{route('store.get-items')}}",
+                  data: data
+              }
+        }
+      },
+      mustSelectItem:true,
+      callback:{
+        // onSubmit: function(argument) {
+        //   alert()
+        // }
+      }
+  });
 
   $(document).on('click', '#search-user', function(e){
     e.preventDefault(); 
@@ -86,20 +128,7 @@ $(document).ready(function(){
             $("#customer_id").val(data.customer.id);
             $("#address_id").val(data.customer.address_id);
         }
-        else{
-          
-           $("#name").val("").prop('readonly', false);
-           $("#address").val("").prop('readonly', false); 
-            $("#city").val("").prop('readonly', false);
-           $("#state").val("").prop('readonly', false);
-            $("#pin").val("").prop('readonly', false);
-           $("#email").val("").prop('readonly', false);
-            $("#latitude").val("").prop('readonly', false);
-           $("#longitude").val("").prop('readonly', false);
-           $("#landmark").val("").prop('readonly', false);
-           $("#customer_id").val("");
-           $("#address_id").val("");
-        }
+        
         $('body').waitMe('hide');
       }
 
@@ -112,7 +141,7 @@ $(document).ready(function(){
 
     var data = $('#addFrenchise').serializeArray();
     //var data = new FormData(form);
-   
+    
     $(".error").html("");
     $.ajax({
       url: $('#addFrenchise').attr('action'),
@@ -120,14 +149,61 @@ $(document).ready(function(){
       data: data,    
       success: function(data){
         success(data.message);
-        //window.location=data.redirectTo;
+        $('body').waitMe('hide');
+      }
+    })
+  
+  })
+
+  $(document).on('click', '#add_item', function(e){
+    e.preventDefault();
+    $('body').waitMe();
+    $("#addressModal").modal('show');
+    $('body').waitMe('hide');
+  })
+
+  $('#addressModal').on('shown.bs.modal', function (e) {
+    $("#service").chosen();
+    $("#ItemForm")[0].reset();
+  })
+
+  $(document).on("click", "#add_new_address", function(e){
+    e.preventDefault();
+    var form = $('#ItemForm')[0];
+    var data = new FormData(form);
+    $(".error").html("");    
+    $.ajax({
+      url: $('#ItemForm').attr('action'),
+      type:'post',
+      data: data,
+      cache: false,
+      processData: false,  
+      contentType: false,      
+      success: function(data){
+        success(data.message);
+        $(".ItemsAdded").html(data.view);
         $('body').waitMe('hide');
       }
     })
   })
-})
-</script>
-<!-- <script src="https://maps.googleapis.com/maps/api/js?key=2&libraries=places&callback=initMap"
-        async defer></script> -->
 
+  $(document).on("click", ".deleteItemBtn", function(e){
+    e.preventDefault();
+    $(".error").html(""); 
+    current = $(this);   
+    $.ajax({
+      url: current.attr('action'),
+      type:'post',
+      data: {'data-id':current.data('id')},
+      cache: false,
+      success: function(data){
+        success(data.message);
+        $(".ItemsAdded").html(data.view);
+        $('body').waitMe('hide');
+      }
+    })
+  })
+
+});
+</script>
 @endpush

@@ -659,7 +659,7 @@
             $('body').waitMe('hide');
           }
         })
-         });
+      });
 
      $(document).on('click', '.reset', function (e) {
       e.preventDefault();        

@@ -14,6 +14,7 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
               <th>Service</th>
               <th>Status</th>
               <th width="20%">AssignedTo</th>
+              <th width="10%">Order</th>
               <!-- <th>Runner</th> -->
             </tr>
           </thead>
@@ -48,6 +49,12 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
 
               <td>
                 {{Form::select("runner_id",$runners, $user->assigned_to, ["class"=>"runner_select form-control", 'placeholder'=>"Select Runner", 'href'=>route('store.assign-runner'), 'data-id'=>$user->id ])}}
+              </td>
+
+               <td>
+                <a href="{{route('store.create-order', encrypt($user->id))}}">
+                  <i class="fa fa-plus"></i>
+                </a>
               </td>
 	           </tr>
             @php

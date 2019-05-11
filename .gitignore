@@ -1,2 +1,3 @@
 .env
 vendor/
+public/uploaded_images
