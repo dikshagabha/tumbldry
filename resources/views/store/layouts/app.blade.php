@@ -102,6 +102,7 @@
              var channel = pusher.subscribe('my-channel');
               channel.bind('notification'+user_id, function(data) {
                   $(".notif-count").text(parseInt($(".notif-count").text())+1);
+                  console.log(data.message);
                   $(".dropdown-menu").prepend("<a class='dropdown-item' href='#'>"+data.message+"</a>");
                   load_listings(location.href);
                 });

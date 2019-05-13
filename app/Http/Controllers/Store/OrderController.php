@@ -39,12 +39,11 @@ class OrderController extends Controller
     	$services = Service::where(['status'=>1])->get();
     	$add_on = $services->where('type', 2)->pluck('name', 'id');
     	$services = $services->where('type', 1)->pluck('name', 'id');
-        $pickup = PickupRequest::where("id", decrypt($id))->first();
-        if (!$pickup) {
-            return redirect()->route('store.home');
-        }
-        
-    	return view("store.manage-order.create", compact('services', 'activePage', 'titlePage', 'add_on', 'id', 'pickup'));
+      $pickup = PickupRequest::where("id", decrypt($id))->first();
+      if (!$pickup) {
+          return redirect()->route('store.home');
+      }
+      return view("store.manage-order.create", compact('services', 'activePage', 'titlePage', 'add_on', 'id', 'pickup'));
     }
 
     public function getItems(Request $request){
@@ -58,8 +57,8 @@ class OrderController extends Controller
     public function addItemSession(Request $request){
 
        $Service = Service::where("id", $request->input('service'))->first();
-       $form_id = Items::where("name", 'LIKE', $request->input('name'))->where('type', $Service->form_type)->first();
-       
+       $form_id = Items::where("name", $request->input('item') )->where('type', $Service->form_type)->first();
+       //dd($form_id);
        
        if (!$form_id) {
            return response()->json(['message'=>'The item is not included in service.'], 400);
@@ -108,7 +107,7 @@ class OrderController extends Controller
      $id = decrypt($id);
      
      $pickup = PickupRequest::where("id", $id)->first();
-     
+     $user=$this->user;
      if (!$pickup) {
            return response()->json(['message'=>'Something Went Wrong'], 400);
      }
@@ -118,7 +117,8 @@ class OrderController extends Controller
            return response()->json(['message'=>'The items are not included in order.'], 400);
      }
 
-     $user=$this->user;
+     
+     
      try {
         DB::beginTransaction();
         $order = Order::create(['pickup_id'=>$id, 'customer_id'=>$pickup->customer_id, 
@@ -140,7 +140,7 @@ class OrderController extends Controller
          
      } catch (Exception $e) {
         DB::rollback();
-         return response()->json(['message'=>$e->getMessage()], 400);
+        return response()->json(['message'=>$e->getMessage()], 400);
      }
     }
 

@@ -67,6 +67,7 @@ class PickupController extends Controller
      */
     public function store(StorePickupRequest $request)
     {
+
       try{
         DB::beginTransaction();
         if ($request->input('customer_id')==null) {
@@ -92,38 +93,38 @@ class PickupController extends Controller
 
         $pin = $request->input('pin');
 
-        $address = Address::where('pin', $pin)->pluck('user_id')->toArray();        
+        $address = Address::where('pin', $pin)->pluck('user_id')->toArray();  
+
         $address = User::where(['role'=> 3, 'status'=>1])->whereIn('id', $address)->first();
-        //dd($request->input('pin'));
+
         if (!$address) {
           $origLat = $request->input('latitude');
           $origLon = $request->input('longitude');
-          $dist = 10; // This is the maximum distance (in miles) away from $origLat, $origLon in which to search
-          
+          $dist = 10; 
           $query = "SELECT user_id, latitude, longitude, 3956 * 2 * 
                     ASIN(SQRT( POWER(SIN(($origLat - latitude)*pi()/180/2),2)
                     +COS($origLat*pi()/180 )*COS(latitude*pi()/180)
-                    *POWER(SIN(($origLon-longitude)*pi()/180/2),2))) 
+                    *POWER(SIN(($origLon- longitude)*pi()/180/2),2))) 
                     as distance ";
           $whereRaw = "longitude between ($origLon-$dist/cos(radians($origLat))*69) 
-                    and ($origLon+$dist/cos(radians($origLat))*69) 
-                    and latitude between ($origLat-($dist/69)) 
-                    and ($origLat+($dist/69)) 
-                    ORDER BY distance limit 100"; 
+                      and ($origLon+$dist/cos(radians($origLat))*69) 
+                      and latitude between ($origLat-($dist/69)) 
+                      and ($origLat+($dist/69)) 
+                         ORDER BY distance limit 1"; 
           $address = Address::whereRaw($whereRaw)
                       ->select($query)->pluck('user_id')->toArray();
         }
 
 
         $address = User::where(['role'=> 3, 'status'=>1])->whereIn('id', $address)->first();
-        //dd($address);
+        
         $id=null;
         if ($address) {
           $id=$address->id;
         }
         $pickup = PickupRequest::create(['customer_id'=>$request->input('customer_id'),
                                 'address'=>$request->input('address_id'),
-                                 'store_id'=>$id, 
+                                 'store_id'=>$id, ' request_time'=>$request->input('time'),
                                 'request_mode'=>1, 'status'=>1, 'service'=>$request->input('service')]);
         if ($id) {
           // Send Notification to store
@@ -141,7 +142,7 @@ class PickupController extends Controller
 
 
             $data['message'] = $request->input('name')." has requested a pickup.";
-            $pusher->trigger('my-channel', 'notification'.$request->input('customer_id'), $data);            
+            $pusher->trigger('my-channel', 'notification'.$id, $data);            
         }
         
 
@@ -215,7 +216,7 @@ class PickupController extends Controller
       if ($customer) {
         return response()->json(["message"=>"Customer Found!!", "customer" => $customer], 200);
       }
-        return response()->json(["message"=>"Customer Not Found!!"], 200);
+        return response()->json(["message"=>"Customer Not Found!!"], 400);
 
 
     }

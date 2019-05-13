@@ -115,13 +115,8 @@
                   }
                 });
               }
-          
-          $(document).ready(function(){
-            //$('input[name="phone_number"]').mask('00/00/0000');
-            
-            
 
-          function success(message=""){
+               function success(message=""){
               PNotify.removeAll() 
               new PNotify({
                 title: 'Success!',
@@ -137,8 +132,10 @@
                 type: 'error'
               });
             }
-
-              $.ajaxSetup({
+          
+          $(document).ready(function(){
+            //$('input[name="phone_number"]').mask('00/00/0000');
+            $.ajaxSetup({
                 headers:{
                   'X-CSRF-TOKEN':$('meta[name="csrf-token"]').attr('content')
                 },

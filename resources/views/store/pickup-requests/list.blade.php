@@ -52,9 +52,13 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
               </td>
 
                <td>
+                @if($user->status==2)
                 <a href="{{route('store.create-order', encrypt($user->id))}}">
                   <i class="fa fa-plus"></i>
                 </a>
+                @else
+                --
+                @endif
               </td>
 	           </tr>
             @php

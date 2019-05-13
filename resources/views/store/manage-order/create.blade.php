@@ -163,7 +163,8 @@ $(document).ready(function(){
   })
 
   $('#addressModal').on('shown.bs.modal', function (e) {
-    $("#service").chosen();
+   
+     //$('#service').trigger("chosen:updated");
     $("#ItemForm")[0].reset();
   })
 
