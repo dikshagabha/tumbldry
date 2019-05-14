@@ -26,6 +26,15 @@
             <p>{{ __('Runner') }}</p>
         </a>
       </li>
+
+      <li class="nav-item{{ $activePage == 'customer' ? ' active' : '' }}">
+        <a class="nav-link" href="{{ route('manage-customer.index') }}">
+          <i><img style="width:25px" src="{{ asset('images/icons/runer.png') }}"></i>
+          <!-- <i class="material-icons">dashboard</i> -->
+            <p>{{ __('Customer') }}</p>
+        </a>
+      </li>
+      
       
   </div>
 </div>

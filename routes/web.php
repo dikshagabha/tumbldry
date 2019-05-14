@@ -88,9 +88,13 @@ Route::prefix('store')->namespace('Store')->group(function () {
 
          Route::resources([
             'manage-runner' => 'RunnerController',
+            'manage-customer' => 'CustomerController',
           ]);
       });
       
+
+      
+
       Route::get('/create-order/{id}', 'OrderController@create')->name('store.create-order');
       Route::post('/create-order/{id}', 'OrderController@store')->name('store.create-order');
       
@@ -100,6 +104,8 @@ Route::prefix('store')->namespace('Store')->group(function () {
 
 
       Route::post('/runner/status/{id}', 'RunnerController@status')->name('manage-runner.status');
+      Route::post('/customer/status/{id}', 'CustomerController@status')->name('manage-customer.status');
+
       Route::post('/notifications/read-all', 'NotificationsController@markRead')->name('notifications.mark-read'); 
 
       Route::post('/runner/assign-runner', 'RunnerController@assignRunner')->name('store.assign-runner'); 
