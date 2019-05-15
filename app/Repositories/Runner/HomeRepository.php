@@ -40,16 +40,16 @@ class HomeRepository extends BaseRepository
 	        						'user_id'=>$user]);
 
 
-	        $address =  Address::create([
-	                                      'address'=>$request->input('address') ,
-	                                      'user_id'=>$user->id,
-	                                      'city'=>$request->input('city'),
-	                                      'state'=>$request->input('state'),
-	                                      'pin'=>$request->input('pin'),
-	                                      'latitude'=>$request->input('latitude') ,
-	                                      'longitude'=>$request->input('longitude'),
-	                                      'landmark'=>$request->input('landmark'),
-	                                      ]);
+	        // $address =  Address::create([
+	        //                               'address'=>$request->input('address') ,
+	        //                               'user_id'=>$user->id,
+	        //                               'city'=>$request->input('city'),
+	        //                               'state'=>$request->input('state'),
+	        //                               'pin'=>$request->input('pin'),
+	        //                               'latitude'=>$request->input('latitude') ,
+	        //                               'longitude'=>$request->input('longitude'),
+	        //                               'landmark'=>$request->input('landmark'),
+	        //                               ]);
 
 
 	        // $messageApi = "http://push.sanketik.net//api/push?accesskey=jzzUlHL4NqhWs6VHzmUkGkYTaQKD7T&to={$phone}&text={$pswd}&from=TBLDRY";
@@ -75,8 +75,8 @@ class HomeRepository extends BaseRepository
 	        
 	        $user = User::where('id', $id)->update(['name'=>$request->input('name'), 'email'=>$request->input('email'), 'phone_number'=>$request->input('phone_number')]);
 
-	        $account =  Address::where('user_id', $id)->update(
-	          $request->only(['address','city','state','pin', 'latitude', 'longitude', 'landmark']));
+	        // $account =  Address::where('user_id', $id)->update(
+	        //   $request->only(['address','city','state','pin', 'latitude', 'longitude', 'landmark']));
 	        DB::commit();
 	        return ["message"=>"Runner Updated", 'redirectTo'=>route('manage-runner.index'), 'http_status'=>200];
       }

@@ -95,13 +95,25 @@ Route::prefix('store')->namespace('Store')->group(function () {
 
       
 
+      Route::get('/orders/', 'OrderController@index')->name('store.create-order.index');
+      
       Route::get('/create-order/{id}', 'OrderController@create')->name('store.create-order');
-      Route::post('/create-order/{id}', 'OrderController@store')->name('store.create-order');
+      Route::post('/create-order/{id?}', 'OrderController@store')->name('store.create-order');
+
+      Route::get('/view-order/{id}', 'OrderController@view')->name('store.getOrderDetails');
+
+
+      Route::get('/create-order', 'OrderController@createWithoutPickup')->name('store.orderWithoutPickup');
+
       
       Route::get('/get-items', 'OrderController@getItems')->name('store.get-items');
       Route::post('/add-items-session', 'OrderController@addItemSession')->name('store.addItemSession');
       Route::post('/delete-items-session', 'OrderController@deleteItemSession')->name('store.deleteItemSession');
+      Route::post('/quantity-items-session', 'OrderController@quantityItemSession')->name('store.quantityItemSession');
+      Route::post('/coupon', 'OrderController@couponItemSession')->name('store.couponItemSession');
 
+
+      Route::post('/find-customer', 'HomeController@findCustomer')->name('store.findCustomer');
 
       Route::post('/runner/status/{id}', 'RunnerController@status')->name('manage-runner.status');
       Route::post('/customer/status/{id}', 'CustomerController@status')->name('manage-customer.status');
@@ -109,6 +121,7 @@ Route::prefix('store')->namespace('Store')->group(function () {
       Route::post('/notifications/read-all', 'NotificationsController@markRead')->name('notifications.mark-read'); 
 
       Route::post('/runner/assign-runner', 'RunnerController@assignRunner')->name('store.assign-runner'); 
+
     Route::post('/logout', 'LoginController@logout')->name('store.logout');
 
   });

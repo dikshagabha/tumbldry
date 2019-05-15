@@ -29,9 +29,17 @@
 
       <li class="nav-item{{ $activePage == 'customer' ? ' active' : '' }}">
         <a class="nav-link" href="{{ route('manage-customer.index') }}">
-          <i><img style="width:25px" src="{{ asset('images/icons/runer.png') }}"></i>
+          <i><img style="width:25px" src="{{ asset('images/icons/customer.png') }}"></i>
           <!-- <i class="material-icons">dashboard</i> -->
             <p>{{ __('Customer') }}</p>
+        </a>
+      </li>
+
+      <li class="nav-item{{ $activePage == 'order' ? ' active' : '' }}">
+        <a class="nav-link" href="{{ route('store.create-order.index') }}">
+          <i><img style="width:25px" src="{{ asset('images/icons/order.png') }}"></i>
+          <!-- <i class="material-icons">dashboard</i> -->
+            <p>{{ __('Order') }}</p>
         </a>
       </li>
       

@@ -8,9 +8,7 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
           <thead>
             <tr>
               <th>S No</th>
-              <th>Customer Email</th>
-              <th>Store Email</th>
-	      <th> Service </th>
+              <th>Order</th>
             </tr>
           </thead>
           <tbody>
@@ -21,18 +19,12 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
                 {{$i}}
               </td>
               <td>
-                <a href="{{route('getcustomerdetails', $user->customer_id)}}" id="getCustomer">
-                {{$user->customer_email}}</a>
+                <a  class="view" title="view order details" href="{{route('store.getOrderDetails', $user->id)}}">
+                  ORDER{{$user->id}}
+                </a>
                 
               </td>
-              <td>
-                 <a href="{{route('getcustomerdetails', $user->store_id)}}" id="getCustomer">
-                  {{$user->store_email}}</a>
-                
-              </td>
-		            <td>
-                  {{$user->service_name}}
-                </td>
+              
 
             </tr>
             @php

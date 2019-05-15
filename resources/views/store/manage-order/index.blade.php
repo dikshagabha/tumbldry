@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('store.layouts.app')
 @section('title', 'Manage Store')
 @section('content')
 
@@ -14,7 +14,7 @@
                 <div class="col-md-9">
                 </div>
                 <div class="col-md-3">
-                  <a href="{{route('pickup-request.create')}}"><button class="btn btn-danger">Add Pickup Request</button></a>
+                  <a href="{{route('store.orderWithoutPickup')}}"><button class="btn btn-danger">Add Order</button></a>
                 </div>
               </div>
               <br>
@@ -43,24 +43,24 @@
               <br>
               <div id="dataList">
                 
-               @include('admin.pickup-request.list')
+               @include('store.manage-order.list')
               </div>
             </div>
         </div>
       </div>
     </div>
 </div>
-<div id="addressModal" class="modal fade" role="dialog">
+<div id="OrderModal" class="modal fade" role="dialog">
   <div class="modal-dialog">
     <!-- Modal content-->
     <div class="modal-content">
       <div class="modal-header">
-         <h4 class="modal-title">User Details</h4>
+         <h4 class="modal-title">Order Details</h4>
         <button type="button" class="close" data-dismiss="modal">&times;</button>
        
       </div>
       <div class="modal-body">
-        <div id="details">
+        <div id="Orderdetails">
          
         </div>
       </div>
@@ -71,6 +71,7 @@
 
   </div>
 </div>
+
 @endsection
 @push('js')
 <script src="{{asset('js/bootbox.js')}}"></script>
@@ -208,34 +209,22 @@ $(document).ready(function(){
     load_listings($(this).attr('href'));
   });
 
-  $(document).on('click', '.view', function(e){
-    e.preventDefault();
-    $('body').waitMe();
-    $.ajax({
-      url: $('.view').attr('href'),
-      type:"get",
-      success: function(data){
-        $('body').waitMe("hide");        
-        $('#details').html(data);
-        $("#addressModal").modal('show');
-      },
-    })
-  })
+  $(document).on("click",".view",function(e) {
+      e.preventDefault();
+      $('body').waitMe();
+      current = $(this)
+      $.ajax({
+        url:current.attr('href'),
+        method:'get',
+        success:function(data){
+          $('#Orderdetails').html(data);
+           $('body').waitMe('hide');
+          $("#OrderModal").modal('show');
+        }
+      })
+    });
 
-  $(document).on('click', '#getCustomer, #getStore', function(e){
-    e.preventDefault();
-    $('body').waitMe();
-    url = $(this).attr('href');
-    $.ajax({
-      url: url,
-      type:"get",
-      success: function(data){
-        $('body').waitMe("hide");        
-        $('#details').html(data);
-        $("#addressModal").modal('show');
-      },
-    })
-  })
+
 })
 </script>
 

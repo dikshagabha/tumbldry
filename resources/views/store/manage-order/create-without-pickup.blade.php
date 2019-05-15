@@ -29,12 +29,11 @@
         <div class="col-lg-12 col-md-12 col-sm-12">
           <div class="card card-stats">
             <div class="card-body">
-            <!-- <form action="{{route('store.create-order',$id)}}" method="post"  id="addFrenchise" enctype="multipart/form-data"> -->
-
-              {{Form::model($pickup, ['url'=> route('store.create-order',$id), "id"=>"addFrenchise"])}}
+          
+              {{Form::open(['url'=> route('store.create-order'), "id"=>"addFrenchise"])}}
              
                   @csrf
-                  @include('store.manage-order.form')
+                  @include('store.manage-order.form-without-pickup')
 
                  <div class="ItemsAdded">
 
@@ -144,7 +143,8 @@ $( "#item" ).autocomplete({
     focus: function(event,ui) {},
     select: function(event, ui) {}
 });
-  $(document).on('click', '#search-user', function(e){
+
+$(document).on('click', '#search-user', function(e){
     e.preventDefault(); 
     $(".error").html("")
     $('body').waitMe(); 
@@ -164,12 +164,53 @@ $( "#item" ).autocomplete({
             $("#customer_id").val(data.customer.id);
             $("#address_id").val(data.customer.address_id);
         }
-        
+        else{
+          
+           $("#name").val("").prop('readonly', false);
+           $("#address").val("").prop('readonly', false); 
+            $("#city").val("").prop('readonly', false);
+           $("#state").val("").prop('readonly', false);
+            $("#pin").val("").prop('readonly', false);
+           $("#email").val("").prop('readonly', false);
+            $("#latitude").val("").prop('readonly', false);
+           $("#longitude").val("").prop('readonly', false);
+           $("#landmark").val("").prop('readonly', false);
+           $("#customer_id").val("");
+           $("#address_id").val("");
+        }
         $('body').waitMe('hide');
       }
 
     })
   })
+
+  
+  // $(document).on('click', '#search-user', function(e){
+  //   e.preventDefault(); 
+  //   $(".error").html("")
+  //   $('body').waitMe(); 
+    
+  //   $.ajax({
+  //     url: $('#search-user').data('url'),
+  //     type:'post',
+  //     data: {'phone_number':$('#phone').val()},
+  //     success: function(data){
+  //       success(data.message);
+  //       if (data.customer) 
+  //       {
+  //         for (var key in data.customer) {
+  //             $("#"+key).val(data.customer[key]);
+  //             $("#"+key).prop('readonly', true);
+  //           }
+  //           $("#customer_id").val(data.customer.id);
+  //           $("#address_id").val(data.customer.address_id);
+  //       }
+        
+  //       $('body').waitMe('hide');
+  //     }
+
+  //   })
+  // })
  
   $(document).on('click', '#add_frenchise', function(e){
     e.preventDefault();

@@ -44,6 +44,28 @@
 
   </div>
 </div>
+
+<div id="OrderModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+         <h4 class="modal-title">Order Details</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+       
+      </div>
+      <div class="modal-body">
+        <div id="Orderdetails">
+         
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
+</div>
 @endsection
 @push('js')
 
@@ -172,7 +194,20 @@ $(document).ready(function(){
     })
   })
 
-
+$(document).on("click",".view",function(e) {
+      e.preventDefault();
+      $('body').waitMe();
+      current = $(this)
+      $.ajax({
+        url:current.attr('href'),
+        method:'get',
+        success:function(data){
+          $('#Orderdetails').html(data);
+           $('body').waitMe('hide');
+          $("#OrderModal").modal('show');
+        }
+      })
+    });
 })
 </script>
 

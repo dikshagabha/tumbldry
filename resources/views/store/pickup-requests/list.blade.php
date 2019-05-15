@@ -29,7 +29,7 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
               </td>
               <td>
                 {{$user->customer_name}}
-              </td>              
+              </td>
               <td>
                 <a href="{{route('getaddressdetails', $user->address)}}" id="getAddress">
                   {{$user->customer_address_string}}
@@ -52,12 +52,14 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
               </td>
 
                <td>
-                @if($user->status==2)
-                <a href="{{route('store.create-order', encrypt($user->id))}}">
-                  <i class="fa fa-plus"></i>
+                @if($user->status==2 && !$user->order()->count())
+                <a href="{{route('store.create-order', encrypt($user->id))}}" title="create order">
+                  <button class="btn btn-link"><i class="fa fa-plus"></i></button>
                 </a>
-                @else
-                --
+                @elseif($user->order()->count())
+                    <a  class="view" title="view order details" href="{{route('store.getOrderDetails', $user->order()->first()->id)}}">
+                      ORDER{{$user->order()->first()->id}}
+                    </a>
                 @endif
               </td>
 	           </tr>

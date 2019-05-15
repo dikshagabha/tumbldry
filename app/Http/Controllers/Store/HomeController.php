@@ -20,7 +20,7 @@ class HomeController extends Controller
     	$titlePage = "Dashboard";
      	
         $runners = User::where(['role'=>5, 'status'=>1])->where('user_id', Auth::user()->id)->pluck('name', 'id');
-    	$users = PickupRequest::where('store_id', Auth::user()->id)->latest()->paginate(10);
+    	$users = PickupRequest::where('store_id', Auth::user()->id)->with('order')->latest()->paginate(10);
     	if ($Request->ajax()) {
     		return view('store.pickup-requests.list', compact('users', 'activePage', 'titlePage', 'runners'));
     	}
@@ -42,5 +42,20 @@ class HomeController extends Controller
         $user = Address::where("id", $id)->first();
 
         return view('store.address_details_modal', compact('user'));
+    }
+
+    public function findCustomer(Request $request)
+    {
+      $validatedData = $request->validate([
+          'phone_number' => 'bail|required|numeric|min:2|max:9999999999',
+          ]);
+
+      $customer = User::where('role', 4)
+                  ->where('phone_number', 'like', '%'.$request->input('phone_number').'%')->first();
+      
+      if ($customer) {
+        return response()->json(["message"=>"Customer Found!!", "customer" => $customer], 200);
+      }
+        return response()->json(["message"=>"Customer Not Found!!"], 400);
     }
 }

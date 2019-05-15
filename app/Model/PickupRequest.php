@@ -24,6 +24,11 @@ class PickupRequest extends Model
         }
     }
 
+    public function order()
+    {
+        return $this->belongsTo('App\Model\Order', 'id', 'pickup_id');
+    }
+
     public function service()
     {
      	return $this->hasOne('App\Model\Service', 'id', 'service');
