@@ -27,6 +27,7 @@ Route::group([
     
     Route::post('pickup-jobs', 'PickupController@getPickupJobs');
     Route::post('delivery-jobs', 'PickupController@getDeliveryJobs');
+    Route::post('pickup-details', 'PickupController@getPickupDetails');
 
     Route::post('customer/register', 'CustomerController@store');
 
