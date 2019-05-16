@@ -4,7 +4,10 @@ namespace App\Repositories\Runner;
 
 use JasonGuru\LaravelMakeRepository\Repository\BaseRepository;
 
-use 
+use App\Model\{
+    UserJobs,
+    PickupRequest
+};
 
 /**
  * Class PickupPickupRepository.
@@ -22,8 +25,15 @@ class PickupPickupRepository extends BaseRepository
 
     public function getPickupJobs($request, $user)
     {
-        $oickups = PickupRequest::where('assigned_to', $user->id)->latest()->paginate(10);
+        $pickups = PickupRequest::where('assigned_to', $user->id)->latest()->paginate(10);
 
-        return ["message"=>"Pickup Found", "data"=>$oickups, 'http_status'=>200];
+        $jobs = UserJobs::where('user_id', $user->id)->where('type', 1)->get();
+        return ["message"=>"Pickup Found", "data"=>['pickups'=>$pickups, 'jobs'=>$jobs], 'http_status'=>200];
+    }
+
+    public function getPickupJobs($request, $user)
+    {
+        $jobs = UserJobs::where('user_id', $user->id)->where('type', 2)->get();
+        return ["message"=>"Delivery Jobs", "data"=>$jobs], 'http_status'=>200];
     }
 }

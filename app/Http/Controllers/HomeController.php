@@ -152,4 +152,12 @@ class HomeController extends Controller
           return response()->json(["message"=>"User Not Found!!"], 400);
 
       }
+
+       public function setTimezone(Request $request)
+    {
+        if ($request->filled('timezone')) {
+            $request->session()->put('user_timezone', $request->input('timezone'));
+        }
+        return response()->json(['message' => 'Timezone set successfully!'], 200);
+    }
 }

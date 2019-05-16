@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\User;
 use App\Model\PickupRequest;
+use App\Model\UserJobs;
 use Auth;
 use App\Repositories\Runner\HomeRepository;
 
@@ -14,7 +15,7 @@ use App\Mail\Runner\SendPassword;
 
 use App\Http\Requests\Runner\Auth\RegisterRequest;
 use App\Http\Requests\Runner\Auth\UpdateRequest;
-
+use DB;
 class RunnerController extends Controller
 {
 
@@ -157,12 +158,14 @@ class RunnerController extends Controller
 
     public function assignRunner(Request $request)
     {
-      
-      $delete = PickupRequest::where(['id'=>$request->input('id')])->update(['assigned_to'=>$request->input('assigned_to'), 'status'=>2]);
-
-      if($delete){
-        return response()->json(["message"=>"Runner Assigned!"], 200);
-      }
-      return response()->json(["message"=>"Something went wrong!"], 400);
+         $delete = PickupRequest::where(['id'=>$request->input('id')])->update(['assigned_to'=>$request->input('assigned_to'), 'status'=>2]);
+          $job = UserJobs::create(["order_id"=>$request->input('id'), 'type'=>1, 'user_id'=>$request->input('assigned_to'), 'assigned_by'=>$this->user->id]);
+          if($delete){
+            return response()->json(["message"=>"Runner Assigned!"], 200);
+          }
+          return response()->json(["message"=>"Something went wrong!"], 400);
+       
     }
+
+
 }

@@ -33,6 +33,8 @@
           </div>
         </div>
 
+        <br>
+
         <div class="form-group-inner">
           <div class="row">
                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
@@ -44,7 +46,7 @@
                </div>
           </div>
         </div>
-
+<br>
         <div class="form-group-inner">
           <div class="row">
                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
@@ -56,7 +58,7 @@
                </div>
           </div>
         </div>
-
+<br>
 
         <!-- <br>
         <div class="form-group-inner">
@@ -82,6 +84,7 @@
                    </div>
                  </div>
             </div>
+            <br>
             <div class="form-group-inner">
               <div class="row">
                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
@@ -93,7 +96,7 @@
                     </div>
                  </div>
             </div>
-
+<br>
             <div class="form-group-inner">
                <div class="row">
                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
@@ -107,7 +110,7 @@
                     
                   </div>
             </div>
-
+<br>
             <div class="form-group-inner">
                <div class="row">
                     <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
@@ -121,7 +124,8 @@
                     
                   </div>
             </div>
-            <div class="form-group-inner">
+            <br>
+            <div class="form-group-inner" style="display: none">
                <div class="row">
                     <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
                       <label class="login2 pull-right pull-right-pro">Latitude</label>
@@ -134,7 +138,7 @@
                     
                   </div>
             </div>
-            <div class="form-group-inner">
+            <div class="form-group-inner" style="display: none">
                <div class="row">
                     <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
                       <label class="login2 pull-right pull-right-pro">Longitude</label>
@@ -155,6 +159,22 @@
                        
                      {!! Form::textarea('landmark',null,array('class' => 'form-control', 'maxlength'=>"200", 'id'=>"landmark", "placeholder"=>"Landmark")) !!}
                       <span class="error" id="landmark_error"></span>
+                    </div>
+                    
+                  </div>
+            </div>
+            <br>
+            <div class="form-group-inner">
+               <div class="row">
+                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                      <label class="login2 pull-right pull-right-pro">Pickup Time</label>
+                    </div>
+                   <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+                    <div id="picker"> </div>
+
+                       {!! Form::hidden('request_time',null,array('class' => 'form-control', 'maxlength'=>"10", 'id'=>"result", "placeholder"=>"Date Time")) !!}
+                          
+                      <span class="error" id="request_time_error"></span>
                     </div>
                     
                   </div>

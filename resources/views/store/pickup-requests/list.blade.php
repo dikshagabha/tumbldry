@@ -12,6 +12,7 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
               <th width="10%">Name</th>
               <th width="20%">Address</th>
               <th>Service</th>
+              <th>Pickup Time</th>
               <th>Status</th>
               <th width="20%">AssignedTo</th>
               <th width="10%">Order</th>
@@ -37,6 +38,15 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
               </td>
               <td>
                	{{$user->service_name}}
+              </td>
+
+              <td>
+                  
+                  @if($user->request_time)
+                    {{$user->request_time->setTimezone($timezone)->format('l y/m/d h:i a')}}
+                  @else
+                    --
+                  @endif
               </td>
               
               <td>

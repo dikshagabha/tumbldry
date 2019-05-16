@@ -50,6 +50,8 @@ Route::prefix('admin')->group(function () {
 
     Route::get('/pin-details', 'HomeController@getPinDetails')->name('getPinDetails');
 
+    Route::post('set-admin-timezone', 'HomeController@setTimezone')->name('admin.set-timezone');
+
     // Rate Cards
     Route::get('/rate-card', 'Admin\RateCardController@getRateCard')->name('admin.getRateCard');
     Route::get('/rate-card-form', 'Admin\RateCardController@getRateCardForm')->name('admin.getRateCardForm');
@@ -93,7 +95,7 @@ Route::prefix('store')->namespace('Store')->group(function () {
       });
       
 
-      
+      Route::post('set-store-timezone', 'HomeController@setTimezone')->name('store.set-timezone');
 
       Route::get('/orders/', 'OrderController@index')->name('store.create-order.index');
       

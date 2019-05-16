@@ -12,7 +12,7 @@ use App\Model\Address;
 use App\User;
 use DB;
 use Pusher;
-
+use Carbon\Carbon;
 class PickupController extends Controller
 {
     /**
@@ -24,26 +24,16 @@ class PickupController extends Controller
     {
       $activePage = 'pickup-request';
       $titlePage  = 'Pickup Request';
-       $users = PickupRequest::
-       //where('role', 3)
-      //         ->when($request->filled('search'), 
-      //           function($query) use($request) {
-      //             $query->where(function($q) use($request) {
-      //               $q->where('name', 'like', '%' . $request->input('search') . '%')
-      //                     ->orWhere('email', 'like', '%' . $request->input('search') . '%')
-      //                     ->orWhere('phone_number', 'like', '%' . $request->input('search') . '%');
-                    
-      //             });
-      //           })->when(($request->filled('sort_type') && in_array($request->input('sort_type'), [0, 1])), function($query) use($request) {
-      //           $query->where('status', $request->input('sort_type'));
-      //          })
+      //$timezone = session()->get('user_timezone');
+      $timezone = $request->session()->get('user_timezone', 'Asia/Calcutta');
+      $users = PickupRequest::
                latest()->paginate(10);
       if ($request->ajax()) {
         //dd($users);
-        return view('admin.pickup-request.list', compact('users', 'activePage', 'titlePage'));
+        return view('admin.pickup-request.list', compact('users', 'activePage', 'titlePage', 'timezone'));
 
       }
-      return view('admin.pickup-request.index', compact('users', 'activePage', 'titlePage'));
+      return view('admin.pickup-request.index', compact('users', 'activePage', 'titlePage', 'timezone'));
     }
 
     /**
@@ -122,10 +112,14 @@ class PickupController extends Controller
         if ($address) {
           $id=$address->id;
         }
+
+        $date = Carbon::createFromFormat('Y-m-d H:i', $request->input('request_time'), $request->header('timezone'));
         $pickup = PickupRequest::create(['customer_id'=>$request->input('customer_id'),
                                 'address'=>$request->input('address_id'),
-                                 'store_id'=>$id, ' request_time'=>$request->input('time'),
+                                 'store_id'=>$id, 'request_time'=>$date->setTimezone('UTC'),
                                 'request_mode'=>1, 'status'=>1, 'service'=>$request->input('service')]);
+
+        //dd($pickup);
         if ($id) {
           // Send Notification to store
           not::dispatch($pickup, 1);

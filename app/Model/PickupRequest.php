@@ -6,8 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class PickupRequest extends Model
 {
-    protected $fillable = ['customer_id', 'store_id', 'address', 'request_mode', 'status', 'service', 'assigned_to'];
-
+    protected $fillable = ['customer_id', 'store_id', 'address', 'request_mode', 'status', 'service', 'assigned_to', 'request_time'];
+    protected $dates = ['created_at', 'updated_at', 'deleted_at','request_time'];
     public function customer()
     {
         return $this->hasOne('App\User', 'id', 'customer_id');

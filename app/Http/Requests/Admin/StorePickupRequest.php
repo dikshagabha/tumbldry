@@ -44,7 +44,7 @@ class StorePickupRequest extends FormRequest
             'longitude'=>'bail|nullable|numeric|min:-180|max:180',
             'landmark'=>'bail|nullable|string|min:2|max:200',
             'service'=>'bail|required|numeric',
-
+            'request_time'=>'bail|required|string'
         ];
         }
 
@@ -68,6 +68,7 @@ class StorePickupRequest extends FormRequest
           'longitude'=>'bail|nullable|numeric|min:-180|max:180',
           'landmark'=>'bail|nullable|string|min:2|max:200',
           'service'=>'bail|required|numeric',
+          'request_time'=>'bail|required|string'
 
         ];
       

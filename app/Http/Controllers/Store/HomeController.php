@@ -18,14 +18,15 @@ class HomeController extends Controller
 
     	$activePage = 'dashboard';
     	$titlePage = "Dashboard";
-     	
+     	$timezone = $Request->session()->get('user_timezone', 'Asia/Calcutta');
+
         $runners = User::where(['role'=>5, 'status'=>1])->where('user_id', Auth::user()->id)->pluck('name', 'id');
     	$users = PickupRequest::where('store_id', Auth::user()->id)->with('order')->latest()->paginate(10);
     	if ($Request->ajax()) {
-    		return view('store.pickup-requests.list', compact('users', 'activePage', 'titlePage', 'runners'));
+    		return view('store.pickup-requests.list', compact('users', 'activePage', 'titlePage', 'runners', 'timezone'));
     	}
     	
-    	return view('store.pickup-requests.index', compact('users', 'activePage', 'titlePage', 'runners'));
+    	return view('store.pickup-requests.index', compact('users', 'activePage', 'titlePage', 'runners','timezone'));
     }
 
     public function getcustomerdetails(Request $Request, $id)
@@ -57,5 +58,13 @@ class HomeController extends Controller
         return response()->json(["message"=>"Customer Found!!", "customer" => $customer], 200);
       }
         return response()->json(["message"=>"Customer Not Found!!"], 400);
+    }
+
+    public function setTimezone(Request $request)
+    {
+        if ($request->filled('timezone')) {
+            $request->session()->put('user_timezone', $request->input('timezone'));
+        }
+        return response()->json(['message' => 'Timezone set successfully!'], 200);
     }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Runner;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use JWTAuth;
+use App\Http\Controllers\Api\Runner\PickupPickupRepository;
 
 class PickupController extends Controller
 {

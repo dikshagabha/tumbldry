@@ -87,7 +87,9 @@
         
         <script src="{{asset('js/waitMe.js')}}"></script>
         <script src="{{asset('js/pnotify.custom.min.js')}}"></script>
-
+        <script src="{{ asset('js/moment.min.js') }}" type="text/javascript"></script>
+        <script src="{{ asset('js/moment-timezone.min.js') }}" type="text/javascript"></script>
+        
         <script src="https://js.pusher.com/4.4/pusher.min.js"></script>
         @auth()
           <script type="text/javascript">
@@ -110,20 +112,22 @@
           </script>
         @endauth
         <script>
-
+          var user_timezone;
           $(document).ready(function(){
+          user_timezone = moment.tz.guess();
+          
 
-         //  var pusher = new Pusher("{{env('PUSHER_APP_KEY')}}", {
-         //    cluster: 'ap2',
-         //    forceTLS: true
-         //  });
-
-         // var channel = pusher.subscribe('my-channel');
-         //  channel.bind('notification'+user_id, function(data) {
-         //      $(".notif-count").text(parseInt($(".notif-count").text())+1);
-         //      $(".dropdown-menu").prepend("<a class='dropdown-item' href='#'>"+data.message+"</a>");
-         //      load_listings(location.href);
-         //    });
+           $.ajax({
+            type: 'POST',
+            url: {!! json_encode(route('store.set-timezone')) !!},
+            data: {
+                user_timezone : moment.tz(user_timezone).format("Z")
+            },
+            datatype: 'html',
+            headers:{
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
 
           $(document).on('click', ".notifications", function(e){
             e.preventDefault();
@@ -195,7 +199,8 @@
 
               $.ajaxSetup({
                 headers:{
-                  'X-CSRF-TOKEN':$('meta[name="csrf-token"]').attr('content')
+                  'X-CSRF-TOKEN':$('meta[name="csrf-token"]').attr('content'),
+                  'timezone': user_timezone
                 },
                 error: function(data, status){
                   if(data.status==422){

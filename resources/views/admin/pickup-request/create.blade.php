@@ -5,6 +5,7 @@
 @section('css')
   <link rel="stylesheet" href="{{ asset('css/chosen/bootstrap-chosen.css') }}">
   <link rel="stylesheet" href="{{ asset('css/jcf.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/datetimepicker.css') }}">
   <!-- <style type="text/css">
     div[data-acc-content] { display: none;  }
   </style> -->
@@ -72,13 +73,14 @@
 
 @push('js')
 <script src="{{asset('js/chosen/chosen.jquery.min.js')}}"></script>
+<script src="{{asset('js/datetimepicker.js')}}"></script>
 
 <script>
 $(document).ready(function(){
 
   //jcf.replaceAll();
 	$('#service').chosen();
-
+  $('#picker').dateTimePicker();
   
 
   $('input[type=radio][name=property_type]').change(function() {
@@ -144,7 +146,7 @@ $(document).ready(function(){
       data: data,    
       success: function(data){
         success(data.message);
-        window.location=data.redirectTo;
+        //window.location=data.redirectTo;
         $('body').waitMe('hide');
       }
     })

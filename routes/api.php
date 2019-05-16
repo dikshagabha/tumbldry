@@ -24,11 +24,11 @@ Route::group([
 	
     Route::post('login', 'AuthController@login');
     Route::post('register', 'AuthController@register');
+    
     Route::post('pickup-jobs', 'PickupController@getPickupJobs');
 
     Route::post('customer/register', 'CustomerController@store');
     Route::post('order/{$id}', 'CustomerController@orderDetails');
-
     Route::post('search-customer', 'CustomerController@searchCustomer');
 
 

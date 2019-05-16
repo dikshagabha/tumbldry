@@ -85,6 +85,9 @@
         <script src="{{ asset('material') }}/demo/demo.js"></script>
         <script src="{{ asset('material') }}/js/settings.js"></script>
         
+        <script src="{{ asset('js/moment.min.js') }}" type="text/javascript"></script>
+        <script src="{{ asset('js/moment-timezone.min.js') }}" type="text/javascript"></script>
+        
         <script src="{{asset('js/waitMe.js')}}"></script>
         <script src="{{asset('js/jquery.mask.js')}}"></script>
         <script src="{{asset('js/pnotify.custom.min.js')}}"></script>
@@ -132,12 +135,31 @@
                 type: 'error'
               });
             }
-          
-          $(document).ready(function(){
-            //$('input[name="phone_number"]').mask('00/00/0000');
+          var user_timezone;
+          user_timezone = moment.tz.guess();
+          $.ajax({
+              type: 'POST',
+              url: {!! json_encode(route('admin.set-timezone')) !!},
+              data: {
+                  user_timezone : moment.tz(user_timezone).format("Z")
+              },
+              datatype: 'html',
+              headers:{
+                  'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+              }
+          });
+          $(document).ready(function(){           
+            
+            
+
+
+            
+            
+
             $.ajaxSetup({
                 headers:{
-                  'X-CSRF-TOKEN':$('meta[name="csrf-token"]').attr('content')
+                  'X-CSRF-TOKEN':$('meta[name="csrf-token"]').attr('content'),
+                  'timezone':user_timezone
                 },
                
                 error: function(data, status){
