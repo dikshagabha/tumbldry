@@ -26,9 +26,14 @@ Route::group([
     Route::post('register', 'AuthController@register');
     
     Route::post('pickup-jobs', 'PickupController@getPickupJobs');
+    Route::post('delivery-jobs', 'PickupController@getDeliveryJobs');
 
     Route::post('customer/register', 'CustomerController@store');
-    Route::post('order/{$id}', 'CustomerController@orderDetails');
+
+    Route::post('order-details', 'PickupController@getOrderDetails');
+    Route::post('last-order-details', 'PickupController@getLastOrderDetails');
+    Route::post('cancel-request', 'PickupController@cancelRequest');
+
     Route::post('search-customer', 'CustomerController@searchCustomer');
 
 

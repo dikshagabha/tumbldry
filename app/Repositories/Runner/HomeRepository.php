@@ -105,8 +105,8 @@ class HomeRepository extends BaseRepository
             $user->last_login = Carbon::now();
             $user->save(); // save the user (update the device token)
 
-            // $common = new CommonRepositary;
-            // $common->getManageToken($token, $user->id); // save the token in the database
+            //$common = new CommonRepositary;
+            CommonRepository::getManageToken($token, $user->id); // save the token in the database
 
             $response['http_status'] = 200;
             $response['data'] = $user;

@@ -8,7 +8,7 @@ use JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Exceptions\TokenExpiredException;
 use Tymon\JWTAuth\Exceptions\TokenInvalidException;
-use App\Models\Token;
+use App\Model\Token;
 class JwtAuthCustom
 {
     /**
@@ -20,10 +20,13 @@ class JwtAuthCustom
      */
     public function handle($request, Closure $next)
     {
+
+
         try {
             // parse the token from the request and fetch the user
             // if the token is not in the request, token is invalid, token is expired it will throw an Exception form below line
             $user = JWTAuth::parseToken()->authenticate();
+
             // if we have an user
             if (!$user) {
                 return response()->json([
@@ -41,10 +44,7 @@ class JwtAuthCustom
                         ], 401);
             }
 
-            // check user email verified or not
-            if (!$user->email_verified) {
-                return response()->json(['message' => 'Please Verify your account',], 401);
-            }
+            
 
             if ($user->status == 1) {
                 return $next($request);
@@ -61,14 +61,15 @@ class JwtAuthCustom
                 }
             }
         } catch (TokenExpiredException $e) {
+            
             return response()->json([
-                    'message' => 'Sorry, looks like you are logged in another device with the same user.',], 401);
+                    'message' => $e->getMessage(),], 401);
         } catch (TokenInvalidException $e) {
             return response()->json([
-                    'message' => 'Sorry, looks like you are logged in another device with the same user.',], 401);
+                    'message' => $e->getMessage()], 401);
         } catch (JWTException $e) {
             return response()->json([
-                    'message' => 'Sorry, looks like you are logged in another device with the same user.',], 401);
+                    'message' => $e->getMessage()], 401);
         }
         return $next($request);
     }

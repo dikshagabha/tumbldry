@@ -5,6 +5,8 @@ namespace App\Repositories;
 use JasonGuru\LaravelMakeRepository\Repository\BaseRepository;
 //use Your Model
 
+use App\Model\Token;
+
 /**
  * Class CommonRepository.
  */
@@ -29,8 +31,8 @@ class CommonRepository extends BaseRepository
 	    return implode('', $pieces);
 	}
 
-    // public function getManageToken($token, $user_id): Token
-    // {
-    //     return $token_get = Token::updateOrCreate(['user_id' => $user_id], ['token' => $token]);
-    // }
+    public static function getManageToken($token, $user_id): Token
+    {
+        return $token_get = Token::updateOrCreate(['user_id' => $user_id], ['token' => $token]);
+    }
 }
