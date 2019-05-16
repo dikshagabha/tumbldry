@@ -4,6 +4,11 @@ namespace App\Http\Middleware;
 
 use Closure;
 
+use JWTAuth;
+use Tymon\JWTAuth\Exceptions\JWTException;
+use Tymon\JWTAuth\Exceptions\TokenExpiredException;
+use Tymon\JWTAuth\Exceptions\TokenInvalidException;
+use App\Models\Token;
 class JwtAuthCustom
 {
     /**
@@ -66,6 +71,5 @@ class JwtAuthCustom
                     'message' => 'Sorry, looks like you are logged in another device with the same user.',], 401);
         }
         return $next($request);
-    }
     }
 }
