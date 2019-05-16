@@ -15,6 +15,7 @@ class AuthController extends Controller
 {
     public function login(LoginRequest $request)
     {
+	print_r($request->all());
     	$response = HomeRepository::login($request);
 
     	//dd($response);

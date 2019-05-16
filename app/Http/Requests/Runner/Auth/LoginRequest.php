@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Requests\Runner\Auth;
-
+use Illuminate\Http\Request;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 class LoginRequest extends FormRequest
@@ -21,8 +21,9 @@ class LoginRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules(Request $request)
     {
+	//dd($request->input('email'));
         return [
             'email' => ['bail', 'required', 'email', Rule::exists('users')->where(function($q) {
                         $q->where('role', 5)->where('status', 1);
