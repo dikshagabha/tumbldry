@@ -77,7 +77,7 @@
           <button href="#" class="dropdown-toggle btn btn-danger btn-simple" data-toggle="dropdown">
           <i class="fa fa-bell"> </i> (<span class="notif-count" >{{Auth::user()->notifications()->where('read_at', 'null')->count()}}</span>)</button>
 
-          <ul class="dropdown-menu dropdown-danger dropdown-menu-right">
+          <ul class="dropdown-menu dropdown-danger dropdown-menu-right notifications_dropdown">
 
             @if(Auth::user()->notifications)    
               @foreach(Auth::user()->notifications as $notifications)
@@ -191,7 +191,7 @@
               channel.bind('notification'+user_id, function(data) {
                   $(".notif-count").text(parseInt($(".notif-count").text())+1);
                   console.log(data.message);
-                  $(".dropdown-menu").prepend("<li><a class='dropdown-item' href='#'>"+data.message+"</a></li>");
+                  $(".notifications_dropdown").prepend("<li><a class='dropdown-item' href='#'>"+data.message+"</a></li>");
                   load_listings(location.href);
                 });
             })
