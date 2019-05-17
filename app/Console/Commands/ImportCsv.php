@@ -47,13 +47,19 @@ class ImportCsv extends Command
             $items = [];
             $id = Service::where('name', 'Dry Clean')->select('id')->first();
             $id = $id->id;
+            $item = Items::where(['name'=>$vals[1], 'type'=>1])->first();
             
-            print_r($vals);
-
-            $item = Items::create(['name'=>$vals[1], 'type'=> 1]);
+            if ($item->count()) {
+                $item_id = $item->id;
+            }else{
+             $item = Items::create(['name'=>$vals[1], 'type'=> 1]);
+             $item_id  = $item->id;  
+            }
+            
+            // $item = Items::create(['name'=>$vals[1], 'type'=> 1]);
 
             $price = ServicePrice::create(['location'=>'global', 'value'=>$vals[2], 'service_id'=>$id,
-                                                   'parameter'=>$item->id, 'service_type'=>1]);
+                                                  'parameter'=>$item->id, 'service_type'=>1]);
         }
 
     }
