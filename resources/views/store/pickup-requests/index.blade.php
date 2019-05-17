@@ -1,4 +1,4 @@
-@extends('store.layouts.app')
+@extends('store.design.app')
 @section('title', 'Manage Pickup Requests')
 @section("css")
 <link rel="stylesheet" type="text/css" href="{{asset('css/chosen/bootstrap-chosen.css')}}">
@@ -67,6 +67,7 @@
   </div>
 </div>
 @endsection
+
 @push('js')
 
 <script src="{{asset('js/jcf/jcf.js')}}"></script>

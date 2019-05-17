@@ -94,6 +94,7 @@ Route::prefix('store')->namespace('Store')->group(function () {
           ]);
       });
       
+      Route::get('logout', 'LoginController@logout')->name('logout');
 
       Route::post('set-store-timezone', 'HomeController@setTimezone')->name('store.set-timezone');
 
@@ -124,9 +125,7 @@ Route::prefix('store')->namespace('Store')->group(function () {
 
       Route::post('/notifications/read-all', 'NotificationsController@markRead')->name('notifications.mark-read'); 
 
-      Route::post('/runner/assign-runner', 'RunnerController@assignRunner')->name('store.assign-runner'); 
-
-    Route::post('/logout', 'LoginController@logout')->name('store.logout');
+      Route::post('/runner/assign-runner', 'RunnerController@assignRunner')->name('store.assign-runner');
 
   });
 });

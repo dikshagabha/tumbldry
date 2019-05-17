@@ -26,13 +26,13 @@ $i=1;
 					</td>					
 						<td width="10%">
 						<input type="text" name="quantity" class="form-control quantityVal_{{$i}} " 
-						style="color: white;" value="{{$item['quantity']}}" 
+						 value="{{$item['quantity']}}" 
 						>
 						</td>
 						<td>
 						<button type="button" class="btn btn-link quantity" data-url = "{{route('store.quantityItemSession')}}" data-id='{{$i}}'
 						data-id="{{$i}}">
-						<i class="fa fa-refresh "></i>
+						<i class="fa fa-refresh"></i>
 						</button>
 						</td>
 
@@ -114,7 +114,7 @@ $i=1;
 			</div>
 	        
 	     </div>
-
+	     <br>
 	     <div class="row">
 	     	<div class="col-md-4 col-sm-4 col-lg-4">
 	     		<strong>Total Price</strong>

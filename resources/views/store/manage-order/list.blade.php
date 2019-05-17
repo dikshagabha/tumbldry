@@ -4,7 +4,7 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
 @endphp
  @if($users->count())
 
-  <table class="table table-striped dataTable">
+  <table class="table table-borderless dataTable">
       <thead>
         <tr>
           <th>S No</th>
@@ -37,8 +37,9 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
                                             'placeholder'=>'Select Runner', 'id'=>'runner'.$user->id])
                   }}
                   <span class="error" id="id_error"></span>
+                  <br>
                   {{
-                    Form::button('assign', ['class'=>'btn btn-warning assign_runner', 'data-url'=> route('store.order.assign-delivery', $user->id), 'data-id'=>$user->id ])
+                    Form::button('Assign', ['class'=>'btn btn-warning assign_runner', 'data-url'=> route('store.order.assign-delivery', $user->id), 'data-id'=>$user->id ])
                   }}
                 @endif
 

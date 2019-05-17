@@ -1,4 +1,4 @@
-@extends('store.layouts.app')
+@extends('store.design.app')
 @section('title', 'Manage Store')
 @section('content')
 
@@ -8,8 +8,6 @@
       <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">
           <div class="card card-stats">
-
-
               <div class="row">
                 <div class="col-md-9">
                 </div>
@@ -17,7 +15,7 @@
                   <a href="{{route('store.orderWithoutPickup')}}"><button class="btn btn-danger">Add Order</button></a>
                 </div>
               </div>
-              <br>
+              
                <!-- <div class="">
                 {{ Form::open(['method' => 'get', 'id' => 'store-search', 'name' => 'serach_form']) }}
                 <div class="form-group-inner">

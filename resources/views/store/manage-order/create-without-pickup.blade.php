@@ -1,4 +1,4 @@
-@extends('store.layouts.app')
+@extends('store.design.app')
 @section('title', 'Create order')
 
 @section('css')
@@ -11,10 +11,7 @@
     .table td {
    text-align: center;   
 }
-  .quantity
-  {
-    color: white;
-  }
+  
 
  </style>
 
