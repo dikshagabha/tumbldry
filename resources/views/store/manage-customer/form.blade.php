@@ -91,7 +91,7 @@
                     
                   </div>
             </div><br>
-            <div class="form-group-inner">
+            <div class="form-group-inner" style="display:none">
                <div class="row">
                     <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
                       <label class="login2 pull-right pull-right-pro">Latitude</label>
@@ -104,7 +104,7 @@
                     
                   </div>
             </div><br>
-            <div class="form-group-inner">
+            <div class="form-group-inner" style="display:none">
                <div class="row">
                     <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
                       <label class="login2 pull-right pull-right-pro">Longitude</label>

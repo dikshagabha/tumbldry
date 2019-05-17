@@ -44,8 +44,8 @@ class RegisterRequest extends FormRequest
             'landmark' => 'bail|nullable|string|max:500',
             
             //'password' => ['bail', 'required', 'min:8', 'max:30', new DisallowSpaces, 'confirmed'],
-            'latitude' => 'bail|required|numeric|min:-90|max:90',
-            'longitude' => 'bail|required|numeric|min:-180|max:180',
+            'latitude' => 'bail|nullable|numeric|min:-90|max:90',
+            'longitude' => 'bail|nullable|numeric|min:-180|max:180',
         ];
        
     }
