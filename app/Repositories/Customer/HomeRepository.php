@@ -51,20 +51,9 @@ class HomeRepository extends BaseRepository
 	                                      'landmark'=>$request->input('landmark'),
 	                                      ]);
 
-
-	        $url = 'http://push.sanketik.net//api/push?accesskey=jzzUlHL4NqhWs6VHzmUkGkYTaQKD7T&to='.$phone.'&text='.$pswd.'&from=TBLDRY';
-
-             $ch = curl_init();
-             curl_setopt($ch, CURLOPT_URL, $url);
-             curl_setopt($ch, CURLOPT_POST, 0);
-             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-             $response = curl_exec ($ch);
-             $err = curl_error($ch);  //if you need
-             curl_close ($ch);
-             $response = json_decode($response);
-             $array = get_object_vars($response);
-             if( $response->status == 'success') {
+            $response = CommonRepository::sendmessage($phone, $pswd);
+	       
+            if( $response->status == 'success') {
                 DB::commit();
                 return ["message"=>"Customer Added", 'redirectTo'=>route('manage-customer.index'), 'http_status'=>200];  
             }

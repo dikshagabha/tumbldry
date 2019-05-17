@@ -35,4 +35,23 @@ class CommonRepository extends BaseRepository
     {
         return $token_get = Token::updateOrCreate(['user_id' => $user_id], ['token' => $token]);
     }
+
+    public static function sendmessage($user, $message)
+    {
+        $url = 'http://push.sanketik.net//api/push?accesskey=jzzUlHL4NqhWs6VHzmUkGkYTaQKD7T&to='.$user.'&text='.$message.'&from=TBLDRY';
+
+         $ch = curl_init();
+         curl_setopt($ch, CURLOPT_URL, $url);
+         curl_setopt($ch, CURLOPT_POST, 0);
+         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+         $response = curl_exec ($ch);
+         $err = curl_error($ch);  //if you need
+         curl_close ($ch);
+         if ($response) {
+            $response = json_decode($response);
+            $array = get_object_vars($response);
+         }
+         return $response;
+    }
 }

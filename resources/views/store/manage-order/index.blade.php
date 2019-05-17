@@ -224,6 +224,40 @@ $(document).ready(function(){
       })
     });
 
+  $(document).on("change",".change_status",function(e) {
+      e.preventDefault();
+      $('body').waitMe();
+      current = $(this)
+      $.ajax({
+        url:current.data('url'),
+        method:'post',
+        data:{'status':current.val()},
+        success:function(data){
+          $('body').waitMe('hide');
+          var current_page = $(".pagination").find('.active').text();
+          load_listings(location.href+'?page='+current_page, 'serach_form');
+          success(data.message);
+        }
+      })
+    });
+
+  $(document).on("click",".assign_runner",function(e) {
+      e.preventDefault();
+      $('body').waitMe();
+      current = $(this)
+      $.ajax({
+        url:current.data('url'),
+        method:'post',
+        data:{'id':$('#runner'+current.data('id')).val()},
+        success:function(data){
+          $('body').waitMe('hide');
+          var current_page = $(".pagination").find('.active').text();
+          load_listings(location.href+'?page='+current_page, 'serach_form');
+          success(data.message);
+        }
+      })
+    });
+
 
 })
 </script>

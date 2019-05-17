@@ -114,6 +114,8 @@ Route::prefix('store')->namespace('Store')->group(function () {
       Route::post('/quantity-items-session', 'OrderController@quantityItemSession')->name('store.quantityItemSession');
       Route::post('/coupon', 'OrderController@couponItemSession')->name('store.couponItemSession');
 
+      Route::post('/order/status/{id}', 'OrderController@status')->name('store.order.status');
+      Route::post('/order/assigndelivery/{id}', 'OrderController@assignDelivery')->name('store.order.assign-delivery');
 
       Route::post('/find-customer', 'HomeController@findCustomer')->name('store.findCustomer');
 

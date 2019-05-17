@@ -19,11 +19,13 @@ use App\Model\{
     Location,
     ServicePrice,
     Coupon,
+    UserJobs,
     Address
 };
 use App\User;
 use Session;
 use DB;
+use App\Repositories\CommonRepository;
 class OrderController extends Controller
 {
 	protected $user;
@@ -48,11 +50,56 @@ class OrderController extends Controller
     $activePage="order";
     $titlePage="Orders";
     $users = Order::where('store_id', $this->user->id)->paginate(10);
-
+    $runner = User::where('user_id', $this->user->id)->pluck('name', 'id');
     if ($request->ajax()) {
-      return view('store.manage-order.list', compact('users'));
+      return view('store.manage-order.list', compact('users', 'runner'));
     }
-    return view('store.manage-order.index', compact('users', 'activePage', 'titlePage'));
+    return view('store.manage-order.index', compact('users', 'activePage', 'titlePage', 'runner'));
+  }
+
+  public function status(Request $request, $id){
+    $activePage="order";
+    $titlePage="Orders";
+    $order = Order::where('id', $id)->with('customer')->first();
+    $order->status = $request->input('status');
+    $order->save();
+
+    //dd($order->customer->phone_number);
+    if ($order) {
+      if ($request->input('status')==2) {
+        $customer = $order->customer;
+        //dd($customer);
+        if ($customer->phone_number) {
+          CommonRepository::sendmessage($customer->phone_number, 'Your%20order%20ORDER'.$id.'%20has%20been%20recieved%20by%20store.');
+        }
+        
+      }
+      return response()->json(['message'=>'Order Status Updated'], 200);
+    }
+  }
+
+  public function assignDelivery(Request $request, $id){
+   
+   $validatedData = $request->validate([
+      'id'=>'bail|required|numeric|min:1']);
+
+    try {
+      DB::beginTransaction();
+      $order = Order::where('id', $id)->first();
+      $order->delivery_runner_id= $request->input('id');
+      $order->save();
+
+      $job = UserJobs::create(['user_id'=>$request->input('id'), 'order_id'=>$id, 'type'=>2, 'assigned_by'=>$this->user->id]);
+
+      $runner = User::where('id', $request->input('id'))->first();
+      if ($runner->phone_number) {
+        CommonRepository::sendmessage($runner->phone_number, 'Delivery%20of%20order%20id%20ORDER'.$id.'%20has%20been%20requested%20by'.$this->user->store_name);
+      }
+      DB::commit();
+      return response()->json(['message'=>'Order Updated'], 200);
+    } catch (Exception $e) {
+      return response()->json(['message'=>'Something went wrong'], 400);
+    }   
   }
 
   public function create(Request $Request, $id){
