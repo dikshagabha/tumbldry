@@ -33,7 +33,7 @@ class RateCardController extends Controller
                     'service_id'=>$selected])
                     ->get();
         $edit = $prices->count();
-        $items = Items::where("type", $request->input('type'))->paginate(10);
+        $items = Items::where("type", $request->input('type'))->where('status', 1)->paginate(10);
 
     	if ($request->ajax()) 
         {
@@ -58,7 +58,8 @@ class RateCardController extends Controller
           ]);
 
         $city =  $request->input('city');
-        $items = Items::where("type", $request->input('type'))->paginate(10);
+
+        $items = Items::where("type", $request->input('type'))->where('status', 1)->paginate(10);
         
         $prices = ServicePrice::where(['location'=>$request->input('city'), 
                     'service_id'=>$request->input('service')])

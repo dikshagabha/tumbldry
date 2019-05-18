@@ -1,4 +1,4 @@
-@extends('store.design.app')
+@extends('store.layouts.app')
 @section('title', 'Create order')
 
 @section('css')
@@ -122,7 +122,7 @@ $( "#item" ).autocomplete({
             dataType: "json",
             type : 'Get',
             url: path,
-            data:{'query': request.term},
+            data:{'query': request.term , 'service':$('#service').val()},
             success: function(data) {
                 $('input.suggest-user').removeClass('ui-autocomplete-loading');  
                 // hide loading image

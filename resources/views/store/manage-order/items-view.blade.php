@@ -6,41 +6,78 @@ $i=1;
 <div class="row">
   	<div class="col-lg-7 col-md-7 col-sm-7 col-xs-7">	
 		<table class="table table-borderless table-dark ">
-			<thead>
+			<!-- <thead>
 				<td width="40%"><h3>Item</h3></td>
 				<td colspan="2" width="20%"><h3>Quantity</h3></td>
 				<td><h3>Action</h3></td>
-			</thead>
+			</thead> -->
 			<tbody>
 			@foreach($items as $item)
  				<tr>
-					<td width="50%"><strong>{{$item['item']}}</strong>
+					<td width="40%"><strong>{{$item['item']}}</strong>
 						<br> Price:
 						@if($item['price'])
 							{{$item['price']}} Rs
 						@else
 							N/A
 						@endif
-
-
 					</td>					
-						<td width="10%">
+					<td width="10%">
 						<input type="text" name="quantity" class="form-control quantityVal_{{$i}} " 
-						 value="{{$item['quantity']}}" 
+						 value="{{$item['quantity']}}"  style="color:white" 
 						>
 						</td>
+						 <td>@if($item['units']) <span>Kg</span> @endif</td>
 						<td>
 						<button type="button" class="btn btn-link quantity" data-url = "{{route('store.quantityItemSession')}}" data-id='{{$i}}'
-						data-id="{{$i}}">
+						data-id="{{$i}}" style="color:white" title="Add Quantity"> 
 						<i class="fa fa-refresh"></i>
 						</button>
-						</td>
-
-					
+					</td>					
 					<td>				
-					<button type="button" class="btn btn-danger deleteItemBtn" action = "{{route('store.deleteItemSession')}}" data-id="{{$i}}"><i class="fa fa-trash"></i></button>
+						<button type="button" class="btn btn-danger deleteItemBtn" action = "{{route('store.deleteItemSession')}}" data-id="{{$i}}" title="Delete"><i class="fa fa-trash"></i></button>
+					</td>
+					<td>
+						@if($item['estimated_price'])
+							{{$item['estimated_price']}} Rs
+						@else
+							N/A
+						@endif
 					</td>
 				</tr>
+				@if($item['addons'])
+					<tr>	
+					<td colspan="5">	
+					 <div id="addonForm{{$i}}" class="form"> addonForm{{$i}}
+							@foreach($item['addons'] as $addon)
+								
+									<input type="checkbox" name="addon[]" id="{{$addon['name'].'_'.$addon->id.'_'.$i}}" 
+									
+									value="{{ $addon['id'] }}" name="addon[]" 
+									
+									@if(in_array( $addon['id'], $item['selected_addons']))
+
+										checked
+
+									@endif 
+									>
+									
+									
+									<label for="{{$addon['name'].'_'.$addon->id.'_'.$i}}">{{ $addon['name'] }}</label>
+								
+							@endforeach
+							<input type="hidden" name="service" value="{{$item['service_id']}}">
+							<input type="hidden" name="id" value="{{$i}}">
+
+							<button type="button" class="btn btn-link addOn" data-url = "{{route('store.addonItemSession')}}" title="Add Addon" data-id='{{$i}}'
+							data-id="{{$i}}" style="color:white"> 
+								<i class="fa fa-refresh"></i>
+							</button>
+					 </div>
+					</td>
+
+					</tr>
+				@endif
 			</tbody>
 		@php
 		$i++;
@@ -52,22 +89,18 @@ $i=1;
 	<div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
 		<table class="table table-borderless table-dark">
 			<thead>
-				<td width="50%"><h4>Item</h4></td>
-				<td width="50%"><h4>Price</h4></td>
+				<!-- <td width="50%"><h4>Item</h4></td>
+				<td width="50%"><h4>Price</h4></td> -->
 			</thead>
-			@foreach($items as $item)
-				<tr>
-					<td width="50%"><strong>{{$item['item']}}</strong></td>
-					<td width="10%">@if($item['estimated_price'])
-										{{$item['estimated_price']}} Rs
-									@else
-										N/A
-									@endif
-					</td>
-				</tr>
-
-			@endforeach
-
+			<tr>
+				<td width="50%"><strong>Price</strong></td>
+				<td width="10%">@if($price_data['estimated_price'])
+									{{$price_data['estimated_price']}} Rs
+								@else
+									N/A
+								@endif
+				</td>
+			</tr>
 			<tr>
 				<td>
 					CGST (9%)
@@ -83,21 +116,7 @@ $i=1;
 				<td>
 					{{ $price_data['gst'] }}
 				</td>
-			</tr>
-
-			<!-- <tr>
-				<td>
-					Total Price
-				</td>
-				<td>
-					@if($price_data['total_price'] !=0)
-						{{$price_data['total_price']}} Rs
-					@else
-						N/A
-					@endif
-				</td>
-			</tr> -->
-			
+			</tr>			
 		</table>
 
 		<div class="row">
@@ -120,7 +139,8 @@ $i=1;
 	     		<strong>Total Price</strong>
 	     	</div>
 	     	<div class="col-md-5 col-sm-5 col-lg-5 pull-left">
-	     		<strong>@if($price_data['total_price'] !=0)
+	     		<strong>
+	     			@if($price_data['total_price'] !=0)
 						{{$price_data['total_price']}} Rs
 					@else
 						N/A

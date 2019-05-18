@@ -6,7 +6,7 @@
 	</tr>
 	<tr>
 		<td>Coupon Applied</td>
-		<td>{{$order->coupon}}</td>
+		<td>{{$order->coupon_id}}</td>
 	</tr>
 	<tr>
 		<td>Total Amount</td>

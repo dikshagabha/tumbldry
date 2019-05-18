@@ -57,12 +57,12 @@
     </nav> 
     
     <div class="wrapper">
-        <div class="register-background"> 
+        <div class="register-background" > 
             <div class="filter-black"></div>
                 <div class="container">
                     <div class="row">
                         <div class="col-md-4 col-md-offset-4 col-sm-6 col-sm-offset-3 col-xs-10 col-xs-offset-1 ">
-                            <div class="register-card">
+                            <div class="register-card" style="background-color: #ece9e1; color: black">
                                 <h3 class="title">Welcome</h3>
                                   {{Form::open(['route'=>'store.login', 'id'=>'loginForm', 'method'=>'post'])}}
                                     <label>Email</label>

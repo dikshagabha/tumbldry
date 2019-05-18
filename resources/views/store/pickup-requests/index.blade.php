@@ -1,4 +1,4 @@
-@extends('store.design.app')
+@extends('store.layouts.app')
 @section('title', 'Manage Pickup Requests')
 @section("css")
 <link rel="stylesheet" type="text/css" href="{{asset('css/chosen/bootstrap-chosen.css')}}">

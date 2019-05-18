@@ -1,4 +1,4 @@
-@extends('store.design.app')
+@extends('store.layouts.app')
 @section('title', 'Create order')
 
 @section('css')
@@ -123,7 +123,7 @@ $( "#item" ).autocomplete({
             dataType: "json",
             type : 'Get',
             url: path,
-            data:{'query': request.term},
+            data:{'query': request.term, 'service':$('#service').val()},
             success: function(data) {
                 $('input.suggest-user').removeClass('ui-autocomplete-loading');  
                 // hide loading image
@@ -258,6 +258,26 @@ $( "#item" ).autocomplete({
       url: current.data('url'),
       type:'post',
       data: {'data-id': current.data('id'), 'quantity':$('.quantityVal_'+current.data('id')).val()},
+      cache: false,
+      success: function(data){
+        success(data.message);
+        $(".ItemsAdded").html(data.view);
+        $('body').waitMe('hide');
+      }
+    })
+  })
+
+  $(document).on("click", ".addOn", function(e){
+    e.preventDefault();
+    $(".error").html(""); 
+    current = $(this);   
+
+    console.log($('#addonForm'+current.data('id')).serializeArray());
+    
+    $.ajax({
+      url: current.data('url'),
+      type:'post',
+      data: $('#addonForm'+current.data('id')).serializeArray(),
       cache: false,
       success: function(data){
         success(data.message);

@@ -20,7 +20,8 @@ use App\Model\{
     ServicePrice,
     Coupon,
     UserJobs,
-    Address
+    Address,
+    LaundaryWeights
 };
 use App\User;
 use Session;
@@ -121,37 +122,61 @@ class OrderController extends Controller
   }
 
   public function getItems(Request $request){
-  	//$type = Service::where('id', $request->input('type'))->select('form_type')->first();
-	  $data = Items::where("name","LIKE","%{$request->input('query')}%")->pluck('name');
+  	$type = Service::where('id', $request->input('service'))->select('form_type')->first();
+	  $data = Items::where("name","LIKE","%{$request->input('query')}%")
+            ->where('type', $type->form_type)->pluck('name');
 	  //$data = Items::where('type', $type->form_type)->pluck('name');
     return response()->json($data);    	
   }
 
   public function addItemSession(Request $request){
      $validatedData = $request->validate([
-      'service'=>'bail|required|numeric|min:1']);
+      'service'=>'bail|required|numeric|min:1',
+       'item'=>'bail|required|string|min:1|max:500']);
 
      $Service = Service::where("id", $request->input('service'))->first();
-     $form_id = Items::where("name", 'LIKE','%'.$request->input('item').'%' )->where('type', $Service->form_type)->first();
-     //dd($form_id);
+
+     if ($Service->form_type !=2) {
+       $form_id = Items::where("name", 'LIKE','%'.$request->input('item').'%' )->where('type', $Service->form_type)->first();
+     }else{
+      $form_id = Items::where('status', 1)->where('type', $Service->form_type)->first();
+     }
+
+     //dd($this->location);
+     //print_r($Service);
      if (!$form_id) {
          return response()->json(['message'=>'We donot have details for this item.'], 400);
      }
 
-     $price = ServicePrice::where(['parameter'=>$form_id->id, 'service_id'=>$Service->id])->where('location', $this->location->id)->first();
+     $price = ServicePrice::where(['service_id'=>$Service->id])->where('parameter', $form_id->id)
+              ->where('location', 'LIKE', '%'.$this->location->city_name.'%')->first();
      
+     $units = false;
      if (!$price) {
-       $price = ServicePrice::where(['parameter'=>$form_id->id, 'service_id'=>$Service->id])->where('location', 'global')->first();
+       $price = ServicePrice::where(['service_id'=>$Service->id])->where('parameter', $form_id->id)
+                ->where('location', 'global')->first();
      }
+    //print_r($price);
+    if ($Service->form_type !=2 ) {
+       if ($price) {
+          $price = $price->value;
+         }
+    }else{
+      $form_id = Items::where("name", 'LIKE','%'.$request->input('item').'%' )->where('type', $Service->form_type)->first();
+      $weight = LaundaryWeights::where('item_id', $form_id->id)->first();
+      if ($weight->weight_unit==2) {
+        $weight = $weight->weight/1000;
+      }else{
+        $weight=$weight->weight;
+      }
 
-     if ($price) {
-      $price = $price->value;
-     }
+      $price = $price->value * $weight;
+      $units = true;
+    }
+    $addon = Service::where("form_type", $Service->form_type)->where('type', 2)->select('id', 'name')->get();
+    
+    $data = ['service_id'=>$request->input('service'), 'item_id'=>$form_id->id, 'service_name'=>$Service->name, 'units'=>$units, 'addons'=> $addon, 'estimated_price'=>$price, 'item'=>$form_id->name, 'price'=>$price, 'quantity'=>1, 'selected_addons'=>[] , 'addon_estimated_price'=>0];
 
-     
-     $data = ['service_id'=>$request->input('service'), 'item_id'=>$form_id->id, 'service_name'=>$Service->name,
-              'item'=>$form_id->name, 'price'=>$price, 'quantity'=>1];
-     $data['estimated_price']=$price;
      
      if (!session()->get('add_order_items')){
 
@@ -163,7 +188,7 @@ class OrderController extends Controller
      $total_price = 0;
      foreach ($items as $key => $value) {
        if ($value) {
-         $total_price = $total_price + $value['estimated_price'];
+         $total_price = $total_price + $value['addon_estimated_price']+$value['estimated_price'];
        }
      }
     $cgst = $total_price*(9/100);
@@ -177,12 +202,13 @@ class OrderController extends Controller
     }
 
     $price_data = ['estimated_price'=> $total_price, 'cgst'=>$cgst, 'gst'=>$gst,
-                                'total_price'=>$total_price+$cgst+$gst-$coupon_discount['discount']];
+                    'total_price'=>$total_price+$cgst+$gst-$coupon_discount['discount']];
 
     session()->put('prices', $price_data);
-    
+    //dd($items);
 
-    return response()->json(['message'=>'Item Added to Cart', 'view'=>view('store.manage-order.items-view', compact('items', 'Service', 'form_id', 'price_data', 'coupon_discount'))->render(), 'items'=>$items], 200);
+    return response()->json(['message'=>'Item Added to Cart', 'view'=>view('store.manage-order.items-view', compact('items', 'Service', 'form_id', 'price_data', 'coupon_discount'))->render(), 'items'=>$items,
+        'price_data'=>$price_data], 200);
   }
 
   public function deleteItemSession(Request $request){
@@ -230,10 +256,61 @@ class OrderController extends Controller
     $index = $request->input('data-id')-1;
     
     $items[$index]['quantity'] =  $request->input('quantity');
-    $items[$index]['estimated_price'] = $request->input('quantity')*($items[$index]['price']);
+    $items[$index]['estimated_price'] = ($request->input('quantity')*($items[$index]['price']))+
+                                        $items[$index]['addon_estimated_price'];
     //unset($items[$index]);
 
 
+    session()->put("add_order_items", $items);
+
+    $items = session('add_order_items');
+    $total_price = 0;
+     foreach ($items as $key => $value) {
+       if ($value) {
+         $total_price = $total_price + $value['estimated_price'];
+       }
+     }
+
+    $cgst = $total_price*(9/100);
+    $gst = $total_price*(9/100);
+    $coupon_discount = 0;
+    $coupon_discount = 0;
+    if (!session()->get('coupon_discount')) {
+      session()->put("coupon_discount", ['coupon'=>null, 'discount'=>null]);
+    }else{
+      $coupon_discount = session('coupon_discount');
+    }
+    $price_data = ['estimated_price'=> $total_price, 'cgst'=>$cgst, 'gst'=>$gst,
+                                'total_price'=>$total_price+$cgst+$gst-$coupon_discount['discount']];     
+    
+
+    session()->put('prices', $price_data);
+    
+    return response()->json(['message'=>'Item Updated', 'view'=>view('store.manage-order.items-view', compact('items','price_data', 'coupon_discount'))->render(), 'items'=>$items], 200);
+  }
+
+
+  public function addonItemSession(Request $request){
+    $items = session('add_order_items');
+    $index = $request->input('id')-1;
+    
+    $items[$index]['selected_addons'] =  $request->input('addon');
+
+    // Price of addons
+    $prices = ServicePrice::where('service_id', $request->input('service'))->whereIn('parameter', 
+                $request->input('addon'))->where('service_type', 0)
+              ->where('location','like' ,'%'.$this->location->city_name.'%')->sum('value');
+    if(!$prices){
+      $prices = ServicePrice::where('service_id', $request->input('service'))
+                ->whereIn('parameter', $request->input('addon'))
+              ->where('location','like' , 'global')->where('service_type', 0)->sum('value');
+    }
+    
+
+    $items[$index]['addon_estimated_price'] = $items[$index]['addon_estimated_price'] + $prices;
+
+    $items[$index]['estimated_price'] =  $items[$index]['price'] + $items[$index]['addon_estimated_price'];
+  
     session()->put("add_order_items", $items);
 
     $items = session('add_order_items');

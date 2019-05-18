@@ -1,4 +1,4 @@
-@extends('store.design.app')
+@extends('store.layouts.app')
 @section('title', 'Manage Runner')
 @section('css')
   <link rel="stylesheet" href="{{ asset('css/chosen/bootstrap-chosen.css') }}">

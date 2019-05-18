@@ -58,7 +58,7 @@
           <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownProfile">
             <!-- <a class="dropdown-item" href="#">{{ __('Settings') }}</a> -->
             <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="{{ route('admin.logout') }}" onclick="event.preventDefault();document.getElementById('logout-form').submit();">{{ __('Log out') }}</a>
+            <a class="dropdown-item" href="{{ route('logout') }}">{{ __('Log out') }}</a>
           </div>
         </li>
       </ul>
