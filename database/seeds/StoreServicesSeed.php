@@ -20,16 +20,20 @@ class StoreServicesSeed extends Seeder
                         'type'=>1, 'form_type'=>2],
             ['name' => 'Ironing',
                         'type'=>1, 'form_type'=>2],
+
             ['name' => 'Dry Clean',
                         'type'=>1, 'form_type'=>1],
             ['name' => 'Shoe Cleaning',
-                        'type'=>1, 'form_type'=>0],
+                        'type'=>1, 'form_type'=>4],
+            
             ['name' => 'Car Wash',
                         'type'=>1, 'form_type'=>3],
+            
             ['name' => 'Sofa Cleaning',
-                        'type'=>1, 'form_type'=>0],
+                        'type'=>1, 'form_type'=>5],
+            
             ['name' => 'Home Cleaning',
-                        'type'=>1, 'form_type'=>0]
+                        'type'=>1, 'form_type'=>6]
 
         ]);
     }

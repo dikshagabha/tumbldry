@@ -45,27 +45,38 @@ $i=1;
 						@endif
 					</td>
 				</tr>
-				@if($item['addons'])
+				@if(count($item['addons']))
 					<tr>	
 					<td colspan="5">	
-					 <div id="addonForm{{$i}}" class="form"> addonForm{{$i}}
+					 <div id="addonForm{{$i}}" class="form">
 							@foreach($item['addons'] as $addon)
-								
+									
+									@if($item['units'])
 									<input type="checkbox" name="addon[]" id="{{$addon['name'].'_'.$addon->id.'_'.$i}}" 
-									
-									value="{{ $addon['id'] }}" name="addon[]" 
-									
+									value="{{ $addon['id'] }}" name="addon[]" 									
 									@if(in_array( $addon['id'], $item['selected_addons']))
 
 										checked
 
 									@endif 
 									>
-									
-									
-									<label for="{{$addon['name'].'_'.$addon->id.'_'.$i}}">{{ $addon['name'] }}</label>
+
+									@else
+									<input type="radio" name="addon[]" id="{{$addon['name'].'_'.$addon->id.'_'.$i}}" 
+									value="{{ $addon['id'] }}" name="addon[]" 									
+									@if(in_array( $addon['id'], $item['selected_addons']))
+
+										checked
+
+									@endif 
+									>
+									@endif
+
+									<label for="{{$addon['name'].'_'.$addon->id.'_'.$i}}">{{ $addon['name'] }}
+									</label>
 								
 							@endforeach
+
 							<input type="hidden" name="service" value="{{$item['service_id']}}">
 							<input type="hidden" name="id" value="{{$i}}">
 
@@ -73,18 +84,23 @@ $i=1;
 							data-id="{{$i}}" style="color:white"> 
 								<i class="fa fa-refresh"></i>
 							</button>
+
+
 					 </div>
 					</td>
 
 					</tr>
+
 				@endif
 			</tbody>
+
 		@php
 		$i++;
 		@endphp
 		@endforeach
 		</table>
 			<span class="error" id="quantity_error"></span>
+			<span class="error" id="addon_error"></span>
 	</div>
 	<div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
 		<table class="table table-borderless table-dark">

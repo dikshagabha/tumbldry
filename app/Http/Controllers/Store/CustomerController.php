@@ -13,6 +13,7 @@ use Mail;
 use App\Mail\Runner\SendPassword;
 
 use App\Http\Requests\Customer\Auth\RegisterRequest;
+use App\Http\Requests\Customer\Auth\AddressRequest;
 use App\Http\Requests\Customer\Auth\UpdateRequest;
 
 class CustomerController extends Controller
@@ -153,5 +154,17 @@ class CustomerController extends Controller
         return response()->json(["message"=>"Store updated!"], 200);
       }
       return response()->json(["message"=>"Something went wrong!"], 400);
+    }
+
+    public function setSessionAddress(AddressRequest $request)
+    {
+     
+     $data = session()->put('address', $request->only('address', 'city', 'state', 'pin', 'landmark'));
+
+     $data = session()->get('address');
+     if ($data) {
+      return response()->json(["message"=>'Address Saved', 'data'=>$data], 200);
+     }
+     return response()->json(["message"=>'Address Not Saved', 'data'=>$data], 400);
     }
 }

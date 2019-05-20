@@ -90,6 +90,27 @@
                 
               </a>
             </li>
+            <!-- <li>
+              <a class="nav-link" href="{{ route('admin.getRateCard', ['type'=>4]) }}">
+                <i><img style="width:25px" src="{{ asset('images/icons/car.png') }}"></i>
+                <p>{{ __('Shoe Clean') }}</p>
+                
+              </a>
+            </li>
+             <li>
+              <a class="nav-link" href="{{ route('admin.getRateCard', ['type'=>5]) }}">
+                <i><img style="width:25px" src="{{ asset('images/icons/car.png') }}"></i>
+                <p>{{ __('Sofa Clean') }}</p>
+                
+              </a>
+            </li>
+            <li>
+              <a class="nav-link" href="{{ route('admin.getRateCard', ['type'=>6]) }}">
+                <i><img style="width:25px" src="{{ asset('images/icons/car.png') }}"></i>
+                <p>{{ __('Home Clean') }}</p>
+                
+              </a>
+            </li> -->
           </ul>
         </div>
       </li>  

@@ -23,7 +23,7 @@ class RateCardController extends Controller
 
     	$cities['global']='Global';
     	
-        $services = Service::orderBy('name', 'asc')->where('form_type', $request->input('type'))->pluck('name', 'id');
+        $services = Service::orderBy('name', 'asc')->where('form_type', $request->input('type'))->where('type', 1)->pluck('name', 'id');
         $selected = null;
         if($request->input('type') != 2) {
             $selected = $services->keys()->first();

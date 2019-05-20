@@ -291,6 +291,11 @@ class OrderController extends Controller
 
 
   public function addonItemSession(Request $request){
+
+    $validatedData = $request->validate([
+        'addon'=>['bail','required', 'array', 'min:1', 'max:100']
+      ]);
+
     $items = session('add_order_items');
     $index = $request->input('id')-1;
     
@@ -307,7 +312,7 @@ class OrderController extends Controller
     }
     
 
-    $items[$index]['addon_estimated_price'] = $items[$index]['addon_estimated_price'] + $prices;
+    $items[$index]['addon_estimated_price'] = $prices;
 
     $items[$index]['estimated_price'] =  $items[$index]['price'] + $items[$index]['addon_estimated_price'];
   
@@ -408,15 +413,7 @@ class OrderController extends Controller
 
       $validatedData = $request->validate([
         'name'=>['bail','required', 'string', 'min:2', 'max:100'],
-        'phone_number'=>['bail','required','numeric', 'unique:users,phone_number,'.$id, 'min:2', 'max:9999999999'],
-        
-        'address'=>'bail|nullable|string|min:2|max:50',
-        'city'=>'bail|nullable|string|min:2|max:50',
-        'state'=>'bail|nullable|string|min:2|max:50',
-        'pin'=>'bail|nullable|numeric|min:2|max:999999',
-        'latitude'=>'bail|nullable|numeric|min:-180|max:180',
-        'longitude'=>'bail|nullable|numeric|min:-180|max:180',
-        'landmark'=>'bail|nullable|string|min:2|max:200',
+        'phone_number'=>['bail','required','numeric', 'unique:users,phone_number,'.$id, 'min:2', 'max:9999999999']
       ]);
 
       $user = User::create(['name'=>$request->input('name'), 
@@ -424,15 +421,12 @@ class OrderController extends Controller
                       'phone_number'=>$request->input('phone_number'),  
                       'role'=> 4
                       ]);
-      $address = Address::create(['address'=>$request->input('address'),
-                        'pin'=>$request->input('pin'),
-                        'city'=>$request->input('city'),
-                        'state'=>$request->input('state'),
-                        'user_id'=>$user->id,
-                        'latitude'=>$request->input('latitude'),
-                        'longitude'=>$request->input('longitude'),
-                        'landmark'=>$request->input('landmark')
-                      ]);
+
+      if (!session()->get('address')) {
+        return response()->json(['errors'=>
+                                  ['address_id'=>['Please enter customer address.']]], 422);
+      }
+      $address = Address::create(session()->get('address'));
       $customer_id = $user->id;
       $address_id = $address->id;
     }
@@ -450,13 +444,19 @@ class OrderController extends Controller
                                'address_id'=>$address_id,'runner_id'=>$assignedTo, 'store_id'=>$user->id,
                                'estimated_price'=>$prices['estimated_price'], 'cgst'=>$prices['cgst'],
                                'gst'=>$prices['gst'], 'total_price'=>round($prices['total_price'], 2),
-                               'coupon_discount'=>$coupon_discount['discount'], 'coupon_id'=>$coupon_discount['coupon']
+                               'coupon_discount'=>$coupon_discount['discount'], 'coupon_id'=>$coupon_discount['coupon'],
                             ]);
      
       foreach ($items as $item) {
           $item['order_id']=$order->id;
-          $orderitem = OrderItems::create($item);            
+          $orderitem = OrderItems::create($item); 
+          $itemData = [];
+          foreach ($item['selected_addons'] as $key => $value) 
+          {
+            array_push($itemData, ['order_id'=>$order->id, 'item_id'=>$orderitem->id, 'addon_id'=>$value]);
           }
+          $item = OrderItemImage::insert($itemData);
+      }
       DB::commit();
       return response()->json([ 'redirectTo'=>route('store.home'), 'message'=>'Order has been created Successfully'], 200); 
    } catch (Exception $e) {

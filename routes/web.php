@@ -100,6 +100,8 @@ Route::prefix('store')->namespace('Store')->group(function () {
 
       Route::get('/orders/', 'OrderController@index')->name('store.create-order.index');
       
+      Route::post('set-address-session', 'CustomerController@setSessionAddress')->name('store.postAddSessionAddress');
+      
       Route::get('/create-order/{id}', 'OrderController@create')->name('store.create-order');
       Route::post('/create-order/{id?}', 'OrderController@store')->name('store.create-order');
 

@@ -272,12 +272,12 @@ $( "#item" ).autocomplete({
     $(".error").html(""); 
     current = $(this);   
 
-    console.log($('#addonForm'+current.data('id')).serializeArray());
+    console.log($('#addonForm'+current.data('id')).serialize());
     
     $.ajax({
       url: current.data('url'),
       type:'post',
-      data: $('#addonForm'+current.data('id')).serializeArray(),
+      data: $('#addonForm'+current.data('id')+' :input').serializeArray(),
       cache: false,
       success: function(data){
         success(data.message);

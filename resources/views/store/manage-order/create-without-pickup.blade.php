@@ -63,12 +63,12 @@
     <div class="modal-content">
       <div class="modal-header">
         
-        <h4 class="modal-title">Add Item</h4>
+        <h4 class="modal-title">Add Address</h4>
         <button type="button" class="close" data-dismiss="modal">&times;</button>
       </div>
       <div class="modal-body">
         <div id="addressForm">
-             @include('store.manage-order.add-item-form')
+             @include('store.addAddressForm')
             
         </div>
       </div>
@@ -116,98 +116,101 @@ $(document).ready(function(){
   //     }
   // });
 
-$( "#item" ).autocomplete({
-    source: function( request, response ) {
-        $.ajax({
-            dataType: "json",
-            type : 'Get',
-            url: path,
-            data:{'query': request.term , 'service':$('#service').val()},
-            success: function(data) {
-                $('input.suggest-user').removeClass('ui-autocomplete-loading');  
-                // hide loading image
+  $( "#item" ).autocomplete({
+      source: function( request, response ) {
+          $.ajax({
+              dataType: "json",
+              type : 'Get',
+              url: path,
+              data:{'query': request.term , 'service':$('#service').val()},
+              success: function(data) {
+                  $('input.suggest-user').removeClass('ui-autocomplete-loading');  
+                  // hide loading image
 
-                response(data);
-            },
-            error: function(data) {
-                $('input.suggest-user').removeClass('ui-autocomplete-loading');  
-            }
-        });
-    },
-    minLength: 2,
-    open: function() {},
-    close: function() {},
-    focus: function(event,ui) {},
-    select: function(event, ui) {}
-});
+                  response(data);
+              },
+              error: function(data) {
+                  $('input.suggest-user').removeClass('ui-autocomplete-loading');  
+              }
+          });
+      },
+      minLength: 2,
+      open: function() {},
+      close: function() {},
+      focus: function(event,ui) {},
+      select: function(event, ui) {}
+  });
 
-$(document).on('click', '#search-user', function(e){
-    e.preventDefault(); 
-    $(".error").html("")
-    $('body').waitMe(); 
-    
-    $.ajax({
-      url: $('#search-user').data('url'),
-      type:'post',
-      data: {'phone_number':$('#phone').val()},
-      success: function(data){
-        success(data.message);
-        if (data.customer) 
-        {
-          for (var key in data.customer) {
-              $("#"+key).val(data.customer[key]);
-              $("#"+key).prop('readonly', true);
-            }
-            $("#customer_id").val(data.customer.id);
-            $("#address_id").val(data.customer.address_id);
+  $(document).on("click", ".addOn", function(e){
+      e.preventDefault();
+      $(".error").html(""); 
+      current = $(this);   
+
+      console.log($('#addonForm'+current.data('id')).serialize());
+      
+      $.ajax({
+        url: current.data('url'),
+        type:'post',
+        data: $('#addonForm'+current.data('id')+' :input').serializeArray(),
+        cache: false,
+        success: function(data){
+          success(data.message);
+          $(".ItemsAdded").html(data.view);
+          $('body').waitMe('hide');
         }
-        else{
-          
-           $("#name").val("").prop('readonly', false);
-           $("#address").val("").prop('readonly', false); 
-            $("#city").val("").prop('readonly', false);
-           $("#state").val("").prop('readonly', false);
-            $("#pin").val("").prop('readonly', false);
-           $("#email").val("").prop('readonly', false);
-            $("#latitude").val("").prop('readonly', false);
-           $("#longitude").val("").prop('readonly', false);
-           $("#landmark").val("").prop('readonly', false);
-           $("#customer_id").val("");
-           $("#address_id").val("");
-        }
-        $('body').waitMe('hide');
-      }
-
+      })
     })
-  })
+
+
+  $(document).on('click', '#search-user', function(e){
+      e.preventDefault(); 
+      $(".error").html("")
+      $('body').waitMe(); 
+      
+      $.ajax({
+        url: $('#search-user').data('url'),
+        type:'post',
+        data: {'phone_number':$('#phone').val()},
+        success: function(data){
+          success(data.message);
+          if (data.customer) 
+          {
+            for (var key in data.customer) {
+                $("#"+key).val(data.customer[key]);
+                $("#"+key).text(data.customer[key]);
+                $("#"+key).prop('readonly', true);
+                console.log(key);
+              }
+              $("#customer_id").val(data.customer.id);
+              $("#address_id").val(data.customer.address_id);
+          }
+          else{
+            
+             // $("#name").val("").prop('readonly', false);
+             // $("#address").val("").prop('readonly', false); 
+             //  $("#city").val("").prop('readonly', false);
+             // $("#state").val("").prop('readonly', false);
+             //  $("#pin").val("").prop('readonly', false);
+             // $("#email").val("").prop('readonly', false);
+             //  $("#latitude").val("").prop('readonly', false);
+             // $("#longitude").val("").prop('readonly', false);
+             // $("#landmark").val("").prop('readonly', false);
+             $("#customer_id").val("");
+             $("#address_id").val("");
+          }
+          $('body').waitMe('hide');
+        }
+
+      })
+    })
 
   
-  // $(document).on('click', '#search-user', function(e){
-  //   e.preventDefault(); 
-  //   $(".error").html("")
-  //   $('body').waitMe(); 
-    
-  //   $.ajax({
-  //     url: $('#search-user').data('url'),
-  //     type:'post',
-  //     data: {'phone_number':$('#phone').val()},
-  //     success: function(data){
-  //       success(data.message);
-  //       if (data.customer) 
-  //       {
-  //         for (var key in data.customer) {
-  //             $("#"+key).val(data.customer[key]);
-  //             $("#"+key).prop('readonly', true);
-  //           }
-  //           $("#customer_id").val(data.customer.id);
-  //           $("#address_id").val(data.customer.address_id);
-  //       }
-        
-  //       $('body').waitMe('hide');
-  //     }
+   $(document).on("click", "#add_address", function(e){
+      e.preventDefault();
+      $('#addressModal').modal('show');
+      //$('#formAddress')[0].reset();
+    })
 
-  //   })
-  // })
  
   $(document).on('click', '#add_frenchise', function(e){
     e.preventDefault();
@@ -250,16 +253,39 @@ $(document).on('click', '#search-user', function(e){
   $('#addressModal').on('shown.bs.modal', function (e) {
    
      //$('#service').trigger("chosen:updated");
-    $("#ItemForm")[0].reset();
+    $('#formAddress')[0].reset();
   })
+
+  // $(document).on("click", "#add_new_address", function(e){
+  //   e.preventDefault();
+  //   var form = $('#ItemForm')[0];
+  //   var data = new FormData(form);
+  //   $(".error").html("");    
+  //   $.ajax({
+  //     url: $('#ItemForm').attr('action'),
+  //     type:'post',
+  //     data: data,
+  //     cache: false,
+  //     processData: false,  
+  //     contentType: false,      
+  //     success: function(data){
+  //       success(data.message);
+  //       $(".ItemsAdded").html(data.view);
+  //       $("#addressModal").modal('hide');
+  //       $('body').waitMe('hide');
+  //     }
+  //   })
+  // })
 
   $(document).on("click", "#add_new_address", function(e){
     e.preventDefault();
-    var form = $('#ItemForm')[0];
+    var form = $('#formAddress')[0];
     var data = new FormData(form);
+
+    console.log($('#formAddress').attr('action'));
     $(".error").html("");    
     $.ajax({
-      url: $('#ItemForm').attr('action'),
+      url: $('#formAddress').attr('action'),
       type:'post',
       data: data,
       cache: false,
@@ -267,7 +293,13 @@ $(document).on('click', '#search-user', function(e){
       contentType: false,      
       success: function(data){
         success(data.message);
-        $(".ItemsAdded").html(data.view);
+        if (data.data) 
+        {
+          for (var key in data.data) {
+              $("#"+key).text(data.data[key]);
+          }
+        }
+
         $("#addressModal").modal('hide');
         $('body').waitMe('hide');
       }
