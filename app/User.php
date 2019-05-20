@@ -5,8 +5,9 @@ namespace App;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
- use Tymon\JWTAuth\Contracts\JWTSubject;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\Order;
 class User extends Authenticatable implements JWTSubject
 {
     //use Notifiable;
@@ -124,13 +125,6 @@ class User extends Authenticatable implements JWTSubject
         }
         return "--";
     }
-
-
-    public function getGetPrimaryAddressAttribute()
-    {
-        return $this->hasMany('App\Model\Address', 'user_id', 'id');
-    }
-
 
     public function getMachineCountAttribute()
     {

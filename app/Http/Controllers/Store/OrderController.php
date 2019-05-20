@@ -173,10 +173,8 @@ class OrderController extends Controller
     $selected = [];
     if ($Service->where('name', 'like', '% Premium Laundary %')) {
      $selected = $addon->pluck('id')->toArray();
-
-
     }
-
+    
     $data = ['service_id'=>$request->input('service'), 'item_id'=>$form_id->id, 'service_name'=>$Service->name, 'units'=>$units, 'addons'=> $addon, 'estimated_price'=>$price, 'item'=>$form_id->name, 'price'=>$price, 'quantity'=>1, 'selected_addons'=>$selected , 'addon_estimated_price'=>0];
 
      
