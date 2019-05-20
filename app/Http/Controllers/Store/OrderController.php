@@ -451,7 +451,7 @@ class OrderController extends Controller
 
       $wallet = User::where('id', $request->input('customer_id'))->with('wallet')->first();
       $price=0;
-      if ($wallet->wallet->count()) {
+      if ($wallet->wallet && $wallet->wallet->count()) {
         $price = $wallet->wallet->first()->price;
       }
 
@@ -477,7 +477,7 @@ class OrderController extends Controller
                           'user_id'=>$customer_id,'to_id'=>$this->user->id, 'type'=>2, 
                         'price'=>$order->total_price-$price]];
         $amount = $order->total_price-$price;
-        $message = "$order->total_price%20Rs%20has%20been%20deducted%20from%20your%20wallet%20and%20you%20have%20to%20pay%20$amount%20more%20for%20ORDER$order->id.";
+        $message = "$price%20Rs%20has%20been%20deducted%20from%20your%20wallet%20and%20you%20have%20to%20pay%20$amount%20more%20for%20ORDER$order->id.";
         UserWallet::where('user_id', $wallet->id)->update(['price'=>0]);
       }
        
