@@ -171,7 +171,7 @@ class OrderController extends Controller
 
     $addon = Service::where("form_type", $Service->form_type)->where('type', 2)->select('id', 'name')->get();
     $selected = [];
-    if ($Service->where('name', 'like', '% Premium Laundary %')) {
+    if ($Service->selected == 1) {
      $selected = $addon->pluck('id')->toArray();
     }
     
@@ -311,7 +311,10 @@ class OrderController extends Controller
               ->where('location','like' , 'global')->where('service_type', 0)->sum('value');
     }
     
-
+   
+    if(Service::where(['id'=>$request->input('service'), 'selected'=>1])->count()){
+	$prices = 0;
+	}
     $items[$index]['addon_estimated_price'] = $prices;
 
     $items[$index]['estimated_price'] =  $items[$index]['price'] + $items[$index]['addon_estimated_price'];
