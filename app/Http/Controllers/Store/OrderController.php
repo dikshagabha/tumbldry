@@ -21,7 +21,10 @@ use App\Model\{
     Coupon,
     UserJobs,
     Address,
-    LaundaryWeights
+    LaundaryWeights,
+    UserWallet,
+    UserPayments
+
 };
 use App\User;
 use Session;
@@ -412,6 +415,7 @@ class OrderController extends Controller
     {
       $customer_id = $request->input('customer_id');
       $address_id = $request->input('address_id');
+
     }else{
 
       $validatedData = $request->validate([
@@ -443,13 +447,44 @@ class OrderController extends Controller
    }
    try {
       DB::beginTransaction();
+
+
+      $wallet = User::where('id', $request->input('customer_id'))->with('wallet')->first();
+      $price=0;
+      if ($wallet->wallet->count()) {
+        $price = $wallet->wallet->first()->price;
+      }
+
       $order = Order::create([ 'pickup_id'=>$id, 'customer_id'=>$customer_id, 
                                'address_id'=>$address_id,'runner_id'=>$assignedTo, 'store_id'=>$user->id,
                                'estimated_price'=>$prices['estimated_price'], 'cgst'=>$prices['cgst'],
                                'gst'=>$prices['gst'], 'total_price'=>round($prices['total_price'], 2),
                                'coupon_discount'=>$coupon_discount['discount'], 'coupon_id'=>$coupon_discount['coupon'],
                             ]);
-     
+      
+      if ($price > $order->total_price) {       
+        $paymentData = ['order_id'=>$order->id,
+                          'user_id'=>$customer_id,
+                        'to_id'=>$this->user->id, 'type'=>1, 
+                        'price'=>$order->total_price];
+        $message = "$order->total_price%20Rs%20has%20been%20deducted%20from%20your%20wallet%20for%20ORDER$order->id.";
+        //dd($price - $order->total_price);
+        UserWallet::where('user_id', $wallet->id)->update(['price'=>$price - $order->total_price]);
+      }else{
+        $paymentData = [['order_id'=>$order->id, 'to_id'=>$this->user->id, 'type'=>1, 
+                        'user_id'=>$customer_id,
+                        'price'=>$price], ['order_id'=>$order->id, 
+                          'user_id'=>$customer_id,'to_id'=>$this->user->id, 'type'=>2, 
+                        'price'=>$order->total_price-$price]];
+        $amount = $order->total_price-$price;
+        $message = "$order->total_price%20Rs%20has%20been%20deducted%20from%20your%20wallet%20and%20you%20have%20to%20pay%20$amount%20more%20for%20ORDER$order->id.";
+        UserWallet::where('user_id', $wallet->id)->update(['price'=>0]);
+      }
+       
+      $payments = UserPayments::insert($paymentData);
+
+      $response = CommonRepository::sendmessage($wallet->phone_number, $message);
+
       foreach ($items as $item) {
           $item['order_id']=$order->id;
           $orderitem = OrderItems::create($item); 

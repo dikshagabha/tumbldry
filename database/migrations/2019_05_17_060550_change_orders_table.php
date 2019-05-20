@@ -13,9 +13,9 @@ class ChangeOrdersTable extends Migration
      */
     public function up()
     {
-         Schema::table('orders', function (Blueprint $table) {
-            $table->integer('delivery_runner_id')->nullable();
-        });
+        //  Schema::table('orders', function (Blueprint $table) {
+        //     $table->integer('delivery_runner_id')->nullable();
+        // });
     }
 
     /**
@@ -25,8 +25,8 @@ class ChangeOrdersTable extends Migration
      */
     public function down()
     {
-        Schema::table('orders', function (Blueprint $table) {
-            $table->dropColumn('delivery_runner_id');
-        });
+        // Schema::table('orders', function (Blueprint $table) {
+        //     // $table->dropColumn('delivery_runner_id');
+        // });
     }
 }

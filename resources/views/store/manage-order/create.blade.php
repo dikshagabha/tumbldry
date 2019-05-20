@@ -94,8 +94,6 @@
 
  
 $(document).ready(function(){ 
-  
-
   var path = "{{ route('store.get-items') }}";  
   // $.typeahead({
   //       input: '.js-typeahead-country_v1',
@@ -126,8 +124,6 @@ $( "#item" ).autocomplete({
             data:{'query': request.term, 'service':$('#service').val()},
             success: function(data) {
                 $('input.suggest-user').removeClass('ui-autocomplete-loading');  
-                // hide loading image
-
                 response(data);
             },
             error: function(data) {
@@ -172,9 +168,7 @@ $( "#item" ).autocomplete({
     e.preventDefault();
     $('body').waitMe();
 
-    var data = $('#addFrenchise').serializeArray();
-    //var data = new FormData(form);
-    
+    var data = $('#addFrenchise').serializeArray();    
     $(".error").html("");
     $.ajax({
       url: $('#addFrenchise').attr('url'),
