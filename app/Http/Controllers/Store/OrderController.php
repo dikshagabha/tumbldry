@@ -34,23 +34,18 @@ class OrderController extends Controller
   protected $location;
 
 	public function __construct(){
-
-        // if the user is logged in then fetches the details of the user
-      $this->middleware(function($request, $next) {
-          $this->user = Auth::user()->load('addresses');
-          $this->useraddress = $this->user->addresses->first();
-
-          $this->location = Location::where('pincode', $this->useraddress->pin)->first();
-          //dd($location);
-
-          return $next($request);
-      });
+    $this->middleware(function($request, $next) {
+        $this->user = Auth::user()->load('addresses');
+        $this->useraddress = $this->user->addresses->first();
+        $this->location = Location::where('pincode', $this->useraddress->pin)->first();
+        return $next($request);
+    });
   }
 
   public function index(Request $request){
     $activePage="order";
     $titlePage="Orders";
-    $users = Order::where('store_id', $this->user->id)->paginate(10);
+    $users = Order::where('store_id', $this->user->id)->latest()->paginate(10);
     $runner = User::where('user_id', $this->user->id)->pluck('name', 'id');
     if ($request->ajax()) {
       return view('store.manage-order.list', compact('users', 'runner'));
@@ -130,33 +125,33 @@ class OrderController extends Controller
   }
 
   public function addItemSession(Request $request){
-     $validatedData = $request->validate([
-      'service'=>'bail|required|numeric|min:1',
-       'item'=>'bail|required|string|min:1|max:500']);
+    $validatedData = $request->validate([
+    'service'=>'bail|required|numeric|min:1',
+     'item'=>'bail|required|string|min:1|max:500']);
 
-     $Service = Service::where("id", $request->input('service'))->first();
+    $Service = Service::where("id", $request->input('service'))->first();
 
-     if ($Service->form_type !=2) {
-       $form_id = Items::where("name", 'LIKE','%'.$request->input('item').'%' )->where('type', $Service->form_type)->first();
-     }else{
-      $form_id = Items::where('status', 1)->where('type', $Service->form_type)->first();
-     }
+    if ($Service->form_type !=2) {
+     $form_id = Items::where("name", 'LIKE','%'.$request->input('item').'%' )->where('type', $Service->form_type)->first();
+    }else{
+    $form_id = Items::where('status', 1)->where('type', $Service->form_type)->first();
+    }
 
-     //dd($this->location);
-     //print_r($Service);
-     if (!$form_id) {
-         return response()->json(['message'=>'We donot have details for this item.'], 400);
-     }
+    //dd($this->location);
+    //print_r($Service);
+    if (!$form_id) {
+       return response()->json(['message'=>'We donot have details for this item.'], 400);
+    }
 
+    $price = ServicePrice::where(['service_id'=>$Service->id])->where('parameter', $form_id->id)
+            ->where('location', 'LIKE', '%'.$this->location->city_name.'%')->first();
+
+    $units = false;
+    if (!$price) {
      $price = ServicePrice::where(['service_id'=>$Service->id])->where('parameter', $form_id->id)
-              ->where('location', 'LIKE', '%'.$this->location->city_name.'%')->first();
-     
-     $units = false;
-     if (!$price) {
-       $price = ServicePrice::where(['service_id'=>$Service->id])->where('parameter', $form_id->id)
-                ->where('location', 'global')->first();
-     }
-    //print_r($price);
+              ->where('location', 'global')->first();
+    }
+    
     if ($Service->form_type !=2 ) {
        if ($price) {
           $price = $price->value;
@@ -173,9 +168,16 @@ class OrderController extends Controller
       $price = $price->value * $weight;
       $units = true;
     }
+
     $addon = Service::where("form_type", $Service->form_type)->where('type', 2)->select('id', 'name')->get();
-    
-    $data = ['service_id'=>$request->input('service'), 'item_id'=>$form_id->id, 'service_name'=>$Service->name, 'units'=>$units, 'addons'=> $addon, 'estimated_price'=>$price, 'item'=>$form_id->name, 'price'=>$price, 'quantity'=>1, 'selected_addons'=>[] , 'addon_estimated_price'=>0];
+    $selected = [];
+    if ($Service->where('name', 'like', '% Premium Laundary %')) {
+     $selected = $addon->pluck('id')->toArray();
+
+
+    }
+
+    $data = ['service_id'=>$request->input('service'), 'item_id'=>$form_id->id, 'service_name'=>$Service->name, 'units'=>$units, 'addons'=> $addon, 'estimated_price'=>$price, 'item'=>$form_id->name, 'price'=>$price, 'quantity'=>1, 'selected_addons'=>$selected , 'addon_estimated_price'=>0];
 
      
      if (!session()->get('add_order_items')){

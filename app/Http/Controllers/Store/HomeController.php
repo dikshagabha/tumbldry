@@ -52,8 +52,7 @@ class HomeController extends Controller
           ]);
 
       $customer = User::where('role', 4)
-                  ->where('phone_number', 'like', '%'.$request->input('phone_number').'%')->first();
-      
+                  ->where('phone_number', 'like', '%'.$request->input('phone_number').'%')->first();      
       if ($customer) {
         return response()->json(["message"=>"Customer Found!!", "customer" => $customer], 200);
       }

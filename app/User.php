@@ -59,7 +59,13 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasOne('App\Model\Address', 'user_id', 'id');
     }
 
-     public function notifications()
+    public function customer_addresses()
+    {
+        return $this->hasMany('App\Model\Address', 'user_id', 'id');
+    }
+
+
+    public function notifications()
     {
         return $this->hasMany('App\Model\Notification', 'to_id', 'id');
     }
@@ -112,11 +118,19 @@ class User extends Authenticatable implements JWTSubject
 
     public function getMachineTypeAttribute()
     {
-        if ($this->machines()->count()) {
+        if ($this->machines()->count()) 
+        {
             return $this->machines()->first()->machine_type;
         }
         return "--";
     }
+
+
+    public function getGetPrimaryAddressAttribute()
+    {
+        return $this->hasMany('App\Model\Address', 'user_id', 'id');
+    }
+
 
     public function getMachineCountAttribute()
     {
