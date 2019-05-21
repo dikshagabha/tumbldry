@@ -146,6 +146,10 @@ class OrderController extends Controller
        return response()->json(['message'=>'We donot have details for this item.'], 400);
     }
 
+    if ($Service->form_type ==2 ) {
+      $form_id = Items::where('type', 2)->first();
+    }
+
     $price = ServicePrice::where(['service_id'=>$Service->id])->where('parameter', $form_id->id)
             ->where('location', 'LIKE', '%'.$this->location->city_name.'%')->first();
 
@@ -160,25 +164,27 @@ class OrderController extends Controller
           $price = $price->value;
          }
     }else{
-      $form_id = Items::where("name", 'LIKE','%'.$request->input('item').'%' )->where('type', $Service->form_type)->first();
-      $weight = LaundaryWeights::where('item_id', $form_id->id)->first();
-      if ($weight->weight_unit==2) {
-        $weight = $weight->weight/1000;
-      }else{
-        $weight=$weight->weight;
-      }
+        //$form_id = Items::where("name", 'LIKE','% Laundary %' )->where('type', $Service->form_type)->first();
+        
+        // $weight = LaundaryWeights::where('item_id', $form_id->id)->first();
+        // if ($weight->weight_unit==2) {
+        //   $weight = $weight->weight/1000;
+        // }else{
+        //   $weight=$weight->weight;
+        // }
 
-      $price = $price->value * $weight;
+      $price = $price->value;
       $units = true;
     }
 
     $addon = Service::where("form_type", $Service->form_type)->where('type', 2)->select('id', 'name')->get();
+    
     $selected = [];
     if ($Service->selected == 1) {
      $selected = $addon->pluck('id')->toArray();
     }
     
-    $data = ['service_id'=>$request->input('service'), 'item_id'=>$form_id->id, 'service_name'=>$Service->name, 'units'=>$units, 'addons'=> $addon, 'estimated_price'=>$price, 'item'=>$form_id->name, 'price'=>$price, 'quantity'=>1, 'selected_addons'=>$selected , 'addon_estimated_price'=>0];
+    $data = ['service_id'=>$request->input('service'), 'item_id'=>$form_id->id, 'service_name'=>$Service->name, 'units'=>$units, 'addons'=> $addon, 'estimated_price'=>$price, 'item'=>$request->input('item'), 'price'=>$price, 'quantity'=>1, 'selected_addons'=>$selected , 'addon_estimated_price'=>0];
 
      
      if (!session()->get('add_order_items')){
@@ -296,21 +302,21 @@ class OrderController extends Controller
   public function addonItemSession(Request $request){
 
     $validatedData = $request->validate([
-        'addon'=>['bail','required', 'array', 'min:1', 'max:100']
+        'addon'.$request->input('id')=>['bail','required', 'array', 'min:1', 'max:100']
       ]);
 
     $items = session('add_order_items');
     $index = $request->input('id')-1;
-    
-    $items[$index]['selected_addons'] =  $request->input('addon');
+    $addons_input = $request->input('addon'.$request->input('id'));
+    $items[$index]['selected_addons'] =  $addons_input;
 
     // Price of addons
     $prices = ServicePrice::where('service_id', $request->input('service'))->whereIn('parameter', 
-                $request->input('addon'))->where('service_type', 0)
+                $addons_input)->where('service_type', 0)
               ->where('location','like' ,'%'.$this->location->city_name.'%')->sum('value');
     if(!$prices){
       $prices = ServicePrice::where('service_id', $request->input('service'))
-                ->whereIn('parameter', $request->input('addon'))
+                ->whereIn('parameter', $addons_input)
               ->where('location','like' , 'global')->where('service_type', 0)->sum('value');
     }
     
@@ -451,7 +457,7 @@ class OrderController extends Controller
 
       $wallet = User::where('id', $request->input('customer_id'))->with('wallet')->first();
       $price=0;
-      if ($wallet->wallet->count()) {
+      if ($wallet->wallet && $wallet->wallet->count()) {
         $price = $wallet->wallet->first()->price;
       }
 
@@ -477,7 +483,7 @@ class OrderController extends Controller
                           'user_id'=>$customer_id,'to_id'=>$this->user->id, 'type'=>2, 
                         'price'=>$order->total_price-$price]];
         $amount = $order->total_price-$price;
-        $message = "$order->total_price%20Rs%20has%20been%20deducted%20from%20your%20wallet%20and%20you%20have%20to%20pay%20$amount%20more%20for%20ORDER$order->id.";
+        $message = "$price%20Rs%20has%20been%20deducted%20from%20your%20wallet%20and%20you%20have%20to%20pay%20$amount%20more%20for%20ORDER$order->id.";
         UserWallet::where('user_id', $wallet->id)->update(['price'=>0]);
       }
        

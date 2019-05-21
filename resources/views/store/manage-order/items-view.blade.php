@@ -52,8 +52,8 @@ $i=1;
 							@foreach($item['addons'] as $addon)
 									
 									@if($item['units'])
-									<input type="checkbox" name="addon[]" id="{{$addon['name'].'_'.$addon->id.'_'.$i}}" 
-									value="{{ $addon['id'] }}" name="addon[]" 									
+									<input type="checkbox" id="{{$addon['name'].'_'.$addon->id.'_'.$i}}" 
+									value="{{ $addon['id'] }}" name="addon{{$i}}[]" 									
 									@if(in_array( $addon['id'], $item['selected_addons']))
 
 										checked
@@ -62,8 +62,8 @@ $i=1;
 									>
 
 									@else
-									<input type="radio" name="addon[]" id="{{$addon['name'].'_'.$addon->id.'_'.$i}}" 
-									value="{{ $addon['id'] }}" name="addon[]" 									
+									<input type="radio" id="{{$addon['name'].'_'.$addon->id.'_'.$i}}" 
+									value="{{ $addon['id'] }}" name="addon{{$i}}[]" 									
 									@if(in_array( $addon['id'], $item['selected_addons']))
 
 										checked
