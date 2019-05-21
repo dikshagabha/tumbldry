@@ -259,7 +259,7 @@ class OrderController extends Controller
   
   public function quantityItemSession(Request $request){
     $validatedData = $request->validate([
-      'quantity'=>'bail|required|numeric|min:1|max:200']);
+      'quantity'=>'bail|required|numeric|min:0|max:200']);
 
     $items = session('add_order_items');
     $index = $request->input('data-id')-1;

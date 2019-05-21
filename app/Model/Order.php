@@ -17,6 +17,13 @@ class Order extends Model
  		return $this->hasOne('App\User', 'id', 'customer_id');
  	}
 
+ 	public function getCustomerPhoneNumberAttribute(){
+ 		if ($this->customer()->count()) 
+        {
+            return $this->customer()->first()->phone_number;
+        }
+        return "--";
+ 	}
 
  							
 }

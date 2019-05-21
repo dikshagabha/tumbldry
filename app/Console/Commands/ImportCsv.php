@@ -45,21 +45,25 @@ class ImportCsv extends Command
             
             $vals = explode(";", $value[0]);
             $items = [];
-            $id = Service::where('name', 'Dry Clean')->select('id')->first();
-            $id = $id->id;
-            $item = Items::where(['name'=>$vals[1], 'type'=>1])->first();
             
-            if ($item->count()) {
-                $item_id = $item->id;
-            }else{
-             $item = Items::create(['name'=>$vals[1], 'type'=> 1]);
-             $item_id  = $item->id;  
-            }
+            // $id = Service::where('name', 'Dry Clean')->select('id')->first();
+            // $id = $id->id;
+
+            $item = Items::create(['name'=>$vals[1], 'type'=> 2, 'status'=>0]);
+            
+            // $item = Items::where(['name'=>$vals[1], 'type'=>1, 'status'=>0])->first();
+            
+            // if ($item->count()) {
+            //     $item_id = $item->id;
+            // }else{
+            //  $item = Items::create(['name'=>$vals[1], 'type'=> 2]);
+            //  $item_id  = $item->id;  
+            // }
             
             // $item = Items::create(['name'=>$vals[1], 'type'=> 1]);
 
-            $price = ServicePrice::create(['location'=>'global', 'value'=>$vals[2], 'service_id'=>$id,
-                                                  'parameter'=>$item->id, 'service_type'=>1]);
+            //$price = ServicePrice::create(['location'=>'global', 'value'=>$vals[2], 'service_id'=>$id,
+            //                                      'parameter'=>$item->id, 'service_type'=>1]);
         }
 
     }

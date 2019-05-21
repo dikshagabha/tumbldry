@@ -7,22 +7,30 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
   <table class="table table-borderless dataTable">
       <thead>
         <tr>
-          <th>S No</th>
+         <!--  <th>S No</th> -->
           <th>Order</th>
-          <th width="40%">Order Status</th>
+          <th>Customer Id</th>
+          <th>Phone Number</th>
+          <th width='30%'>Order Status</th>
 
         </tr>
       </thead>
       <tbody>
         @foreach($users as $user)
           <tr>
-            <td>
+            <!-- <td>
               {{$i}}
-            </td>
+            </td> -->
             <td>
               <a  class="view" title="view order details" href="{{route('store.getOrderDetails', $user->id)}}">
                 ORDER{{$user->id}}
               </a>
+            </td>
+            <td>
+              CUSTOMER{{$user->customer_id}}
+            </td>
+            <td>
+              {{$user->customer_phone_number}}
             </td>
             <td>
                 {{
