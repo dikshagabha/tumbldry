@@ -76,7 +76,7 @@ $i=1;
 									</label>
 								
 							@endforeach
-
+							<input type="hidden" name="quantity" value="{{$item['quantity']}}">
 							<input type="hidden" name="service" value="{{$item['service_id']}}">
 							<input type="hidden" name="id" value="{{$i}}">
 

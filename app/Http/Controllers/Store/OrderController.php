@@ -322,11 +322,11 @@ class OrderController extends Controller
     
    
     if(Service::where(['id'=>$request->input('service'), 'selected'=>1])->count()){
-	$prices = 0;
-	}
+    	$prices = 0;
+    	}
     $items[$index]['addon_estimated_price'] = $prices;
 
-    $items[$index]['estimated_price'] =  $items[$index]['price'] + $items[$index]['addon_estimated_price'];
+    $items[$index]['estimated_price'] =  ( $items[$index]['price'] * $request->input('quantity') ) + $items[$index]['addon_estimated_price'];
   
     session()->put("add_order_items", $items);
 

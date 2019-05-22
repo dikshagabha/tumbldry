@@ -145,9 +145,6 @@ $(document).ready(function(){
       e.preventDefault();
       $(".error").html(""); 
       current = $(this);   
-
-      console.log($('#addonForm'+current.data('id')).serialize());
-      
       $.ajax({
         url: current.data('url'),
         type:'post',
