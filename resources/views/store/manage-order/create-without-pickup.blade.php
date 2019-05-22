@@ -180,18 +180,15 @@ $(document).ready(function(){
               }
               $("#customer_id").val(data.customer.id);
               $("#address_id").val(data.customer.address_id);
+              if (data.wallet) {
+                $("#wallet").text("User has "+data.wallet.price+" Rs in wallet.")
+              }
+              
           }
           else{
             
-             // $("#name").val("").prop('readonly', false);
-             // $("#address").val("").prop('readonly', false); 
-             //  $("#city").val("").prop('readonly', false);
-             // $("#state").val("").prop('readonly', false);
-             //  $("#pin").val("").prop('readonly', false);
-             // $("#email").val("").prop('readonly', false);
-             //  $("#latitude").val("").prop('readonly', false);
-             // $("#longitude").val("").prop('readonly', false);
-             // $("#landmark").val("").prop('readonly', false);
+             $("#name").val("").prop('readonly', false);
+             $("#phone").val("").prop('readonly', false);
              $("#customer_id").val("");
              $("#address_id").val("");
           }

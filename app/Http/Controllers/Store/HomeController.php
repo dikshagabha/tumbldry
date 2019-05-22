@@ -52,9 +52,12 @@ class HomeController extends Controller
           ]);
 
       $customer = User::where('role', 4)
-                  ->where('phone_number', 'like', '%'.$request->input('phone_number').'%')->first();      
+                  ->where('phone_number', 'like', '%'.$request->input('phone_number').'%')->with('wallet')->first(); 
+      
+      $wallet = $customer->wallet;  
+
       if ($customer) {
-        return response()->json(["message"=>"Customer Found!!", "customer" => $customer], 200);
+        return response()->json(["message"=>"Customer Found!!", "customer" => $customer, 'wallet'=>$wallet], 200);
       }
         return response()->json(["message"=>"Customer Not Found!!"], 400);
     }

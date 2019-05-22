@@ -61,7 +61,7 @@ class OrderController extends Controller
     $titlePage="Orders";
     $order = Order::where('id', $id)->with('customer')->first();
     $order->status = $request->input('status');
-    $order->save();
+    
 
     //dd($order->customer->phone_number);
     if ($order) {
@@ -69,10 +69,15 @@ class OrderController extends Controller
         $customer = $order->customer;
         //dd($customer);
         if ($customer->phone_number) {
-          CommonRepository::sendmessage($customer->phone_number, 'Your%20order%20ORDER'.$id.'%20has%20been%20recieved%20by%20store.');
+          //CommonRepository::sendmessage($customer->phone_number, 'Your%20order%20ORDER'.$id.'%20has%20been%20recieved%20by%20store.');
+
+          $date = Carbon::now($request->header('timezone'));
+          $order->date_of_arrival = $date;
         }
         
       }
+
+      $order->save();
       return response()->json(['message'=>'Order Status Updated'], 200);
     }
   }
@@ -510,7 +515,7 @@ class OrderController extends Controller
   }
 
   public function view(Request $request, $id){
-    $order = Order::where('id', $id)->with('items')->first();
+    $order = Order::where('id', $id)->with('items', 'customer', 'address')->first();
     return view('store.manage-order.show', compact('order'));
   }
 

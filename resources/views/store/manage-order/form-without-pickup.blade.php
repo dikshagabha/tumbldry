@@ -12,6 +12,7 @@
               		{!! Form::text('phone_number',null, array('class' => 'form-control', "maxlength"=>20,
                                               "id"=>'phone')) !!}
                 <span class="error" id="phone_number_error"></span>
+                <span class="badge badge-dark" id="wallet"></span>
               </div>                
               <div class="col-md-2 col-lg-2 col-sm-2">
               		 <button type="button" class="btn btn-detail" id="search-user" data-url = "{{route('store.findCustomer')}}"><i class="fa fa-search"></i></button>
@@ -20,6 +21,7 @@
               <input type="hidden" name="address_id" id="address_id">
             </div>
         </div>
+
         <br>       
         <div class="form-group-inner">
           <div class="row">
@@ -44,7 +46,6 @@
                   <span id="address"></span> <span id="city"></span>
                   <span id="state"></span> <span id="pin"></span>
 
-                  <input type="hidden" name="address_id">
                   <span class="error" id="address_id_error"></span>
                 </div>
                 <div class="col-lg-2 col-md-2 col-sm-2">

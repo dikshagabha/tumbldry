@@ -11,6 +11,7 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
           <th>Order</th>
           <th>Customer Id</th>
           <th>Phone Number</th>
+          <th>Date of Arrival</th>
           <th width='30%'>Order Status</th>
 
         </tr>
@@ -31,6 +32,14 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
             </td>
             <td>
               {{$user->customer_phone_number}}
+            </td>
+            <td>
+              @if($user->date_of_arrival)
+
+              {{$user->date_of_arrival->format('l y/m/d h:i a')}}
+              @else
+              --
+              @endif
             </td>
             <td>
                 {{
