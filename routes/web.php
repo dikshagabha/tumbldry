@@ -91,11 +91,13 @@ Route::prefix('store')->namespace('Store')->group(function () {
          Route::resources([
             'manage-runner' => 'RunnerController',
             'manage-customer' => 'CustomerController',
+            'manage-vendor' => 'VendorController',
           ]);
       });
       
       Route::get('logout', 'LoginController@logout')->name('logout');
 
+      Route::post('set-providers-session', 'VendorController@setSessionProviders')->name('store.postAddSessionProviders');
       Route::post('set-store-timezone', 'HomeController@setTimezone')->name('store.set-timezone');
 
       Route::get('/orders/', 'OrderController@index')->name('store.create-order.index');
@@ -107,7 +109,7 @@ Route::prefix('store')->namespace('Store')->group(function () {
 
       Route::get('/view-order/{id}', 'OrderController@view')->name('store.getOrderDetails');
 
-
+      Route::post('/order/get-grn', 'OrderController@getGrn')->name('store.getGrn');
       Route::get('/create-order', 'OrderController@createWithoutPickup')->name('store.orderWithoutPickup');
 
       
@@ -126,6 +128,7 @@ Route::prefix('store')->namespace('Store')->group(function () {
 
       Route::post('/runner/status/{id}', 'RunnerController@status')->name('manage-runner.status');
       Route::post('/customer/status/{id}', 'CustomerController@status')->name('manage-customer.status');
+      Route::post('/vendor/status/{id}', 'VendorController@status')->name('manage-vendor.status');
 
       Route::post('/notifications/read-all', 'NotificationsController@markRead')->name('notifications.mark-read'); 
 

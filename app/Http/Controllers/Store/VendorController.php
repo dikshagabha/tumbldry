@@ -5,18 +5,15 @@ namespace App\Http\Controllers\Store;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\User;
-use App\Model\PickupRequest;
+
 use Auth;
-use App\Repositories\Customer\HomeRepository;
+use App\Repositories\Vendor\HomeRepository;
 
-use Mail;
-use App\Mail\Runner\SendPassword;
-
-use App\Http\Requests\Customer\Auth\RegisterRequest;
-use App\Http\Requests\Customer\Auth\AddressRequest;
-use App\Http\Requests\Customer\Auth\UpdateRequest;
-
-class CustomerController extends Controller
+use App\Http\Requests\Vendor\Auth\RegisterRequest;
+use App\Http\Requests\Vendor\Auth\UpdateRequest;
+use App\Http\Requests\Vendor\createVendorProviderRequest;
+use DB;
+class VendorController extends Controller
 {
 
     protected $user;
@@ -35,9 +32,9 @@ class CustomerController extends Controller
      */
     public function index(Request $request)
     {
-      $activePage = 'customer';
-      $titlePage  = 'Customer Details';
-      $users = User::where('role', 4)->where('user_id', Auth::user()->id)
+      $activePage = 'vendor';
+      $titlePage  = 'Vendor Details';
+      $users = User::where('role', 6)->where('user_id', $this->user->id)
               ->when($request->filled('search'), 
                 function($query) use($request) {
                   $query->where(function($q) use($request) {
@@ -52,10 +49,10 @@ class CustomerController extends Controller
                ->latest()->paginate(10);
       if ($request->ajax()) {
         //dd($users);
-        return view('store.manage-customer.list', compact('users', 'activePage', 'titlePage'));
+        return view('store.manage-vendor.list', compact('users', 'activePage', 'titlePage'));
 
       }
-      return view('store.manage-customer.index', compact('users', 'activePage', 'titlePage'));
+      return view('store.manage-vendor.index', compact('users', 'activePage', 'titlePage'));
     }
 
     /**
@@ -65,10 +62,10 @@ class CustomerController extends Controller
      */
     public function create()
     {
-      $activePage = 'customer';
-      $titlePage  = 'Create Customer';
-
-      return view('store.manage-customer.create', compact('users', 'activePage', 'titlePage'));
+      $activePage = 'vendor';
+      $titlePage  = 'Create Vendor';
+      session()->forget('providers');
+      return view('store.manage-vendor.create', compact('users', 'activePage', 'titlePage'));
     }
 
     /**
@@ -79,7 +76,9 @@ class CustomerController extends Controller
      */
     public function store(RegisterRequest $request)
     {
-      $response = HomeRepository::store($request, Auth::user()->id);
+      $address = session()->get('address');
+      $providers = session()->get('providers');
+      $response = HomeRepository::store($request, $this->user, $address, $providers);
       $http_status = $response['http_status'];
       unset($response['http_status']);
       return response()->json($response, $http_status); 
@@ -95,9 +94,9 @@ class CustomerController extends Controller
     {
         $id = decrypt($id);
 
-       $user = User::where("id", $id)->first();
+       $user = User::where("id", $id)->with('addresses', 'users')->first();
       // $data = StoreFields::whereIn('id', [$user->machine_type, $user->boiler_type])->get();
-       return view("store.manage-customer.show", compact('user', 'data'));
+       return view("store.manage-vendor.show", compact('user', 'data'));
     }
 
     /**
@@ -108,12 +107,12 @@ class CustomerController extends Controller
      */
     public function edit($id)
     {
-      $activePage = 'customer';
-      $titlePage  = 'Edit Customer';
+      $activePage = 'vendor';
+      $titlePage  = 'Edit Vendor';
 
       $user = User::where("id", decrypt($id))->first();
       
-      return view('store.manage-customer.edit', compact('user', 'id','activePage', 'titlePage'));
+      return view('store.manage-vendor.edit', compact('user', 'id','activePage', 'titlePage'));
     }
 
     /**
@@ -125,7 +124,7 @@ class CustomerController extends Controller
      */
     public function update(UpdateRequest $request, $id)
     {
-      //$id = decrypt($id);
+        $id = decrypt($id);
       $response = HomeRepository::update($request, $id);
       $http_status = $response['http_status'];
       unset($response['http_status']);
@@ -156,15 +155,26 @@ class CustomerController extends Controller
       return response()->json(["message"=>"Something went wrong!"], 400);
     }
 
-    public function setSessionAddress(AddressRequest $request)
+    public function setSessionProviders(createVendorProviderRequest $request)
     {
-     
-     $data = session()->put('address', $request->only('address', 'city', 'state', 'pin', 'landmark', 'latitude', 'longitude'));
+      $data = session()->get('providers');
+      $details = ['name'=>$request->input('vendor_name'),'phone_number'=>$request->input('vendor_phone_number'), 'email'=>$request->input('vendor_email'), 'address'=>['city'=>$request->input('vendor_city'), 'state'=>$request->input('vendor_state'), 'pin'=>$request->input('vendor_pin'), 'latitude'=>$request->input('vendor_latitude'), 'longitude'=>$request->input('vendor_longitude'), 'address'=>$request->input('vendor_address')] 
+      ];
+      
+      if (!$data) {
+        $data = session()->put('providers', [ $details ]);
+      }else{
+        array_push($data, $details);
+        
+        session()->put('providers', $data);
+      }
+      
+      $data = session()->get('providers');
 
-     $data = session()->get('address');
-     if ($data) {
-      return response()->json(["message"=>'Address Saved', 'data'=>$data], 200);
-     }
-     return response()->json(["message"=>'Address Not Saved', 'data'=>$data], 400);
+      if ($data) {
+        return response()->json(["message"=>'Address Saved', 'data'=>$data], 200);
+      }
+       return response()->json(["message"=>'Address Not Saved', 'data'=>$data], 400);
+
     }
 }

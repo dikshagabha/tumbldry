@@ -55,6 +55,11 @@ class User extends Authenticatable implements JWTSubject
         return [];
     }
 
+    public function users()
+    {
+        return $this->hasMany('App\User', 'user_id', 'id');
+    }
+
     public function addresses()
     {
         return $this->hasOne('App\Model\Address', 'user_id', 'id');
@@ -118,6 +123,11 @@ class User extends Authenticatable implements JWTSubject
         if($this->role==5)
         {
             return "Runner";
+        };
+
+        if($this->role==6)
+        {
+            return "Vendor";
         }; 
     }
 

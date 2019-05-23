@@ -29,6 +29,8 @@ use App\Model\{
 use App\User;
 use Session;
 use DB;
+use PDF;
+use App;
 use App\Repositories\CommonRepository;
 class OrderController extends Controller
 {
@@ -473,13 +475,22 @@ class OrderController extends Controller
                                'coupon_discount'=>$coupon_discount['discount'], 'coupon_id'=>$coupon_discount['coupon'],
                             ]);
       
+      
+      $points = $order->total_price*40/100;
+      $insert = $points;
+      
+      if($wallet->wallet->loyality_points)
+      {
+        $insert = $wallet->wallet->loyality_points + $points;
+      }
+
       if ($price > $order->total_price) {       
         $paymentData = ['order_id'=>$order->id,
                           'user_id'=>$customer_id,
                         'to_id'=>$this->user->id, 'type'=>1, 
                         'price'=>$order->total_price];
         $message = "$order->total_price%20Rs%20has%20been%20deducted%20from%20your%20wallet%20for%20ORDER$order->id.";
-        //dd($price - $order->total_price);
+        
         UserWallet::where('user_id', $wallet->id)->update(['price'=>$price - $order->total_price]);
       }else{
         $paymentData = [['order_id'=>$order->id, 'to_id'=>$this->user->id, 'type'=>1, 
@@ -533,5 +544,15 @@ class OrderController extends Controller
 
     return view("store.manage-order.create-without-pickup", compact('services', 'activePage', 'titlePage', 'add_on', 'id', 'pickup'));
 
+  }
+
+  public function getGrn(Request $request)
+  {
+   $orders = OrderItems::whereIn('id', $request->input('grn'))->with('order')->with(['itemimage'=>function($q){
+       $q->with('addons');
+      }])->get();
+  
+   $pdf = PDF::loadView('store.grn.grn', compact('orders'));
+   return ($pdf->download('invoice.pdf'));
   }
 }

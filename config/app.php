@@ -163,7 +163,7 @@ return [
         Illuminate\View\ViewServiceProvider::class,
         Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
         Ixudra\Curl\CurlServiceProvider::class,
-
+        Barryvdh\DomPDF\ServiceProvider::class,
         /*
          * Package Service Providers...
          */
@@ -231,6 +231,8 @@ return [
         'Curl' => Ixudra\Curl\Facades\Curl::class,
         'JWTAuth' => Tymon\JWTAuth\Facades\JWTAuth::class, 
         'JWTFactory' => Tymon\JWTAuth\Facades\JWTFactory::class,
+        'PDF' => Barryvdh\DomPDF\Facade::class,
+        // 'SnappyImage' => Barryvdh\Snappy\Facades\SnappyImage::class,
 
     ],
 

@@ -1,0 +1,78 @@
+<?php
+
+namespace App\Repositories\Vendor;
+
+use JasonGuru\LaravelMakeRepository\Repository\BaseRepository;
+use App\User;
+use App\Model\Address;
+use DB;
+use Auth;
+use App\Repositories\CommonRepository;
+/**
+ * Class HomeRepository.
+ */
+class HomeRepository extends BaseRepository
+{
+    /**
+     * @return string
+     *  Return the model
+     */
+    public function model()
+    {
+        //return YourModel::class;
+    }
+
+    public static function store($request, $user,  $address, $providers)
+    {
+	    try {
+	        DB::beginTransaction();
+	        $pswd=CommonRepository::random_str();
+	        $phone = $request->input('phone_number');
+	        $user = User::create(['name'=>$request->input('name'), 'role'=>6, 'email'=> $request->input('email'), 
+	        						'password'=>bcrypt($pswd), 'phone_number'=> $request->input('phone_number'), 
+	        						'user_id'=>$user->id, 'status'=>1]);
+
+	        $address['user_id']=$user->id;
+	        $address =  Address::create($address);
+
+	        foreach ($providers as $key => $value) {
+	        	//dd($providers);
+	        	$value['role']=7;
+	        	$value['status']=1;
+	        	$value['user_id']=$user->id;
+	        	$provider = User::create($value);
+	        	$add = $value['address'];
+	        	//dd($provider->id);
+	        	$add['user_id']=$provider->id;
+	        	$add['role']=7;
+	        	//dd($value);
+	        	$add = Address::create($add);
+	        }
+
+            DB::commit();
+	        return ["message"=>"Vendor Added", 'redirectTo'=>route('manage-vendor.index'), 'http_status'=>200];	
+        }
+	    catch (\Exception $e) {
+	        DB::rollback();
+	        return ["message"=>$e->getMessage(), 'http_status'=>400];
+	    }        
+    }
+
+    public static function update($request, $id)
+    {
+	   try {
+	        DB::beginTransaction();
+	        
+	        $user = User::where('id', $id)->update(['name'=>$request->input('name'), 'email'=>$request->input('email'), 'phone_number'=>$request->input('phone_number')]);
+
+	        // $account =  Address::where('user_id', $id)->update(
+	        // $request->only(['address','city','state','pin', 'latitude', 'longitude', 'landmark']));
+	        DB::commit();
+	        return ["message"=>"Runner Updated", 'redirectTo'=>route('manage-vendor.index'), 'http_status'=>200];
+      }
+      catch (\Exception $e) {
+	        DB::rollback();
+	        return ["message"=>$e->getMessage(), 'http_status'=>400];
+      }      
+    }
+}

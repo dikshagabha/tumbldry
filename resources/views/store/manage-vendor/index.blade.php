@@ -1,5 +1,5 @@
 @extends('store.layouts.app')
-@section('title', 'Manage Store')
+@section('title', 'Manage Runner')
 @section('content')
 
 
@@ -8,21 +8,23 @@
       <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">
           <div class="card card-stats">
+
+
               <div class="row">
                 <div class="col-md-9">
                 </div>
                 <div class="col-md-3">
-                  <a href="{{route('store.orderWithoutPickup')}}"><button class="btn btn-danger">Add Order</button></a>
+                  <a href="{{route('manage-vendor.create')}}"><button class="btn btn-danger">Add New Vendor</button></a>
                 </div>
               </div>
-              
-               <!-- <div class="">
+              <br>
+               <div class="">
                 {{ Form::open(['method' => 'get', 'id' => 'store-search', 'name' => 'serach_form']) }}
                 <div class="form-group-inner">
                     <div class="row">
                       <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
                       </div>
-                         <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                         <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
                           {{ Form::text('search', '', ['class' => 'form-control', 'placeholder' => 'Search by Name or E-mail or Phone', 'maxlength'=>'50']) }}
                          </div>
                          <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
@@ -36,29 +38,29 @@
                        </div>
                   </div>
                   {{ Form::close() }}
-              </div> -->
+              </div>
 
               <br>
               <div id="dataList">
                 
-               @include('store.manage-order.list')
+               @include('store.manage-vendor.list')
               </div>
             </div>
         </div>
       </div>
     </div>
 </div>
-<div id="OrderModal" class="modal fade" role="dialog">
-  <div class="modal-dialog">
+<div id="addressModal" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-lg">
     <!-- Modal content-->
     <div class="modal-content">
       <div class="modal-header">
-         <h4 class="modal-title">Order Details</h4>
+         <h4 class="modal-title">Vendor Details</h4>
         <button type="button" class="close" data-dismiss="modal">&times;</button>
        
       </div>
       <div class="modal-body">
-        <div id="Orderdetails">
+        <div id="details">
          
         </div>
       </div>
@@ -69,22 +71,17 @@
 
   </div>
 </div>
-
 @endsection
 @push('js')
 <script src="{{asset('js/bootbox.js')}}"></script>
 <script>
 $(document).ready(function(){
   var current_page = $(".pagination").find('.active').text();
-   
-
-  
-
   $(document).on('click', '#delete', function(e){
     e.preventDefault();
           bootbox.confirm({
           title: "Confirm",
-          message: "Do you want to delete the store? This cannot be undone.",
+          message: "Do you want to delete the Runner? This cannot be undone.",
           buttons: {
               cancel: {
                   label: '<i class="fa fa-times"></i> Cancel'
@@ -207,131 +204,19 @@ $(document).ready(function(){
     load_listings($(this).attr('href'));
   });
 
-  $(document).on("click",".view",function(e) {
-      e.preventDefault();
-      $('body').waitMe();
-      current = $(this)
-      $.ajax({
-        url:current.attr('href'),
-        method:'get',
-        success:function(data){
-          $('#Orderdetails').html(data);
-           $('body').waitMe('hide');
-          $("#OrderModal").modal('show');
-        }
-      })
-    });
-
-  $(document).on("change",".change_status",function(e) {
-      e.preventDefault();
-      $('body').waitMe();
-      current = $(this)
-      $.ajax({
-        url:current.data('url'),
-        method:'post',
-        data:{'status':current.val()},
-        success:function(data){
-          $('body').waitMe('hide');
-          var current_page = $(".pagination").find('.active').text();
-          load_listings(location.href+'?page='+current_page, 'serach_form');
-          success(data.message);
-        }
-      })
-    });
-
-  $(document).on("click",".assign_runner",function(e) {
-      e.preventDefault();
-      $('body').waitMe();
-      current = $(this)
-      $.ajax({
-        url:current.data('url'),
-        method:'post',
-        data:{'id':$('#runner'+current.data('id')).val()},
-        success:function(data){
-          $('body').waitMe('hide');
-          var current_page = $(".pagination").find('.active').text();
-          load_listings(location.href+'?page='+current_page, 'serach_form');
-          success(data.message);
-        }
-      })
-    });
-
-  $(document).on("click","#grnBtn",function(e) {
-      e.preventDefault();
-      $('body').waitMe();
-      current = $(this)
-
-      console.log($('#grnForm :input').serializeArray());
-      $.ajax({
-        url:current.data('url'),
-        method:'post',
-         //xhrFields is what did the trick to read the blob to pdf
-            xhrFields: {
-                responseType: 'blob'
-            },
-        data: $('#grnForm :input').serializeArray(),
-        success:function(response, status, xhr){
-          $('body').waitMe('hide');
-          // var current_page = $(".pagination").find('.active').text();
-          // load_listings(location.href+'?page='+current_page, 'serach_form');
-          //success(data.message);
-
-          var filename = "";                   
-                var disposition = xhr.getResponseHeader('Content-Disposition');
-
-                 if (disposition) {
-                    var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
-                    var matches = filenameRegex.exec(disposition);
-                    if (matches !== null && matches[1]) filename = matches[1].replace(/['"]/g, '');
-                } 
-                var linkelem = document.createElement('a');
-                try {
-                                           var blob = new Blob([response], { type: 'application/octet-stream' });                        
-
-                    if (typeof window.navigator.msSaveBlob !== 'undefined') {
-                        //   IE workaround for "HTML7007: One or more blob URLs were revoked by closing the blob for which they were created. These URLs will no longer resolve as the data backing the URL has been freed."
-                        window.navigator.msSaveBlob(blob, filename);
-                    } else {
-                        var URL = window.URL || window.webkitURL;
-                        var downloadUrl = URL.createObjectURL(blob);
-
-                        if (filename) { 
-                            // use HTML5 a[download] attribute to specify filename
-                            var a = document.createElement("a");
-
-                            // safari doesn't support this yet
-                            if (typeof a.download === 'undefined') {
-                                window.location = downloadUrl;
-                            } else {
-                                a.href = downloadUrl;
-                                a.download = filename;
-                                document.body.appendChild(a);
-                                a.target = "_blank";
-                                a.click();
-                            }
-                        } else {
-                            window.location = downloadUrl;
-                        }
-                    }   
-
-                } catch (ex) {
-                    console.log(ex);
-                } 
-        }
-      })
-    });
-
-  $(document).on('click', '.select_all', function(e){
-    //e.preventDefault();
-
-    if ($(this).prop('checked')) {
-      $(".grn_units").prop("checked", true); 
-    }else{
-      $(".grn_units").prop("checked", false);
-    }
+  $(document).on('click', '.view', function(e){
+    e.preventDefault();
+    $('body').waitMe();
+    $.ajax({
+      url: $('.view').attr('href'),
+      type:"get",
+      success: function(data){
+        $('body').waitMe("hide");        
+        $('#details').html(data);
+        $("#addressModal").modal('show');
+      },
+    })
   })
-
-
 })
 </script>
 

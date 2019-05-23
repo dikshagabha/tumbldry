@@ -13,31 +13,34 @@
 		<td>{{$order->total_price}} Rs</td>
 	</tr>
 </table>
-
 @if($order->items->count())
 Items:
+<div id="grnForm">
 <table class="table table-bordered">
 	<tr>
 		<th>Item</th>
 		<th>Quantity</th>
 		<th>Service</th>
+		<th>GRN <input type="checkbox" name="select_all[]" title="Select All" class="select_all" value="0"><button type="button" id="grnBtn" data-url="{{route('store.getGrn')}}" class="btn btn-link" title="Download Grn"><i class="fa fa-download"></i></button></th>
 	</tr>
+	
 	@foreach($order->items as $item)
 	<tr>
 		<td class="table-modal">{{$item->item}}</td>
 		<td class="table-modal">{{round($item->quantity, 2)}}</td>
 		<td class="table-modal">{{$item->service_name}}</td>
+		<td class="table-modal"><input type="checkbox" name="grn[]"  value="{{ $item['id'] }}" class="grn_units"> </td>
+
 	</tr>
 	@endforeach
+	<input type="hidden" name="order_id" value="{{ $order->id }}">
+	
 </table>
-
+</div>
 @endif
-
-
 @if($order->customer->count())
 Customer Details:
 <table class="table table-bordered">
-	
 	<tr>
 		<th class="table-modal">Name</th>
 		<td class="table-modal">{{$order->customer->name}}</td>
@@ -51,10 +54,7 @@ Customer Details:
 		<td class="table-modal">{{$order->customer->email}}</td>
 	</tr>
 </table>
-
 @endif
-
-
 @if($order->address)
 Customer Address Details:
 <table class="table table-bordered">

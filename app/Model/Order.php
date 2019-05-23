@@ -28,6 +28,13 @@ class Order extends Model
         }
         return "--";
  	}
+ 	public function getCustomerNameAttribute(){
+ 		if ($this->customer()->count()) 
+        {
+            return $this->customer()->first()->name;
+        }
+        return "--";
+ 	}
 
  							
 }
