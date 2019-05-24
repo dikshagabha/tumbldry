@@ -43,13 +43,13 @@
         </a>
       </li>
 
-      <li class="nav-item{{ $activePage == 'vendor' ? ' active' : '' }}">
+     <!--  <li class="nav-item{{ $activePage == 'vendor' ? ' active' : '' }}">
         <a class="nav-link" href="{{ route('manage-vendor.index') }}">
           <i><img style="width:25px" src="{{ asset('images/icons/order.png') }}"></i>
-          <!-- <i class="material-icons">dashboard</i> -->
+          <i class="material-icons">dashboard</i>
             <p>{{ __('Vendor') }}</p>
         </a>
-      </li>
+      </li> -->
       
       
   </div>
