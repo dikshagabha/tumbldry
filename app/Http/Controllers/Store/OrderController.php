@@ -51,7 +51,7 @@ class OrderController extends Controller
     $activePage="order";
     $titlePage="Orders";
     $users = Order::where('store_id', $this->user->id)->latest()->paginate(10);
-    $runner = User::where('user_id', $this->user->id)->pluck('name', 'id');
+    $runner = User::where('user_id', $this->user->id)->where('role', 5)->pluck('name', 'id');
     if ($request->ajax()) {
       return view('store.manage-order.list', compact('users', 'runner'));
     }
