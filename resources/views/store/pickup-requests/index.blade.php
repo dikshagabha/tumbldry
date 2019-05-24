@@ -209,6 +209,8 @@ $(document).on("click",".view",function(e) {
         }
       })
     });
+
+
 })
 </script>
 

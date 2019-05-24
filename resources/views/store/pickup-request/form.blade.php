@@ -14,7 +14,7 @@
                </div>
 
                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
-                <button type="button" class="btn btn-detail" id="search-user" data-url = "{{route('admin.findCustomer')}}"><i class="fa fa-search"></i></button>
+                <button type="button" class="btn btn-detail" id="search-user" data-url = "{{route('store.findCustomer')}}"><i class="fa fa-search"></i></button>
                 <input type="hidden" name="customer_id" id="customer_id">
                 <input type="hidden" name="address_id" id="address_id">
                </div>

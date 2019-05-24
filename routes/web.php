@@ -98,6 +98,7 @@ Route::prefix('store')->namespace('Store')->group(function () {
             'manage-runner' => 'RunnerController',
             'manage-customer' => 'CustomerController',
             // 'manage-vendor' => 'VendorController',
+            'store-pickup-request' => 'PickupController',
           ]);
       });
       

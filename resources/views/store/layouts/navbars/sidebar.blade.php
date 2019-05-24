@@ -34,7 +34,13 @@
             <p>{{ __('Customer') }}</p>
         </a>
       </li>
-
+       <li class="nav-item{{ $activePage == 'pickup-request' ? ' active' : '' }}">
+        <a class="nav-link" href="{{ route('store-pickup-request.index') }}">
+          <i><img style="width:25px" src="{{ asset('images/icons/pickup.png') }}"></i>
+          <!-- <i class="material-icons">dashboard</i> -->
+            <p>{{ __('Pickup Request') }}</p>
+        </a>
+      </li>
       <li class="nav-item{{ $activePage == 'order' ? ' active' : '' }}">
         <a class="nav-link" href="{{ route('store.create-order.index') }}">
           <i><img style="width:25px" src="{{ asset('images/icons/order.png') }}"></i>
