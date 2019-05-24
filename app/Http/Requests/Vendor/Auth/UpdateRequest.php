@@ -34,10 +34,10 @@ class UpdateRequest extends FormRequest
             
             'name' => ['bail', 'required', 'string', 'min:2', 'max:25', new CheckName],
             
-            'email' => ['bail', 'nullable', 'email', 'max:120', Rule::unique('users', 'email')->ignore(decrypt($this->route('manage_runner')), 'id') ],
+            'email' => ['bail', 'nullable', 'email', 'max:120', Rule::unique('users', 'email')->ignore(decrypt($this->route('manage_vendor')), 'id') ],
             
             
-            'phone_number' => ['bail', 'required', 'numeric', 'digits_between:8,15', Rule::unique('users', 'phone_number')->ignore(decrypt($this->route('manage_runner')), 'id')],
+            'phone_number' => ['bail', 'required', 'numeric', 'digits_between:8,15', Rule::unique('users', 'phone_number')->ignore(decrypt($this->route('manage_vendor')), 'id')],
 
             // 'address' => 'bail|required|string|max:500',
             // 'city' => 'bail|required|max:255',

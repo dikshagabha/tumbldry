@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Store;
+namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -34,7 +34,7 @@ class VendorController extends Controller
     {
       $activePage = 'vendor';
       $titlePage  = 'Vendor Details';
-      $users = User::where('role', 6)->where('user_id', $this->user->id)
+      $users = User::where('role', 6)
               ->when($request->filled('search'), 
                 function($query) use($request) {
                   $query->where(function($q) use($request) {
@@ -49,10 +49,10 @@ class VendorController extends Controller
                ->latest()->paginate(10);
       if ($request->ajax()) {
         //dd($users);
-        return view('store.manage-vendor.list', compact('users', 'activePage', 'titlePage'));
+        return view('admin.manage-vendor.list', compact('users', 'activePage', 'titlePage'));
 
       }
-      return view('store.manage-vendor.index', compact('users', 'activePage', 'titlePage'));
+      return view('admin.manage-vendor.index', compact('users', 'activePage', 'titlePage'));
     }
 
     /**
@@ -65,7 +65,7 @@ class VendorController extends Controller
       $activePage = 'vendor';
       $titlePage  = 'Create Vendor';
       session()->forget('providers');
-      return view('store.manage-vendor.create', compact('users', 'activePage', 'titlePage'));
+      return view('admin.manage-vendor.create', compact('users', 'activePage', 'titlePage'));
     }
 
     /**
@@ -78,6 +78,10 @@ class VendorController extends Controller
     {
       $address = session()->get('address');
       $providers = session()->get('providers');
+
+      dd($providers);
+
+      
       $response = HomeRepository::store($request, $this->user, $address, $providers);
       $http_status = $response['http_status'];
       unset($response['http_status']);
@@ -96,7 +100,7 @@ class VendorController extends Controller
 
        $user = User::where("id", $id)->with('addresses', 'users')->first();
       // $data = StoreFields::whereIn('id', [$user->machine_type, $user->boiler_type])->get();
-       return view("store.manage-vendor.show", compact('user', 'data'));
+       return view("admin.manage-vendor.show", compact('user', 'data'));
     }
 
     /**
@@ -113,7 +117,7 @@ class VendorController extends Controller
       $user = User::where("id", decrypt($id))->with('addresses')->first();
       $providers = User::where('user_id', decrypt($id))->get();
       //dd($providers);
-      return view('store.manage-vendor.edit', compact('user', 'id','activePage', 'titlePage', 'providers'));
+      return view('admin.manage-vendor.edit', compact('user', 'id','activePage', 'titlePage', 'providers'));
     }
 
     /**

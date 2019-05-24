@@ -36,9 +36,13 @@ Route::prefix('admin')->group(function () {
       'manage-frenchise' => 'Admin\FranchiseController',
       'manage-store' => 'Admin\StoreController',
       'manage-service' => 'Admin\ServiceController',
-      'pickup-request' => 'Admin\PickupController'
+      'pickup-request' => 'Admin\PickupController',
+      'manage-vendor' => 'Admin\VendorController',
     ]);
     
+    Route::post('/vendor/status/{id}', 'Admin\VendorController@status')->name('manage-vendor.status');
+
+      Route::post('set-providers-session', 'Admin\VendorController@setSessionProviders')->name('admin.postAddSessionProviders');
     Route::post('/store/status/{id}', 'Admin\StoreController@status')->name('manage-store.status');
 
     Route::post('/add-store/{id}', 'Admin\StoreController@saveSession')->name('admin.store.add');
@@ -65,6 +69,8 @@ Route::prefix('admin')->group(function () {
     Route::post('/find-customer', 'Admin\PickupController@findCustomer')->name('admin.findCustomer');
     Route::post('/find-user', 'HomeController@findUser')->name('admin.findUser');
     
+    Route::post('set-address-session', 'CustomerController@setSessionAddress')->name('store.postAddSessionAddress');
+      
     Route::post('/logout', 'Auth\LoginController@logout')->name('admin.logout');
 
   });
@@ -91,13 +97,12 @@ Route::prefix('store')->namespace('Store')->group(function () {
          Route::resources([
             'manage-runner' => 'RunnerController',
             'manage-customer' => 'CustomerController',
-            'manage-vendor' => 'VendorController',
+            // 'manage-vendor' => 'VendorController',
           ]);
       });
       
       Route::get('logout', 'LoginController@logout')->name('logout');
 
-      Route::post('set-providers-session', 'VendorController@setSessionProviders')->name('store.postAddSessionProviders');
       Route::post('set-store-timezone', 'HomeController@setTimezone')->name('store.set-timezone');
 
       Route::get('/orders/', 'OrderController@index')->name('store.create-order.index');
@@ -128,7 +133,7 @@ Route::prefix('store')->namespace('Store')->group(function () {
 
       Route::post('/runner/status/{id}', 'RunnerController@status')->name('manage-runner.status');
       Route::post('/customer/status/{id}', 'CustomerController@status')->name('manage-customer.status');
-      Route::post('/vendor/status/{id}', 'VendorController@status')->name('manage-vendor.status');
+      //Route::post('/vendor/status/{id}', 'VendorController@status')->name('manage-vendor.status');
 
       Route::post('/notifications/read-all', 'NotificationsController@markRead')->name('notifications.mark-read'); 
 

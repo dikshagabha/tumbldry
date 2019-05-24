@@ -47,7 +47,13 @@
             <p>{{ __('Store') }}</p>
         </a>
       </li>
-
+      <li class="nav-item{{ $activePage == 'vendor' ? ' active' : '' }}">
+        <a class="nav-link" href="{{ route('manage-vendor.index') }}">
+          <i><img style="width:25px" src="{{ asset('images/icons/customer.png') }}"></i>
+          <p>{{ __('Vendor') }}</p>
+          
+        </a>
+      </li>
       
       <li class="nav-item{{ $activePage == 'service' ? ' active' : '' }}">
         <a class="nav-link" href="{{ route('manage-service.index') }}">

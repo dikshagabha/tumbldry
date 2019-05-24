@@ -1,46 +1,34 @@
-@extends('store.layouts.app')
-@section('title', 'Manage Runner')
-@section('css')
-  <link rel="stylesheet" href="{{ asset('css/chosen/bootstrap-chosen.css') }}">
-  <link rel="stylesheet" href="{{ asset('css/jcf.css') }}">
-
-@endsection
+@extends('layouts.app')
+@section('title', 'Manage Vendor')
 
 @section('content')
-
-
 <div class="content">
     <div class="container-fluid">
       <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">
           <div class="card card-stats">
+            {{ Form::model($user, ['route'=> array('manage-vendor.update', $id) , 'method'=>'put', 'id'=>'addFrenchise', 'images'=>true]) }}
+            @include('admin.manage-vendor.form')
 
-<form action="{{route('manage-vendor.store')}}" method="post"  id="addFrenchise" enctype="multipart/form-data">
- 
-  @csrf
-  @include('store.manage-vendor.form')
-
-   <div class="row">
-     <div class="col-lg-3 col-md-3 col-sm-3">
-     </div>
-     <div class="col-lg-3 col-md-3 col-sm-3">
-      <a href="{{route('manage-vendor.index')}}">
-        <button type="button" class="btn btn-default" data-id="5">Cancel</button>
-      </a>
+              <div class="row">
+               <div class="col-lg-3 col-md-3 col-sm-3">
+                {{Form::hidden('address_id', $user->addresses->id)}}
+               </div>
+               <div class="col-lg-3 col-md-3 col-sm-3">
+                <a href="{{route('manage-vendor.index')}}">
+                  <button type="button" class="btn btn-default" data-id="5" data-url="{{route('manage-runner.index')}}">Cancel</button>
+                </a>
+                </div>
+               <div class="col-lg-5 col-md-5 col-sm-5">
+                  <button type="button" class="btn btn-warning" id="add_frenchise">Edit</button>
+               </div>
+              </div>
+            {{Form::close()}}
+        </div>
       </div>
-     <div class="col-lg-5 col-md-5 col-sm-5">
-        <button type="button" class="btn btn-warning" id="add_frenchise" data-url="{{route('manage-vendor.store')}}">Create</button>
-     </div>
-    </div>
-</form>
-
-</div>
-  </div>
-
     </div>
   </div>
 </div>
-
 <div id="addressModal" class="modal fade " role="dialog">
   <div class="modal-dialog  modal-lg">
     <!-- Modal content-->
@@ -52,7 +40,7 @@
       </div>
       <div class="modal-body">
         <div id="addressForm">
-          @include('store.addAddressForm')  
+          @include('admin.addAddressForm')  
         </div>
       </div>
       <div class="modal-footer">
@@ -73,7 +61,7 @@
       </div>
       <div class="modal-body">
         <div id="providerForm">
-          @include('store.manage-vendor.addProviderForm')  
+          @include('admin.manage-vendor.addProviderForm')  
         </div>
       </div>
       <div class="modal-footer">
@@ -84,10 +72,12 @@
 
   </div>
 </div>
+
 @endsection
 
 @push('js')
 <script>
+
 
 var map; var map1;
 function initMap() {
@@ -193,6 +183,7 @@ function initMap() {
   }
 }
 $(document).ready(function(){
+
   $(document).on('click', '#add_frenchise', function(e){
     e.preventDefault();
     $('body').waitMe();
@@ -200,8 +191,6 @@ $(document).ready(function(){
     var form = $('#addFrenchise')[0];
 
     var data = new FormData(form);
-
-    console.log(data.values())
     $(".error").html("");
     $.ajax({
       url: $('#addFrenchise').attr('action'),
@@ -211,12 +200,13 @@ $(document).ready(function(){
       processData: false,  
       contentType: false,      
       success: function(data){
-        success(data.message);
+        // /success(data.message);
         window.location=data.redirectTo;
         $('body').waitMe('hide');
       }
     })
   })
+
   $(document).on("click", "#add_address", function(e){
       e.preventDefault();
       $('#addressModal').modal('show');
@@ -292,7 +282,6 @@ $(document).ready(function(){
   });
 
 })
-
 
 </script>
 <script src="https://maps.googleapis.com/maps/api/js?key={{env('MAPS_EMBED_KEY')}}&libraries=places&callback=initMap"

@@ -1,4 +1,4 @@
-<form action="" method="post" id="formProvider">
+<form action="{{route('admin.postAddSessionProviders')}}" method="post" id="formProvider">
   <div class="row">
   <div class="col-sm-6 col-md-6 col-lg-6">
      <div class="form-group-inner">

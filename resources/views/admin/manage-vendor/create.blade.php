@@ -1,5 +1,5 @@
-@extends('store.layouts.app')
-@section('title', 'Manage Runner')
+@extends('layouts.app')
+@section('title', 'Manage Vendor')
 @section('css')
   <link rel="stylesheet" href="{{ asset('css/chosen/bootstrap-chosen.css') }}">
   <link rel="stylesheet" href="{{ asset('css/jcf.css') }}">
@@ -18,7 +18,7 @@
 <form action="{{route('manage-vendor.store')}}" method="post"  id="addFrenchise" enctype="multipart/form-data">
  
   @csrf
-  @include('store.manage-vendor.form')
+  @include('admin.manage-vendor.form')
 
    <div class="row">
      <div class="col-lg-3 col-md-3 col-sm-3">
@@ -52,7 +52,7 @@
       </div>
       <div class="modal-body">
         <div id="addressForm">
-          @include('store.addAddressForm')  
+          @include('admin.addAddressForm')  
         </div>
       </div>
       <div class="modal-footer">
@@ -73,7 +73,7 @@
       </div>
       <div class="modal-body">
         <div id="providerForm">
-          @include('store.manage-vendor.addProviderForm')  
+          @include('admin.manage-vendor.addProviderForm')  
         </div>
       </div>
       <div class="modal-footer">
