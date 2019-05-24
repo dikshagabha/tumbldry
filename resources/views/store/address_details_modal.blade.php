@@ -15,14 +15,14 @@
 		<td class="table-modal">Pin</td>
 		<td class="table-modal">{{$user->pin}}</td>
 	</tr>
-	<tr>
+	<!-- <tr>
 		<td class="table-modal">Latitude</td>
 		<td class="table-modal">{{$user->latitude}}</td>
 	</tr>
 	<tr>
 		<td class="table-modal">Longitude</td>
 		<td class="table-modal">{{$user->longitude}}</td>
-	</tr>
+	</tr> -->
 	<tr>
 		<td class="table-modal">Landmark</td>
 		<td class="table-modal">{{$user->landmark}}</td>
