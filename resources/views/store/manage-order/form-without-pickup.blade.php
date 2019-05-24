@@ -12,7 +12,7 @@
               		{!! Form::text('phone_number',null, array('class' => 'form-control', "maxlength"=>20,
                                               "id"=>'phone_order')) !!}
                 <span class="error" id="phone_number_error"></span>
-                <span class="badge badge-dark" id="wallet"></span>
+                <!-- <span class="badge badge-dark" id="wallet"></span> -->
               </div>                
               <div class="col-md-2 col-lg-2 col-sm-2">
               		 <button type="button" class="btn btn-detail" id="search-user" data-url = "{{route('store.findCustomer')}}"><i class="fa fa-search"></i></button>
