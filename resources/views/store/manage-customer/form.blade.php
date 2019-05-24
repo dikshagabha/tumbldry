@@ -123,7 +123,7 @@
                     </div>
                    <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
                        
-                     {!! Form::textarea('landmark',null,array('class' => 'form-control', 'maxlength'=>"200", 'id'=>"landmark", "placeholder"=>"Landmark")) !!}
+                     {!! Form::text('landmark',null,array('class' => 'form-control', 'maxlength'=>"200", 'id'=>"landmark", "placeholder"=>"Landmark")) !!}
                       <span class="error" id="landmark_error"></span>
                     </div>
                     

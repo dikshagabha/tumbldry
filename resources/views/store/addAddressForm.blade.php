@@ -57,7 +57,8 @@
          <span class="error" id="landmark_error"></span>
        </div>
      </div>
-       <input type="hidden" class="form-control" name="location_id" id="location_id" value=""/>
+       <input type="hidden" class="form-control" name="latitude" id="latitude" value=""/>
+       <input type="hidden" class="form-control" name="longitude" id="longitude" value=""/>
   </div>
   </div> 
 

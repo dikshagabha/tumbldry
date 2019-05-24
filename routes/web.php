@@ -117,7 +117,7 @@ Route::prefix('store')->namespace('Store')->group(function () {
       Route::post('/add-items-session', 'OrderController@addItemSession')->name('store.addItemSession');
       Route::post('/delete-items-session', 'OrderController@deleteItemSession')->name('store.deleteItemSession');
       Route::post('/quantity-items-session', 'OrderController@quantityItemSession')->name('store.quantityItemSession');
-      
+      Route::post('/discount-items-session', 'OrderController@discountItemSession')->name('store.discountItemSession');
       Route::post('/addon-items-session', 'OrderController@addonItemSession')->name('store.addonItemSession');
       Route::post('/coupon', 'OrderController@couponItemSession')->name('store.couponItemSession');
 

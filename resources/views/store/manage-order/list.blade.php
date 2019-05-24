@@ -47,7 +47,7 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
                                            6 =>'Delivered'], $user->status, ['class'=>'form-control change_status',
                                           'data-url'=> route('store.order.status',$user->id)])
                 }}
-                @if($user->status==4)
+                <div class="add_runner" @if($user->status != 4) style="display: none" @endif>
                   {{
                     Form::select('runner', $runner, $user->delivery_runner_id, ['class'=>'form-control',
                                             'data-url'=> route('store.order.status',$user->id),
@@ -58,7 +58,7 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
                   {{
                     Form::button('Assign', ['class'=>'btn btn-warning assign_runner', 'data-url'=> route('store.order.assign-delivery', $user->id), 'data-id'=>$user->id ])
                   }}
-                @endif
+                </div>
 
             </td>
             

@@ -5,7 +5,10 @@ namespace App\Http\Controllers\Store;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\User;
-use App\Model\PickupRequest;
+use App\Model\{
+  PickupRequest,
+  Address
+};
 use Auth;
 use App\Repositories\Customer\HomeRepository;
 
@@ -157,13 +160,19 @@ class CustomerController extends Controller
     }
 
     public function setSessionAddress(AddressRequest $request)
-    {
-     
-     $data = session()->put('address', $request->only('address', 'city', 'state', 'pin', 'landmark', 'latitude', 'longitude'));
+    { 
+     $data = $request->only('address', 'city', 'state', 'pin', 'landmark', 'latitude', 'longitude');
+     if ($request->input('user_id')) {
+       $data['user_id']=$request->input('user_id');
+       $address = Address::create($data);
+       $data['address_id']=$address->id;
+     }
+
+     $data = session()->put('address', $data);
 
      $data = session()->get('address');
      if ($data) {
-      return response()->json(["message"=>'Address Saved', 'data'=>$data], 200);
+      return response()->json(["message"=>'Address Saved', 'data'=> $data], 200);
      }
      return response()->json(["message"=>'Address Not Saved', 'data'=>$data], 400);
     }

@@ -20,8 +20,8 @@ class HomeController extends Controller
     	$titlePage = "Dashboard";
      	$timezone = $Request->session()->get('user_timezone', 'Asia/Calcutta');
 
-        $runners = User::where(['role'=>5, 'status'=>1])->where('user_id', Auth::user()->id)->pluck('name', 'id');
-    	$users = PickupRequest::where('store_id', Auth::user()->id)->with('order')->latest()->paginate(10);
+      $runners = User::where(['role'=>5, 'status'=>1])->where('user_id', Auth::user()->id)->pluck('name', 'id');
+    	$users = PickupRequest::where('store_id', Auth::user()->id)->wheredoesnthave('order')->with('order')->latest()->paginate(10);
     	if ($Request->ajax()) {
     		return view('store.pickup-requests.list', compact('users', 'activePage', 'titlePage', 'runners', 'timezone'));
     	}
@@ -52,10 +52,10 @@ class HomeController extends Controller
           ]);
 
       $customer = User::where('role', 4)
-                  ->where('phone_number', 'like', '%'.$request->input('phone_number').'%')->with('wallet')->first(); 
-      
-      $wallet = $customer->wallet;  
+                  ->where('phone_number', 'like', '%'.$request->input('phone_number').'%')->with('wallet')->first();      
+      $wallet = $customer->wallet;
 
+      session()->put('customer_details', ['user'=>$customer, 'wallet'=>$wallet]);
       if ($customer) {
         return response()->json(["message"=>"Customer Found!!", "customer" => $customer, 'wallet'=>$wallet], 200);
       }

@@ -1,8 +1,9 @@
-@if($items)
 @php
 $i=1;
 @endphp
 <hr>
+@if(count($items))
+
 <div class="row">
   	<div class="col-lg-7 col-md-7 col-sm-7 col-xs-7">	
 		<table class="table table-borderless table-dark ">
@@ -102,15 +103,16 @@ $i=1;
 			<span class="error" id="quantity_error"></span>
 			<span class="error" id="addon_error"></span>
 	</div>
+
 	<div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
-		<table class="table table-borderless table-dark">
+		<table class="table-dark">
 			<thead>
 				<!-- <td width="50%"><h4>Item</h4></td>
 				<td width="50%"><h4>Price</h4></td> -->
 			</thead>
 			<tr>
-				<td width="50%"><strong>Price</strong></td>
-				<td width="10%">@if($price_data['estimated_price'])
+				<td style="text-align: center;" colspan="2"><strong>Price</strong></td>
+				<td style="text-align: center;">@if($price_data['estimated_price'])
 									{{$price_data['estimated_price']}} Rs
 								@else
 									N/A
@@ -118,58 +120,65 @@ $i=1;
 				</td>
 			</tr>
 			<tr>
-				<td>
+				<td style="text-align: center;"  colspan="2">
 					CGST (9%)
 				</td>
-				<td>
+				<td style="text-align: center;" >
 					{{ $price_data['cgst'] }}
 				</td>
 			</tr>
 			<tr>
-				<td>
+				<td colspan="2" style="text-align: center;" >
 					GST (9%)
 				</td>
-				<td>
+				<td style="text-align: center;" >
 					{{ $price_data['gst'] }}
 				</td>
-			</tr>			
-		</table>
+			</tr>
+			<tr >
+				<td style="text-align: center;" >Coupon</td>
+				<td style="text-align: center;" ><input type="text" name="coupon" id="coupon" class="form-control" value="{{$coupon_discount['coupon']}}"style="color: white">
+				<span class="error" id="coupon_error"></span></td>
+				<td style="text-align: center;" ><button type="button" class="btn btn-danger" data-url="{{route('store.couponItemSession')}}" id="couponBtn">Apply</button></td>
 
-		<div class="row">
+			</tr>	
 
-			<div class="col-lg-3 col-md-3 col-sm-3">
-				Coupon
-			</div>
-			<div class="col-lg-4 col-md-4 col-sm-4">
-				<input type="text" name="coupon" id="coupon" class="form-control" value="{{$coupon_discount['coupon']}}">
-				<span class="error" id="coupon_error"></span>
-			</div>
-			<div class="col-lg-2 col-md-2 col-sm-2">
-				<button type="button" class="btn btn-danger" data-url="{{route('store.couponItemSession')}}" id="couponBtn">Apply</button>
-			</div>
-	        
-	     </div>
-	     <br>
-	     <div class="row">
-	     	<div class="col-md-4 col-sm-4 col-lg-4">
-	     		<strong>Total Price</strong>
-	     	</div>
-	     	<div class="col-md-5 col-sm-5 col-lg-5 pull-left">
-	     		<strong>
-	     			@if($price_data['total_price'] !=0)
-						{{$price_data['total_price']}} Rs
+			<tr >
+				<td style="text-align: center;" >Discount</td>
+				<td style="text-align: center;" >
+					<input type="text" name="discount" id="discount" class="form-control" value="{{$coupon_discount['user_discount']}}" style="color: white">
+					<span class="error" id="discount_error"></span>
+			    </td>
+				 <td style="text-align: center;" ><button type="button" class="btn btn-danger" data-url="{{route('store.discountItemSession')}}" id="discountBtn">Apply</button>
+				 </td>
+			</tr>
+			<tr >
+				<td colspan="2" style="text-align: center;">
+					TOTAL PRICE
+				</td>
+				<td style="text-align: center;">
+
+					@if($price_data['total_price'])
+						{{$price_data['total_price']}}
 					@else
 						N/A
 					@endif
-				</strong>
-	     	</div>
-	     </div>
+				</td>
+			</tr>
+			@if($wallet)
+			<tr>
+				<td colspan="3">Customer has {{$wallet['wallet']->price}} Rs in wallet.</td>
+			</tr>
+			<tr>
+				<td colspan="3">Customer has {{round($wallet['wallet']->loyality_points, 0)}} Loyality Points.</td>
+			</tr>
+			@endif
+			<tr >
+				<td colspan="3" style="text-align: center;" ><button type="button" class="btn btn-warning" id="add_frenchise">Create Order</button></td>
+			</tr>		
+		</table>
 
-	     <div class="row">
-	     	<div class="col-lg-8 col-md-8 col-sm-8">
-				<button type="button" class="btn btn-warning" id="add_frenchise">Create Order</button>
-			</div>	        
-	     </div>
+		
 		
 		
 

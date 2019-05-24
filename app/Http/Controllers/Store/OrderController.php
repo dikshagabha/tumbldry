@@ -71,7 +71,7 @@ class OrderController extends Controller
         $customer = $order->customer;
         //dd($customer);
         if ($customer->phone_number) {
-          //CommonRepository::sendmessage($customer->phone_number, 'Your%20order%20ORDER'.$id.'%20has%20been%20recieved%20by%20store.');
+          CommonRepository::sendmessage($customer->phone_number, 'Your%20order%20ORDER'.$id.'%20has%20been%20recieved%20by%20store.');
 
           $date = Carbon::now($request->header('timezone'));
           $order->date_of_arrival = $date;
@@ -93,6 +93,7 @@ class OrderController extends Controller
       DB::beginTransaction();
       $order = Order::where('id', $id)->first();
       $order->delivery_runner_id= $request->input('id');
+      $order->status= 4;
       $order->save();
 
       $job = UserJobs::create(['user_id'=>$request->input('id'), 'order_id'=>$id, 'type'=>2, 'assigned_by'=>$this->user->id]);
@@ -212,18 +213,19 @@ class OrderController extends Controller
 
     $coupon_discount = 0;
     if (!session()->get('coupon_discount')) {
-      session()->put("coupon_discount", ['coupon'=>'', 'discount'=>0]);
+      session()->put("coupon_discount", ['coupon'=>'', 'discount'=>0, 'user_discount'=>null]);
     }else{
       $coupon_discount = session('coupon_discount');
     }
 
+
     $price_data = ['estimated_price'=> $total_price, 'cgst'=>$cgst, 'gst'=>$gst,
-                    'total_price'=>$total_price+$cgst+$gst-$coupon_discount['discount']];
+                    'total_price'=>$total_price+$cgst+$gst-($coupon_discount['discount']+$coupon_discount['user_discount'])];
 
     session()->put('prices', $price_data);
     //dd($items);
-
-    return response()->json(['message'=>'Item Added to Cart', 'view'=>view('store.manage-order.items-view', compact('items', 'Service', 'form_id', 'price_data', 'coupon_discount'))->render(), 'items'=>$items,
+    $wallet = session()->get('customer_details');
+    return response()->json(['message'=>'Item Added to Cart', 'view'=>view('store.manage-order.items-view', compact('items', 'Service', 'form_id', 'price_data', 'coupon_discount', 'wallet'))->render(), 'items'=>$items,
         'price_data'=>$price_data], 200);
   }
 
@@ -259,8 +261,8 @@ class OrderController extends Controller
     $price_data = ['estimated_price'=> $total_price, 'cgst'=>$cgst, 'gst'=>$gst, 
                     'total_price'=>$total_price+$cgst+$gst-$coupon_discount['discount']];
     session()->put('prices', $price_data);
-    
-    return response()->json(['message'=>'Item Deleted', 'view'=>view('store.manage-order.items-view', compact('items','price_data', 'coupon_discount'))->render(), 'items'=>$items], 200);
+    $wallet = session()->get('customer_details');
+    return response()->json(['message'=>'Item Deleted', 'view'=>view('store.manage-order.items-view', compact('items','price_data', 'coupon_discount', 'wallet'))->render(), 'items'=>$items], 200);
   }
 
   
@@ -292,17 +294,15 @@ class OrderController extends Controller
     $coupon_discount = 0;
     $coupon_discount = 0;
     if (!session()->get('coupon_discount')) {
-      session()->put("coupon_discount", ['coupon'=>null, 'discount'=>null]);
+      session()->put("coupon_discount", ['coupon'=>null, 'discount'=>null, 'user_discount'=> null]);
     }else{
       $coupon_discount = session('coupon_discount');
     }
     $price_data = ['estimated_price'=> $total_price, 'cgst'=>$cgst, 'gst'=>$gst,
-                                'total_price'=>$total_price+$cgst+$gst-$coupon_discount['discount']];     
-    
-
+                                'total_price'=>$total_price+$cgst+$gst-($coupon_discount['discount']+$coupon_discount['user_discount'])];
     session()->put('prices', $price_data);
-    
-    return response()->json(['message'=>'Item Updated', 'view'=>view('store.manage-order.items-view', compact('items','price_data', 'coupon_discount'))->render(), 'items'=>$items], 200);
+    $wallet = session()->get('customer_details');
+    return response()->json(['message'=>'Item Updated', 'view'=>view('store.manage-order.items-view', compact('items','price_data', 'coupon_discount', 'wallet'))->render(), 'items'=>$items], 200);
   }
 
 
@@ -347,20 +347,20 @@ class OrderController extends Controller
 
     $cgst = $total_price*(9/100);
     $gst = $total_price*(9/100);
-    $coupon_discount = 0;
+   
     $coupon_discount = 0;
     if (!session()->get('coupon_discount')) {
-      session()->put("coupon_discount", ['coupon'=>null, 'discount'=>null]);
+      session()->put("coupon_discount", ['coupon'=>null, 'discount'=>null, 'user_discount'=>null]);
     }else{
       $coupon_discount = session('coupon_discount');
     }
     $price_data = ['estimated_price'=> $total_price, 'cgst'=>$cgst, 'gst'=>$gst,
-                                'total_price'=>$total_price+$cgst+$gst-$coupon_discount['discount']];     
+                                'total_price'=>$total_price+$cgst+$gst-($coupon_discount['discount']+$coupon_discount['user_discount'])];     
     
 
     session()->put('prices', $price_data);
-    
-    return response()->json(['message'=>'Item Updated', 'view'=>view('store.manage-order.items-view', compact('items','price_data', 'coupon_discount'))->render(), 'items'=>$items], 200);
+    $wallet = session()->get('customer_details');
+    return response()->json(['message'=>'Item Updated', 'view'=>view('store.manage-order.items-view', compact('items','price_data', 'coupon_discount', 'wallet'))->render(), 'items'=>$items], 200);
   }
 
   public function couponItemSession(Request $request){
@@ -392,8 +392,10 @@ class OrderController extends Controller
     else{
       $discount = ($coupon->coupon_percent*$total_price/100);
     }
+
+    $discount = $discount+session('coupon_discount')['user_discount'];
     
-    $coupon_discount = ['discount'=>$discount, 'coupon'=>$coupon->coupon];
+    $coupon_discount = ['discount'=>$discount, 'coupon'=>$coupon->coupon, 'user_discount'=>session('coupon_discount')['user_discount']];
     session()->put("coupon_discount", $coupon_discount);
     
     $cgst = $total_price*(9/100);
@@ -401,8 +403,47 @@ class OrderController extends Controller
     $price_data = ['estimated_price'=> $total_price, 'cgst'=>$cgst, 'gst'=>$gst, 
                                 'total_price'=>$total_price+$cgst+$gst-$discount];
     session()->put('prices', $price_data);
+    $wallet = session()->get('customer_details');
+    return response()->json(['message'=>'Items Updated', 'view'=>view('store.manage-order.items-view', compact('items','price_data', 'coupon_discount', 'wallet'))->render(), 'items'=>$items], 200);
+  }
 
-    return response()->json(['message'=>'Items Updated', 'view'=>view('store.manage-order.items-view', compact('items','price_data', 'coupon_discount'))->render(), 'items'=>$items], 200);
+  public function discountItemSession(Request $request){
+    $validatedData = $request->validate([
+      'discount'=>'bail|required|min:1|max:99999|numeric']);
+
+  
+    $items = session('add_order_items');
+    
+    $total_price = 0;
+    foreach ($items as $key => $value) {
+       if ($value) {
+         $total_price = $total_price + $value['estimated_price'];
+       }
+    }
+
+
+    $coupon_discount = session()->get('coupon_discount');    
+    $cgst = $total_price*(9/100);
+    $gst = $total_price*(9/100);
+    
+    $total = $total_price+$cgst+$gst-$coupon_discount['discount'];
+
+
+    if ($request->input('discount')>$total) 
+    {
+      return response()->json(['message'=>"Discount can not be greater than total price"], 400);
+    }
+    
+    $coupon_discount['user_discount']=$request->input('discount');
+    session()->put("coupon_discount", $coupon_discount);
+
+    $discount = $coupon_discount['discount']+$coupon_discount['user_discount'];
+
+    $price_data = ['estimated_price'=> $total_price, 'cgst'=>$cgst, 'gst'=>$gst, 
+                                'total_price'=>$total_price+$cgst+$gst-$discount];
+    session()->put('prices', $price_data);
+    $wallet = session()->get('customer_details');
+    return response()->json(['message'=>'Items Updated', 'view'=>view('store.manage-order.items-view', compact('items','price_data', 'coupon_discount', 'wallet'))->render(), 'items'=>$items], 200);
   }
 
 
@@ -460,8 +501,6 @@ class OrderController extends Controller
    }
    try {
       DB::beginTransaction();
-
-
       $wallet = User::where('id', $request->input('customer_id'))->with('wallet')->first();
       $price=0;
       if ($wallet->wallet && $wallet->wallet->count()) {
@@ -473,9 +512,9 @@ class OrderController extends Controller
                                'estimated_price'=>$prices['estimated_price'], 'cgst'=>$prices['cgst'],
                                'gst'=>$prices['gst'], 'total_price'=>round($prices['total_price'], 2),
                                'coupon_discount'=>$coupon_discount['discount'], 'coupon_id'=>$coupon_discount['coupon'],
+                               'discount'=>$coupon_discount['user_discount']
                             ]);
-      
-      
+
       $points = $order->total_price*40/100;
       $insert = $points;
       
@@ -483,28 +522,30 @@ class OrderController extends Controller
       {
         $insert = $wallet->wallet->loyality_points + $points;
       }
-
       if ($price > $order->total_price) {       
-        $paymentData = ['order_id'=>$order->id,
-                          'user_id'=>$customer_id,
-                        'to_id'=>$this->user->id, 'type'=>1, 
-                        'price'=>$order->total_price];
+        $paymentData = [['order_id'=>$order->id,
+                                  'user_id'=>$customer_id,
+                                'to_id'=>$this->user->id, 'type'=>1, 
+                                'price'=>$order->total_price, 'created_at'=>Carbon::now()]];
         $message = "$order->total_price%20Rs%20has%20been%20deducted%20from%20your%20wallet%20for%20ORDER$order->id.";
         
-        UserWallet::where('user_id', $wallet->id)->update(['price'=>$price - $order->total_price]);
+        UserWallet::where('user_id', $wallet->id)->update(['price'=>$price - $order->total_price, 
+                                                          'loyality_points'=>$insert]);
       }else{
         $paymentData = [['order_id'=>$order->id, 'to_id'=>$this->user->id, 'type'=>1, 
-                        'user_id'=>$customer_id,
+                        'user_id'=>$customer_id,'created_at'=>Carbon::now(),
                         'price'=>$price], ['order_id'=>$order->id, 
                           'user_id'=>$customer_id,'to_id'=>$this->user->id, 'type'=>2, 
-                        'price'=>$order->total_price-$price]];
+                        'price'=>$order->total_price-$price,'created_at'=>Carbon::now()]];
         $amount = $order->total_price-$price;
         $message = "$price%20Rs%20has%20been%20deducted%20from%20your%20wallet%20and%20you%20have%20to%20pay%20$amount%20more%20for%20ORDER$order->id.";
-        UserWallet::where('user_id', $wallet->id)->update(['price'=>0]);
+        UserWallet::where('user_id', $wallet->id)->update(['price'=>0, 
+                                                          'loyality_points'=>$insert]);
       }
-       
+      
+      array_push($paymentData, ['order_id'=>$order->id, 'to_id'=>$customer_id, 'created_at'=>Carbon::now(),
+        'user_id'=>0,'type'=>3, 'price'=>$points]);
       $payments = UserPayments::insert($paymentData);
-
       $response = CommonRepository::sendmessage($wallet->phone_number, $message);
 
       foreach ($items as $item) {

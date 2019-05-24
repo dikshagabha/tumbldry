@@ -58,7 +58,7 @@
 </div>
 
 <div id="addressModal" class="modal fade" role="dialog">
-  <div class="modal-dialog">
+  <div class="modal-dialog modal-lg">
     <!-- Modal content-->
     <div class="modal-content">
       <div class="modal-header">
@@ -96,26 +96,6 @@ $(document).ready(function(){
   
 
   var path = "{{ route('store.get-items') }}";  
-  // $.typeahead({
-  //       input: '.js-typeahead-country_v1',
-  //       source: {
-  //         ajax:
-  //         function (query) {
-  //             data={'query':query};
-  //             return {
-  //                 url:  "{{route('store.get-items')}}",
-  //                 data: data
-  //             }
-  //       }
-  //     },
-  //     mustSelectItem:true,
-  //     callback:{
-  //       // onSubmit: function(argument) {
-  //       //   alert()
-  //       // }
-  //     }
-  // });
-
   $( "#item" ).autocomplete({
       source: function( request, response ) {
           $.ajax({
@@ -167,16 +147,16 @@ $(document).ready(function(){
       $.ajax({
         url: $('#search-user').data('url'),
         type:'post',
-        data: {'phone_number':$('#phone').val()},
+        data: {'phone_number':$('#phone_order').val()},
         success: function(data){
           success(data.message);
           if (data.customer) 
           {
             for (var key in data.customer) {
-                $("#"+key).val(data.customer[key]);
-                $("#"+key).text(data.customer[key]);
-                $("#"+key).prop('readonly', true);
-                console.log(key);
+                $("#"+key+'_order').val(data.customer[key]);
+                $("#"+key+'_order').text(data.customer[key]);
+                $("#"+key+'_order').prop('readonly', true);
+                
               }
               $("#customer_id").val(data.customer.id);
               $("#address_id").val(data.customer.address_id);
@@ -187,8 +167,8 @@ $(document).ready(function(){
           }
           else{
             
-             $("#name").val("").prop('readonly', false);
-             $("#phone").val("").prop('readonly', false);
+             $("#name_order").val("").prop('readonly', false);
+             $("#phone_order").val("").prop('readonly', false);
              $("#customer_id").val("");
              $("#address_id").val("");
           }
@@ -220,7 +200,7 @@ $(document).ready(function(){
       data: data,    
       success: function(data){
         success(data.message);
-        window.location = data.redirectTo;
+        //window.location = data.redirectTo;
         $('body').waitMe('hide');
       }
     })
@@ -245,38 +225,14 @@ $(document).ready(function(){
   })
 
   $('#addressModal').on('shown.bs.modal', function (e) {
-   
-     //$('#service').trigger("chosen:updated");
     $('#formAddress')[0].reset();
   })
-
-  // $(document).on("click", "#add_new_address", function(e){
-  //   e.preventDefault();
-  //   var form = $('#ItemForm')[0];
-  //   var data = new FormData(form);
-  //   $(".error").html("");    
-  //   $.ajax({
-  //     url: $('#ItemForm').attr('action'),
-  //     type:'post',
-  //     data: data,
-  //     cache: false,
-  //     processData: false,  
-  //     contentType: false,      
-  //     success: function(data){
-  //       success(data.message);
-  //       $(".ItemsAdded").html(data.view);
-  //       $("#addressModal").modal('hide');
-  //       $('body').waitMe('hide');
-  //     }
-  //   })
-  // })
-
   $(document).on("click", "#add_new_address", function(e){
     e.preventDefault();
     var form = $('#formAddress')[0];
     var data = new FormData(form);
-
-    console.log($('#formAddress').attr('action'));
+    data.append('user_id', $('#customer_id').val());
+    
     $(".error").html("");    
     $.ajax({
       url: $('#formAddress').attr('action'),
@@ -290,10 +246,10 @@ $(document).ready(function(){
         if (data.data) 
         {
           for (var key in data.data) {
-              $("#"+key).text(data.data[key]);
+              $("#"+key+'_order').text(data.data[key]);
           }
         }
-
+        $('#address_id').val(data.data.address_id);
         $("#addressModal").modal('hide');
         $('body').waitMe('hide');
       }
@@ -351,8 +307,87 @@ $(document).ready(function(){
     })
   })
 
-  
-
+  $(document).on("click", "#discountBtn", function(e){
+    e.preventDefault();
+    $(".error").html(""); 
+    current = $(this);   
+    $.ajax({
+      url: current.data('url'),
+      type:'post',
+      data: {'discount': $("#discount").val()},
+      cache: false,
+      success: function(data){
+        success(data.message);
+        $(".ItemsAdded").html(data.view);
+        $('body').waitMe('hide');
+      }
+    })
+  })
 });
+
+var map;
+function initMap() {
+  map = new google.maps.Map(document.getElementById('map'), {    
+    zoom: 8
+  });
+  if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(function(position) {
+        var pos = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude
+        };
+        var marker = new google.maps.Marker({
+            position: pos,
+            map: map,
+            draggable:true,
+          });
+
+        map.setCenter(pos);
+        google.maps.event.addListener(marker, 'dragend', function (evt) {
+           geocodePosition(marker.getPosition());
+        });
+      });
+
+
+  }
+  function geocodePosition(pos) 
+  {
+     geocoder = new google.maps.Geocoder();
+     geocoder.geocode
+      ({
+          latLng: pos
+      }, 
+      function(results, status) 
+      {
+          if (status == google.maps.GeocoderStatus.OK) 
+          {
+
+              $('#address').val(results[0].formatted_address);
+              if (results[0].address_components[2]) 
+              {
+                $('#city').val(results[0].address_components[2].long_name);
+              }
+               if (results[0].address_components[4]) {
+                $('#state').val(results[0].address_components[4].long_name);
+               }
+               address = results[0].address_components;
+               zipcode = address[address.length - 1].long_name;
+               $('#pin').val(zipcode);
+              $('#latitude').val(results[0].geometry.location.lat());
+              $('#longitude').val(results[0].geometry.location.lng());
+          } 
+          else 
+          {
+              console.log('Cannot determine address at this location.'+status);
+          }
+      }
+      );
+  }
+}
+$('#addressModal').on('shown.bs.modal', function () {
+    data = google.maps.event.trigger(map, "resize");
+  });
 </script>
+<script src="https://maps.googleapis.com/maps/api/js?key={{env('MAPS_EMBED_KEY')}}&libraries=places&callback=initMap"
+        async defer></script>
 @endpush

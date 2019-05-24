@@ -225,18 +225,28 @@ $(document).ready(function(){
   $(document).on("change",".change_status",function(e) {
       e.preventDefault();
       $('body').waitMe();
-      current = $(this)
-      $.ajax({
-        url:current.data('url'),
-        method:'post',
-        data:{'status':current.val()},
-        success:function(data){
-          $('body').waitMe('hide');
-          var current_page = $(".pagination").find('.active').text();
-          load_listings(location.href+'?page='+current_page, 'serach_form');
-          success(data.message);
-        }
-      })
+      current = $(this);
+
+      if (current.val() != 4) {
+        $.ajax({
+          url:current.data('url'),
+          method:'post',
+          data:{'status':current.val()},
+          success:function(data){
+            $('body').waitMe('hide');
+            var current_page = $(".pagination").find('.active').text();
+            load_listings(location.href+'?page='+current_page, 'serach_form');
+            success(data.message);
+          }
+        })
+      }else{
+        $('body').waitMe('hide');
+        console.log(current.next( ".add_runner" ).html());
+
+        current.next( ".add_runner" ).show();
+      }
+        
+        
     });
 
   $(document).on("click",".assign_runner",function(e) {

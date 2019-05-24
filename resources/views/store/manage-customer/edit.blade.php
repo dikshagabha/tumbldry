@@ -95,12 +95,20 @@ function geocodePosition(pos)
         {
             if (status == google.maps.GeocoderStatus.OK) 
             {
-                $('#address').val(results[0].formatted_address);
-                $('#city').val(results[0].city);
-                $('#state').val(results[0].state);
-                $('#pin').val(results[0].zip);
-                $('#latitude').val(results[0].latitude);
-                $('#longitude').val(results[0].longitude);
+              $('#address').val(results[0].formatted_address);
+              if (results[0].address_components[2]) 
+              {
+                $('#city').val(results[0].address_components[2].long_name);
+              }
+               if (results[0].address_components[4]) {
+                $('#state').val(results[0].address_components[4].long_name);
+               }
+               address = results[0].address_components;
+               zipcode = address[address.length - 1].long_name;
+               $('#pin').val(zipcode);
+              $('#latitude').val(results[0].geometry.location.lat());
+              $('#longitude').val(results[0].geometry.location.lng());
+              
             } 
             else 
             {
