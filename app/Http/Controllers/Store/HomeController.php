@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 
 use App\Model\PickupRequest;
 use App\Model\Address;
+use App\Model\Order;
 use App\User;
 use Auth;
 use App\Notifications\StoreNotifications;
@@ -52,12 +53,18 @@ class HomeController extends Controller
           ]);
 
       $customer = User::where('role', 4)
-                  ->where('phone_number', 'like', '%'.$request->input('phone_number').'%')->with('wallet')->first();      
-      $wallet = $customer->wallet;
-
-      session()->put('customer_details', ['user'=>$customer, 'wallet'=>$wallet]);
+                  ->where('phone_number', 'like', $request->input('phone_number'))->with('wallet')->first();
       if ($customer) {
-        return response()->json(["message"=>"Customer Found!!", "customer" => $customer, 'wallet'=>$wallet], 200);
+        $orders = Order::where('customer_id', $customer->id)->latest()->first();
+        $address = null;
+        if ($orders->count()) {
+         $address = Address::where('id', $orders->address_id)->first();
+        }
+        $wallet = $customer->wallet;
+        session()->put('customer_details', ['user'=>$customer, 'wallet'=>$wallet]);
+      
+        return response()->json(["message"=>"Customer Found!!", "customer" => $customer, 'wallet'=>$wallet, 
+                                  'address'=>$address], 200);
       }
         return response()->json(["message"=>"Customer Not Found!!"], 400);
     }
@@ -68,5 +75,13 @@ class HomeController extends Controller
             $request->session()->put('user_timezone', $request->input('timezone'));
         }
         return response()->json(['message' => 'Timezone set successfully!'], 200);
+    }
+
+    public function getCustomerAddresses(Request $request)
+    {
+        $address = Address::where('user_id', $request->input('user_id'))->get();
+
+        //dd($address);
+        return response()->json(['message' => 'Addresses Found', 'view'=>view('store.displayAddress', compact('address'))->render()], 200);
     }
 }

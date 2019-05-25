@@ -138,7 +138,7 @@ class OrderController extends Controller
   public function addItemSession(Request $request){
     $validatedData = $request->validate([
     'service'=>'bail|required|numeric|min:1',
-     'item'=>'bail|required|string|min:1|max:500']);
+    'item'=>'bail|required|string|min:1|max:500']);
 
     $Service = Service::where("id", $request->input('service'))->first();
 
@@ -161,27 +161,16 @@ class OrderController extends Controller
     $price = ServicePrice::where(['service_id'=>$Service->id])->where('parameter', $form_id->id)
             ->where('location', 'LIKE', '%'.$this->location->city_name.'%')->first();
 
+    
     $units = false;
     if (!$price) {
      $price = ServicePrice::where(['service_id'=>$Service->id])->where('parameter', $form_id->id)
               ->where('location', 'global')->first();
-    }
-    
-    if ($Service->form_type !=2 ) {
-       if ($price) {
-          $price = $price->value;
-         }
-    }else{
-        //$form_id = Items::where("name", 'LIKE','% Laundary %' )->where('type', $Service->form_type)->first();
-        
-        // $weight = LaundaryWeights::where('item_id', $form_id->id)->first();
-        // if ($weight->weight_unit==2) {
-        //   $weight = $weight->weight/1000;
-        // }else{
-        //   $weight=$weight->weight;
-        // }
+    }    
+    //dd($form_id->id);
+    $price = $price->value;
 
-      $price = $price->value;
+    if ($Service->form_type == 2 ) {
       $units = true;
     }
 
@@ -360,6 +349,7 @@ class OrderController extends Controller
 
     session()->put('prices', $price_data);
     $wallet = session()->get('customer_details');
+
     return response()->json(['message'=>'Item Updated', 'view'=>view('store.manage-order.items-view', compact('items','price_data', 'coupon_discount', 'wallet'))->render(), 'items'=>$items], 200);
   }
 

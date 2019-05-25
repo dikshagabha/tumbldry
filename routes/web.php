@@ -106,6 +106,8 @@ Route::prefix('store')->namespace('Store')->group(function () {
 
       Route::post('set-store-timezone', 'HomeController@setTimezone')->name('store.set-timezone');
 
+      Route::get('get-customer-addresses', 'HomeController@getCustomerAddresses')->name('store.getCustomerAddresses');
+
       Route::get('/orders/', 'OrderController@index')->name('store.create-order.index');
       
       Route::post('set-address-session', 'CustomerController@setSessionAddress')->name('store.postAddSessionAddress');

@@ -11,6 +11,7 @@
                 {!! Form::text('phone_number',null,array('class' => 'form-control', "maxlength"=>20,
                                 "id"=>'phone',  "placeholder"=>"Phone Number")) !!}
                 <span class="error" id="phone_number_error"></span>
+                
                </div>
 
                

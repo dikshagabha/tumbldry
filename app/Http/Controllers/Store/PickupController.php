@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Store;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Jobs\NotificationsUser as not;
-use App\Http\Requests\Admin\StorePickupRequest;
+use App\Http\Requests\Store\StorePickupRequest;
 use App\Model\PickupRequest;
 use App\Model\Service;
 use App\Model\Address;
@@ -67,15 +67,10 @@ class PickupController extends Controller
                         'phone_number'=>$request->input('phone_number'),  
                         'role'=> 4
                         ]);
-          $address = Address::create(['address'=>$request->input('address'),
-                            'pin'=>$request->input('pin'),
-                            'city'=>$request->input('city'),
-                            'state'=>$request->input('state'),
-                            'user_id'=>$user->id,
-                            'latitude'=>$request->input('latitude'),
-                            'longitude'=>$request->input('longitude'),
-                            'landmark'=>$request->input('landmark')
-                          ]);
+
+          $address = session()->get('address');
+          $address['user_id'] = $user->id;
+          $address = Address::create($address);
 
           $request->merge(['customer_id' => $user->id]);
           $request->merge(['address_id' => $address->id]);

@@ -48,7 +48,10 @@
 
                   <span class="error" id="address_id_error"></span>
                 </div>
-                <div class="col-lg-2 col-md-2 col-sm-2">
+                <div class="col-lg-2 col-md-2 col-sm-2 select" style="display: none">
+                  <button type="button" class="btn btn-warning" id="select_address"  data-url= "{{ route('store.getCustomerAddresses') }}" title="select Address"><i class="fa fa-home"></i> </button>                
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-2 add"  >
                   <button type="button" class="btn btn-warning" id="add_address"><i class="fa fa-plus"></i> </button>
                 </div>
                   

@@ -80,7 +80,29 @@
 
   </div>
 </div>
+<div id="selectAddressModal" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-lg">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        
+        <h4 class="modal-title">Select Address</h4>
 
+         <button type="button" class="btn btn-warning" id="add_address"><i class="fa fa-plus"></i> </button>
+      </div>
+      <div class="modal-body">
+        <div id="selectAddressForm">
+            
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="select_new_address">Save</button>
+      </div>
+    </div>
+
+  </div>
+</div>
 @endsection
 
 @push('js')
@@ -146,35 +168,80 @@ $(document).ready(function(){
           success(data.message);
           if (data.customer) 
           {
-            for (var key in data.customer) {
-                $("#"+key+'_order').val(data.customer[key]);
-                $("#"+key+'_order').text(data.customer[key]);
-                $("#"+key+'_order').prop('readonly', true);
-                
-              }
+              $('#name_order').val(data.customer['name']).prop('readonly', true);
+            $('#email_order').val(data.customer['email']).prop('readonly', true);
+            $('#phone_number').val(data.customer['phone_number']).prop('readonly', true);
+
+              $('#address_order').text(data.customer.address);
               $("#customer_id").val(data.customer.id);
               $("#address_id").val(data.customer.address_id);
-              if (data.wallet) {
-                $("#wallet").text("User has "+data.wallet.price+" Rs in wallet.")
-              }
+              if (data.address) {
+                $('#address_order').text(data.address.address);
+                $("#address_id").val(data.address.id);
+             }
+
+             $(".select").show();
+             $(".add").hide();
               
           }
-          else{
-            
-             $("#name_order").val("").prop('readonly', false);
-             $("#phone_order").val("").prop('readonly', false);
-             $("#customer_id").val("");
-             $("#address_id").val("");
-          }
           $('body').waitMe('hide');
+        },
+        error: function(data){
+            error(data.responseJSON.message);
+            $(".select").hide();
+            $(".add").show();
+            $('#name').val('').prop('readonly', false);
+            $('#email').val('').prop('readonly', false);
+            $('#phone_number').val('').prop('readonly', false);
+            $('#address_order').text('');
+            $("#customer_id").val("");
+            $("#address_id").val("");
+             $('body').waitMe('hide');
         }
 
       })
     })
 
+  $(document).on("click", "#add_address", function(e){
+      e.preventDefault();
+      $("#selectAddressModal").modal('hide');
+      $('#addressModal').modal('show');
+      //$('#formAddress')[0].reset();
+    })
+
+   $(document).on("click", "#select_address", function(e){
+      e.preventDefault();
+      current = $(this);
+
+       $.ajax({
+        url: current.data('url'),
+        type:'get',
+        data: {'user_id' : $('#customer_id').val()},     
+        success: function(data){
+          $('#selectAddressForm').html(data.view);
+          $("#selectAddressModal").modal('show');
+          $('body').waitMe('hide');
+        }
+    })
+    })
+
+   $(document).on("click", ".address", function(e){
+      e.preventDefault();
+      current = $(this);
+
+      $('#address_id').val(current.data('id'));
+
+      $('#address_order').text(current.data('value'));
+
+       $("#selectAddressModal").modal('hide');
+    })
+
+
+
   
    $(document).on("click", "#add_address", function(e){
       e.preventDefault();
+      $("#selectAddressModal").modal('hide');
       $('#addressModal').modal('show');
       //$('#formAddress')[0].reset();
     })
@@ -190,7 +257,7 @@ $(document).ready(function(){
         success: function(data){
         //success(data.message);
         $('#select_box').html(data.view);
-        console.log(data.form_type);
+        
         if (data.form_type==1 || data.form_type==2) {
           $( "#item" ).autocomplete({
                   source: function( request, response ) {

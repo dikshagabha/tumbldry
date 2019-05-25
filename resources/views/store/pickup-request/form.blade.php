@@ -65,108 +65,42 @@
               <label class="login2 pull-right pull-right-pro">Pickup Time</label>
             </div>
             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
-            <div id="picker"> </div>
+            <input type="text" id="picker" name="request_time" class="form-control">
 
-               {!! Form::hidden('request_time',null,array('class' => 'form-control', 'maxlength'=>"10", 'id'=>"result", "placeholder"=>"Date Time")) !!}
+              <!--  {!! Form::hidden('request_time',null,array('class' => 'form-control', 'maxlength'=>"10", 'id'=>"result", "placeholder"=>"Date Time")) !!} -->
                   
               <span class="error" id="request_time_error"></span>
             </div>    
         </div>
       </div>
-            <br>
-        <div class="form-group-inner">
-              <div class="row">
-                   <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                     <label class="login2 pull-right pull-right-pro">Address</label>
-                   </div>
-                   <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
-                     {!! Form::text('address', null, array('class' => 'form-control', 'maxlength'=>"50", 'id'=>"address", "placeholder"=>"Address")) !!}
-                     <span class="error" id="address_error"></span>
-                   </div>
-                 </div>
-            </div>
-            <br>
-            <div class="form-group-inner">
-              <div class="row">
-                   <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                      <label class="login2 pull-right pull-right-pro">City</label>
-                    </div>
-                   <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
-                     {!! Form::text('city',null,array('class' => 'form-control', 'maxlength'=>"50", 'id'=>"city", "placeholder"=>"City")) !!}
-                      <span class="error" id="city_error"></span>
-                    </div>
-                 </div>
-            </div>
-          <br>
-            <div class="form-group-inner">
-               <div class="row">
-                   <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                      <label class="login2 pull-right pull-right-pro">State</label>
-                    </div>
-                    <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
-                       
-                     {!! Form::text('state',null,array('class' => 'form-control', 'maxlength'=>"50", 'id'=>"state", "placeholder"=>"State")) !!}
-                      <span class="error" id="state_error"></span>
-                    </div>
-                    
-                  </div>
-            </div>
-            <br>
-            <div class="form-group-inner">
-               <div class="row">
-                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                      <label class="login2 pull-right pull-right-pro">Pin</label>
-                    </div>
-                   <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
-                       
-                     {!! Form::text('pin',null,array('class' => 'form-control', 'maxlength'=>"6", 'id'=>"pin", "placeholder"=>"Pin")) !!}
-                      <span class="error" id="pin_error"></span>
-                    </div>
-                    
-                  </div>
-            </div>
-            <br>
-            <div class="form-group-inner" style="display: none">
-               <div class="row">
-                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                      <label class="login2 pull-right pull-right-pro">Latitude</label>
-                    </div>
-                   <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
-                       
-                     {!! Form::text('latitude',null,array('class' => 'form-control', 'maxlength'=>"10", 'id'=>"latitude", "placeholder"=>"Latitude")) !!}
-                      <span class="error" id="latitude_error"></span>
-                    </div>
-                    
-                  </div>
-            </div>
-            <div class="form-group-inner" style="display: none">
-               <div class="row">
-                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                      <label class="login2 pull-right pull-right-pro">Longitude</label>
-                    </div>
-                   <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
-                       
-                     {!! Form::text('longitude',null,array('class' => 'form-control', 'maxlength'=>"10", 'id'=>"longitude", "placeholder"=>"Longitude")) !!}
-                      <span class="error" id="longitude_error"></span>
-                    </div>
-                  </div>
-            </div>
-            <div class="form-group-inner">
-               <div class="row">
-                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                      <label class="login2 pull-right pull-right-pro">Landmark</label>
-                    </div>
-                   <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
-                       
-                     {!! Form::text('landmark',null,array('class' => 'form-control', 'maxlength'=>"200", 'id'=>"landmark", "placeholder"=>"Landmark")) !!}
-                      <span class="error" id="landmark_error"></span>
-                    </div>
-                    
-                  </div>
-            </div>
-            <br>
-            
+      <br>
 
+      <div class="form-group-inner">
+          <div class="row">
+               <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                 <label class="login2 pull-right pull-right-pro">Address</label>
+               </div>
+              <!--  <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9"> -->
+                <div class="col-lg-7 col-md-7 col-sm-7 col-xs-7">
+                  
+                  <span id="address_form"></span>
+                  <!--  {!! Form::text('address',null,array('class' => 'form-control',  "placeholder"=>"Address", "maxlength"=>50, "id"=>'address_form', 'readonly'=>true)) !!} -->
+
+                  <span class="error" id="address_id_error"></span>
+                </div>
+
+                <div class="col-lg-2 col-md-2 col-sm-2 select" style="display: none">
+                  <button type="button" class="btn btn-warning" id="select_address"  data-url= "{{ route('store.getCustomerAddresses') }}" title="select Address"><i class="fa fa-home"></i> </button>                
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-2 add"  >
+                  <button type="button" class="btn btn-warning" id="add_address"><i class="fa fa-plus"></i> </button>
+                </div>
+               <!-- </div> -->
+          </div>
+        </div>
+        <br>
+        
+     
     </div>
   </div>
 </div>
