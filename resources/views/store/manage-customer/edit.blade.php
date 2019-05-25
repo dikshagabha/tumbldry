@@ -28,6 +28,29 @@
     </div>
   </div>
 </div>
+
+
+<div id="addressModal" class="modal fade " role="dialog">
+  <div class="modal-dialog  modal-lg">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        
+        <h4 class="modal-title">Add Address</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div id="addressForm">
+          @include('store.addAddressForm')  
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="add_new_address" data-url="{{ route('store.addCustomerAddresses')}}">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
 @endsection
 @push('js')
 <script>
@@ -55,6 +78,50 @@ $(document).ready(function(){
       }
     })
   })
+
+  $(document).on("click", "#add_address", function(e){
+    e.preventDefault();
+    $('#addressModal').modal('show');
+  });
+  $(document).on("click", "#add_new_address", function(e){
+    e.preventDefault();
+    var form = $('#formAddress')[0];
+    var data = new FormData(form);
+
+    $(".error").html("");    
+    $.ajax({
+      url: $('#add_new_address').data('url'),
+      type:'post',
+      data: data,
+      cache: false,
+      processData: false,  
+      contentType: false,      
+      success: function(data){
+        success(data.message);
+        
+        $('#address_form').html(data.view);
+        $("#addressModal").modal('hide');
+        $('body').waitMe('hide');
+      }
+    })
+  });
+  $(document).on("click", ".deleteItemBtn", function(e){
+    e.preventDefault();
+    $(".error").html("");
+    current = $(this);  
+    console.log(current.data('url')); 
+    $.ajax({
+      url: current.data('url'),
+      type:'post',
+      data: {'data-id':current.data('id')},
+      cache: false,
+      success: function(data){
+        success(data.message);
+        $("#address_form").html(data.view);
+        $('body').waitMe('hide');
+      }
+    })
+  });
 })
 var map;
 function initMap() {

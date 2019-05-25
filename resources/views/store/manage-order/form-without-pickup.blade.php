@@ -77,18 +77,22 @@
                  <!-- <label class="login2 pull-right pull-right-pro">Search Item</label> -->
                </div>
                
+               
                <!-- <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9"> -->
                 <div class="col-lg-8 col-md-8 col-sm-8 col-xs-82">
-                 <!-- {!! Form::text('item',null,array('class' => 'form-control', "maxlength"=>50, "id"=>'item', 'placeholder'=>'Search Item')) !!} -->
-                <input type="text" name="item" autocomplete="on" placeholder="Search Item" class="form-control" id="item">
-                <!-- <div class="typeahead__container">
-                    <div class="typeahead__field">
-                        <div class="typeahead__query">
-                            <input class="js-typeahead-country_v1" name="item" type="search" name="item" placeholder="Search Item" id="item" autocomplete="on">
-                        </div>
-                       
-                    </div>
-                </div> -->
+                <div id="select_box">
+                   
+                   <!-- {!! Form::text('item',null,array('class' => 'form-control', "maxlength"=>50, "id"=>'item', 'placeholder'=>'Search Item')) !!} -->
+                    <input type="text" name="item" autocomplete="on" placeholder="Search Item" class="form-control" id="item">
+                  <!-- <div class="typeahead__container">
+                      <div class="typeahead__field">
+                          <div class="typeahead__query">
+                              <input class="js-typeahead-country_v1" name="item" type="search" name="item" placeholder="Search Item" id="item" autocomplete="on">
+                          </div>
+                         
+                      </div>
+                  </div> -->
+                </div>
                  <span class="error" id="item_error"></span>
                  </div>
                  <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">

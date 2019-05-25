@@ -70,7 +70,7 @@ class CustomerController extends Controller
     {
       $activePage = 'customer';
       $titlePage  = 'Create Customer';
-
+      session()->forget('address');
       return view('store.manage-customer.create', compact('users', 'activePage', 'titlePage'));
     }
 
@@ -82,7 +82,8 @@ class CustomerController extends Controller
      */
     public function store(RegisterRequest $request)
     {
-      $response = HomeRepository::store($request, Auth::user()->id);
+      $address = session()->get('address');
+      $response = HomeRepository::store($request, Auth::user()->id, $address);
       $http_status = $response['http_status'];
       unset($response['http_status']);
       return response()->json($response, $http_status); 
@@ -98,7 +99,7 @@ class CustomerController extends Controller
     {
         $id = decrypt($id);
 
-       $user = User::where("id", $id)->first();
+       $user = User::where("id", $id)->with('customer_addresses')->first();
       // $data = StoreFields::whereIn('id', [$user->machine_type, $user->boiler_type])->get();
        return view("store.manage-customer.show", compact('user', 'data'));
     }
@@ -114,8 +115,9 @@ class CustomerController extends Controller
       $activePage = 'customer';
       $titlePage  = 'Edit Customer';
 
-      $user = User::where("id", decrypt($id))->first();
-      
+      $user = User::where("id", decrypt($id))->with('customer_addresses')->first();
+      $session = session()->put('address',$user->customer_addresses()->select('user_id', 'address', 'landmark', 'latitude','longitude', 'city', 'state', 'pin')->get()->toArray());
+      //dd(session()->get('address'));
       return view('store.manage-customer.edit', compact('user', 'id','activePage', 'titlePage'));
     }
 
@@ -129,7 +131,8 @@ class CustomerController extends Controller
     public function update(UpdateRequest $request, $id)
     {
       //$id = decrypt($id);
-      $response = HomeRepository::update($request, $id);
+      $address = session()->get('address');
+      $response = HomeRepository::update($request, decrypt($id), Auth::user() ,$address);
       $http_status = $response['http_status'];
       unset($response['http_status']);
       return response()->json($response, $http_status);
@@ -175,5 +178,45 @@ class CustomerController extends Controller
       return response()->json(["message"=>'Address Saved', 'data'=> $data], 200);
      }
      return response()->json(["message"=>'Address Not Saved', 'data'=>$data], 400);
+    }
+
+
+    public function setSessionAddresses(AddressRequest $request)
+    { 
+     $details = $request->only('address', 'city', 'state', 'pin', 'landmark', 'latitude', 'longitude');
+     if ($request->input('user_id')) {
+       $details['user_id']=$request->input('user_id');
+       $address = Address::create($details);
+       $details['address_id']=$address->id;
+     }
+     $data = session()->get('address');
+     if ($data) {
+       array_push($data, $details);
+       session()->put('address', $data);
+     }else{
+      session()->put('address', [$details]);
+     }
+
+     $data = session()->get('address');
+
+     
+     if ($data) {
+      return response()->json(["message"=>'Address Saved', 'view'=> view('store.showMultipleAddressess', compact('data'))->render()], 200);
+     }
+     return response()->json(["message"=>'Address Not Saved', 'data'=>$data], 400);
+    }
+
+    public function deleteSessionAddresses(Request $request){
+    $items = session('address');
+    $index = $request->input('data-id')-1;
+    
+    unset($items[$index]);
+
+    $items = array_values($items);
+    session()->put("address", $items);
+
+    $data = session('address');
+   
+    return response()->json(['message'=>'Address Deleted', 'view'=> view('store.showMultipleAddressess', compact('data'))->render()], 200);
     }
 }

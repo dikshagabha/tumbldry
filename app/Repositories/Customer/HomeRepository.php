@@ -26,8 +26,11 @@ class HomeRepository extends BaseRepository
     }
 
 
-    public static function store($request, $user)
+    public static function store($request, $user, $address)
     {
+        if (!$address) {
+            return ["message"=>"Please enter an address.", 'http_status'=>400];
+        }
 	    try {
 	        DB::beginTransaction();
 	        $pswd=CommonRepository::random_str();
@@ -35,25 +38,23 @@ class HomeRepository extends BaseRepository
 	        $phone = $request->input('phone_number');
 
 
+
+
 	        $user = User::create(['name'=>$request->input('name'), 'role'=>4, 'email'=> $request->input('email'), 
 	        						'password'=>bcrypt($pswd), 'phone_number'=> $request->input('phone_number'), 
 	        						'user_id'=>$user, 'status'=>1]);
 
-
-	        $address =  Address::create([
-	                                      'address'=>$request->input('address') ,
-	                                      'user_id'=>$user->id,
-	                                      'city'=>$request->input('city'),
-	                                      'state'=>$request->input('state'),
-	                                      'pin'=>$request->input('pin'),
-	                                      'latitude'=>$request->input('latitude') ,
-	                                      'longitude'=>$request->input('longitude'),
-	                                      'landmark'=>$request->input('landmark'),
-	                                      ]);
-
-            $response = CommonRepository::sendmessage($phone, $pswd);
+            $data = [];
+            foreach ($address as $key => $value) {
+                $value['user_id']=$user->id;
+                array_push($data, $value);
+               
+            }
+	        $address =  Address::insert($data);
+            
+             $response = CommonRepository::sendmessage($phone, $pswd);
 	       
-            if( $response->status == 'success') {
+             if( $response->status == 'success') {
                 DB::commit();
                 return ["message"=>"Customer Added", 'redirectTo'=>route('manage-customer.index'), 'http_status'=>200];  
             }
@@ -65,15 +66,20 @@ class HomeRepository extends BaseRepository
 	    }        
     }
 
-    public static function update($request, $id)
+    public static function update($request, $id, $user, $address)
     {
 	   try {
-	        DB::beginTransaction();
-	        
-	        $user = User::where('id', $id)->update(['name'=>$request->input('name'), 'email'=>$request->input('email'), 'phone_number'=>$request->input('phone_number')]);
+	        DB::beginTransaction();	        
+	        $user_update = User::where('id', $id)->update(['name'=>$request->input('name'), 'email'=>$request->input('email'), 'phone_number'=>$request->input('phone_number')]);
 
-	        $account =  Address::where('user_id', $id)->update(
-	          $request->only(['address','city','state','pin', 'latitude', 'longitude', 'landmark']));
+	        $ad = Address::where('user_id', $id)->delete();
+            //print_r($id);
+            $data = [];
+            foreach ($address as $key => $value) {
+                $value['user_id']=$id;
+                array_push($data, $value);
+            }
+            $address =  Address::insert($data);
 	        DB::commit();
 	        return ["message"=>"Customer Updated", 'redirectTo'=>route('manage-customer.index'), 'http_status'=>200];
       }

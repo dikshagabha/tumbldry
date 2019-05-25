@@ -37,15 +37,15 @@ class RegisterRequest extends FormRequest
             'email' => ['bail', 'nullable', 'email', 'max:120', Rule::unique('users', 'email')],
             
             'phone_number' => ['bail', 'required', 'numeric', 'digits_between:8,15', Rule::unique('users', 'phone_number')],
-            'address' => 'bail|required|string|max:500',
-            'city' => 'bail|required|max:255',
-            'state' => 'bail|required|max:255',
-            'pin' => 'bail|required|min:1|max:15',
-            'landmark' => 'bail|nullable|string|max:500',
+            // 'address' => 'bail|required|string|max:500',
+            // 'city' => 'bail|required|max:255',
+            // 'state' => 'bail|required|max:255',
+            // 'pin' => 'bail|required|min:1|max:15',
+            // 'landmark' => 'bail|nullable|string|max:500',
             
-            //'password' => ['bail', 'required', 'min:8', 'max:30', new DisallowSpaces, 'confirmed'],
-            'latitude' => 'bail|nullable|numeric|min:-90|max:90',
-            'longitude' => 'bail|nullable|numeric|min:-180|max:180',
+            // //'password' => ['bail', 'required', 'min:8', 'max:30', new DisallowSpaces, 'confirmed'],
+            // 'latitude' => 'bail|nullable|numeric|min:-90|max:90',
+            // 'longitude' => 'bail|nullable|numeric|min:-180|max:180',
         ];
        
     }
