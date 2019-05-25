@@ -87,7 +87,7 @@ $(document).ready(function(){
       contentType: false,      
       success: function(data){
         success(data.message);
-        //window.location=data.redirectTo;
+        window.location=data.redirectTo;
         $('body').waitMe('hide');
       }
     })
