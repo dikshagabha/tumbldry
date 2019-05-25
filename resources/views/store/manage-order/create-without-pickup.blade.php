@@ -94,7 +94,7 @@
  
 $(document).ready(function(){ 
   
-
+  $("#service").chosen();
   var path = "{{ route('store.get-items') }}";  
   $( "#item" ).autocomplete({
       source: function( request, response ) {
@@ -104,9 +104,7 @@ $(document).ready(function(){
               url: path,
               data:{'query': request.term , 'service':$('#service').val()},
               success: function(data) {
-                  $('input.suggest-user').removeClass('ui-autocomplete-loading');  
-                  // hide loading image
-
+                  $('input.suggest-user').removeClass('ui-autocomplete-loading'); 
                   response(data);
               },
               error: function(data) {
@@ -115,10 +113,6 @@ $(document).ready(function(){
           });
       },
       minLength: 2,
-      open: function() {},
-      close: function() {},
-      focus: function(event,ui) {},
-      select: function(event, ui) {}
   });
 
   $(document).on("click", ".addOn", function(e){
@@ -187,10 +181,41 @@ $(document).ready(function(){
 
    $(document).on("change", "#service", function(e){
       e.preventDefault();
-      
-      
-      //$('#addressModal').modal('show');
-      //$('#formAddress')[0].reset();
+      $('body').waitMe();
+      current = $(this);
+      $.ajax({
+        url:current.data('url'),
+        data:{'id':current.val()},
+        type:'post',
+        success: function(data){
+        //success(data.message);
+        $('#select_box').html(data.view);
+
+        if (data.form_type==1 || data.form_type==2) {
+          $( "#item" ).autocomplete({
+                  source: function( request, response ) {
+                      $.ajax({
+                          dataType: "json",
+                          type : 'Get',
+                          url: path,
+                          data:{'query': request.term , 'service':$('#service').val()},
+                          success: function(data) {
+                              $('input.suggest-user').removeClass('ui-autocomplete-loading'); 
+                              response(data);
+                          },
+                          error: function(data) {
+                              $('input.suggest-user').removeClass('ui-autocomplete-loading');  
+                          }
+                      });
+                  },
+                  minLength: 2,
+              });
+        }
+              
+
+        $('body').waitMe('hide');
+      }
+      });
     })
 
  
@@ -208,7 +233,7 @@ $(document).ready(function(){
       data: data,    
       success: function(data){
         success(data.message);
-        //window.location = data.redirectTo;
+        window.location = data.redirectTo;
         $('body').waitMe('hide');
       }
     })

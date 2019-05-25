@@ -596,4 +596,13 @@ class OrderController extends Controller
    $pdf = PDF::loadView('store.grn.grn', compact('orders'));
    return ($pdf->download('invoice.pdf'));
   }
+
+  public function setServiceInput(Request $request){
+    $type = Service::where('id', $request->input('id'))->select('form_type')->first();
+    $form_type = $type->form_type;
+    $data = Items::where('type', $type->form_type)->pluck('name', 'name');
+
+    return response()->json(['view'=>view('store.manage-order.input', compact('type', 'data', 'form_type'))->render()]);
+
+  }
 }

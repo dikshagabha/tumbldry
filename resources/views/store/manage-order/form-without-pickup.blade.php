@@ -63,7 +63,7 @@
                  <label class="login2 pull-right pull-right-pro">Service</label>
                </div>
                <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
-                 {{ Form::select("service", $services, null, ['class'=>'form-control', 'id'=>'service', 'placeholder'=>'Select Service' ,'data-url'=>route('store.get-items')])}}
+                 {{ Form::select("service", $services, null, ['class'=>'form-control', 'id'=>'service', 'placeholder'=>'Select Service' ,'data-url'=>route('store.service.input')])}}
                 <span class="error" id="service_error"></span>
                </div>
           </div>
