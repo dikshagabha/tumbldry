@@ -46,7 +46,7 @@ class PickupController extends Controller
     {
       $activePage = 'pickup-request';
       $titlePage  = 'Pickup Request';
-      $services = Service::pluck('name', 'id');
+      $services = Service::where('type', 1)->pluck('name', 'id');
       return view('store.pickup-request.create', compact('users', 'activePage', 'titlePage', 'services'));
     }
 
