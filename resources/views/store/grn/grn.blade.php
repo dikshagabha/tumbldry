@@ -4,7 +4,7 @@ $i = 1;
 
 @foreach($orders as $order)
 <div class="row">
-	<table class="table table-borderless" frame="box">
+	<table class="table table-borderless" frame="box" width="192px" height="192px">
 	<tr>
 		<th col-span=3>ORDER{{$order->order->id}}</th>
 	</tr>
@@ -12,8 +12,8 @@ $i = 1;
 		<td col-span=3>{{$order->order->customer_name}}</td>
 	</tr>
 	<tr>
-		<td >{{$order->service_name}}</td>
-		<td col-span=2>{{$i}}/{{$orders->count()}}</td>
+		<td col-span=2>{{$order->service_name}}</td>
+		<td >{{$i}}/{{$orders->count()}}</td>
 	</tr>	
 	@if($order->itemimage->count())
 	<tr>
