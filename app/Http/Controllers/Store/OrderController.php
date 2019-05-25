@@ -602,7 +602,7 @@ class OrderController extends Controller
     $form_type = $type->form_type;
     $data = Items::where('type', $type->form_type)->pluck('name', 'name');
 
-    return response()->json(['view'=>view('store.manage-order.input', compact('type', 'data', 'form_type'))->render()]);
+    return response()->json(['view'=>view('store.manage-order.input', compact('type', 'data'))->render(), 'form_type'=>$form_type]);
 
   }
 }
