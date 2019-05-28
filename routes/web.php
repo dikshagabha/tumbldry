@@ -124,6 +124,7 @@ Route::prefix('store')->namespace('Store')->group(function () {
       Route::get('/view-order/{id}', 'OrderController@view')->name('store.getOrderDetails');
 
       Route::post('/order/get-grn', 'OrderController@getGrn')->name('store.getGrn');
+      Route::post('/order/deliver-items', 'OrderController@itemsDeliver')->name('store.itemsDeliver');
       Route::get('/create-order', 'OrderController@createWithoutPickup')->name('store.orderWithoutPickup');
 
       
@@ -133,6 +134,7 @@ Route::prefix('store')->namespace('Store')->group(function () {
       Route::post('/quantity-items-session', 'OrderController@quantityItemSession')->name('store.quantityItemSession');
       Route::post('/discount-items-session', 'OrderController@discountItemSession')->name('store.discountItemSession');
       Route::post('/addon-items-session', 'OrderController@addonItemSession')->name('store.addonItemSession');
+      Route::post('/weight-items-session', 'OrderController@weightItemSession')->name('store.weightItemSession');
       Route::post('/coupon', 'OrderController@couponItemSession')->name('store.couponItemSession');
 
       Route::post('/order/status/{id}', 'OrderController@status')->name('store.order.status');

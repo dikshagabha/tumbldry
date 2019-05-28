@@ -30,7 +30,7 @@ class HomeRepository extends BaseRepository
 	        $phone = $request->input('phone_number');
 	        $user = User::create(['name'=>$request->input('name'), 'role'=>6, 'email'=> $request->input('email'), 
 	        						'password'=>bcrypt($pswd), 'phone_number'=> $request->input('phone_number'), 
-	        						'user_id'=>$user->id, 'store_name'=>$requst->input('store_name'),'status'=>1]);
+	        						'user_id'=>$user->id, 'store_name'=>$requst->input('store_name'),'status'=>1, 'service_id'=>$request->input('service_id')]);
 
 	        $address['user_id']=$user->id;
 	        $address =  Address::create($address);
@@ -63,7 +63,7 @@ class HomeRepository extends BaseRepository
 	   try {
 	        DB::beginTransaction();
 	        
-	        $user = User::where('id', $id)->update(['name'=>$request->input('name'), 'email'=>$request->input('email'), 'phone_number'=>$request->input('phone_number'), 'store_name'=>$request->input('store_name')]);
+	        $user = User::where('id', $id)->update(['name'=>$request->input('name'), 'email'=>$request->input('email'), 'phone_number'=>$request->input('phone_number'), 'store_name'=>$request->input('store_name'), 'service_id'=>$request->input('service_id')]);
 
 	        if ($address) {
 	        	$address = Address::where('id', $request->input('address_id'))->update($address);

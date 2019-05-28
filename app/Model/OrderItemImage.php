@@ -11,4 +11,12 @@ class OrderItemImage extends Model
     public function addons(){
  		return $this->hasOne('App\Model\Service', 'id', 'addon_id');
  	}
+
+ 	public function getAddonNameAttribute(){
+ 		if ($this->addons()->count()) 
+        {
+            return $this->addons()->first()->name;
+        }
+        return "--";
+ 	}
 }

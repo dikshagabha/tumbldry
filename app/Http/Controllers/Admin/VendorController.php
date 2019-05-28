@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\User;
+use App\Model\Service;
 
 use Auth;
 use App\Repositories\Vendor\HomeRepository;
@@ -65,7 +66,10 @@ class VendorController extends Controller
       $activePage = 'vendor';
       $titlePage  = 'Create Vendor';
       session()->forget('providers');
-      return view('admin.manage-vendor.create', compact('users', 'activePage', 'titlePage'));
+      $services = Service::where(['status'=>1])->get();
+      $add_on = $services->where('type', 2)->pluck('name', 'id');
+      $services = $services->where('type', 1)->pluck('name', 'id');
+      return view('admin.manage-vendor.create', compact('users', 'activePage', 'titlePage', 'services'));
     }
 
     /**
@@ -77,11 +81,7 @@ class VendorController extends Controller
     public function store(RegisterRequest $request)
     {
       $address = session()->get('address');
-      $providers = session()->get('providers');
-
-      dd($providers);
-
-      
+      $providers = session()->get('providers');      
       $response = HomeRepository::store($request, $this->user, $address, $providers);
       $http_status = $response['http_status'];
       unset($response['http_status']);
@@ -113,11 +113,13 @@ class VendorController extends Controller
     {
       $activePage = 'vendor';
       $titlePage  = 'Edit Vendor';
-
+       $services = Service::where(['status'=>1])->get();
+      $add_on = $services->where('type', 2)->pluck('name', 'id');
+      $services = $services->where('type', 1)->pluck('name', 'id');
       $user = User::where("id", decrypt($id))->with('addresses')->first();
       $providers = User::where('user_id', decrypt($id))->get();
       //dd($providers);
-      return view('admin.manage-vendor.edit', compact('user', 'id','activePage', 'titlePage', 'providers'));
+      return view('admin.manage-vendor.edit', compact('user', 'id','activePage', 'titlePage', 'providers', 'services'));
     }
 
     /**

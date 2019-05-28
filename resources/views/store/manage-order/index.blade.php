@@ -1,5 +1,10 @@
 @extends('store.layouts.app')
 @section('title', 'Manage Store')
+
+@section('css')
+
+<link rel="stylesheet" type="text/css" href=" https://printjs-4de6.kxcdn.com/print.min.css">
+@endsection
 @section('content')
 
 
@@ -73,6 +78,7 @@
 @endsection
 @push('js')
 <script src="{{asset('js/bootbox.js')}}"></script>
+<script src="https://printjs-4de6.kxcdn.com/print.min.js"></script>
 <script>
 $(document).ready(function(){
   var current_page = $(".pagination").find('.active').text();
@@ -226,8 +232,9 @@ $(document).ready(function(){
       e.preventDefault();
       $('body').waitMe();
       current = $(this);
-
-      if (current.val() != 4) {
+      console.log(current.val());
+      if (current.val() != 4 && current.val() != 5)
+      {
         $.ajax({
           url:current.data('url'),
           method:'post',
@@ -240,11 +247,9 @@ $(document).ready(function(){
           }
         })
       }else{
-        $('body').waitMe('hide');
-        console.log(current.next( ".add_runner" ).html());
-
-        current.next( ".add_runner" ).show();
-      }
+            $('body').waitMe('hide');
+            current.next( ".add_runner" ).show();
+          }
         
         
     });
@@ -256,12 +261,23 @@ $(document).ready(function(){
       $.ajax({
         url:current.data('url'),
         method:'post',
+        xhrFields: {
+                responseType: 'blob'
+            },
         data:{'id':$('#runner'+current.data('id')).val()},
         success:function(data){
+          var pdfFile = new Blob([data], {
+            type: "application/pdf"
+            });
+            var pdfUrl = URL.createObjectURL(pdfFile);
+            //window.open(pdfUrl);
+              printJS(pdfUrl);
+          // var current_page = $(".pagination").find('.active').text();
+          // load_listings(location.href+'?page='+current_page, 'serach_form');
+
+
+          // success(data.message);
           $('body').waitMe('hide');
-          var current_page = $(".pagination").find('.active').text();
-          load_listings(location.href+'?page='+current_page, 'serach_form');
-          success(data.message);
         }
       })
     });
@@ -270,8 +286,6 @@ $(document).ready(function(){
       e.preventDefault();
       $('body').waitMe();
       current = $(this)
-
-      console.log($('#grnForm :input').serializeArray());
       $.ajax({
         url:current.data('url'),
         method:'post',
@@ -280,53 +294,76 @@ $(document).ready(function(){
                 responseType: 'blob'
             },
         data: $('#grnForm :input').serializeArray(),
-        success:function(response, status, xhr){
+        success:function(data){
           $('body').waitMe('hide');
-          // var current_page = $(".pagination").find('.active').text();
-          // load_listings(location.href+'?page='+current_page, 'serach_form');
-          //success(data.message);
 
-          var filename = "";                   
-                var disposition = xhr.getResponseHeader('Content-Disposition');
+          var pdfFile = new Blob([data], {
+            type: "application/pdf"
+            });
+            var pdfUrl = URL.createObjectURL(pdfFile);
+            //window.open(pdfUrl);
+            printJS(pdfUrl);
+            //var printwWindow = $window.open(pdfUrl);
+        //printwWindow.print();
 
-                 if (disposition) {
-                    var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
-                    var matches = filenameRegex.exec(disposition);
-                    if (matches !== null && matches[1]) filename = matches[1].replace(/['"]/g, '');
-                } 
-                var linkelem = document.createElement('a');
-                try {
-                                           var blob = new Blob([response], { type: 'application/octet-stream' });                        
+          // var filename = "";                   
+          //       var disposition = xhr.getResponseHeader('Content-Disposition');
 
-                    if (typeof window.navigator.msSaveBlob !== 'undefined') {
-                        //   IE workaround for "HTML7007: One or more blob URLs were revoked by closing the blob for which they were created. These URLs will no longer resolve as the data backing the URL has been freed."
-                        window.navigator.msSaveBlob(blob, filename);
-                    } else {
-                        var URL = window.URL || window.webkitURL;
-                        var downloadUrl = URL.createObjectURL(blob);
+          //        if (disposition) {
+          //           var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+          //           var matches = filenameRegex.exec(disposition);
+          //           if (matches !== null && matches[1]) filename = matches[1].replace(/['"]/g, '');
+          //       } 
+          //       var linkelem = document.createElement('a');
+          //       try {
+          //           var blob = new Blob([response], { type: 'application/pdf' });                        
 
-                        if (filename) { 
-                            // use HTML5 a[download] attribute to specify filename
-                            var a = document.createElement("a");
+          //           if (typeof window.navigator.msSaveBlob !== 'undefined') {
+          //               //   IE workaround for "HTML7007: One or more blob URLs were revoked by closing the blob for which they were created. These URLs will no longer resolve as the data backing the URL has been freed."
+          //               window.navigator.msSaveBlob(blob, filename);
+          //           } else {
+          //               var URL = window.URL || window.webkitURL;
+          //               var downloadUrl = URL.createObjectURL(blob);
 
-                            // safari doesn't support this yet
-                            if (typeof a.download === 'undefined') {
-                                window.location = downloadUrl;
-                            } else {
-                                a.href = downloadUrl;
-                                a.download = filename;
-                                document.body.appendChild(a);
-                                a.target = "_blank";
-                                a.click();
-                            }
-                        } else {
-                            window.location = downloadUrl;
-                        }
-                    }   
+          //               if (filename) { 
+          //                   // use HTML5 a[download] attribute to specify filename
+          //                   var a = document.createElement("a");
 
-                } catch (ex) {
-                    console.log(ex);
-                } 
+          //                   // safari doesn't support this yet
+          //                   if (typeof a.download === 'undefined') {
+          //                       window.location = downloadUrl;
+          //                   } else {
+
+          //                       window.print = downloadUrl;
+          //                       // a.href = downloadUrl;
+          //                       // a.download = filename;
+          //                       // document.body.appendChild(a);
+          //                       // a.target = "_blank";
+          //                       // a.click();
+          //                   }
+          //               } else {
+          //                   window.location = downloadUrl;
+          //               }
+          //           }   
+
+          //       } catch (ex) {
+          //           console.log(ex);
+          //       } 
+        }
+      })
+    });
+
+  $(document).on("click","#deliverBtn",function(e) {
+      e.preventDefault();
+      $('body').waitMe();
+      current = $(this)
+      $.ajax({
+        url:current.data('url'),
+        method:'post',
+        data: $('#grnForm :input').serializeArray(),
+        success:function(data){
+          $('body').waitMe('hide');
+          success(data.message);
         }
       })
     });
@@ -341,7 +378,15 @@ $(document).ready(function(){
     }
   })
 
+  $(document).on('click', '.select_all_deliver', function(e){
+    //e.preventDefault();
 
+    if ($(this).prop('checked')) {
+      $(".deliver_units").prop("checked", true); 
+    }else{
+      $(".deliver_units").prop("checked", false);
+    }
+  })
 })
 </script>
 

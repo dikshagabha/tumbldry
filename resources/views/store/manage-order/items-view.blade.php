@@ -15,20 +15,14 @@ $i=1;
 			<tbody>
 			@foreach($items as $item)
  				<tr>
-					<td width="40%"><strong>{{$item['item']}}</strong>
-						<br> Price:
-						@if($item['price'])
-							{{$item['price']}} Rs
-						@else
-							N/A
-						@endif
+					<td width="40%">
+						<strong>{{$item['item']}}</strong>
 					</td>					
 					<td width="10%">
 						<input type="text" name="quantity" class="form-control quantityVal_{{$i}} " 
 						 value="{{$item['quantity']}}"  style="color:white" 
 						>
 						</td>
-						 <td>@if($item['units']) <span>Kg</span> @endif</td>
 						<td>
 						<button type="button" class="btn btn-link quantity" data-url = "{{route('store.quantityItemSession')}}" data-id='{{$i}}'
 						data-id="{{$i}}" style="color:white" title="Add Quantity"> 
@@ -36,7 +30,7 @@ $i=1;
 						</button>
 					</td>					
 					<td>				
-						<button type="button" class="btn btn-danger deleteItemBtn" action = "{{route('store.deleteItemSession')}}" data-id="{{$i}}" title="Delete"><i class="fa fa-trash"></i></button>
+						<button type="button" class="btn btn-danger deleteItemBtn" action = "{{route('store.deleteItemSession')}}" data-add=@if($item['units']) 0 @else 1 @endif data-id="{{$i}}" title="Delete"><i class="fa fa-trash"></i></button>
 					</td>
 					<td>
 						@if($item['estimated_price'])
@@ -46,6 +40,20 @@ $i=1;
 						@endif
 					</td>
 				</tr>
+				@if($item['units'])
+				<tr >
+					<td >
+						<input type="number" name="weight" class="weight_{{$i}}" class="form-control" value="{{$item['weight']}}"> 
+					</td>
+					<td>kg</td>
+					<td colspan="2">
+						<button type="button" class="btn btn-success weight" data-url = "{{route('store.weightItemSession')}}" 
+						data-id="{{$i}}" style="color:white" title="Add Weight"> 
+						Add Weight
+						</button>
+					</td>
+				</tr>	
+				@endif
 				@if(count($item['addons']))
 					<tr>	
 					<td colspan="5">	
@@ -78,6 +86,7 @@ $i=1;
 								
 							@endforeach
 							<input type="hidden" name="quantity" value="{{$item['quantity']}}">
+							<input type="hidden" name="weight" value="{{$item['weight']}}">
 							<input type="hidden" name="service" value="{{$item['service_id']}}">
 							<input type="hidden" name="id" value="{{$i}}">
 
@@ -91,8 +100,10 @@ $i=1;
 					</td>
 
 					</tr>
+					
 
 				@endif
+
 			</tbody>
 
 		@php
@@ -100,6 +111,8 @@ $i=1;
 		@endphp
 		@endforeach
 		</table>
+
+
 			<span class="error" id="quantity_error"></span>
 			<span class="error" id="addon_error"></span>
 	</div>
@@ -167,22 +180,13 @@ $i=1;
 			</tr>
 			@if($wallet)
 			<tr>
-				<td colspan="3">Customer has {{$wallet['wallet']->price}} Rs in wallet.</td>
-			</tr>
-			<tr>
-				<td colspan="3">Customer has {{round($wallet['wallet']->loyality_points, 0)}} Loyality Points.</td>
+				<td colspan="2">Customer Wallet</td><td>{{$wallet['wallet']->price}} Rs</td> 
 			</tr>
 			@endif
 			<tr >
 				<td colspan="3" style="text-align: center;" ><button type="button" class="btn btn-warning" id="add_frenchise">Create Order</button></td>
 			</tr>		
 		</table>
-
-		
-		
-		
-
-		
 	</div>
 </div>
 @else

@@ -1,9 +1,7 @@
-
 @php
 $i = ($users->currentpage() - 1) * $users->perPage() + 1;
 @endphp
  @if($users->count())
-
   <table class="table table-borderless dataTable">
       <thead>
         <tr>
@@ -43,11 +41,11 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
             </td>
             <td>
                 {{
-                  Form::select('status', [1=>'Pending', '2'=>'Recieved', 3=>'Processing', 4 =>'Assign Delivery to Runner', 5 =>'Out for delivery',
-                                           6 =>'Delivered'], $user->status, ['class'=>'form-control change_status',
+                  Form::select('status', [1=>'Pending', '2'=>'Recieved', 3=>'Processing', 4 =>'Assign Partial Delivery to Runner',
+                                            5 => 'Assign Full Delivery to Runner', 6 =>'Out for delivery', 7 =>'Delivered'], $user->status, ['class'=>'form-control change_status',
                                           'data-url'=> route('store.order.status',$user->id)])
                 }}
-                <div class="add_runner" @if($user->status != 4) style="display: none" @endif>
+                <div class="add_runner" @if($user->status != 4 && $user->status != 5 ) style="display: none" @endif>
                   {{
                     Form::select('runner', $runner, $user->delivery_runner_id, ['class'=>'form-control',
                                             'data-url'=> route('store.order.status',$user->id),
@@ -59,10 +57,7 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
                     Form::button('Assign', ['class'=>'btn btn-warning assign_runner', 'data-url'=> route('store.order.assign-delivery', $user->id), 'data-id'=>$user->id ])
                   }}
                 </div>
-
-            </td>
-            
-
+            </td>        
           </tr>
           @php
           $i++;

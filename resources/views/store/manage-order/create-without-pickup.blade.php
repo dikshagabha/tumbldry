@@ -7,6 +7,7 @@
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
   <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<link rel="stylesheet" type="text/css" href=" https://printjs-4de6.kxcdn.com/print.min.css">
  <style type="text/css">
     .table td {
    text-align: center;   
@@ -109,6 +110,7 @@
 <script src="{{asset('js/chosen/chosen.jquery.min.js')}}"></script>
 <script src="{{asset('js/jquery.typeahead.min.js')}}"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="https://printjs-4de6.kxcdn.com/print.min.js"></script>
 <script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
 
 <script>
@@ -297,10 +299,10 @@ $(document).ready(function(){
     $.ajax({
       url: $('#addFrenchise').attr('url'),
       type:'post',
-      data: data,    
+      data: data, 
       success: function(data){
         success(data.message);
-        window.location = data.redirectTo;
+        //window.location = data.redirectTo;
         $('body').waitMe('hide');
       }
     })
@@ -380,7 +382,24 @@ $(document).ready(function(){
     $.ajax({
       url: current.data('url'),
       type:'post',
-      data: {'data-id': current.data('id'), 'quantity':$('.quantityVal_'+current.data('id')).val()},
+      data: {'data-id': current.data('id'), 'quantity':$('.quantityVal_'+current.data('id')).val(), 'add':current.data('add')},
+      cache: false,
+      success: function(data){
+        success(data.message);
+        $(".ItemsAdded").html(data.view);
+        $('body').waitMe('hide');
+      }
+    })
+  })
+
+  $(document).on("click", ".weight", function(e){
+    e.preventDefault();
+    $(".error").html(""); 
+    current = $(this);   
+    $.ajax({
+      url: current.data('url'),
+      type:'post',
+      data: {'data-id': current.data('id'), 'weight':$('.weight_'+current.data('id')).val()},
       cache: false,
       success: function(data){
         success(data.message);

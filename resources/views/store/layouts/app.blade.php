@@ -216,7 +216,8 @@
                      
                      if (data.responseJSON) {error(data.responseJSON.message);}
                      
-                     else {error("Something went wrong")}
+                     else {
+                      error("Something went wrong")}
                      
                   }
                 }

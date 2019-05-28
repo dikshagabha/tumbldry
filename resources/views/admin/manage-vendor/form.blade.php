@@ -56,6 +56,19 @@
         <div class="form-group-inner">
           <div class="row">
                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                 <label class="login2 pull-right pull-right-pro">Service</label>
+               </div>
+               <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
+                {!! Form::select('service_id',$services, null,array('class' => 'form-control',  "placeholder"=>"Select Service", "maxlength"=>50, "id"=>'company name')) !!}
+                <span class="error" id="store_name_error"></span>
+               </div>
+          </div>
+        </div>
+        <br>
+
+        <div class="form-group-inner">
+          <div class="row">
+               <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
                  <label class="login2 pull-right pull-right-pro">Address</label>
                </div>
               <!--  <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9"> -->

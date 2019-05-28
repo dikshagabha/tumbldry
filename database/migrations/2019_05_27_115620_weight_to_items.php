@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddDiscountOrders extends Migration
+class WeightToItems extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,8 @@ class AddDiscountOrders extends Migration
      */
     public function up()
     {
-       Schema::table('orders', function (Blueprint $table) {
-            $table->string('discount')->nullable();
-            $table->integer('service_id')->nullable();
-
+        Schema::table('order_items', function (Blueprint $table) {
+            $table->string('weight')->nullable();
         });
     }
 
@@ -27,9 +25,8 @@ class AddDiscountOrders extends Migration
      */
     public function down()
     {
-       Schema::table('orders', function (Blueprint $table) {
-            $table->dropColumn('discount');
-            $table->dropColumn('service_id');
+        Schema::table('order_items', function (Blueprint $table) {
+             $table->dropColumn('weight');
         });
     }
 }

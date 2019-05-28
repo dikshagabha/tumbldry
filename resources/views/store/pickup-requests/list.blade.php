@@ -9,14 +9,11 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
             <tr>
               <th>S No</th>
               <th>Phone Number</th>
-              <th width="10%">Name</th>
-              <th width="20%">Address</th>
+              <th width="20%">Name</th>
               <th>Service</th>
               <th>Pickup Time</th>
               <th>Status</th>
               <th width="20%">AssignedTo</th>
-              <!-- <th width="10%">Order</th> -->
-              <!-- <th>Runner</th> -->
             </tr>
           </thead>
           <tbody>
@@ -31,11 +28,7 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
               <td>
                 {{$user->customer_name}}
               </td>
-              <td>
-                <a href="{{route('getaddressdetails', $user->address)}}" id="getAddress">
-                  {{$user->customer_address_string}}
-                </a>  
-              </td>
+              
               <td>
                	{{$user->service_name}}
               </td>
