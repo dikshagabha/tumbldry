@@ -96,7 +96,7 @@ class HomeRepository extends BaseRepository
      public static function login($request)
     {
         // get the user email
-        $credentials = $request->only('email', 'password');
+        $credentials = $request->only('phone_number', 'password');
         $credentials['role'] = 5;
         $credentials['status'] = 1;
         //dd(JWTAuth::attempt($credentials));
