@@ -23,11 +23,11 @@ class LoginRequest extends FormRequest
      */
     public function rules(Request $request)
     {
-	//dd($request->input('email'));
+	//	dd($request->input('email'));
         return [
-            'email' => ['bail', 'email', Rule::exists('users')->where(function($q) {
-                        $q->where('role', 5)->where('status', 1);
-                    })],
+           // 'email' => ['bail', 'email', Rule::exists('users')->where(function($q) {
+           //             $q->where('role', 5)->where('status', 1);
+           //         })],
             'phone_number'=>['bail', 'numeric', 'required', Rule::exists('users')->where(function($q) {
                         $q->where('role', 5)->where('status', 1);
                     })],
