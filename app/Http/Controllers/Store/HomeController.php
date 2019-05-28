@@ -84,4 +84,5 @@ class HomeController extends Controller
         //dd($address);
         return response()->json(['message' => 'Addresses Found', 'view'=>view('store.displayAddress', compact('address'))->render()], 200);
     }
+
 }

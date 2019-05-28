@@ -81,7 +81,14 @@ class VendorController extends Controller
     public function store(RegisterRequest $request)
     {
       $address = session()->get('address');
-      $providers = session()->get('providers');      
+      $providers = session()->get('providers');  
+      if (!$address) {
+        return response()->json(['message'=>'Please enter an address'], 400); 
+      } 
+
+      if (!$providers) {
+        return response()->json(['message'=>'Please add providers'], 400); 
+      }    
       $response = HomeRepository::store($request, $this->user, $address, $providers);
       $http_status = $response['http_status'];
       unset($response['http_status']);

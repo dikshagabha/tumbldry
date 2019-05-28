@@ -30,7 +30,7 @@ class HomeRepository extends BaseRepository
 	        $phone = $request->input('phone_number');
 	        $user = User::create(['name'=>$request->input('name'), 'role'=>6, 'email'=> $request->input('email'), 
 	        						'password'=>bcrypt($pswd), 'phone_number'=> $request->input('phone_number'), 
-	        						'user_id'=>$user->id, 'store_name'=>$requst->input('store_name'),'status'=>1, 'service_id'=>$request->input('service_id')]);
+	        						'user_id'=>$user->id, 'store_name'=>$request->input('store_name'),'status'=>1, 'service_id'=>$request->input('service_id')]);
 
 	        $address['user_id']=$user->id;
 	        $address =  Address::create($address);

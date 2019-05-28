@@ -46,14 +46,10 @@ class updateLatLng implements ShouldQueue
                 $latlmg = '' . $add->address . ' ' . $add->city . ' ' . $add->state . ' ' . $add->country . ' ' . $add->pin;
                 if (trim($latlmg)) {
                     $lat_lng = self::getLatandLong($latlmg);
-
-                    //dd($lat_lng);
                     Address::where("id", $add->id)->update([
                         "latitude" => $lat_lng["lat"],
                         "longitude" => $lat_lng["lng"]
                     ]);
-
-                    print_r($add->id."updated");
                 }
             }
         }

@@ -647,8 +647,9 @@ class OrderController extends Controller
     $orders = OrderItems::whereIn('id', $request->input('grn'))->with('order')->with(['itemimage'=>function($q){
        $q->with('addons');
       }])->get();
+    $user = $this->user;
    $update_status = Order::where("id", $orders->first()->order->id)->update(['status'=> 2]);  
-   $pdf = PDF::loadView('store.grn.grn', compact('orders'));
+   $pdf = PDF::loadView('store.grn.grn', compact('orders', 'user'));
    return ($pdf->download('invoice.pdf'));
   }
 

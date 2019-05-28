@@ -13,7 +13,6 @@ use App\Model\{
     OrderItems,
     VendorItem,
     Address
-
 };
 
 use App\User;
@@ -45,24 +44,42 @@ class assignVendor implements ShouldQueue
 
         foreach ($items as $key => $item) {
             
+            if (VendorItem::where('item_id', $item->id)->where('deleted_at', null)->count()) {
+                return;
+            }
 
             if ($item->order) {
-                $pin = $item->order->store->pin;
-                
+                $pin = $item->order->store->pin;               
 
-                $users = User::where('role', 6)->where('service_id', $item->service_id)->where('status', 1)->whereHas('addresses', function($q) use($pin){
+                $users = User::where('role', 6)->where('service_id', $item->service_id)->where('status', 1)
+                ->whereHas('addresses', function($q) use($pin){
                     $q->where('pin', $pin);
-                })->with('addresses')->get();
+                })
+                ->with('addresses')->first();
                 if (!$users) {
                     $coordinates = ['latitude'=> $item->order->store->latitude, 'longitude'=>$item->order->store->longitude];
-
-                    $users = User::where('role', 6)->where('service_id', $item->service_id)->where('status', 1)->whereHas('addresses',function($q){
-                         $q->isWithinMaxDistance($coordinates);
-                    })->with('addresses')->get();
+                    if ($item->order->store->latitude && $item->order->store->longitude) 
+                    {
+                         $haversine = "(6371 * acos(cos(radians(" . $coordinates['latitude'] . ")) 
+                        * cos(radians(`latitude`)) 
+                        * cos(radians(`longitude`) 
+                        - radians(" . $coordinates['longitude'] . ")) 
+                        + sin(radians(" . $coordinates['latitude'] . ")) 
+                        * sin(radians(`latitude`))))";
+                        $users = User::where('role', 6)->where('service_id', $item->service_id)->where('status', 1)->with(['addresses'=>function($query) use ($coordinates, $haversine){
+                    
+                                            $query->select('*')
+                                                ->selectRaw("{$haversine} AS distance");
+                                             //$q->isWithinMaxDistance($coordinates);
+                                        }
+                        ])->get();
+                    }                   
                 }
-                if ($users->count()) {                    
+                if ($users && $users->count()) {                    
                     $vendor = $users->first();
-                    VendorItem::create(['item_id'=>$item->id, 'order_id'=>$item->order->id, 'address_id'=>$vendor->addresses->id, 'vendor_id'=>$vendor->id]);
+                    //print_r($vendor->addresses);
+
+                    $vendor = VendorItem::create(['item_id'=>$item->id, 'order_id'=>$item->order->id, 'address_id'=>$vendor->addresses->id, 'vendor_id'=>$vendor->id, 'service_id'=>$item->service_id]);
                 }                
             }
         }

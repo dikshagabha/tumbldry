@@ -52,7 +52,7 @@
       </div>
       <div class="modal-body">
         <div id="addressForm">
-          @include('admin.addAddressForm')  
+          @include('admin.addAddressFormNew')  
         </div>
       </div>
       <div class="modal-footer">

@@ -10,7 +10,7 @@ class Address extends Model
 
     protected $fillable = ['pin', 'address', 'state', 'city', 'landmark', 'latitude', 'longitude', 'user_id'];
 
-    public function scopeIsWithinMaxDistance($query, $coordinates, $radius = 5) {
+    public function scopeIsWithinMaxDistance($query, $coordinates, $radius = 100000000) {
 
 	    $haversine = "(6371 * acos(cos(radians(" . $coordinates['latitude'] . ")) 
 	                    * cos(radians(`latitude`)) 
@@ -19,8 +19,8 @@ class Address extends Model
 	                    + sin(radians(" . $coordinates['latitude'] . ")) 
 	                    * sin(radians(`latitude`))))";
 
-	    return $query->select('id', 'users_id', 'cities_id')
-                 ->selectRaw("{$haversine} AS distance")
-                 ->whereRaw("{$haversine} < ?", [$radius]);
+	    return $query->select('*')
+                 ->selectRaw("{$haversine} AS distance");
+                 //->whereRaw("{$haversine} < ?", [$radius]);
         }
 }

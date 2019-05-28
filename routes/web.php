@@ -49,6 +49,7 @@ Route::prefix('admin')->group(function () {
     // Address Routes
     Route::get('/address', 'HomeController@addAddress')->name('admin.addAddress');
     Route::post('/address', 'HomeController@postAddAddress')->name('admin.postAddAddress');
+    Route::post('/session-address', 'HomeController@setSessionAddress')->name('admin.setSessionAddress');
     Route::get('/edit-address', 'HomeController@editAddress')->name('admin.editAddress');
     Route::post('/edit-address', 'HomeController@postEditAddress')->name('admin.postEditAddress');
 

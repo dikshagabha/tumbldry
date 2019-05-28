@@ -14,6 +14,8 @@ use App\Model\ServicePrice;
 use App\Model\Items;
 
 use App\Http\Requests\Admin\AddAddressRequest;
+
+use App\Http\Requests\Customer\Auth\AddressRequest as sessionAddressRequest;
 class HomeController extends Controller
 {
     /**
@@ -154,10 +156,30 @@ class HomeController extends Controller
       }
 
        public function setTimezone(Request $request)
-    {
+      {
         if ($request->filled('timezone')) {
             $request->session()->put('user_timezone', $request->input('timezone'));
         }
         return response()->json(['message' => 'Timezone set successfully!'], 200);
+      }
+
+      public function setSessionAddress(sessionAddressRequest $request)
+    { 
+     $data = $request->only('address', 'city', 'state', 'pin', 'landmark', 'latitude', 'longitude');
+     if ($request->input('user_id')) {
+       $data['user_id']=$request->input('user_id');
+       $address = Address::create($data);
+       $data['address_id']=$address->id;
+     }
+
+     $data = session()->put('address', $data);
+
+     $data = session()->get('address');
+     if ($data) {
+      return response()->json(["message"=>'Address Saved', 'data'=> $data], 200);
+     }
+     return response()->json(["message"=>'Address Not Saved', 'data'=>$data], 400);
     }
+
+
 }

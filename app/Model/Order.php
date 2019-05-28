@@ -60,5 +60,16 @@ class Order extends Model
         return "--";
  	}
 
+    public function getServiceShortNameAttribute(){
+        if ($this->service()->count()) 
+        {
+            if ($this->service()->first()->short_code != null) {
+                return $this->service()->first()->short_code;
+            }
+            return $this->service()->first()->name;
+        }
+        return "--";
+    }
+
  							
 }
