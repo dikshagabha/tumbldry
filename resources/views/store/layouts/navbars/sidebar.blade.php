@@ -49,13 +49,35 @@
         </a>
       </li>
 
-     <!--  <li class="nav-item{{ $activePage == 'vendor' ? ' active' : '' }}">
-        <a class="nav-link" href="{{ route('manage-vendor.index') }}">
-          <i><img style="width:25px" src="{{ asset('images/icons/order.png') }}"></i>
-          <i class="material-icons">dashboard</i>
-            <p>{{ __('Vendor') }}</p>
+      <li class="nav-item{{ $activePage == 'rates' ? ' active' : '' }}">
+        <a class="nav-link" href="{{ route('store.getRate') }}">
+          <i><img style="width:25px" src="{{ asset('images/icons/money.png') }}"></i>
+          <!-- <i class="material-icons">Rates</i> -->
+            <p>{{ __('Rates') }}</p>
         </a>
-      </li> -->
+      </li>
+
+      <li class="nav-item {{ ($activePage == 'reports') ? ' active' : '' }}">
+        <a class="nav-link" data-toggle="collapse" href="#laravelExample" aria-expanded="false">
+          <i><img style="width:25px" src="{{ asset('images/icons/coins.png') }}"></i>
+          <p>{{ __('Reports') }}
+            <b class="caret"></b>
+          </p>
+        </a>
+        <div class="collapse" id="laravelExample">
+          <ul class="nav">
+            <li>
+              <a class="nav-link" href="{{ route('store.customer-reports') }}">
+                 <i><img style="width:25px" src="{{ asset('images/icons/customer.png') }}"></i>
+                <p>{{ __('Customer') }}</p>
+                
+              </a>
+            </li>
+            <li>
+           
+          </ul>
+        </div>
+      </li>
       
       
   </div>

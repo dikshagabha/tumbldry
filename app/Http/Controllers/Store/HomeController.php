@@ -21,8 +21,9 @@ class HomeController extends Controller
     	$titlePage = "Dashboard";
      	$timezone = $Request->session()->get('user_timezone', 'Asia/Calcutta');
 
-      $runners = User::where(['role'=>5, 'status'=>1])->where('user_id', Auth::user()->id)->pluck('name', 'id');
+        $runners = User::where(['role'=>5, 'status'=>1])->where('user_id', Auth::user()->id)->pluck('name', 'id');
     	$users = PickupRequest::where('store_id', Auth::user()->id)->wheredoesnthave('order')->with('order')->latest()->paginate(10);
+        
     	if ($Request->ajax()) {
     		return view('store.pickup-requests.list', compact('users', 'activePage', 'titlePage', 'runners', 'timezone'));
     	}

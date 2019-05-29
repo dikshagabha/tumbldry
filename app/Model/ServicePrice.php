@@ -12,6 +12,10 @@ class ServicePrice extends Model
     	return $this->belongsTo('App\Model\Items', 'parameter', 'id');
     }
 
+    public function addon_details(){
+        return $this->belongsTo('App\Model\Service', 'parameter', 'id');
+    }
+
     public function getItemNameAttribute()
     {
     	if ($this->item_details()->count()) {

@@ -36,7 +36,7 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
               <td>
                   
                   @if($user->request_time)
-                    {{$user->request_time->setTimezone($timezone)->format('l y/m/d h:i a')}}
+                    {{$user->request_time->setTimezone($timezone)->format('y/m/d h:i a')}}
                   @else
                     --
                   @endif

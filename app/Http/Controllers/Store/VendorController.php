@@ -18,12 +18,11 @@ class VendorController extends Controller
 
     protected $user;
     public function __construct(){
-
-          // if the user is logged in then fetches the details of the user
-          $this->middleware(function($request, $next) {
-              $this->user = Auth::user();
-              return $next($request);
-          });
+      // if the user is logged in then fetches the details of the user
+      $this->middleware(function($request, $next) {
+          $this->user = Auth::user();
+          return $next($request);
+      });
     }
     /**
      * Display a listing of the resource.
@@ -73,7 +72,7 @@ class VendorController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
-     */
+    */
     public function store(RegisterRequest $request)
     {
       $address = session()->get('address');
@@ -92,11 +91,9 @@ class VendorController extends Controller
      */
     public function show($id)
     {
-        $id = decrypt($id);
-
-       $user = User::where("id", $id)->with('addresses', 'users')->first();
-      // $data = StoreFields::whereIn('id', [$user->machine_type, $user->boiler_type])->get();
-       return view("store.manage-vendor.show", compact('user', 'data'));
+      $id = decrypt($id);
+      $user = User::where("id", $id)->with('addresses', 'users')->first();
+      return view("store.manage-vendor.show", compact('user', 'data'));
     }
 
     /**
@@ -109,10 +106,8 @@ class VendorController extends Controller
     {
       $activePage = 'vendor';
       $titlePage  = 'Edit Vendor';
-
       $user = User::where("id", decrypt($id))->with('addresses')->first();
       $providers = User::where('user_id', decrypt($id))->get();
-      //dd($providers);
       return view('store.manage-vendor.edit', compact('user', 'id','activePage', 'titlePage', 'providers'));
     }
 
@@ -128,7 +123,6 @@ class VendorController extends Controller
       $id = decrypt($id);
       $address = session()->get('address');
       $providers = session()->get('providers');
-
       $response = HomeRepository::update($request, $id, $address, $providers);
       $http_status = $response['http_status'];
       unset($response['http_status']);

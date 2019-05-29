@@ -40,6 +40,7 @@ class User extends Authenticatable implements JWTSubject
         'email_verified_at' => 'datetime',
     ];
 
+    protected $dates = ['created_at', 'modified_at'];
     protected $appends = ['address', 'city', 'state', 'pin', 'latitude', 'longitude', 'landmark',
                             'address_id', 'role_type'];
 

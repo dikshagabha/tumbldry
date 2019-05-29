@@ -128,7 +128,10 @@ Route::prefix('store')->namespace('Store')->group(function () {
       Route::post('/order/deliver-items', 'OrderController@itemsDeliver')->name('store.itemsDeliver');
       Route::get('/create-order', 'OrderController@createWithoutPickup')->name('store.orderWithoutPickup');
 
-      
+      Route::post('/rate-card', 'RateCardController@getRate')->name('store.getRate');
+      Route::get('/rate-card', 'RateCardController@index')->name('store.getRate');
+      Route::get('/services', 'RateCardController@getServices')->name('store.getServices');
+
       Route::get('/get-items', 'OrderController@getItems')->name('store.get-items');
       Route::post('/add-items-session', 'OrderController@addItemSession')->name('store.addItemSession');
       Route::post('/delete-items-session', 'OrderController@deleteItemSession')->name('store.deleteItemSession');
@@ -150,6 +153,8 @@ Route::prefix('store')->namespace('Store')->group(function () {
       Route::post('/notifications/read-all', 'NotificationsController@markRead')->name('notifications.mark-read'); 
 
       Route::post('/runner/assign-runner', 'RunnerController@assignRunner')->name('store.assign-runner');
+
+      Route::get('/reports/customer', 'ReportsController@customerReports')->name('store.customer-reports');
 
   });
 });
