@@ -74,6 +74,12 @@
               </a>
             </li>
             <li>
+              <a class="nav-link" href="{{ route('store.order-reports') }}">
+                 <i><img style="width:25px" src="{{ asset('images/icons/order.png') }}"></i>
+                <p>{{ __('Order') }}</p>
+                
+              </a>
+            </li>
            
           </ul>
         </div>

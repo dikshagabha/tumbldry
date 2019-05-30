@@ -35,7 +35,7 @@
               <br>
               <div id="dataList">
                 
-               @include('store.reports.customer.list')
+               @include('store.reports.orders.list')
               </div>
             </div>
         </div>

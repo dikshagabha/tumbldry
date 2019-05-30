@@ -155,6 +155,7 @@ Route::prefix('store')->namespace('Store')->group(function () {
       Route::post('/runner/assign-runner', 'RunnerController@assignRunner')->name('store.assign-runner');
 
       Route::get('/reports/customer', 'ReportsController@customerReports')->name('store.customer-reports');
+      Route::get('/reports/order', 'ReportsController@orderReports')->name('store.order-reports');
 
   });
 });
