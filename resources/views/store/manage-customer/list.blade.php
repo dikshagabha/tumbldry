@@ -4,7 +4,7 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
 @endphp
  @if($users->count())
 
-      <table class="table table-striped dataTable">
+      <table class="table table-borderless dataTable">
           <thead>
             <tr>
               <th>S No</th>
@@ -40,13 +40,13 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
               </td>
               <td>
                   <a href="{{route('manage-customer.edit',encrypt( $user->id))}}" title="edit">
-                    <button type="button" class="btn btn-primary"><i class="fa fa-edit"></i></button>
+                    <vs-button type="gradient" color="warning" ><i class="fa fa-edit"></i></vs-button>
                   </a>
                   <a href="{{route('manage-customer.show',encrypt( $user->id))}}" class="view" title="view">
-                    <button type="button" class="btn btn-info "><i class="fa fa-eye"></i></button>
+                    <vs-button type="gradient" color="success" > <i class="fa fa-eye"></i></vs-button>
                   </a>
                   <a href="{{route('manage-customer.destroy', encrypt( $user->id))}}" id="delete" data-token="{{csrf_token()}}" title="delete"> 
-                    <button type="button" class="btn btn-danger"><i class="fa fa-trash"></i></button>
+                    <vs-button type="gradient" color="danger" > <i class="fa fa-trash"></i></vs-button>
                   </a>
               </td>
             </tr>

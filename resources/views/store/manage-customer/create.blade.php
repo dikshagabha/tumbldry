@@ -8,39 +8,50 @@
   </style> -->
 @endsection
 @section('content')
-
-
-<div class="content">
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12">
-          <div class="card card-stats">
-
-<form action="{{route('manage-customer.store')}}" method="post"  id="addFrenchise" enctype="multipart/form-data">
-  @csrf
-  @include('store.manage-customer.form')
-
-   <div class="row">
-     <div class="col-lg-3 col-md-3 col-sm-3">
-     </div>
-     <div class="col-lg-3 col-md-3 col-sm-3">
-      <a href="{{route('manage-customer.index')}}">
-        <button type="button" class="btn btn-default" data-id="5">Cancel</button>
-      </a>
+<vs-row vs-justify="center">
+  <vs-col type="flex" vs-justify="center" vs-align="center" vs-w="11">
+    <vs-card>
+      <div slot="header">
+        <h3>
+          Create Customer
+        </h3>
       </div>
-     <div class="col-lg-5 col-md-5 col-sm-5">
-        <button type="button" class="btn btn-warning" id="add_frenchise" data-url="{{ route('manage-customer.store') }}">Create</button>
-     </div>
+      <div>
+
+        <vs-row vs-justify="center">
+         <vs-col type="flex" vs-justify="center" vs-align="center" vs-w="11">
+
+           <a href="{{route('manage-customer.index')}}">
+              <vs-button color="danger" type="border" icon="arrow_back"></vs-button>
+            </a>
+            <br>
+         <form action="{{route('manage-customer.store')}}" method="post"  id="addFrenchise" enctype="multipart/form-data">
+        @csrf
+        @include('store.manage-customer.form')
+
+         <div class="row">
+           <div class="col-lg-3 col-md-3 col-sm-3">
+           </div>
+           <!--<div class="col-lg-3 col-md-3 col-sm-3">
+             <a href="{{route('manage-customer.index')}}">
+              <vs-button color="danger" type="border">Cancel</vs-button>
+            </a>
+            </div> -->
+           <div class="col-lg-5 col-md-5 col-sm-5">
+            <vs-button color="primary" type="border"  id="add_frenchise" data-url="{{ route('manage-customer.store') }}">
+              Create
+            </vs-button>
+           </div>
+          </div>
+        </form>
+      </vs-col>
+    <br>
+    </vs-row>
     </div>
-</form>
-
-</div>
-  </div>
-
-    </div>
-  </div>
-</div>
-
+    
+    </vs-card>
+  </vs-col>
+</vs-row>
 <div id="addressModal" class="modal fade " role="dialog">
   <div class="modal-dialog  modal-lg">
     <!-- Modal content-->

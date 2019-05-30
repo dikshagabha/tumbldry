@@ -20,7 +20,7 @@ $i=1;
 					</td>					
 					<td width="10%">
 						<input type="text" name="quantity" class="form-control quantityVal_{{$i}} " 
-						 value="{{$item['quantity']}}"  style="color:white" 
+						 value="{{$item['quantity']}}"  
 						>
 						</td>
 						<td>
@@ -43,7 +43,7 @@ $i=1;
 				@if($item['units'])
 				<tr >
 					<td >
-						<input type="number" name="weight" class="weight_{{$i}}" class="form-control" value="{{$item['weight']}}"> 
+						<input type="number" name="weight" class="weight_{{$i}} form-control" value="{{$item['weight']}}"> 
 					</td>
 					<td>kg</td>
 					<td colspan="2">
@@ -150,7 +150,7 @@ $i=1;
 			</tr>
 			<tr >
 				<td style="text-align: center;" >Coupon</td>
-				<td style="text-align: center;" ><input type="text" name="coupon" id="coupon" class="form-control" value="{{$coupon_discount['coupon']}}"style="color: white">
+				<td style="text-align: center;" ><input type="text" name="coupon" id="coupon" class="form-control" value="{{$coupon_discount['coupon']}}">
 				<span class="error" id="coupon_error"></span></td>
 				<td style="text-align: center;" ><button type="button" class="btn btn-danger" data-url="{{route('store.couponItemSession')}}" id="couponBtn">Apply</button></td>
 
@@ -159,7 +159,7 @@ $i=1;
 			<tr >
 				<td style="text-align: center;" >Discount</td>
 				<td style="text-align: center;" >
-					<input type="text" name="discount" id="discount" class="form-control" value="{{$coupon_discount['user_discount']}}" style="color: white">
+					<input type="text" name="discount" id="discount" class="form-control" value="{{$coupon_discount['user_discount']}}">
 					<span class="error" id="discount_error"></span>
 			    </td>
 				 <td style="text-align: center;" ><button type="button" class="btn btn-danger" data-url="{{route('store.discountItemSession')}}" id="discountBtn">Apply</button>
@@ -184,7 +184,9 @@ $i=1;
 			</tr>
 			@endif
 			<tr >
-				<td colspan="3" style="text-align: center;" ><button type="button" class="btn btn-warning" id="add_frenchise">Create Order</button></td>
+				<br>
+				<td colspan="3" style="text-align: center;" >
+					<button type="button" class="btn btn-warning" id="add_frenchise">Create Order</button></td>
 			</tr>		
 		</table>
 	</div>

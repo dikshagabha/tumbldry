@@ -1,23 +1,35 @@
 @extends('store.layouts.app')
 @section('title', 'Pickup Request')
-
-@section('content')
 @section('css')
   <link rel="stylesheet" href="{{ asset('css/chosen/bootstrap-chosen.css') }}">
   <link rel="stylesheet" href="{{ asset('css/jcf.css') }}">
   <link rel="stylesheet" href="{{ asset('css/jquery.datetimepicker.css') }}">
-  <!-- <style type="text/css">
-    div[data-acc-content] { display: none;  }
-  </style> -->
 @endsection
+@section('content')
 
-<div class="content">
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12">
-          <div class="card card-stats">
 
-<form action="{{route('store-pickup-request.store')}}" method="post"  id="addFrenchise" enctype="multipart/form-data">
+
+<vs-row vs-justify="center">
+  <vs-col type="flex" vs-justify="center" vs-align="center" vs-w="11">
+    <vs-card>
+      <div slot="header">
+        <h3>
+          Create Pickup Request
+        </h3>
+      </div>
+      <div>
+
+        <vs-row vs-justify="center">
+         <vs-col type="flex" vs-justify="center" vs-align="center" vs-w="11">
+
+          <a href="{{route('store-pickup-request.index')}}">
+
+              <vs-button color="danger" type="border" icon="arrow_back"></vs-button>
+          
+          </a>
+            <br>
+
+            <form action="{{route('store-pickup-request.store')}}" method="post"  id="addFrenchise" enctype="multipart/form-data">
  <br>
   @csrf
   @include('store.pickup-request.form')
@@ -25,26 +37,25 @@
    <div class="row">
      <div class="col-lg-3 col-md-3 col-sm-3">
      </div>
-     <div class="col-lg-3 col-md-3 col-sm-3">
-      <a href="{{route('store-pickup-request.index')}}">
-        <button type="button" class="btn btn-default" data-url="{{route('pickup-request.index')}}">Cancel</button>
-      </a>
-      </div>
      <div class="col-lg-5 col-md-5 col-sm-5">
+
        <a href="{{route('store-pickup-request.store')}}" id="add_frenchise">
-          
-          <button type="submit" class="btn btn-success">Save</button>
+            
+          <vs-button color="primary" type="border">
+              Create
+            </vs-button>
        </a>
      </div>
     </div>
 </form>
-
-</div>
-  </div>
-
+      </vs-col>
+    <br>
+    </vs-row>
     </div>
-  </div>
-</div>
+    
+    </vs-card>
+  </vs-col>
+</vs-row>
 
 <div id="addressModal" class="modal fade" role="dialog">
   <div class="modal-dialog modal-lg">
@@ -156,6 +167,14 @@ $(document).ready(function(){
         $('body').waitMe('hide');
       },
       error: function(data){
+          if (data.status==422) {
+            $('body').waitMe('hide');
+                    var errors = data.responseJSON;
+                    for (var key in errors.errors) {
+                      console.log(errors.errors[key][0])
+                        $("#"+key+"_error").html(errors.errors[key][0])
+                      }
+          }else{
             error(data.responseJSON.message);
             $(".select").hide();
             $(".add").show();
@@ -166,6 +185,8 @@ $(document).ready(function(){
             $("#customer_id").val("");
             $("#address_id").val("");
              $('body').waitMe('hide');
+          }
+            
       }
     })
   })

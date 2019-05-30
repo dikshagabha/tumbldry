@@ -1,4 +1,55 @@
-<!-- Navbar -->
+
+<template>
+  <div>
+    <vs-navbar v-model="activeItem" class="nabarx">
+      <div slot="title">
+        <vs-navbar-title>
+          
+          @include('store.layouts.navbars.sidebar')
+          
+        </vs-navbar-title>
+      </div>
+
+      <vs-navbar-item index="0" icon="bell">
+        <div class="dropdown" style="float: right; padding: 13px">
+          <a href="#" onclick="return false;" role="button" data-toggle="dropdown" id="dropdownMenu1" data-target="#" style="float: left" aria-expanded="true">
+              <i class="fa fa-bell-o" style="font-size: 20px; float: left; color: black">
+              </i>
+          </a>
+          <span class="badge badge-danger notif-count"></span>
+          <ul class="dropdown-menu dropdown-menu-left pull-right" role="menu" aria-labelledby="dropdownMenu1">
+              <li role="presentation">
+                  <a href="#" class="dropdown-menu-header">Notifications</a>
+              </li>
+
+              <ul class="timeline timeline-icons timeline-sm  " style="margin:10px;width:210px">
+
+                @if(Auth::user()->notifications()->count())    
+              @foreach(Auth::user()->notifications()->limit(5)->get() as $notifications)
+                 <li><p>{{ $notifications->message }} 
+                        
+                  </p></li>
+              @endforeach
+            @else
+              <a class="dropdown-item" href="#">No Notifications</a>
+            @endif                                              
+              <li role="presentation">
+                  <a href="#" class="dropdown-menu-header"></a>
+              </li>
+          </ul>
+      </div>
+      </vs-navbar-item>
+      <vs-navbar-item index="1">
+         <a class="dropdown-item" href="{{ route('logout') }}">{{ __('Log out') }}</a>
+      </vs-navbar-item>
+     <!--  <vs-navbar-item index="2">
+        <a href="#">Update</a>
+      </vs-navbar-item> -->
+    </vs-navbar>
+  </div>
+</template>
+
+<!-- 
 <nav class="navbar navbar-expand-lg navbar-transparent navbar-absolute fixed-top ">
   <div class="container-fluid">
     <div class="navbar-wrapper">
@@ -12,23 +63,9 @@
     </button>
     <div class="collapse navbar-collapse justify-content-end">
       <form class="navbar-form">
-        <!-- <div class="input-group no-border">
-        <input type="text" value="" class="form-control" placeholder="Search...">
-        <button type="submit" class="btn btn-white btn-round btn-just-icon">
-          <i class="material-icons">search</i>
-          <div class="ripple-container"></div>
-        </button>
-        </div> -->
+      
       </form>
       <ul class="navbar-nav">
-        <!-- <li class="nav-item">
-          <a class="nav-link" href="{{ route('home') }}">
-            <i class="material-icons">dashboard</i>
-            <p class="d-lg-none d-md-block">
-              {{ __('Stats') }}
-            </p>
-          </a>
-        </li> -->
         <li class="nav-item dropdown">
           <a class="nav-link notifications"  id="navbarDropdownMenuLink" href="{{route('notifications.mark-read')}}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <i class="material-icons">notifications</i>
@@ -56,7 +93,7 @@
             </p>
           </a>
           <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownProfile">
-            <!-- <a class="dropdown-item" href="#">{{ __('Settings') }}</a> -->
+            <a class="dropdown-item" href="#">{{ __('Settings') }}</a>
             <div class="dropdown-divider"></div>
             <a class="dropdown-item" href="{{ route('logout') }}">{{ __('Log out') }}</a>
           </div>
@@ -65,3 +102,4 @@
     </div>
   </div>
 </nav>
+ -->

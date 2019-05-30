@@ -8,51 +8,36 @@
 @section('content')
 
 
-<div class="content">
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12">
-          <div class="card card-stats">
-              <div class="row">
-                <div class="col-md-9">
-                </div>
-                <div class="col-md-3">
-                  <a href="{{route('store.orderWithoutPickup')}}"><button class="btn btn-danger">Add Order</button></a>
-                </div>
-              </div>
-              
-               <!-- <div class="">
-                {{ Form::open(['method' => 'get', 'id' => 'store-search', 'name' => 'serach_form']) }}
-                <div class="form-group-inner">
-                    <div class="row">
-                      <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
-                      </div>
-                         <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
-                          {{ Form::text('search', '', ['class' => 'form-control', 'placeholder' => 'Search by Name or E-mail or Phone', 'maxlength'=>'50']) }}
-                         </div>
-                         <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
-                          {{ Form::select('sort_type', ['' => 'Select Status', '1' => 'Active', '0' => 'Inactive'], null, ['class' => 'form-control', 'id' => 'sort_type']) }}
-                           
-                         </div>
-                         <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
-                          <button type="submit" id="search-button" class="btn btn-success margin-bottom-20">Filter</button>
-                        <button type="submit" id="reset-button" class="btn btn-danger margin-bottom-20">Reset</button>
-                         </div>
-                       </div>
-                  </div>
-                  {{ Form::close() }}
-              </div> -->
+<vs-row vs-justify="center">
+  <vs-col type="flex" vs-justify="center" vs-align="center" vs-w="11">
+    <vs-card>
+      <div slot="header">
+        <h3>
+          Orders Details
+        </h3>
+      </div>
+      <div>
 
-              <br>
+        <vs-row vs-justify="flex-end">
+         
+          <a href="{{route('store.orderWithoutPickup')}}">
+            <vs-button type="gradient" color="danger">Create Order</vs-button>
+          </a>
+         </vs-row>
+           <br>
               <div id="dataList">
                 
+               
                @include('store.manage-order.list')
               </div>
-            </div>
-        </div>
+        
       </div>
-    </div>
-</div>
+      <div slot="footer">
+        
+      </div>
+    </vs-card>
+  </vs-col>
+</vs-row>
 <div id="OrderModal" class="modal fade" role="dialog">
   <div class="modal-dialog modal-lg">
     <!-- Modal content-->

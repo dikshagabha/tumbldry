@@ -7,15 +7,24 @@
 @section('content')
 
 
-<div class="content">
-    <div class="container-fluid">
-      <div class="card card-stats">
-<div class="row" id="rate_search">
 
 
-        <div class="col-md-12">
-          <br>
-                {{Form::open(['route'=>'store.getRate', 'id'=>'rateForm'])}}
+<vs-row vs-justify="center">
+  <vs-col type="flex" vs-justify="center" vs-align="center" vs-w="11">
+    <vs-card>
+      <div slot="header">
+        <h3>
+          Rate Card
+        </h3>
+      </div>
+      <div>
+
+        <vs-row vs-justify="center">
+         <vs-col type="flex" vs-justify="center" vs-align="center" vs-w="11">
+
+         
+            <br>
+{{Form::open(['route'=>'store.getRate', 'id'=>'rateForm'])}}
 
                   <div class="row">
                     <!-- <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
@@ -44,19 +53,20 @@
                     </div>
                   </div>                
                 {{Form::close()}}
-
+                <br>
                 <div id="dataList">
 
                   
                 </div>
-                <br>
+      </vs-col>
+    <br>
+    </vs-row>
+    </div>
+    
+    </vs-card>
+  </vs-col>
+</vs-row>
 
-              </div>
-            </div>
-          </div>
-        </div>
-        </div>
-  
 @endsection
 
 @push('js')

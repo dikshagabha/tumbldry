@@ -22,7 +22,7 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
             </td> -->
             <td>
               <a  class="view" title="view order details" href="{{route('store.getOrderDetails', $user->id)}}">
-                ORDER{{$user->id}}
+                {{$user->id}}
               </a>
             </td>
             <td>

@@ -21,14 +21,28 @@
 @section('content')
 
 
-<div class="content">
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12">
-          <div class="card card-stats">
-            <div class="card-body">
+
+<vs-row vs-justify="center">
+  <vs-col type="flex" vs-justify="center" vs-align="center" vs-w="11">
+    <vs-card>
+      <div slot="header">
+        <h3>
+          Create Pickup Request
+        </h3>
+      </div>
+      <div>
+
+        <vs-row vs-justify="center">
+         <vs-col type="flex" vs-justify="center" vs-align="center" vs-w="11">
+
+          <a href="{{route('store.create-order.index')}}">
+
+              <vs-button color="danger" type="border" icon="arrow_back"></vs-button>
           
-              {{Form::open(['url'=> route('store.create-order'), "id"=>"addFrenchise"])}}
+          </a>
+            <br>
+
+            {{Form::open(['url'=> route('store.create-order'), "id"=>"addFrenchise"])}}
              
                   @csrf
                   @include('store.manage-order.form-without-pickup')
@@ -37,26 +51,16 @@
 
                  </div>
                <br>
-               <div class="row">
-                 
-                 <div class="col-lg-3 col-md-3 col-sm-3">
-                  <a href="{{route('store.home')}}">
-                    <button type="button" class="btn btn-default" data-id="5">Cancel</button>
-                  </a>
-                  </div>
-                <!--  <div class="col-lg-7 col-md-7 col-sm-7">
-                    <button type="button" class="btn btn-warning" id="add_frenchise">Create</button>
-                 </div> -->
-                </div>
-            </form>
-          </div>
-        
-</div>
-  </div>
-
+               
+      </vs-col>
+    <br>
+    </vs-row>
     </div>
-  </div>
-</div>
+    
+    </vs-card>
+  </vs-col>
+</vs-row>
+
 
 <div id="addressModal" class="modal fade" role="dialog">
   <div class="modal-dialog modal-lg">
@@ -189,6 +193,15 @@ $(document).ready(function(){
           $('body').waitMe('hide');
         },
         error: function(data){
+
+           if (data.status==422) {
+            $('body').waitMe('hide');
+                    var errors = data.responseJSON;
+                    for (var key in errors.errors) {
+                      console.log(errors.errors[key][0])
+                        $("#"+key+"_error").html(errors.errors[key][0])
+                      }
+          }else{
             error(data.responseJSON.message);
             $(".select").hide();
             $(".add").show();
@@ -199,6 +212,7 @@ $(document).ready(function(){
             $("#customer_id").val("");
             $("#address_id").val("");
              $('body').waitMe('hide');
+           }
         }
 
       })

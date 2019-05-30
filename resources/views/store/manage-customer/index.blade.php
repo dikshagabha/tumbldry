@@ -1,53 +1,58 @@
 @extends('store.layouts.app')
-@section('title', 'Manage Runner')
+@section('title', 'Manage Customer')
 @section('content')
 
+<vs-row vs-justify="center">
+  <vs-col type="flex" vs-justify="center" vs-align="center" vs-w="11">
+    <vs-card>
+      <div slot="header">
+        <h3>
+          Customer Details
+        </h3>
+      </div>
+      <div>
 
-<div class="content">
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12">
-          <div class="card card-stats">
-              <div class="row">
-                <div class="col-md-9">
-                </div>
-                <div class="col-md-3">
-                  <a href="{{route('manage-customer.create')}}"><button class="btn btn-danger">Add New Customer</button></a>
-                </div>
-              </div>
-              <br>
-               <div class="">
+        <vs-row vs-justify="flex-end">
+         
+          <a href="{{route('manage-customer.create')}}">
+            <vs-button type="gradient" color="danger">Add New Customer</vs-button>
+          </a>
+         </vs-row>
+           <br>
+            <!-- <vs-row  > -->
                 {{ Form::open(['method' => 'get', 'id' => 'store-search', 'name' => 'serach_form']) }}
-                <div class="form-group-inner">
-                    <div class="row">
-                      <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
-                      </div>
-                         <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
-                          {{ Form::text('search', '', ['class' => 'form-control', 'placeholder' => 'Search by Name or E-mail or Phone', 'maxlength'=>'50']) }}
-                         </div>
-                         <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
-                          {{ Form::select('sort_type', ['' => 'Select Status', '1' => 'Active', '0' => 'Inactive'], null, ['class' => 'form-control', 'id' => 'sort_type']) }}
-                           
-                         </div>
-                         <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
-                          <button type="submit" id="search-button" class="btn btn-success margin-bottom-20">Filter</button>
-                        <button type="submit" id="reset-button" class="btn btn-danger margin-bottom-20">Reset</button>
-                         </div>
-                       </div>
-                  </div>
-                  {{ Form::close() }}
-              </div>
+              <vs-col vs-type="flex" vs-justify="center" vs-align="center" vs-w="5">
+                  {{ Form::text('search', '', ['class' => 'form-control', 'placeholder' => 'Search by Name or E-mail or Phone', 'maxlength'=>'50']) }}
+                </vs-col>
 
-              <br>
+                <vs-col vs-type="flex" vs-justify="center" vs-align="center" vs-w="2">                  
+                 {{ Form::select('sort_type', ['' => 'Select Status', '1' => 'Active', '0' => 'Inactive'], null, ['class' => 'form-control', 'id' => 'sort_type']) }}
+                </vs-col>
+                
+                <vs-col vs-type="flex" vs-justify="center" vs-align="center" vs-w="1">
+                  <vs-button type="gradient" color="success" id="search-button">Filter</vs-button>
+                </vs-col>
+                 <vs-col vs-type="flex" vs-justify="center" vs-align="center" vs-w="1">
+                  <vs-button type="gradient" color="danger"id="reset-button" >Reset</vs-button>
+                </vs-col>
+              {{ Form::close() }}
+
+            <!-- </vs-row> -->
+            <br>
+            <br>
               <div id="dataList">
                 
+               
                @include('store.manage-customer.list')
               </div>
-            </div>
-        </div>
+        
       </div>
-    </div>
-</div>
+      <div slot="footer">
+        
+      </div>
+    </vs-card>
+  </vs-col>
+</vs-row>
 <div id="addressModal" class="modal fade" role="dialog">
   <div class="modal-dialog">
     <!-- Modal content-->
@@ -63,7 +68,7 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <vs-button type="gradient" color="success" data-dismiss="modal">Close</vs-button>
       </div>
     </div>
 
@@ -73,6 +78,7 @@
 @push('js')
 <script src="{{asset('js/bootbox.js')}}"></script>
 <script>
+
 $(document).ready(function(){
   var current_page = $(".pagination").find('.active').text();
   $(document).on('click', '#delete', function(e){
