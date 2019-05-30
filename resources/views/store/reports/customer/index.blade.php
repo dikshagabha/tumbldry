@@ -53,47 +53,6 @@
   </vs-col>
 </vs-row>
 
-<div class="content">
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12">
-          <div class="card card-stats">
-              <div class="row">
-                
-              </div>
-              <br>
-               <div class="">
-                {{ Form::open(['method' => 'get', 'id' => 'store-search', 'name' => 'serach_form']) }}
-                <div class="form-group-inner">
-                    <div class="row">
-                      <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
-                      </div>
-                         <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
-                          {{ Form::text('currentFilter', '', ['class' => 'form-control', 'placeholder' => 'Filter by date', 'maxlength'=>'50', 'id'=>'date']) }}
-                         </div>
-                         <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
-                          {{ Form::select('monthFilter', $months, null, ['class' => 'form-control', 'placeholder' => 'Filter by month', 'maxlength'=>'50']) }}
-                           
-                         </div>
-                         <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
-                          <button type="submit" id="search-button" class="btn btn-success margin-bottom-20">Filter</button>
-                        <button type="submit" id="reset-button" class="btn btn-danger margin-bottom-20">Reset</button>
-                         </div>
-                       </div>
-                  </div>
-                  {{ Form::close() }}
-              </div>
-
-              <br>
-              <div id="dataList">
-                
-               @include('store.reports.customer.list')
-              </div>
-            </div>
-        </div>
-      </div>
-    </div>
-</div>
 <div id="addressModal" class="modal fade" role="dialog">
   <div class="modal-dialog">
     <!-- Modal content-->

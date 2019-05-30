@@ -20,7 +20,7 @@
           <!-- <vs-button color="primary" icon="more_horiz" type="flat"></vs-button> -->
         </h4>
       </div>
-      <vs-sidebar-item index="dashboard" icon="question_answer" >
+      <vs-sidebar-item index="dashboard" icon="question_answer" href="{{ route('store.home') }}">
         Dashboard
       </vs-sidebar-item>
       <vs-sidebar-item index="runner" icon="person" href="{{ route('manage-runner.index') }}">
