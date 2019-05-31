@@ -110,7 +110,8 @@ class OrderController extends Controller
 
       $runner = User::where('id', $request->input('id'))->first();
       if ($runner->phone_number) {
-        //CommonRepository::sendmessage($runner->phone_number, 'Delivery%20of%20order%20id%20ORDER'.$id.'%20has%20been%20requested%20by'.$this->user->store_name);
+        
+        CommonRepository::sendmessage($runner->phone_number, 'Delivery%20of%20order%20id%20ORDER'.$id.'%20has%20been%20requested%20by'.$this->user->store_name);
       }
       DB::commit();
       
@@ -575,7 +576,6 @@ class OrderController extends Controller
                                   'user_id'=>$customer_id,
                                 'to_id'=>$this->user->id, 'type'=>1, 
                                 'price'=>$order->total_price, 'created_at'=>Carbon::now()]];
-        $message = "$order->total_price%20Rs%20has%20been%20deducted%20from%20your%20wallet%20for%20ORDER$order->id.";
         
         UserWallet::where('user_id', $wallet->id)->update(['price'=>$price - $order->total_price, 
                                                           'loyality_points'=>$insert]);
@@ -586,7 +586,7 @@ class OrderController extends Controller
                           'user_id'=>$customer_id,'to_id'=>$this->user->id, 'type'=>2, 
                         'price'=>$order->total_price-$price,'created_at'=>Carbon::now()]];
         $amount = $order->total_price-$price;
-        $message = "$price%20Rs%20has%20been%20deducted%20from%20your%20wallet%20and%20you%20have%20to%20pay%20$amount%20more%20for%20ORDER$order->id.";
+        
         UserWallet::where('user_id', $wallet->id)->update(['price'=>0, 
                                                           'loyality_points'=>$insert]);
       }
@@ -594,6 +594,9 @@ class OrderController extends Controller
       array_push($paymentData, ['order_id'=>$order->id, 'to_id'=>$customer_id, 'created_at'=>Carbon::now(),
         'user_id'=>0,'type'=>3, 'price'=>$points]);
       $payments = UserPayments::insert($paymentData);
+
+     
+      
       //$response = CommonRepository::sendmessage($wallet->phone_number, $message);
 
       foreach ($items as $item) {
@@ -606,6 +609,22 @@ class OrderController extends Controller
           }
           $order_items = OrderItemImage::insert($itemData);
       }
+
+      $total = OrderItems::where('order_id', $order->id)->sum('quantity');
+      $weighr = OrderItems::where('order_id', $order->id)->sum('weight');
+      
+      $message = SMSTemplate::where('title', 'like','%Order Created%')->select('description')->first();
+      //dd($message);
+      $message = $message->description;
+
+      $mes = str_replace('@order_id@', $order->id, $message);
+      $mes = str_replace('@total_clothes@', $total, $mes);
+      if ($weighr && $weighr>0) {
+       $mes = str_replace('@weight@', $weighr, $mes);
+      }
+      $mes = str_replace(' ', '%20', $mes);
+
+      CommonRepository::sendmessage($request->input('phone_number'), $mes);
 
       //dd($items);
       DB::commit();
