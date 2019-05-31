@@ -10,7 +10,7 @@
         </vs-navbar-title>
       </div>
 
-      <vs-navbar-item index="0" icon="bell">
+      <vs-navbar-item icon="bell">
         <div class="dropdown" style="float: right; padding: 13px">
           <a href="#" onclick="return false;" role="button" data-toggle="dropdown" id="dropdownMenu1" data-target="#" style="float: left" aria-expanded="true">
               <i class="fa fa-bell-o" style="font-size: 20px; float: left; color: black">
@@ -39,12 +39,10 @@
           </ul>
       </div>
       </vs-navbar-item>
-      <vs-navbar-item index="1">
+      <vs-navbar-item>
          <a class="dropdown-item" href="{{ route('logout') }}">{{ __('Log out') }}</a>
       </vs-navbar-item>
-     <!--  <vs-navbar-item index="2">
-        <a href="#">Update</a>
-      </vs-navbar-item> -->
+     
     </vs-navbar>
   </div>
 </template>
