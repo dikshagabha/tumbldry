@@ -48,6 +48,9 @@ class CommonRepository extends BaseRepository
          $response = curl_exec ($ch);
          $err = curl_error($ch);  //if you need
          curl_close ($ch);
+         
+         //dd($response);
+
          if ($response) {
             $response = json_decode($response);
             $array = get_object_vars($response);

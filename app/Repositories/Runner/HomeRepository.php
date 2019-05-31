@@ -11,6 +11,7 @@ use App\Repositories\CommonRepository;
 use JWTAuth;
 use Ixudra\Curl\Facades\Curl;
 use Carbon\Carbon;
+use App\Model\Otp;
 /**
  * Class HomeRepository.
  */
@@ -93,7 +94,7 @@ class HomeRepository extends BaseRepository
       }      
     }
 
-     public static function login($request)
+    public static function login($request)
     {
         // get the user email
         $credentials = $request->only('phone_number', 'password');
@@ -124,5 +125,41 @@ class HomeRepository extends BaseRepository
         }
 
         return $response;
+    }
+
+    public static function sendOtp($request)
+    {
+        $user = User::where('phone_number', $request->input('phone_number'))->whereRole(5)->first();
+
+        if (!$user) {
+            return ['message'=>'runner not found.', 'http_status'=>400];
+        }
+        $otp = rand(0000, 9999);
+
+        $otp = Otp::create(['user_id'=>$user->id, 'otp'=>$otp, 'expiry'=>Carbon::now()->addMinutes(15)]);
+
+        $res = CommonRepository::sendmessage($request->input('phone_number'), "Hi%20$user->name%20\n%20The%20otp%20for%20your%20login%20is%20$otp.");
+        if ($otp) {
+            return ['message'=>'Otp send to user.', 'http_status'=>200];
+        }
+
+        return ['message'=>'Something Went Wrong!', 'http_status'=>400];
+    }
+
+    public static function verifyOtp($request)
+    {
+        $user = User::where('phone_number', $request->input('phone_number'))->whereRole(5)->first();
+        if (!$user) {
+            return ['message'=>'runner not found.', 'http_status'=>400];
+        }
+        $otp = Otp::where(['user_id'=>$user->id, 'otp'=>$request->input('otp')])->first();
+        if ($otp) {
+              if ($otp->expiry->lt(Carbon::now())) {
+                return ['message'=>'Otp has expired.', 'http_status'=>200];
+              }
+              $otp->delete();
+            return ['message'=>'Otp verified.', 'http_status'=>200];
+        }
+        return ['message'=>'Something Went Wrong!', 'http_status'=>400];
     }
 }

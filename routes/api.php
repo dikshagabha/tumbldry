@@ -24,6 +24,16 @@ Route::group([
 	
     Route::post('login', 'AuthController@login');
     Route::post('register', 'AuthController@register');
+    Route::post('otp', 'AuthController@sendOtp');
+    Route::post('verify-otp', 'AuthController@verifyotp');
+
+
+    Route::post('services', 'OrderController@services');
+    Route::post('laundary-addons', 'OrderController@laundaryAddons');
+    Route::post('dryclean-addons', 'OrderController@dryCleanAddons');
+    Route::post('service-price', 'OrderController@servicePrice');
+    Route::post('service-items', 'OrderController@serviceItems');
+
     
     Route::post('pickup-jobs', 'PickupController@getPickupJobs');
     Route::post('delivery-jobs', 'PickupController@getDeliveryJobs');
