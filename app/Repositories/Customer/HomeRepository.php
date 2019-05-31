@@ -36,10 +36,6 @@ class HomeRepository extends BaseRepository
 	        $pswd=CommonRepository::random_str();
 
 	        $phone = $request->input('phone_number');
-
-
-
-
 	        $user = User::create(['name'=>$request->input('name'), 'role'=>4, 'email'=> $request->input('email'), 
 	        						'password'=>bcrypt($pswd), 'phone_number'=> $request->input('phone_number'), 
 	        						'user_id'=>$user, 'status'=>1]);

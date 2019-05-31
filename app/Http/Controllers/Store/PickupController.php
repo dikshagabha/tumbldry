@@ -14,6 +14,10 @@ use DB;
 use Pusher;
 use Auth;
 use Carbon\Carbon;
+
+use App\Repositories\CommonRepository;
+use App\Model\SMSTemplate;
+
 class PickupController extends Controller
 {
     /**
@@ -82,8 +86,6 @@ class PickupController extends Controller
                                 'address'=>$request->input('address_id'),
                                  'store_id'=> $id, 'request_time'=>$date->setTimezone('UTC'),
                                 'request_mode'=>1, 'status'=>1, 'service'=>$request->input('service')]);
-
-        //dd($pickup);
         //if ($id) {
           // Send Notification to store
           not::dispatch($pickup, 1);
@@ -100,7 +102,18 @@ class PickupController extends Controller
 
 
             $data['message'] = $request->input('name')." has requested a pickup.";
-            $pusher->trigger('my-channel', 'notification'.$id, $data);            
+            $pusher->trigger('my-channel', 'notification'.$id, $data);  
+
+            $message = SMSTemplate::where('title', 'like','%Pick Up Scheduled%')->select('description')->first();
+            //dd($message);
+            $message = $message->description;
+
+            $mes = str_replace('@customer_name@', $request->input('name'), $message);
+
+            $mes = str_replace('@id@', $pickup->id, $mes);
+            $mes = str_replace(' ', '%20', $mes);
+
+            CommonRepository::sendmessage($request->input('phone_number'), $mes);          
         //}
         
 

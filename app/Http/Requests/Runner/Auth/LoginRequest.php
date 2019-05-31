@@ -23,8 +23,7 @@ class LoginRequest extends FormRequest
      */
     public function rules(Request $request)
     {
-	//	dd($request->input('email'));
-        return [
+		return [
            // 'email' => ['bail', 'email', Rule::exists('users')->where(function($q) {
            //             $q->where('role', 5)->where('status', 1);
            //         })],
