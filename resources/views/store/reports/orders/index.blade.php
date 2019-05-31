@@ -8,7 +8,7 @@
     <vs-card>
       <div slot="header">
         <h3>
-          Orders Details
+          Orders Reports
         </h3>
       </div>
       <div>

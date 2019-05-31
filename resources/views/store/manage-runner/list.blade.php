@@ -30,11 +30,11 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
               <td>
                 @if($user->status==0)
                   <a href="{{route('manage-runner.status', $user->id)}}" class="status" data-status="1">
-                    <span class="badge badge-warning">Inactive</span>
+                    <!-- <span class="badge badge-warning"> -->Inactive<!-- </span> -->
                   </a>
                 @else
                   <a href="{{route('manage-runner.status', $user->id)}}" class="status" data-status="0">
-                    <span class="badge badge-success">Active</span>
+                    <!-- <span class="badge badge-success"> -->Active<!-- </span> -->
                   </a>
                 @endif
               </td>

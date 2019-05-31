@@ -27,11 +27,9 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
               <td>
                 @if($user->status==0)
                   
-                    <span class="badge badge-warning">Inactive</span>
-                  
+                   Inactive
                 @else
-                  <span class="badge badge-success">Active</span>
-                  
+                  Active
                 @endif
               </td>
               <td>

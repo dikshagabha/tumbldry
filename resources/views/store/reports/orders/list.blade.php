@@ -22,17 +22,17 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
               </td>
               <td>
                 @if($user->status==1)
-                    <span class="badge badge-warning">Pending</span>
+                    <!-- <span class="badge badge-warning"> -->Pending<!-- </span> -->
                 @elseif($user->status==2)
-                  <span class="badge badge-info">Recieved</span>
+                 <!--  <span class="badge badge-info"> -->Recieved<!-- </span> -->
                 @elseif($user->status==3)
-                  <span class="badge badge-warning">Processing</span>
+                  <!-- <span class="badge badge-warning"> -->Processing<!-- </span> -->
                 @elseif($user->status==4)
-                  <span class="badge badge-danger">Partial Delivery</span>
+                  <!-- <span class="badge badge-danger"> -->Partial Delivery<!-- </span> -->
                 @elseif($user->status==5)
-                  <span class="badge badge-danger">Full Delivery</span>
+                  <!-- <span class="badge badge-danger"> -->Full Delivery<!-- </span> -->
                 @elseif($user->status==6)
-                  <span class="badge badge-success">Delivered</span>
+                  <!-- <span class="badge badge-success"> -->Delivered<!-- </span> -->
                   
                 @endif
               </td>
