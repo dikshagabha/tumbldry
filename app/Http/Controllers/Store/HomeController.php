@@ -57,11 +57,13 @@ class HomeController extends Controller
                   ->where('phone_number', 'like', $request->input('phone_number'))->with('wallet')->first();
       if ($customer) {
         $orders = Order::where('customer_id', $customer->id)->latest()->first();
-        $address = null;
-        if ($orders->count()) {
-         $address = Address::where('id', $orders->address_id)->first();
+        if ($orders) {
+            $address = null;
+            if ($orders->count()) {
+             $address = Address::where('id', $orders->address_id)->first();
+            }
+            $wallet = $customer->wallet;
         }
-        $wallet = $customer->wallet;
         session()->put('customer_details', ['user'=>$customer, 'wallet'=>$wallet]);
       
         return response()->json(["message"=>"Customer Found!!", "customer" => $customer, 'wallet'=>$wallet, 
