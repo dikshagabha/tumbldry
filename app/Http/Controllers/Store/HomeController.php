@@ -54,16 +54,18 @@ class HomeController extends Controller
           ]);
 
       $customer = User::where('role', 4)
-                  ->where('phone_number', 'like', $request->input('phone_number'))->with('wallet')->first();
-      if ($customer) {
+                  ->where('phone_number', 'like', $request->input('phone_number'))->with('wallet', 'addresses')->first();
+      $address = $customer->addresses;
+	if ($customer) {
         $orders = Order::where('customer_id', $customer->id)->latest()->first();
         if ($orders) {
             $address = null;
             if ($orders->count()) {
              $address = Address::where('id', $orders->address_id)->first();
             }
-            $wallet = $customer->wallet;
+            //$wallet = $customer->wallet;
         }
+	 $wallet = $customer->wallet;
         session()->put('customer_details', ['user'=>$customer, 'wallet'=>$wallet]);
       
         return response()->json(["message"=>"Customer Found!!", "customer" => $customer, 'wallet'=>$wallet, 
