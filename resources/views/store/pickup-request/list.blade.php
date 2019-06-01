@@ -7,7 +7,7 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
       <table class="table table-striped dataTable">
           <thead>
             <tr>
-              <th>S No</th>
+              <th>Id</th>
               <th>Phone Number</th>
               <th>Address</th>
 	            <th> Service </th>
@@ -20,7 +20,7 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
       @foreach($users as $user)
             <tr>
               <td>
-                {{$i}}
+                {{$user->id}}
               </td>
               <td>
                 <a href="{{route('getcustomerdetails', $user->customer_id)}}" id="getCustomer">

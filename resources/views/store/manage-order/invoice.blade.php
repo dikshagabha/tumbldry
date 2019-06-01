@@ -28,7 +28,8 @@
 			{{$order->created_at->format('d-m-y')}}
 		</div>
 		<div class="col-md-6 col-sm-6 col-lg-6 pull-right">
-			
+			<strong>Arrival Date</strong>
+			{{$order->date_of_arrival}}
 		</div>
 	</div>
 	<div class="row">

@@ -259,7 +259,7 @@ $(document).ready(function(){
         success: function(data){
         //success(data.message);
         $('#select_box').html(data.view);
-        
+        $(".ItemsAdded").html('');
         if (data.form_type==1 || data.form_type==2) {
           $( "#item" ).autocomplete({
                   source: function( request, response ) {
@@ -399,7 +399,7 @@ $(document).ready(function(){
     $.ajax({
       url: current.data('url'),
       type:'post',
-      data: {'data-id': current.data('id'), 'weight':$('.weight_'+current.data('id')).val()},
+      data: {'data-id': current.data('id'), 'weight':$('.weight').val()},
       cache: false,
       success: function(data){
         success(data.message);
