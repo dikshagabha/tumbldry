@@ -133,7 +133,8 @@ Route::prefix('store')->namespace('Store')->group(function () {
       Route::post('/order/deliver-items', 'OrderController@itemsDeliver')->name('store.itemsDeliver');
       Route::get('/create-order', 'OrderController@createWithoutPickup')->name('store.orderWithoutPickup');
 
-      Route::post('/rate-card', 'RateCardController@getRate')->name('store.getRate');
+      Route::get('/input-rate-card', 'RateCardController@getRate')->name('store.getInputRate');
+
       Route::get('/rate-card', 'RateCardController@index')->name('store.getRate');
       Route::get('/services', 'RateCardController@getServices')->name('store.getServices');
 

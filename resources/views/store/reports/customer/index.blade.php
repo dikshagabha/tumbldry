@@ -30,10 +30,12 @@
                           {{ Form::select('monthFilter', $months, null, ['class' => 'form-control', 'placeholder' => 'Filter by month', 'maxlength'=>'50']) }}
                            
                          </div>
-                         <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
-                          <button type="submit" id="search-button" class="btn btn-success margin-bottom-20">Filter</button>
-                        <button type="submit" id="reset-button" class="btn btn-danger margin-bottom-20">Reset</button>
-                         </div>
+                         <vs-col vs-type="flex" vs-justify="center" vs-align="center" vs-w="1">
+                  <vs-button type="gradient" color="success" id="search-button">Filter</vs-button>
+                </vs-col>
+                 <vs-col vs-type="flex" vs-justify="center" vs-align="center" vs-w="1">
+                  <vs-button type="gradient" color="danger"id="reset-button" >Reset</vs-button>
+                </vs-col>
                        </div>
                   </div>
                   {{ Form::close() }}

@@ -38,7 +38,7 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
               </td>
               <td>                  
                   <a href="{{route('manage-customer.show',encrypt($user->id))}}" class="view" title="view">
-                    <button type="button" class="btn btn-info "><i class="fa fa-eye"></i></button>
+                    <vs-button type="gradient" color="warning"><i class="fa fa-eye"></i></vs-button>
                   </a>
                   
               </td>

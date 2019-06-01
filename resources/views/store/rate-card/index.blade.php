@@ -24,11 +24,9 @@
 
          
             <br>
-{{Form::open(['route'=>'store.getRate', 'id'=>'rateForm'])}}
+                    {{Form::open(['route'=>'store.getInputRate', 'id'=>'rateForm'])}}
 
                   <div class="row">
-                    <!-- <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
-                    </div> -->
                     <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
 
                         {{ Form::select('type',  $types, null, ['class' => 'form-control', 'placeholder' => 'Select Type', 'id' => 'select_type', 'data-url'=>route('store.getServices')]) }}
@@ -42,18 +40,17 @@
                         'id' => 'select_service',  'maxlength'=>'50']) }}
                         <span class="error" id="service_error"></span>
                     </div>
-                     <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
-
-                        {{ Form::submit('Submit', ['class' => 'btn btn-warning',
-                        'id' => 'search_rate', 'data-url'=>route('store.getRate')]) }}
-
-                        {{ Form::button('Reset', ['class' => 'btn btn-danger reset',
-                         'data-type'=>1]) }}
-                       
-                    </div>
-                  </div>                
+                       <vs-col vs-type="flex" vs-justify="center" vs-align="center" vs-w="1">
+                          <vs-button type="gradient" color="success" id="search_rate" data-url="store.getRate">Search</vs-button>
+                        </vs-col>
+                         <vs-col vs-type="flex" vs-justify="center" vs-align="center" vs-w="1">
+                          <vs-button type="gradient" color="danger" id="reset-button"  class="reset" data-type=1>Reset</vs-button>
+                        </vs-col>
+                                 
                 {{Form::close()}}
                 <br>
+                </div> 
+
                 <div id="dataList">
 
                   
@@ -131,7 +128,7 @@
         $.ajax({
           url:$('#rateForm').attr('action'),
           data:$('#rateForm').serializeArray(),
-          type:'post',
+          type:'get',
           success: function(data){
             $('#dataList').html(data);
             $("#dataList").show();
@@ -142,11 +139,13 @@
     $(document).on("click",".pagination li a",function(e) {
         e.preventDefault();
         //load_listings($(this).attr('href'), 'form_data');
+        data = $('#rateForm').serializeArray();
+        data = data.concat($('#store-search').serializeArray());
         url = $(this).attr('href');
         $.ajax({
           url:url,
-          data:$('#rateForm').serializeArray(),
-          type:'post',
+          data: data,
+          type:'get',
           success: function(data){
             $('#dataList').html(data);
             $('body').waitMe('hide');
@@ -154,6 +153,33 @@
         })
 
       });
+
+      $(document).on("click","#search-button",function(e) {
+          e.preventDefault();
+          $('body').waitMe();
+          //$('#export_csv').addClass('apply_filter');
+          //check current active page
+          var current_page = $(".pagination").find('.active').text();
+          
+          // reload the list
+          //load_listings(location.href, 'serach_form');
+          
+            data = $('#rateForm').serializeArray();
+            data = data.concat($('#store-search').serializeArray());
+
+            console.log(data);
+            $.ajax({
+              url:$('#store-search').data('url'),
+              data:data,
+              type:'get',
+              success: function(data){
+                $('#dataList').html(data);
+                $('body').waitMe('hide');
+              }
+            })
+          //stopLoader("body");
+        });
+  
     });
   </script>
 @endpush
