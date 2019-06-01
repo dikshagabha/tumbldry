@@ -12,6 +12,7 @@
         "barryvdh/laravel-dompdf": "^0.8.4",
         "barryvdh/laravel-snappy": "^0.4.4",
         "fideloper/proxy": "^4.0",
+        "gopal-g/payment": "^1.1",
         "h4cc/wkhtmltoimage-amd64": "0.12.x",
         "h4cc/wkhtmltopdf-amd64": "0.12.x",
         "ixudra/curl": "^6.16",
@@ -19,6 +20,7 @@
         "laravel/tinker": "^1.0",
         "laravelcollective/html": "^5.8",
         "pusher/pusher-php-server": "^3.4",
+        "softon/indipay": "^1.1",
         "tymon/jwt-auth": "dev-develop"
     },
     "require-dev": {

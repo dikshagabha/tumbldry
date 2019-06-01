@@ -166,7 +166,11 @@ class OrderController extends Controller
 
     if ($Service->form_type !=2) {
      $form_id = Items::where("name", 'LIKE','%'.$request->input('item').'%' )->where('type', $Service->form_type)->first();
+     $units=false;
+     $weight=1;
     }else{
+    $units=true;
+    $weight=0;
     $form_id = Items::where('status', 1)->where('type', $Service->form_type)->first();
     }
     if (!$form_id) {
@@ -204,7 +208,8 @@ class OrderController extends Controller
 
      
      if (!session()->get('add_order_items')){
-
+          $data['units']=$units;
+          $data['weight']=$weight;
           session()->put("add_order_items", [$data]);            
      }
      else{session()->push('add_order_items', $data);}
@@ -325,17 +330,19 @@ class OrderController extends Controller
     $index = $request->input('data-id')-1;
     
     $items[$index]['weight'] =  $request->input('weight');
+
+    //dd( session('add_order_items'));
     $items[$index]['estimated_price'] = ($request->input('weight')*($items[$index]['price']))+
                                         $items[$index]['addon_estimated_price'];
     session()->put("add_order_items", $items);
 
     $items = session('add_order_items');
     $total_price = 0;
-     foreach ($items as $key => $value) {
+    foreach ($items as $key => $value) {
        if ($value) {
          $total_price = $total_price + $value['estimated_price'];
        }
-     }
+    }
 
     $cgst = $total_price*(9/100);
     $gst = $total_price*(9/100);
@@ -687,6 +694,9 @@ class OrderController extends Controller
   }
 
   public function setServiceInput(Request $request){
+    session()->forget('add_order_items');
+    session()->forget('prices');
+    session()->forget('coupon_discount');
     $type = Service::where('id', $request->input('id'))->select('form_type')->first();
     $form_type = $type->form_type;
     $data = Items::where('type', $type->form_type)->pluck('name', 'name');
