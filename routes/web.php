@@ -103,6 +103,10 @@ Route::prefix('store')->namespace('Store')->group(function () {
           ]);
       });
       
+      Route::get('/payment', 'PaymentController@pay')->name('pay');
+      
+
+
       Route::get('logout', 'LoginController@logout')->name('logout');
 
       Route::post('set-store-timezone', 'HomeController@setTimezone')->name('store.set-timezone');
@@ -118,6 +122,7 @@ Route::prefix('store')->namespace('Store')->group(function () {
       
       Route::post('delete-addresses-session', 'CustomerController@deleteSessionAddresses')->name('store.deleteCustomerAddresses');
       
+      //Route::get('/payment', 'RateCardController@index')->name('store.getRate');
       
       Route::get('/create-order/{id}', 'OrderController@create')->name('store.create-order');
       Route::post('/create-order/{id?}', 'OrderController@store')->name('store.create-order');

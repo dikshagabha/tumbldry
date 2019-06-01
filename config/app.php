@@ -176,6 +176,9 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        //Softon\Indipay\IndipayServiceProvider::class,
+         Appnings\Payment\PaymentServiceProvider::class,
+
 
     ],
 
@@ -232,6 +235,8 @@ return [
         'JWTAuth' => Tymon\JWTAuth\Facades\JWTAuth::class, 
         'JWTFactory' => Tymon\JWTAuth\Facades\JWTFactory::class,
         'PDF' => Barryvdh\DomPDF\Facade::class,
+         'Payment' => Appnings\Payment\Facades\Payment::class 
+        //'Indipay' => Softon\Indipay\Facades\Indipay::class,
         // 'SnappyImage' => Barryvdh\Snappy\Facades\SnappyImage::class,
 
     ],
