@@ -23,7 +23,8 @@ use App\Model\{
     Address,
     LaundaryWeights,
     UserWallet,
-    UserPayments
+    UserPayments,
+    SMSTemplate
 
 };
 use App\User;
@@ -32,6 +33,7 @@ use DB;
 use PDF;
 use App;
 use App\Repositories\CommonRepository;
+use App\Jobs\sendMessage;
 class OrderController extends Controller
 {
 	protected $user;
@@ -71,7 +73,7 @@ class OrderController extends Controller
         $customer = $order->customer;
         //dd($customer);
         if ($customer->phone_number) {
-          CommonRepository::sendmessage($customer->phone_number, 'Your%20order%20ORDER'.$id.'%20has%20been%20recieved%20by%20store.');
+          //CommonRepository::sendmessage($customer->phone_number, 'Your%20order%20ORDER'.$id.'%20has%20been%20recieved%20by%20store.');
 
           $date = Carbon::now($request->header('timezone'));
           $order->date_of_arrival = $date;
@@ -111,7 +113,7 @@ class OrderController extends Controller
       $runner = User::where('id', $request->input('id'))->first();
       if ($runner->phone_number) {
         
-        CommonRepository::sendmessage($runner->phone_number, 'Delivery%20of%20order%20id%20ORDER'.$id.'%20has%20been%20requested%20by'.$this->user->store_name);
+       // CommonRepository::sendmessage($runner->phone_number, 'Delivery%20of%20order%20id%20ORDER'.$id.'%20has%20been%20requested%20by'.$this->user->store_name);
       }
       DB::commit();
       
@@ -584,8 +586,8 @@ class OrderController extends Controller
                                 'to_id'=>$this->user->id, 'type'=>1, 
                                 'price'=>$order->total_price, 'created_at'=>Carbon::now()]];
         
-        UserWallet::where('user_id', $wallet->id)->update(['price'=>$price - $order->total_price, 
-                                                          'loyality_points'=>$insert]);
+        //UserWallet::where('user_id', $wallet->id)->update(['price'=>$price - $order->total_price, 
+        //                                                 'loyality_points'=>$insert]);
       }else{
         $paymentData = [['order_id'=>$order->id, 'to_id'=>$this->user->id, 'type'=>1, 
                         'user_id'=>$customer_id,'created_at'=>Carbon::now(),
@@ -594,16 +596,13 @@ class OrderController extends Controller
                         'price'=>$order->total_price-$price,'created_at'=>Carbon::now()]];
         $amount = $order->total_price-$price;
         
-        UserWallet::where('user_id', $wallet->id)->update(['price'=>0, 
-                                                          'loyality_points'=>$insert]);
+        //UserWallet::where('user_id', $wallet->id)->update(['price'=>0, 
+        //                                                  'loyality_points'=>$insert]);
       }
       
       array_push($paymentData, ['order_id'=>$order->id, 'to_id'=>$customer_id, 'created_at'=>Carbon::now(),
         'user_id'=>0,'type'=>3, 'price'=>$points]);
       $payments = UserPayments::insert($paymentData);
-
-     
-      
       //$response = CommonRepository::sendmessage($wallet->phone_number, $message);
 
       foreach ($items as $item) {
@@ -617,25 +616,13 @@ class OrderController extends Controller
           $order_items = OrderItemImage::insert($itemData);
       }
 
-      $total = OrderItems::where('order_id', $order->id)->sum('quantity');
-      $weighr = OrderItems::where('order_id', $order->id)->sum('weight');
       
-      $message = SMSTemplate::where('title', 'like','%Order Created%')->select('description')->first();
-      //dd($message);
-      $message = $message->description;
-
-      $mes = str_replace('@order_id@', $order->id, $message);
-      $mes = str_replace('@total_clothes@', $total, $mes);
-      if ($weighr && $weighr>0) {
-       $mes = str_replace('@weight@', $weighr, $mes);
-      }
-      $mes = str_replace(' ', '%20', $mes);
-
-      CommonRepository::sendmessage($request->input('phone_number'), $mes);
+      //sendMessage::dispatch("", $request->input('phone_number'), 1, $order);
+      //$response = CommonRepository::sendmessage($request->input('phone_number'), "asldls");
 
       //dd($items);
       DB::commit();
-      return response()->json([ 'redirectTo'=>route('store.home'), 'message'=>'Order has been created Successfully'], 200); 
+      return response()->json([ 'redirectTo'=>route('store.create-order.index'), 'message'=>'Order has been created Successfully'], 200); 
    } catch (Exception $e) {
       DB::rollback();
       return response()->json(['message'=>$e->getMessage()], 400);
