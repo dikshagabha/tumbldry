@@ -34,7 +34,7 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
             <td>
               @if($user->date_of_arrival)
 
-              {{$user->date_of_arrival->format('l y/m/d h:i a')}}
+              {{$user->date_of_arrival->format('y/m/d h:i a')}}
               @else
               --
               @endif

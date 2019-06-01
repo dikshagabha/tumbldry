@@ -158,7 +158,7 @@ $i=1;
 				</tr>
 				<tr >
 					<td style="text-align: center;" >Coupon</td>
-					<td style="text-align: center;" ><input type="text" name="coupon" id="coupon" class="form-control" value="{{$coupon_discount['coupon']}}"style="color: white">
+					<td style="text-align: center;" ><input type="text" name="coupon" id="coupon" class="form-control" value="{{$coupon_discount['coupon']}}" >
 					<span class="error" id="coupon_error"></span></td>
 					<td style="text-align: center;" ><button type="button" class="btn btn-danger" data-url="{{route('store.couponItemSession')}}" id="couponBtn">Apply</button></td>
 
@@ -167,7 +167,7 @@ $i=1;
 				<tr >
 					<td style="text-align: center;" >Discount</td>
 					<td style="text-align: center;" >
-						<input type="text" name="discount" id="discount" class="form-control" value="{{$coupon_discount['user_discount']}}" style="color: white">
+						<input type="text" name="discount" id="discount" class="form-control" value="{{$coupon_discount['user_discount']}}">
 						<span class="error" id="discount_error"></span>
 				    </td>
 					 <td style="text-align: center;" ><button type="button" class="btn btn-danger" data-url="{{route('store.discountItemSession')}}" id="discountBtn">Apply</button>
