@@ -73,7 +73,7 @@ class OrderController extends Controller
         $customer = $order->customer;
         //dd($customer);
         if ($customer->phone_number) {
-          CommonRepository::sendmessage($customer->phone_number, 'Your%20order%20ORDER'.$id.'%20has%20been%20recieved%20by%20store.');
+          //CommonRepository::sendmessage($customer->phone_number, 'Your%20order%20ORDER'.$id.'%20has%20been%20recieved%20by%20store.');
 
           $date = Carbon::now($request->header('timezone'));
           $order->date_of_arrival = $date;
@@ -113,7 +113,7 @@ class OrderController extends Controller
       $runner = User::where('id', $request->input('id'))->first();
       if ($runner->phone_number) {
         
-        CommonRepository::sendmessage($runner->phone_number, 'Delivery%20of%20order%20id%20ORDER'.$id.'%20has%20been%20requested%20by'.$this->user->store_name);
+       // CommonRepository::sendmessage($runner->phone_number, 'Delivery%20of%20order%20id%20ORDER'.$id.'%20has%20been%20requested%20by'.$this->user->store_name);
       }
       DB::commit();
       
@@ -618,7 +618,9 @@ class OrderController extends Controller
 
       
       //sendMessage::dispatch("", $request->input('phone_number'), 1, $order);
-      
+      //$response = CommonRepository::sendmessage($request->input('phone_number'), "asldls");
+
+      //dd($items);
       DB::commit();
       return response()->json([ 'redirectTo'=>route('store.create-order.index'), 'message'=>'Order has been created Successfully'], 200); 
    } catch (Exception $e) {
