@@ -61,6 +61,11 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany('App\User', 'user_id', 'id');
     }
 
+    public function gst()
+    {
+        return $this->hasOne('App\Model\UserGst', 'user_id', 'id');
+    }
+
     public function addresses()
     {
         return $this->hasOne('App\Model\Address', 'user_id', 'id');

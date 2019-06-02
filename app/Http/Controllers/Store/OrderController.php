@@ -39,12 +39,26 @@ class OrderController extends Controller
 	protected $user;
   protected $useraddress;
   protected $location;
+  protected $gst;
+  protected $cgst;
 
 	public function __construct(){
     $this->middleware(function($request, $next) {
-        $this->user = Auth::user()->load('addresses');
+        $this->user = Auth::user()->load('addresses', 'gst');
         $this->useraddress = $this->user->addresses->first();
         $this->location = Location::where('pincode', $this->useraddress->pin)->first();
+        $this->gst = 9;
+        $this->cgst = 9;
+        
+        if ($this->user->gst) {
+          $this->gst = 0;
+          $this->cgst = 0;
+          if ($this->user->gst->enabled) {
+            $this->gst = $user->gst->gst;
+            $this->cgst = $user->gst->cgst;
+          }
+        }
+        //dd($this->gst);
         return $next($request);
     });
   }
@@ -63,27 +77,36 @@ class OrderController extends Controller
   public function status(Request $request, $id){
     $activePage="order";
     $titlePage="Orders";
-    $order = Order::where('id', $id)->with('customer')->first();
-    $order->status = $request->input('status');
-    
 
-    //dd($order->customer->phone_number);
-    if ($order) {
-      if ($request->input('status')==2) {
-        $customer = $order->customer;
-        //dd($customer);
-        if ($customer->phone_number) {
-          //CommonRepository::sendmessage($customer->phone_number, 'Your%20order%20ORDER'.$id.'%20has%20been%20recieved%20by%20store.');
-
-          $date = Carbon::now($request->header('timezone'));
-          $order->date_of_arrival = $date;
-        }
+    try{
+        $order = Order::where('id', $id)->with('customer')->first();
+        $order->status = $request->input('status');
         
-      }
 
-      $order->save();
-      return response()->json(['message'=>'Order Status Updated'], 200);
+        //dd($order->customer->phone_number);
+        if ($order) {
+          if ($request->input('status')==2) {
+
+            $customer = $order->customer;
+            //dd($customer);
+            if ($customer->phone_number) {
+              //CommonRepository::sendmessage($customer->phone_number, 'Your%20order%20ORDER'.$id.'%20has%20been%20recieved%20by%20store.');
+
+              $updateitems = OrderItems::where('order_id', $id)->update(['status'=>3]);
+              $date = Carbon::now($request->header('timezone'));
+              $order->date_of_arrival = $date;
+            }
+            
+          }
+
+          $order->save();
+          return response()->json(['message'=>'Order Status Updated'], 200);
+        }
+    }catch(Exception $e)
+    {
+      return response()->json(['message'=>'Something went wrong'], 400);
     }
+
   }
 
   public function assignDelivery(Request $request, $id){
@@ -223,8 +246,9 @@ class OrderController extends Controller
          $total_price = $total_price + $value['addon_estimated_price']+$value['estimated_price'];
        }
      }
-    $cgst = $total_price*(9/100);
-    $gst = $total_price*(9/100);
+
+    $cgst = $total_price*($this->cgst/100);
+    $gst = $total_price*($this->gst/100);
 
     $coupon_discount = 0;
     if (!session()->get('coupon_discount')) {
@@ -263,8 +287,8 @@ class OrderController extends Controller
          $total_price = $total_price + $value['estimated_price'];
        }
      }
-    $cgst = $total_price*(9/100);
-    $gst = $total_price*(9/100);
+    $cgst = $total_price*($this->cgst/100);
+    $gst = $total_price*($this->gst/100);
 
     $coupon_discount = 0;
     if (!session()->get('coupon_discount')) {
@@ -346,10 +370,10 @@ class OrderController extends Controller
        }
     }
 
-    $cgst = $total_price*(9/100);
-    $gst = $total_price*(9/100);
+    $cgst = $total_price*($this->cgst/100);
+    $gst = $total_price*($this->gst/100);
     $coupon_discount = 0;
-    $coupon_discount = 0;
+    
     if (!session()->get('coupon_discount')) {
       session()->put("coupon_discount", ['coupon'=>null, 'discount'=>null, 'user_discount'=> null]);
     }else{
@@ -402,8 +426,8 @@ class OrderController extends Controller
        }
      }
 
-    $cgst = $total_price*(9/100);
-    $gst = $total_price*(9/100);
+    $cgst = $total_price*($this->cgst/100);
+    $gst = $total_price*($this->gst/100);
    
     $coupon_discount = 0;
     if (!session()->get('coupon_discount')) {
@@ -456,8 +480,8 @@ class OrderController extends Controller
     $coupon_discount = ['discount'=>$discount, 'coupon'=>$coupon->coupon, 'user_discount'=>session('coupon_discount')['user_discount']];
     session()->put("coupon_discount", $coupon_discount);
     
-    $cgst = $total_price*(9/100);
-    $gst = $total_price*(9/100);
+    $cgst = $total_price*($this->cgst/100);
+    $gst = $total_price*($this->gst/100);
     $price_data = ['estimated_price'=> $total_price, 'cgst'=>$cgst, 'gst'=>$gst, 
                                 'total_price'=>$total_price+$cgst+$gst-$discount];
     session()->put('prices', $price_data);
@@ -481,8 +505,8 @@ class OrderController extends Controller
 
 
     $coupon_discount = session()->get('coupon_discount');    
-    $cgst = $total_price*(9/100);
-    $gst = $total_price*(9/100);
+    $cgst = $total_price*($this->cgst/100);
+    $gst = $total_price*($this->gst/100);
     
     $total = $total_price+$cgst+$gst-$coupon_discount['discount'];
 

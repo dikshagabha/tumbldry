@@ -27,7 +27,7 @@
     <vs-card>
       <div slot="header">
         <h3>
-          Create Pickup Request
+          Create Order
         </h3>
       </div>
       <div>
