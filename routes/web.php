@@ -15,8 +15,6 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-//Auth::routes();
-
 Route::prefix('admin')->group(function () {
   // Auth Routes
   Auth::routes(['register' => false]);
@@ -129,6 +127,7 @@ Route::prefix('store')->namespace('Store')->group(function () {
 
       Route::get('/view-order/{id}', 'OrderController@view')->name('store.getOrderDetails');
 
+
       Route::post('/order/get-grn', 'OrderController@getGrn')->name('store.getGrn');
       Route::post('/order/deliver-items', 'OrderController@itemsDeliver')->name('store.itemsDeliver');
       Route::get('/create-order', 'OrderController@createWithoutPickup')->name('store.orderWithoutPickup');
@@ -147,8 +146,10 @@ Route::prefix('store')->namespace('Store')->group(function () {
       Route::post('/weight-items-session', 'OrderController@weightItemSession')->name('store.weightItemSession');
       Route::post('/coupon', 'OrderController@couponItemSession')->name('store.couponItemSession');
 
+
       Route::post('/order/status/{id}', 'OrderController@status')->name('store.order.status');
       Route::post('/order/assigndelivery/{id}', 'OrderController@assignDelivery')->name('store.order.assign-delivery');
+      Route::post('/order/mark-recieved/{id}', 'OrderController@markRecieved')->name('store.mark-recieved');
 
       Route::post('/find-customer', 'HomeController@findCustomer')->name('store.findCustomer');
 

@@ -21,6 +21,7 @@ Items:
 		<th>Item</th>
 		<th>Quantity</th>
 		<th>Service</th>
+		<th>Status</th>
 		<th>GRN <input type="checkbox" name="select_all[]" title="Select All" class="select_all" value="0"><button type="button" id="grnBtn" data-url="{{route('store.getGrn')}}" class="btn btn-link" title="Download Grn"><i class="fa fa-download"></i></button>
 			<span id="grn_error" class="error"></span>
 		</th>
@@ -35,9 +36,29 @@ Items:
 	<tr>
 		<td class="table-modal">{{$item->item}}</td>
 		<td class="table-modal">{{round($item->quantity, 2)}}</td>
+		
 		<td class="table-modal">{{$item->service_name}}</td>
-		<td class="table-modal"><input type="checkbox" name="grn[]"  value="{{ $item['id'] }}" class="grn_units"> </td>
-		<td class="table-modal"><input type="checkbox" @if($item->status == 2) checked @endif name="deliver[]"  value="{{ $item['id'] }}" class="deliver_units"> </td>
+		
+		<td class="table-modal">
+			<a href="{{route('store.mark-recieved', $item->id)}}" value="{{ $item->status }}" class="mark_status">
+				@if($item->status==1) Pending @else Recieved @endif</a>
+		</td>
+
+		<td class="table-modal">
+			@if($item->status != 1)
+				<input type="checkbox" name="grn[]" value="{{$item['id']}}" @if($item->status == 4 ||  $item->status==2 ) checked @endif class="grn_units">
+			@else
+				--
+			@endif
+		 </td>
+		
+		<td class="table-modal">
+			@if($item->status != 1)
+				<input type="checkbox" @if($item->status == 2) checked @endif name="deliver[]"  value="{{ $item['id'] }}" class="deliver_units"> 
+			@else
+				--
+			@endif
+		</td>
 
 	</tr>
 	@endforeach

@@ -509,7 +509,7 @@ class OrderController extends Controller
   public function store(Request $request, $id=null){
 
    $user=$this->user;
-
+    $validatedData = $request->validate(['delivery_mode'=>'bail|required|integer']);
    if ($id) {
      $id = decrypt($id);     
      $pickup = PickupRequest::where("id", $id)->first();
@@ -570,7 +570,8 @@ class OrderController extends Controller
                                'estimated_price'=>$prices['estimated_price'], 'cgst'=>$prices['cgst'],
                                'gst'=>$prices['gst'], 'total_price'=>round($prices['total_price'], 2),
                                'coupon_discount'=>$coupon_discount['discount'], 'coupon_id'=>$coupon_discount['coupon'],
-                               'discount'=>$coupon_discount['user_discount'], 'service_id'=>$request->input('service')
+                               'discount'=>$coupon_discount['user_discount'], 'service_id'=>$request->input('service'),
+                               'delivery_mode'=>$request->input('delivery_mode')
                             ]);
 
       $points = $order->total_price*40/100;
@@ -615,12 +616,6 @@ class OrderController extends Controller
           }
           $order_items = OrderItemImage::insert($itemData);
       }
-
-      
-      //sendMessage::dispatch("", $request->input('phone_number'), 1, $order);
-      //$response = CommonRepository::sendmessage($request->input('phone_number'), "asldls");
-
-      //dd($items);
       DB::commit();
       return response()->json([ 'redirectTo'=>route('store.create-order.index'), 'message'=>'Order has been created Successfully'], 200); 
    } catch (Exception $e) {
@@ -656,14 +651,33 @@ class OrderController extends Controller
     if (!$request->input('grn')) {
       return response()->json(['message'=> 'Please select an item'], 400);
     }
-
     $orders = OrderItems::whereIn('id', $request->input('grn'))->with('order')->with(['itemimage'=>function($q){
        $q->with('addons');
       }])->get();
-    $user = $this->user;
-   $update_status = Order::where("id", $orders->first()->order->id)->update(['status'=> 2]);  
-   $pdf = PDF::loadView('store.grn.grn', compact('orders', 'user'));
-   return ($pdf->download('invoice.pdf'));
+     $user = $this->user;
+     
+     $update_status = OrderItems::whereIn("id", $request->input('grn'))->update(['status'=> 4]);
+
+     $pdf = PDF::loadView('store.grn.grn', compact('orders', 'user'));
+     return ($pdf->download('invoice.pdf'));
+  }
+
+
+  public function markRecieved(Request $request, $id)
+  {
+    //dd($request->all());
+
+    $status=1;
+    if($request->input('status')==1) {
+     $status=3;
+    }
+    $orders = OrderItems::where('id', $id)->update(['status'=> 3]);
+
+    if($orders){
+      return response()->json(['message'=> 'Items Updated'], 200);
+    }
+    return response()->json(['message'=> 'Something went Wrong'], 400);
+    
   }
 
   public function itemsDeliver(Request $request)

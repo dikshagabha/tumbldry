@@ -455,7 +455,7 @@ $(document).ready(function(){
         $('body').waitMe('hide');
       }
     })
-  })
+  });
 });
 
 var map;

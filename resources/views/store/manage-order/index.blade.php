@@ -288,52 +288,6 @@ $(document).ready(function(){
             var pdfUrl = URL.createObjectURL(pdfFile);
             //window.open(pdfUrl);
             printJS(pdfUrl);
-            //var printwWindow = $window.open(pdfUrl);
-        //printwWindow.print();
-
-          // var filename = "";                   
-          //       var disposition = xhr.getResponseHeader('Content-Disposition');
-
-          //        if (disposition) {
-          //           var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
-          //           var matches = filenameRegex.exec(disposition);
-          //           if (matches !== null && matches[1]) filename = matches[1].replace(/['"]/g, '');
-          //       } 
-          //       var linkelem = document.createElement('a');
-          //       try {
-          //           var blob = new Blob([response], { type: 'application/pdf' });                        
-
-          //           if (typeof window.navigator.msSaveBlob !== 'undefined') {
-          //               //   IE workaround for "HTML7007: One or more blob URLs were revoked by closing the blob for which they were created. These URLs will no longer resolve as the data backing the URL has been freed."
-          //               window.navigator.msSaveBlob(blob, filename);
-          //           } else {
-          //               var URL = window.URL || window.webkitURL;
-          //               var downloadUrl = URL.createObjectURL(blob);
-
-          //               if (filename) { 
-          //                   // use HTML5 a[download] attribute to specify filename
-          //                   var a = document.createElement("a");
-
-          //                   // safari doesn't support this yet
-          //                   if (typeof a.download === 'undefined') {
-          //                       window.location = downloadUrl;
-          //                   } else {
-
-          //                       window.print = downloadUrl;
-          //                       // a.href = downloadUrl;
-          //                       // a.download = filename;
-          //                       // document.body.appendChild(a);
-          //                       // a.target = "_blank";
-          //                       // a.click();
-          //                   }
-          //               } else {
-          //                   window.location = downloadUrl;
-          //               }
-          //           }   
-
-          //       } catch (ex) {
-          //           console.log(ex);
-          //       } 
         }
       })
     });
@@ -372,6 +326,46 @@ $(document).ready(function(){
       $(".deliver_units").prop("checked", false);
     }
   })
+
+  $(document).on("click", ".mark_status", function(e){
+    e.preventDefault();
+    $(".error").html(""); 
+    current = $(this);
+    $("#OrderModal").modal('hide');
+    text = 'pending';
+    if (current.attr('value')==1) {
+        text = 'recieved';
+    }
+
+    bootbox.confirm({
+        title: "Confirm",
+        message: "Mark order item as "+text+" ?",
+        buttons: {
+            cancel: {
+                label: '<i class="fa fa-times"></i> Cancel'
+            },
+            confirm: {
+                label: '<i class="fa fa-check"></i> Confirm'
+            }
+        },
+        callback: function (result) {
+          if (result) {
+            $.ajax({
+              url: current.attr('href'),
+              type:'post',
+              data:{"status": current.attr('value'), "data":"dl;fdsf"},
+              cache: false,
+              success: function(data){
+                success(data.message);
+                //$(".ItemsAdded").html(data.view);
+                $('body').waitMe('hide');
+              }
+            })
+          }
+            
+        }
+      });
+    })
 })
 </script>
 

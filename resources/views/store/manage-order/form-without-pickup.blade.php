@@ -58,7 +58,20 @@
                </div>
           </div>
         <br>
-
+        <div class="form-group-inner">
+          <div class="row">
+               <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                 <label class="login2 pull-right pull-right-pro">Delivery Mode</label>
+               </div>
+               <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
+                {{Form::radio('delivery_mode', '1', false, ['id'=>"self"])}} <label for="self"> Self Pickup</label>
+                {{Form::radio('delivery_mode', '2', false, ['id'=>"home"])}}<label for="home"> Home Delivery</label>
+               
+                <span class="error" id="delivery_mode_error"></span>
+               </div>
+          </div>
+        </div>
+        <br>
 
         <div class="form-group-inner">
           <div class="row">
