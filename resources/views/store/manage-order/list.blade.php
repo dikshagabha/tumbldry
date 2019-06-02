@@ -8,6 +8,7 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
          <!--  <th>S No</th> -->
           <th>Order</th>
           <th>Customer Id</th>
+          <th>Service</th>
           <th>Delivery Mode</th>
           <th>Date of Arrival</th>
           <th>Estimated Time</th>
@@ -26,6 +27,9 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
             </td>
             <td>
               {{$user->customer_id}}
+            </td>
+            <td>
+              {{$user->service->name}}
             </td>
             <td>
               @if($user->delivery_mode==1) Self Pickup @else Home Delivery @endif
