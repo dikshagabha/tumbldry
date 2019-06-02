@@ -39,7 +39,7 @@ class CustomerController extends Controller
     {
 
         $response['order'] =  Order::where('id', $id)->with('items')->first();;
-        $http_status = 200
+        $http_status = 200;
          return response()->json($response, $http_status);
     }
 

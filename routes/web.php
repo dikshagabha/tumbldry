@@ -107,6 +107,9 @@ Route::prefix('store')->namespace('Store')->group(function () {
 
       Route::get('logout', 'LoginController@logout')->name('logout');
 
+      Route::get('order/print/{id}', 'OrderController@invoice')->name('store.printInvoice');
+
+
       Route::post('set-store-timezone', 'HomeController@setTimezone')->name('store.set-timezone');
 
       Route::get('get-customer-addresses', 'HomeController@getCustomerAddresses')->name('store.getCustomerAddresses');
@@ -131,6 +134,7 @@ Route::prefix('store')->namespace('Store')->group(function () {
       Route::post('/order/get-grn', 'OrderController@getGrn')->name('store.getGrn');
       Route::post('/order/deliver-items', 'OrderController@itemsDeliver')->name('store.itemsDeliver');
       Route::get('/create-order', 'OrderController@createWithoutPickup')->name('store.orderWithoutPickup');
+      
 
       Route::get('/input-rate-card', 'RateCardController@getRate')->name('store.getInputRate');
 
@@ -170,3 +174,4 @@ Route::prefix('store')->namespace('Store')->group(function () {
 
 Route::get('/customer-details/{id?}', 'Store\HomeController@getcustomerdetails')->name('getcustomerdetails');
 Route::get('/address-details/{id}', 'Store\HomeController@getaddressdetails')->name('getaddressdetails');
+

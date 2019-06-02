@@ -267,6 +267,27 @@ $(document).ready(function(){
       })
     });
 
+    $(document).on("click",".print_invoice",function(e) {
+      e.preventDefault();
+      $('body').waitMe();
+      current = $(this)
+      $.ajax({
+        url: current.attr('href'),
+        method:'get',
+        xhrFields: {
+                responseType: 'blob'
+            },
+        success:function(data){
+          var pdfFile = new Blob([data], {
+            type: "application/pdf"
+            });
+            var pdfUrl = URL.createObjectURL(pdfFile);
+              printJS(pdfUrl);
+             $('body').waitMe('hide');
+        }
+      })
+    });
+
   $(document).on("click","#grnBtn",function(e) {
       e.preventDefault();
       $('body').waitMe();

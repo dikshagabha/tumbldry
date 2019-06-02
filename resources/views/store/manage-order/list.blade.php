@@ -10,7 +10,9 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
           <th>Customer Id</th>
           <th>Delivery Mode</th>
           <th>Date of Arrival</th>
-          <th width='30%'>Order Status</th>
+          <th>Estimated Time</th>
+          <th width='20%'>Order Status</th>
+          <th>Invoice</th>
 
         </tr>
       </thead>
@@ -23,7 +25,6 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
               </a>
             </td>
             <td>
-
               {{$user->customer_id}}
             </td>
             <td>
@@ -36,6 +37,9 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
               @else
               --
               @endif
+            </td>
+            <td>
+              {{$user->created_at->addDays(2)->format('y/m/d h:i a')}}
             </td>
             <td>
               @php
@@ -62,7 +66,16 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
                     Form::button('Assign', ['class'=>'btn btn-warning assign_runner', 'data-url'=> route('store.order.assign-delivery', $user->id), 'data-id'=>$user->id ])
                   }}
                 </div>
-            </td>        
+            </td>   
+            <td>
+              
+                @if($user->items()->where('status', 2)->count())
+                  <a href="{{ route('store.printInvoice', $user->id) }}" class="print_invoice"> <vs-button type="gradient" color="warning" > <i class="fa fa-file-pdf-o"></i> </vs-button>
+                @else
+                  --
+                @endif
+              </a>
+            </td>     
           </tr>
           @php
           $i++;
