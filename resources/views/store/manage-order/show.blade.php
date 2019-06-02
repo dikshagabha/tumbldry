@@ -4,12 +4,29 @@
 		<th width="50%">Order Id</th>
 		<td>ORDER{{$order->id}}</td>
 	</tr>
+	
+	<tr>
+		<th>Total Amount</th>
+		<td>{{$order->estimated_price}} Rs</td>
+	</tr>
+	<tr>
+		<th>GST</th>
+		<td>{{$order->gst}} Rs</td>
+	</tr>
+	<tr>
+		<th>CGST</th>
+		<td>{{$order->cgst}} Rs</td>
+	</tr>
+	<tr>
+		<th>Discount</th>
+		<td>@if($order->discount){{$order->discount}} Rs @endif</td>
+	</tr>
 	<tr>
 		<th>Coupon Applied</th>
 		<td>{{$order->coupon_id}}</td>
 	</tr>
 	<tr>
-		<th>Total Amount</th>
+		<th>Payable Amount Amount</th>
 		<td>{{$order->total_price}} Rs</td>
 	</tr>
 </table>

@@ -313,15 +313,18 @@ class OrderController extends Controller
     $index = $request->input('data-id')-1;
     
     $items[$index]['quantity'] =  $request->input('quantity');
+    $form_type = Service::where('id', $request->input('service'))->first();
+
+    if ($form_type->form_type!=2) {
+      $items[$index]['estimated_price'] = ($request->input('quantity')*($items[$index]['price']));
+    }
 
     if ($request->input('add')) {
-      $items[$index]['estimated_price'] = ($request->input('quantity')*($items[$index]['price']))+
+      $items[$index]['estimated_price'] = $items[$index]['estimated_price'] +
                                         $items[$index]['addon_estimated_price'];
     }
-    
-    //unset($items[$index]);
 
-
+    //dd($items[$index]);
     session()->put("add_order_items", $items);
 
     $items = session('add_order_items');

@@ -23,7 +23,9 @@ $i=1;
 						>
 						</td>
 						<td>
-						<button type="button" class="btn btn-link quantity" data-url = "{{route('store.quantityItemSession')}}" data-id='{{$i}}'
+
+
+						<button type="button" class="btn btn-link quantity" data-url = "{{route('store.quantityItemSession')}}" data-service = {{$item['service_id']}} data-id='{{$i}}'
 						data-id="{{$i}}" style="color:white" title="Add Quantity"> 
 						<i class="fa fa-refresh"></i>
 						</button>

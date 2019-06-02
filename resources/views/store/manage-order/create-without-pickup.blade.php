@@ -396,7 +396,9 @@ $(document).ready(function(){
     $.ajax({
       url: current.data('url'),
       type:'post',
-      data: {'data-id': current.data('id'), 'quantity':$('.quantityVal_'+current.data('id')).val(), 'add':current.data('add')},
+      data: {'data-id': current.data('id'), 'quantity':$('.quantityVal_'+current.data('id')).val(), 
+                'service':current.data('service'), 
+              'add':current.data('add')},
       cache: false,
       success: function(data){
         success(data.message);
