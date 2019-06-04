@@ -38,6 +38,18 @@
 		         <h4> Please Select a Payment Mode</h4>
 		         
 	      	 	<table class="table">
+	      	 		<tr>
+		          		<td> <label for = 'wallet'>Wallet Payment</label>
+		          		</td>
+
+		          		<td> 
+		          			<input type="checkbox" name="payment_mode[]" value="2" id="wallet" class="mode">  
+		          			<div class="2 input" id="2" style="display: none">
+		          				<input type="text" name="wallet_pay" id="wallet_pay" value="{{$order->total_price}}" class="form-control">
+		          				Wallet Money: {{$userwallet->price}} Rs
+		          			</div>
+		          		</td>
+		          	</tr>
 		          	<tr>
 		          		<td> <label for = 'cash'>Cash</label>
 		          		</td>
@@ -51,18 +63,7 @@
 		          		</td>
 		          	</tr>
 
-		          	<tr>
-		          		<td> <label for = 'wallet'>Wallet Payment</label>
-		          		</td>
-
-		          		<td> 
-		          			<input type="checkbox" name="payment_mode[]" value="2" id="wallet" class="mode">  
-		          			<div class="2 input" id="2" style="display: none">
-		          				<input type="text" name="wallet_pay" id="wallet_pay" value="{{$order->total_price}}" class="form-control">
-		          				Wallet Money: {{$userwallet->price}} Rs
-		          			</div>
-		          		</td>
-		          	</tr>
+		          
 		          	<tr>
 		          		<td> <label for = 'loyality'>Redeem Loyality Points</label>
 		          		</td>

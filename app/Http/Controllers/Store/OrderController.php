@@ -24,8 +24,8 @@ use App\Model\{
     LaundaryWeights,
     UserWallet,
     UserPayments,
-    SMSTemplate
-
+    SMSTemplate,
+    VendorItem
 };
 use App\User;
 use Session;
@@ -652,8 +652,23 @@ class OrderController extends Controller
   } 
  
   public function view(Request $request, $id){
-    $order = Order::where('id', $id)->with('items', 'customer', 'address', 'payment')->first();
-    return view('store.manage-order.show', compact('order'));
+    $order = Order::where('id', $id)->with('items', 'customer', 'address', 'payment', 'vendor')->first();
+    $vendors = null;
+    
+    if ($order->items->where('status', 3)->count()) {
+      
+      if ($order->service->form_type !=2) {
+          $address = $order->address_id;
+          if ($order->service->form_type==1) {
+            $address = $this->useraddress->id;
+          }
+        $vendors = CommonRepository::search_vendor($address, $order->service_id);
+        $vendors = $vendors->pluck('name', 'id');
+      }
+    }
+      
+
+    return view('store.manage-order.show', compact('order', 'vendors'));
   }
 
   public function createWithoutPickup(Request $request){
@@ -692,19 +707,54 @@ class OrderController extends Controller
 
   public function markRecieved(Request $request, $id)
   {
-    //dd($request->all());
-
     $status=1;
     if($request->input('status')==1) {
      $status=3;
     }
-    $orders = OrderItems::where('id', $id)->update(['status'=> 3]);
+
+   //dd($status);
+    $orders = OrderItems::where('id', $id)->with('order')->first();
+    if ($status==3) {
+      if ($orders->service->form_type != 2) {
+          // Vendor Assignment
+          $address = $orders->order->address_id;
+
+          if($orders->service->form_type == 1) {
+            $address = $this->useraddress->id;
+          }
+          //dd($address);
+          //Search Vendor in pin
+          $vendor = CommonRepository::search_vendor($address, $orders->service_id);
+          if($vendor && $vendor->count()==1){
+            $vendor = $vendor->first();
+            VendorItem::create(['item_id'=>$id, 'order_id'=>$orders->order->id, 
+              'address_id'=>$vendor->addresses->id, 
+              'vendor_id'=>$vendor->id, 
+              'service_id'=>$orders->service_id]);
+          }
+          
+        }  
+    }
+    $orders->status= $status;
+    $orders->save();
 
     if($orders){
       return response()->json(['message'=> 'Items Updated'], 200);
     }
     return response()->json(['message'=> 'Something went Wrong'], 400);
     
+  }
+
+  public function assignVendor(Request $request){
+
+    $data = $request->only('order_id', 'item_id', 'vendor_id', 'service_id');
+
+    $orders = VendorItem::create($data);
+    if ($orders) {
+      return response()->json(['message'=> 'Items Updated'], 200);
+    }
+    return response()->json(['message'=> 'Something went Wrong'], 400);
+
   }
 
   public function itemsDeliver(Request $request)

@@ -328,6 +328,23 @@ $(document).ready(function(){
       })
     });
 
+  $(document).on("change",".selectVendor",function(e) {
+      e.preventDefault();
+      $('body').waitMe();
+      current = $(this)
+      $.ajax({
+        url:current.data('url'),
+        method:'post',
+        data: {'order_id': current.data('order'), 'item_id': current.data('item'),
+                'vendor_id': current.val(), 'service_id':current.data('service')},
+        success:function(data){
+          $('body').waitMe('hide');
+          $("#OrderModal").modal('hide');
+          success(data.message);
+        }
+      })
+    });
+
   $(document).on('click', '.select_all', function(e){
     //e.preventDefault();
 

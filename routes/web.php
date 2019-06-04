@@ -112,6 +112,7 @@ Route::prefix('store')->namespace('Store')->group(function () {
       Route::get('logout', 'LoginController@logout')->name('logout');
 
       Route::get('order/print/{id}', 'OrderController@invoice')->name('store.printInvoice');
+      Route::post('order/assignvendor/', 'OrderController@assignvendor')->name('store.assignVendor');
 
 
       Route::post('set-store-timezone', 'HomeController@setTimezone')->name('store.set-timezone');

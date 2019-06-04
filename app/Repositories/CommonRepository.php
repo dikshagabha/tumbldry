@@ -6,7 +6,8 @@ use JasonGuru\LaravelMakeRepository\Repository\BaseRepository;
 //use Your Model
 
 use App\Model\Token;
-
+use App\User;
+use App\Model\Address;
 /**
  * Class CommonRepository.
  */
@@ -57,4 +58,18 @@ class CommonRepository extends BaseRepository
          }
          return $response;
     }
+
+     public static function search_vendor($address, $service){
+        $pin = Address::where('id', $address)->first();
+        $pin = $pin->pin;
+        //dd($pin);
+        $users = User::where('role', 6)->where('service_id', $service)->where('status', 1)
+                 ->whereHas('addresses', function($q) use($pin){
+                    $q->where('pin', $pin);
+                })
+                ->with('addresses')->get();
+        //dd($users);
+        return $users;
+    }   
+
 }

@@ -29,6 +29,10 @@ class Order extends Model
  		return $this->hasOne('App\Model\Service', 'id', 'service_id');
  	}
 
+    public function vendor(){
+        return $this->hasMany('App\Model\VendorItem', 'order_id', 'id');
+    }
+
     public function payment(){
         return $this->hasMany('App\Model\UserPayments', 'order_id', 'id');
     }
