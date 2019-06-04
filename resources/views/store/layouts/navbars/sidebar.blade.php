@@ -38,7 +38,10 @@
       <vs-sidebar-item index="rates" icon="money" href="{{ route('store.getRate') }}">
         Rates
       </vs-sidebar-item>
-      <vs-sidebar-group title="Reports" icon="paper">
+      <vs-sidebar-item index="plans" icon="money_off" href="{{ route('manage-plans.index') }}">
+        Plans
+      </vs-sidebar-item>
+      <vs-sidebar-group title="Reports" icon="publish">
           <vs-sidebar-item  index="customer_reports" icon="verified_user" href="{{ route('store.customer-reports') }}">
             Customer
           </vs-sidebar-item>

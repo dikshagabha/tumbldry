@@ -145,7 +145,7 @@ class OrderController extends Controller
 
       $total = $items->sum('quantity');
       $weight = $items->sum('weight');
-      $items_partial = $items->where('status', 1);
+      $items_partial = $items->where('status', 2)->count();
 
       $pdf = PDF::loadView('store.manage-order.invoice', compact('order', 'user', 'items', 'total', 'weight','items_partial'));
       return ($pdf->download('invoice.pdf'));
@@ -335,8 +335,8 @@ class OrderController extends Controller
        }
      }
 
-    $cgst = $total_price*(9/100);
-    $gst = $total_price*(9/100);
+    $cgst = $total_price*($this->cgst/100);
+    $gst = $total_price*($this->gst/100);
     $coupon_discount = 0;
     $coupon_discount = 0;
     if (!session()->get('coupon_discount')) {
@@ -601,36 +601,36 @@ class OrderController extends Controller
                                'delivery_mode'=>$request->input('delivery_mode')
                             ]);
 
-      $points = $order->total_price*40/100;
-      $insert = $points;
+      // $points = $order->total_price*40/100;
+      // $insert = $points;
       
-      if($wallet->wallet->loyality_points)
-      {
-        $insert = $wallet->wallet->loyality_points + $points;
-      }
-      if ($price > $order->total_price) {       
-        $paymentData = [['order_id'=>$order->id,
-                                  'user_id'=>$customer_id,
-                                'to_id'=>$this->user->id, 'type'=>1, 
-                                'price'=>$order->total_price, 'created_at'=>Carbon::now()]];
+      // if($wallet->wallet->loyality_points)
+      // {
+      //   $insert = $wallet->wallet->loyality_points + $points;
+      // }
+      // if ($price > $order->total_price) {       
+      //   $paymentData = [['order_id'=>$order->id,
+      //                             'user_id'=>$customer_id,
+      //                           'to_id'=>$this->user->id, 'type'=>1, 
+      //                           'price'=>$order->total_price, 'created_at'=>Carbon::now()]];
         
-        //UserWallet::where('user_id', $wallet->id)->update(['price'=>$price - $order->total_price, 
-        //                                                 'loyality_points'=>$insert]);
-      }else{
-        $paymentData = [['order_id'=>$order->id, 'to_id'=>$this->user->id, 'type'=>1, 
-                        'user_id'=>$customer_id,'created_at'=>Carbon::now(),
-                        'price'=>$price], ['order_id'=>$order->id, 
-                          'user_id'=>$customer_id,'to_id'=>$this->user->id, 'type'=>2, 
-                        'price'=>$order->total_price-$price,'created_at'=>Carbon::now()]];
-        $amount = $order->total_price-$price;
+      //   //UserWallet::where('user_id', $wallet->id)->update(['price'=>$price - $order->total_price, 
+      //   //                                                 'loyality_points'=>$insert]);
+      // }else{
+      //   $paymentData = [['order_id'=>$order->id, 'to_id'=>$this->user->id, 'type'=>1, 
+      //                   'user_id'=>$customer_id,'created_at'=>Carbon::now(),
+      //                   'price'=>$price], ['order_id'=>$order->id, 
+      //                     'user_id'=>$customer_id,'to_id'=>$this->user->id, 'type'=>2, 
+      //                   'price'=>$order->total_price-$price,'created_at'=>Carbon::now()]];
+      //   $amount = $order->total_price-$price;
         
-        //UserWallet::where('user_id', $wallet->id)->update(['price'=>0, 
-        //                                                  'loyality_points'=>$insert]);
-      }
+      //   //UserWallet::where('user_id', $wallet->id)->update(['price'=>0, 
+      //   //                                                  'loyality_points'=>$insert]);
+      // }
       
-      array_push($paymentData, ['order_id'=>$order->id, 'to_id'=>$customer_id, 'created_at'=>Carbon::now(),
-        'user_id'=>0,'type'=>3, 'price'=>$points]);
-      $payments = UserPayments::insert($paymentData);
+      //array_push($paymentData, ['order_id'=>$order->id, 'to_id'=>$customer_id, 'created_at'=>Carbon::now(),
+      //  'user_id'=>0,'type'=>3, 'price'=>$points]);
+      //$payments = UserPayments::insert($paymentData);
       //$response = CommonRepository::sendmessage($wallet->phone_number, $message);
 
       foreach ($items as $item) {
@@ -644,12 +644,12 @@ class OrderController extends Controller
           $order_items = OrderItemImage::insert($itemData);
       }
       DB::commit();
-      return response()->json([ 'redirectTo'=>route('store.create-order.index'), 'message'=>'Order has been created Successfully'], 200); 
+      return response()->json([ 'redirectTo'=>route('store.paymentmodes', $order->id), 'message'=>'Order has been created Successfully'], 200); 
    } catch (Exception $e) {
       DB::rollback();
       return response()->json(['message'=>$e->getMessage()], 400);
    }
-  }
+  } 
  
   public function view(Request $request, $id){
     $order = Order::where('id', $id)->with('items', 'customer', 'address')->first();

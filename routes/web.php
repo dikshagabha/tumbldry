@@ -98,12 +98,16 @@ Route::prefix('store')->namespace('Store')->group(function () {
             'manage-customer' => 'CustomerController',
             // 'manage-vendor' => 'VendorController',
             'store-pickup-request' => 'PickupController',
+            'manage-plans' => 'PlanController',
           ]);
       });
       
       Route::get('/payment', 'PaymentController@pay')->name('pay');
-      
 
+      Route::get('order/payment/{id}', 'PaymentController@getPaymentMode')->name('store.paymentmodes');
+      
+      Route::post('order/payment/', 'PaymentController@payment')->name('store.payment');
+      
 
       Route::get('logout', 'LoginController@logout')->name('logout');
 
@@ -122,6 +126,8 @@ Route::prefix('store')->namespace('Store')->group(function () {
       Route::post('store-service-input', 'OrderController@setServiceInput')->name('store.service.input');
       
       Route::post('delete-addresses-session', 'CustomerController@deleteSessionAddresses')->name('store.deleteCustomerAddresses');
+
+      Route::post('export/customer', 'ReportsController@exportCustomer')->name('store.export-customer');
       
       //Route::get('/payment', 'RateCardController@index')->name('store.getRate');
       

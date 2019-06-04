@@ -42,7 +42,7 @@
 					<td> Total </td>
 				 </tr>
 					
-				@if($items_partial->count()==0)
+				@if($items_partial->count()==$items->count())
 					<tr>
 						<td>1. </td>
 						<td>						

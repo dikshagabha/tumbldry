@@ -10,7 +10,7 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
               <th>Id</th>
               <th>Status</th>
                <th>Created At</th>
-              <th>View</th>
+            <!--   <th>View</th> -->
             </tr>
           </thead>
           <tbody>
@@ -40,12 +40,12 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
                   {{$user->created_at->setTimezone($timezone)->format('y/m/d h:i a')}}
                   
               </td>
-              <td>                  
+             <!--  <td>                  
                   <a href="{{route('store.getOrderDetails', $user->id)}}" class="view" title="view">
                     <button type="button" class="btn btn-info "><i class="fa fa-eye"></i></button>
                   </a>
                   
-              </td>
+              </td> -->
 
 
             </tr>

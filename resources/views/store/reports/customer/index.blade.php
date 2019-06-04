@@ -13,10 +13,7 @@
       </div>
       <div>
 
-        <vs-row vs-justify="flex-end">
-         
-         
-         </vs-row>
+       
            <br>
              {{ Form::open(['method' => 'get', 'id' => 'store-search', 'name' => 'serach_form']) }}
                 <div class="form-group-inner">
@@ -40,7 +37,9 @@
                   </div>
                   {{ Form::close() }}
               </div>
-
+               <!-- <vs-row vs-justify="flex-end">
+                <a href="{{ route('store.export-customer')}}"><vs-button type="gradient" color="danger"  id="export-button" >Export</vs-button></a>
+                </vs-row> -->
               <br>
               <div id="dataList">
                 

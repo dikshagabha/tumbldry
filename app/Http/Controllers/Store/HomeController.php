@@ -11,6 +11,7 @@ use App\Model\Order;
 use App\User;
 use Auth;
 use App\Notifications\StoreNotifications;
+use App\Reports\MyReport;
 
 class HomeController extends Controller
 {
@@ -20,6 +21,8 @@ class HomeController extends Controller
     	$activePage = 'dashboard';
     	$titlePage = "Dashboard";
      	$timezone = $Request->session()->get('user_timezone', 'Asia/Calcutta');
+
+        
 
         $runners = User::where(['role'=>5, 'status'=>1])->where('user_id', Auth::user()->id)->pluck('name', 'id');
     	$users = PickupRequest::where('store_id', Auth::user()->id)->wheredoesnthave('order')->with('order')->latest()->paginate(5);
