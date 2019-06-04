@@ -10,6 +10,7 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
           <th>Customer Id</th>
           <th>Service</th>
           <th>Delivery Mode</th>
+          <th>Payment</th>
           <th>Date of Arrival</th>
           <th>Estimated Time</th>
           <th width='20%'>Order Status</th>
@@ -34,6 +35,24 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
             <td>
               @if($user->delivery_mode==1) Self Pickup @else Home Delivery @endif
             </td>
+
+            <td>
+              @if($user->payment->count())
+                @foreach($user->payment()->where('type', '!=', 0)->get() as $pay)
+                  @if($pay->type==1)                                
+                    Cash
+                  @elseif($pay->type==2)
+                    Wallet
+                  @else
+                    Loyality Points
+                  @endif
+                  ({{$pay->price}} Rs),  
+                  @endforeach
+                @else
+                  --
+                @endif
+            </td>
+
             <td>
               @if($user->date_of_arrival)
 

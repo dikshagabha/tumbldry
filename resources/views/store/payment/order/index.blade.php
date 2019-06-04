@@ -63,6 +63,20 @@
 		          			</div>
 		          		</td>
 		          	</tr>
+		          	<tr>
+		          		<td> <label for = 'loyality'>Redeem Loyality Points</label>
+		          		</td>
+
+		          		<td> 
+		          			<input type="checkbox" name="payment_mode[]" value="3" id="wallet" class="mode">  
+		          			<div class="3 input" id="3" style="display: none">
+		          				
+		          				Loyality Points: {{round($userwallet->loyality_points, 2)}} Points <br>
+		          				Loyality Points Value: {{round($userwallet->loyality_points * (1/40) , 2)}} Rs
+		          				<input type="hidden" name="loyality_points" value="{{round($userwallet->loyality_points * (1/40) , 2)}}">
+		          			</div>
+		          		</td>
+		          	</tr>
 		        </table>
 		        <input type="hidden" name="order_id" value="{{$order->id}}">
 			</vs-col>
@@ -91,12 +105,6 @@
 		          		<td>Rs {{$order->total_price }}</td>
 		          	</tr>
 		        </table>
-		          <!-- <vs-list>
-				    <vs-list-item title="Order Id">{{$order->id}}</vs-list-item>
-				    <vs-list-item title="Walet Payment" subtitle=""></vs-list-item>
-				    <vs-list-item title="Some more text"></vs-list-item>
-				    <vs-list-item title="Even more text" subtitle="Another little text"></vs-list-item>
-				  </vs-list> -->
 			</vs-col>
 		</vs-row>
 		<vs-row>

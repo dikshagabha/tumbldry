@@ -30,6 +30,8 @@
 		<td>{{$order->total_price}} Rs</td>
 	</tr>
 </table>
+
+
 @if($order->items->count())
 Items:
 <div id="grnForm">
@@ -87,6 +89,27 @@ Items:
 </table>
 </div>
 @endif
+
+@if($order->payment->count())
+Payment Details:
+<table class="table table-bordered">
+	@foreach($order->payment()->where('type', '!=', 0)->get() as $pay)
+	<tr>
+		<th class="table-modal">@if($pay->type==1)
+								
+									Cash
+								@elseif($pay->type==2)
+									Wallet
+								@else
+									Loyality Points
+								@endif</th>
+
+		<td class="table-modal">{{$pay->price}} Rs</td>
+	</tr>
+	@endforeach
+</table>	
+@endif
+
 @if($order->customer->count())
 Customer Details:
 <table class="table table-bordered">

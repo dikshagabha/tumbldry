@@ -652,7 +652,7 @@ class OrderController extends Controller
   } 
  
   public function view(Request $request, $id){
-    $order = Order::where('id', $id)->with('items', 'customer', 'address')->first();
+    $order = Order::where('id', $id)->with('items', 'customer', 'address', 'payment')->first();
     return view('store.manage-order.show', compact('order'));
   }
 
