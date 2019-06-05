@@ -1,5 +1,5 @@
 @extends('store.layouts.app')
-@section('title', 'Manage Runner')
+@section('title', 'Manage Plans')
 @section('css')
   <link rel="stylesheet" href="{{ asset('css/chosen/bootstrap-chosen.css') }}">
   <link rel="stylesheet" href="{{ asset('css/jcf.css') }}">
@@ -15,7 +15,7 @@
     <vs-card>
       <div slot="header">
         <h3>
-          Create Runner
+          Create Plan 
         </h3>
       </div>
       <div>
@@ -23,26 +23,22 @@
         <vs-row vs-justify="center">
          <vs-col type="flex" vs-justify="center" vs-align="center" vs-w="11">
 
-          <a href="{{route('manage-runner.index')}}">
+          <a href="{{route('manage-plans.index')}}">
 
               <vs-button color="danger" type="border" icon="arrow_back"></vs-button>
           
           </a>
             <br>
-         <form action="{{route('manage-runner.store')}}" method="post"  id="addFrenchise" enctype="multipart/form-data">
-        @csrf
-        @include('store.manage-runner.form')
+         <form action="{{route('manage-plans.store')}}" method="post"  id="addFrenchise" enctype="multipart/form-data">
+            @csrf
+
+            @include('store.manage-plans.form')
 
          <div class="row">
            <div class="col-lg-3 col-md-3 col-sm-3">
            </div>
-           <!--<div class="col-lg-3 col-md-3 col-sm-3">
-             <a href="{{route('manage-customer.index')}}">
-              <vs-button color="danger" type="border">Cancel</vs-button>
-            </a>
-            </div> -->
            <div class="col-lg-5 col-md-5 col-sm-5">
-            <vs-button color="primary" type="border"  id="add_frenchise" data-url="{{ route('manage-runner.store') }}">
+            <vs-button color="primary" type="border"  id="add_frenchise" data-url="{{ route('manage-plans.store') }}">
               Create
             </vs-button>
            </div>
@@ -82,73 +78,75 @@ $(document).ready(function(){
       contentType: false,      
       success: function(data){
         success(data.message);
+        window.location=data.redirectTo;
+        $('body').waitMe('hide');
+      }
+    })
+  })
+
+  $(document).on('change', '#plan_type', function(e){
+    e.preventDefault();
+    $('body').waitMe();
+
+    var form = $('#addFrenchise')[0];
+    var data = new FormData(form);
+    $(".error").html("");
+    $.ajax({
+      url: $('#plan_type').data('url'),
+      type:'post',
+      data: {'type': $('#plan_type').val()},
+         
+      success: function(data){
+        //success(data.message);
+
+        $("#plans").html(data.view);
         //window.location=data.redirectTo;
         $('body').waitMe('hide');
       }
     })
   })
-})
+  $(document).on('click', '#search-user', function(e){
+      e.preventDefault(); 
+      $(".error").html("")
+      $('body').waitMe();      
+      $.ajax({
+        url: $('#search-user').data('url'),
+        type:'post',
+        data: {'phone_number':$('#phone').val()},
+        success: function(data){
+          success(data.message);
+          if (data.customer) 
+          {
+              $('#name').val(data.customer['name']).prop('readonly', true);
+            $('#email').val(data.customer['email']).prop('readonly', true);
+            $('#phone').val(data.customer['phone_number']).prop('readonly', true);
+            $("#customer_id").val(data.customer.id);
+              
+          }
+          $('body').waitMe('hide');
+        },
+        error: function(data){
 
-var map;
-function initMap() {
-  map = new google.maps.Map(document.getElementById('map'), {
-    
-    zoom: 8
-  });
-if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(function(position) {
-      var pos = {
-        lat: position.coords.latitude,
-        lng: position.coords.longitude
-      };
-
-      var marker = new google.maps.Marker({
-          position: pos,
-          map: map,
-          draggable:true,
-        });
-      map.setCenter(pos);
-      google.maps.event.addListener(marker, 'dragend', function (evt) {
-         geocodePosition(marker.getPosition());
-      });
-    });
-
-
-  }
-
-
-function geocodePosition(pos) 
-{
-   geocoder = new google.maps.Geocoder();
-   geocoder.geocode
-    ({
-        latLng: pos
-    }, 
-        function(results, status) 
-        {
-            if (status == google.maps.GeocoderStatus.OK) 
-            {
-                $('#address').val(results[0].formatted_address);
-                $('#city').val(results[0].city);
-                $('#state').val(results[0].state);
-                $('#pin').val(results[0].zip);
-                $('#latitude').val(results[0].latitude);
-                $('#longitude').val(results[0].longitude);
-            } 
-            else 
-            {
-                console.log('Cannot determine address at this location.'+status);
-            }
+           if (data.status==422) {
+            $('body').waitMe('hide');
+                    var errors = data.responseJSON;
+                    for (var key in errors.errors) {
+                      console.log(errors.errors[key][0])
+                        $("#"+key+"_error").html(errors.errors[key][0])
+                      }
+          }else{
+            error(data.responseJSON.message);
+            $('#name').val('').prop('readonly', false);
+            $('#email').val('').prop('readonly', false);
+            $('#phone_number').val('').prop('readonly', false);
+            $("#customer_id").val("");
+            $('body').waitMe('hide');
+           }
         }
-    );
-}
-
-  
- 
-}
-
+      })
+    })
+})
 </script>
-<script src="https://maps.googleapis.com/maps/api/js?key={{env('MAPS_EMBED_KEY')}}&libraries=places&callback=initMap"
-        async defer></script>
+
 
 @endpush

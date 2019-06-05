@@ -108,12 +108,17 @@ Route::prefix('store')->namespace('Store')->group(function () {
       
       Route::post('order/payment/', 'PaymentController@payment')->name('store.payment');
       
+      Route::get('/plans-payment/{id}', 'PaymentController@getPlansPayment')->name('plans.payment');
+      Route::post('/plans-payment/', 'PaymentController@plansPayment')->name('store.plans.payment');
 
       Route::get('logout', 'LoginController@logout')->name('logout');
 
       Route::get('order/print/{id}', 'OrderController@invoice')->name('store.printInvoice');
       Route::post('order/assignvendor/', 'OrderController@assignvendor')->name('store.assignVendor');
 
+      Route::post('plans/get-plans/', 'PlanController@getPlans')->name('store.getPlans');
+
+     
 
       Route::post('set-store-timezone', 'HomeController@setTimezone')->name('store.set-timezone');
 

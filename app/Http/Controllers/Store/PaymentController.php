@@ -10,7 +10,8 @@ use App\Model\{
   Order,
   UserWallet,
   UserPayments,
-  Location
+  Location,
+  UserPlan
 };
 use Auth;
 use App\User;
@@ -146,6 +147,53 @@ class PaymentController extends Controller
             $payment= UserPayments::insert($paymentData);
             $userwallet->save();
             return response()->json(["message"=>"Payment Success", 'redirectTo'=>route('store.create-order.index')], 200);
+          }catch(Exception $e){
+            return response()->json(["message"=>"Something went wrong"], 400);
+          }
+    }
+
+    public function getPlansPayment(Request $request, $id){
+
+     $activePage="plans";
+     $titlePage="Plans";
+     $order = UserPlan::where('id', $id)->first();
+     //$userwallet = UserWallet::where('user_id', $order->customer_id)->first();
+     return view('store.payment.plans.index', compact('activePage', 'titlePage', 'order', 'userwallet'));
+     
+    }
+
+
+    public function plansPayment(Request $request){
+       $request->validate([
+        'payment_mode'=>'bail|required|array',
+        'order_id'=>'bail|required|numeric'
+       ]);
+
+      try{
+            $plan = UserPlan::where('id', $request->input('order_id'))->first();
+            //dd($plan->customer_id);
+            $payment_modes = $request->input('payment_mode');
+            
+            $wallet = UserWallet::where('user_id', $plan->user_id)->first();
+            if (!$wallet) {
+              $wallet = UserWallet::create(['user_id'=>$plan->user_id, 'price'=>0]);
+            }
+            $wallet->price= $wallet->price+$plan->price;      
+            $paymentData = [];
+            
+            if (in_array(1, $request->input('payment_mode'))) {
+              array_push($paymentData , [
+                                    'order_id'=>$plan->id, 'price'=>$request->input('cash_pay'),
+                                    'to_id'=>$this->user->id, 'type'=>11,
+                                     'user_id'=>$plan->user_id
+                                  ]);
+            }
+      
+           
+      
+            $payment= UserPayments::insert($paymentData);
+            $wallet->save();
+            return response()->json(["message"=>"Payment Success", 'redirectTo'=>route('manage-plans.index')], 200);
           }catch(Exception $e){
             return response()->json(["message"=>"Something went wrong"], 400);
           }

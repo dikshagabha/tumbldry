@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Store;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\User;
-use App\Model\PickupRequest;
+use App\Model\UserPlan;
 use App\Model\Plan;
 use Auth;
 use App\Repositories\Runner\HomeRepository;
@@ -16,6 +16,7 @@ use App\Mail\Runner\SendPassword;
 use App\Http\Requests\Runner\Auth\RegisterRequest;
 use App\Http\Requests\Runner\Auth\UpdateRequest;
 use DB;
+use Carbon\Carbon;
 class PlanController extends Controller
 {
 
@@ -37,7 +38,7 @@ class PlanController extends Controller
     {
       $activePage = 'plans';
       $titlePage  = 'Plan';
-      $users = Plan::where('user_id', $this->user->id)
+      $users = UserPlan::where('store_id', $this->user->id)
                ->latest()->paginate(10);
 
       if ($request->ajax()) {
@@ -57,9 +58,22 @@ class PlanController extends Controller
     {
       $activePage = 'runner';
       $titlePage  = 'Create Runner';
-
-      return view('store.manage-runner.create', compact('users', 'activePage', 'titlePage'));
+      $plan_types  = ['1'=>'Membership Plan'];
+      return view('store.manage-plans.create', compact('users', 'activePage', 'plan_types','titlePage'));
     }
+
+    public function getPlans(Request $request){
+
+      $plans = Plan::where('type', $request->input('type'))->get();
+      //dd($plans);
+      if ($plans) {
+        return response()->json(['message'=>'Plans Found', 'view'=>view('store.manage-plans.plans', compact('plans'))->render()], 200);
+   
+      }
+
+      return response()->json(['message'=>'No Plans Found', 'view'=>view('store.manage-plans.plans', compact('plans'))], 400);
+   
+       }
 
     /**
      * Store a newly created resource in storage.
@@ -67,12 +81,58 @@ class PlanController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(RegisterRequest $request)
+    public function store(Request $request)
     {
-      $response = HomeRepository::store($request, Auth::user()->id);
-      $http_status = $response['http_status'];
-      unset($response['http_status']);
-      return response()->json($response, $http_status); 
+      $request->validate(['customer_id'=>'bail|nullable|numeric',
+                          'name'=>'bail|required|string',
+                          'email'=>'bail|nullable|string',
+                          'phone_number'=>'bail|required|string',
+                          'plan'=>'bail|required|numeric',
+                          //'plan_types'=>'bail|required|numeric'
+                        ]);
+      if ($request->input('customer_id')) 
+      {
+        $customer_id = $request->input('customer_id');
+      }else{
+        $user = User::create(['name'=>$request->input('name'), 
+                  'email'=>$request->input('email'),
+                  'phone_number'=>$request->input('phone_number'),  
+                  'role'=> 4
+                  ]);
+        $customer_id = $user->id;
+      }
+
+      $plan = Plan::where('id', $request->input('plan'))->first();
+
+      $valid_to = null;
+      if ($plan->end_date==1) {
+        $valid_to=Carbon::now()->addWeek(1);
+      }
+      
+      if ($plan->end_date==2) {
+        $valid_to=Carbon::now()->addMonth(1);
+      }
+
+      if ($plan->end_date==3) {
+        $valid_to=Carbon::now()->addYear(1);
+      }
+      
+      $plans = UserPlan::create(['user_id'=>$customer_id, 'store_id'=>$this->user->id, 'valid_from'=>Carbon::now(), 
+                        'plan_id'=>$request->input('plan'), 'valid_to'=>$valid_to]);
+
+      // $wallet = UserWallet::where('user_id', $customer_id)->first();
+      // if (!$wallet) {
+      //   $wallet = UserWallet::create(['user_id'=>$customer_id])
+      // }
+      // $wallet->price= $wallet->price+$plan->price;
+      // $wallet->save();
+
+      //dd(route('plans.payment',$plans->id ));
+      if ($plans) {
+        return response()->json(["message"=>"Plan Added!", 'redirectTo'=>route('plans.payment', $plans->id)], 200);
+      }
+
+      return response()->json(["message"=>"Something Went Wrong"], 200);
     }
 
     /**

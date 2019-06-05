@@ -7,44 +7,20 @@
     <vs-card>
       <div slot="header">
         <h3>
-          Runner Details
+          Plans Details
         </h3>
       </div>
       <div>
 
         <vs-row vs-justify="flex-end">
          
-          <a href="{{route('manage-runner.create')}}">
-            <vs-button type="gradient" color="danger">Add New Runner</vs-button>
+          <a href="{{route('manage-plans.create')}}">
+            <vs-button type="gradient" color="danger">Add Plan</vs-button>
           </a>
          </vs-row>
-           <br>
-            <!-- <vs-row  > -->
-                {{ Form::open(['method' => 'get', 'id' => 'store-search', 'name' => 'serach_form']) }}
-              <vs-col vs-type="flex" vs-justify="center" vs-align="center" vs-w="5">
-                  {{ Form::text('search', '', ['class' => 'form-control', 'placeholder' => 'Search by Name or E-mail or Phone', 'maxlength'=>'50']) }}
-                </vs-col>
-
-                <vs-col vs-type="flex" vs-justify="center" vs-align="center" vs-w="2">                  
-                 {{ Form::select('sort_type', ['' => 'Select Status', '1' => 'Active', '0' => 'Inactive'], null, ['class' => 'form-control', 'id' => 'sort_type']) }}
-                </vs-col>
-                
-                <vs-col vs-type="flex" vs-justify="center" vs-align="center" vs-w="1">
-                  <vs-button type="gradient" color="success" id="search-button">Filter</vs-button>
-
-                </vs-col>
-                 <vs-col vs-type="flex" vs-justify="center" vs-align="center" vs-w="1">
-                  <vs-button type="gradient" color="danger"id="reset-button" >Reset</vs-button>
-                </vs-col>
-              {{ Form::close() }}
-
-            <!-- </vs-row> -->
-            <br>
-            <br>
+            <br>          
               <div id="dataList">
-                
-               
-               @include('store.manage-runner.list')
+               @include('store.manage-plans.list')
               </div>
         
       </div>
@@ -59,7 +35,7 @@
     <!-- Modal content-->
     <div class="modal-content">
       <div class="modal-header">
-         <h4 class="modal-title">Runner Details</h4>
+         <h4 class="modal-title">Plan Details</h4>
         <button type="button" class="close" data-dismiss="modal">&times;</button>
        
       </div>
