@@ -187,16 +187,22 @@ class OrderController extends Controller
     'service'=>'bail|required|numeric|min:1',
     'item'=>'bail|required|string|min:1|max:500']);
 
-    $Service = Service::where("id", $request->input('service'))->first();
+   
+    //dd(!$request->input('phone'));   
+    if (!$request->input('phone')) {
+      return response()->json(['message'=>'Please enter customer details'], 400);
+    }
+    $phone  = $request->input('phone');
 
+    $Service = Service::where("id", $request->input('service'))->first();
     if ($Service->form_type !=2) {
-     $form_id = Items::where("name", 'LIKE','%'.$request->input('item').'%' )->where('type', $Service->form_type)->first();
-     $units=false;
-     $weight=1;
+    $form_id = Items::where("name", 'LIKE','%'.$request->input('item').'%' )->where('type', $Service->form_type)->first();
+    $units=false;
+    $weight=1;
     }else{
-    $units=true;
-    $weight=0;
-    $form_id = Items::where('status', 1)->where('type', $Service->form_type)->first();
+      $units=true;
+      $weight=0;
+      $form_id = Items::where('status', 1)->where('type', $Service->form_type)->first();
     }
     if (!$form_id) {
        return response()->json(['message'=>'We donot have details for this item.'], 400);
@@ -228,31 +234,44 @@ class OrderController extends Controller
     if ($Service->selected == 1) {
      $selected = $addon->pluck('id')->toArray();
     }
-    
     $data = ['service_id'=>$request->input('service'), 'item_id'=>$form_id->id, 'service_name'=>$Service->name, 'units'=>$units, 'addons'=> $addon, 'estimated_price'=>$price, 'item'=>$request->input('item'), 'price'=>$price, 'quantity'=>1, 'selected_addons'=>$selected , 'addon_estimated_price'=>0, 'weight'=>null];
-
-     
-     if (!session()->get('add_order_items')){
+    if (!session()->get('add_order_items')){
           $data['units']=$units;
           $data['weight']=$weight;
           session()->put("add_order_items", [$data]);            
-     }
-     else{session()->push('add_order_items', $data);}
+    }
+    else{session()->push('add_order_items', $data);}
 
      $items = session('add_order_items');
+     
      $total_price = 0;
-     foreach ($items as $key => $value) {
-       if ($value) {
-         $total_price = $total_price + $value['addon_estimated_price']+$value['estimated_price'];
-       }
-     }
 
+     if ($Service->form_type !=2) {
+          foreach ($items as $key => $value) {
+           if ($value) {
+             $total_price = $total_price + $value['addon_estimated_price']+$value['estimated_price'];
+           }
+         }
+     }else{
+      $total_price = $items[0]['addon_estimated_price']+$items[0]['estimated_price'];
+     }
     $cgst = $total_price*($this->cgst/100);
     $gst = $total_price*($this->gst/100);
-
     $coupon_discount = 0;
-    if (!session()->get('coupon_discount')) {
-      session()->put("coupon_discount", ['coupon'=>'', 'discount'=>0, 'user_discount'=>null]);
+    $coupon = CommonRepository::get_valid_coupon($request->input('phone'), $request->input('service'), null);
+    if(!session()->get('coupon_discount')) {
+      if($coupon) {
+        if ($coupon['type']==2) {
+          $coupon_discount = $total_price*$coupon['value']/100;
+        }else{
+          $coupon_discount = $price*$coupon['value']/100;
+        }
+        session()->put("coupon_discount", ['coupon'=>$coupon['name'], 'discount'=>$coupon_discount, 
+                                          'user_discount'=>null, 'percent'=>$coupon['value']
+                                        ]);
+      }else{
+        session()->put("coupon_discount", ['coupon'=>"", 'discount'=>0, 'user_discount'=>null, 'percent'=>null]);
+      }
     }else{
       $coupon_discount = session('coupon_discount');
     }
@@ -292,13 +311,18 @@ class OrderController extends Controller
 
     $coupon_discount = 0;
     if (!session()->get('coupon_discount')) {
-      session()->put("coupon_discount", ['coupon'=>'', 'discount'=>0]);
+      session()->put("coupon_discount", ['coupon'=>'', 'discount'=>0, 'percent'=>null]);
     }else{
       $coupon_discount = session('coupon_discount');
     }
-
+    $discount = $coupon_discount['discount'];
+    if ($coupon_discount['percent']) {
+      $discount = $total_price*($coupon_discount['percent']/100);
+    }
+    session()->put("coupon_discount", ['coupon'=>$coupon_discount['coupon'], 
+                                        'discount'=>$discount, 'percent'=>$coupon_discount['percent'],'user_discount'=> $coupon_discount['user_discount']]);
     $price_data = ['estimated_price'=> $total_price, 'cgst'=>$cgst, 'gst'=>$gst, 
-                    'total_price'=>$total_price+$cgst+$gst-$coupon_discount['discount']];
+                    'total_price'=>$total_price+$cgst+$gst-($discount+$coupon_discount['user_discount'])];
     session()->put('prices', $price_data);
     $wallet = session()->get('customer_details');
     return response()->json(['message'=>'Item Deleted', 'view'=>view('store.manage-order.items-view', compact('items','price_data', 'coupon_discount', 'wallet'))->render(), 'items'=>$items], 200);
@@ -337,15 +361,25 @@ class OrderController extends Controller
 
     $cgst = $total_price*($this->cgst/100);
     $gst = $total_price*($this->gst/100);
-    $coupon_discount = 0;
+   
     $coupon_discount = 0;
     if (!session()->get('coupon_discount')) {
       session()->put("coupon_discount", ['coupon'=>null, 'discount'=>null, 'user_discount'=> null]);
-    }else{
-      $coupon_discount = session('coupon_discount');
     }
+    
+    $coupon_discount = session('coupon_discount');
+    
+
+    //$discount = $coupon_discount['discount'];
+    if ($coupon_discount['percent']) {
+      $coupon_discount['discount'] = $total_price*($coupon_discount['percent']/100);
+    }
+    
+    session()->put("coupon_discount", ['coupon'=>$coupon_discount['coupon'], 
+                                        'discount'=>$discount, 'percent'=>$coupon_discount['percent'],'user_discount'=> $coupon_discount['user_discount']]);
+
     $price_data = ['estimated_price'=> $total_price, 'cgst'=>$cgst, 'gst'=>$gst,
-                                'total_price'=>$total_price+$cgst+$gst-($coupon_discount['discount']+$coupon_discount['user_discount'])];
+                                'total_price'=>$total_price+$cgst+$gst-($coupon_discount['user_discount']+$coupon_discount['discount'])];
     session()->put('prices', $price_data);
     $wallet = session()->get('customer_details');
     return response()->json(['message'=>'Item Updated', 'view'=>view('store.manage-order.items-view', compact('items','price_data', 'coupon_discount', 'wallet'))->render(), 'items'=>$items], 200);
@@ -356,32 +390,46 @@ class OrderController extends Controller
       'weight'=>'bail|required|numeric|min:0|max:200']);
 
     $items = session('add_order_items');
-    $index = $request->input('data-id')-1;
+    //$index = $request->input('data-id')-1;
     
-    $items[$index]['weight'] =  $request->input('weight');
+    $items[0]['weight'] =  $request->input('weight');
+    
+    $addon_price = 0;
+    foreach ($items as $key => $value) {
+      $addon_price += $value['addon_estimated_price'];
+    }
 
     //dd( session('add_order_items'));
-    $items[$index]['estimated_price'] = ($request->input('weight')*($items[$index]['price']))+
-                                        $items[$index]['addon_estimated_price'];
+    $items[0]['estimated_price'] = ($request->input('weight')*($items[0]['price']))+
+                                         $addon_price;
+
+
     session()->put("add_order_items", $items);
 
     $items = session('add_order_items');
-    $total_price = 0;
-    foreach ($items as $key => $value) {
-       if ($value) {
-         $total_price = $total_price + $value['estimated_price'];
-       }
-    }
-
+    $total_price = $items[0]['estimated_price'];
+    // foreach ($items as $key => $value) {
+    //    if ($value) {
+    //      $total_price = $value['estimated_price'];
+    //    }
+    // }
     $cgst = $total_price*($this->cgst/100);
     $gst = $total_price*($this->gst/100);
     $coupon_discount = 0;
-    
-    if (!session()->get('coupon_discount')) {
+    if(!session()->get('coupon_discount')) {
       session()->put("coupon_discount", ['coupon'=>null, 'discount'=>null, 'user_discount'=> null]);
-    }else{
-      $coupon_discount = session('coupon_discount');
     }
+    $coupon_discount = session('coupon_discount');
+    //$discount = $coupon_discount['discount'];
+    if ($coupon_discount['percent']) {
+      $coupon_discount['discount'] = $total_price*($coupon_discount['percent']/100);
+    }
+    //dd($total_price);
+    session()->put("coupon_discount", ['coupon'=>$coupon_discount['coupon'], 
+                                        'discount'=>$coupon_discount['discount'], 'percent'=>$coupon_discount['percent'],
+                                        'user_discount'=> $coupon_discount['user_discount']]);
+
+
     $price_data = ['estimated_price'=> $total_price, 'cgst'=>$cgst, 'gst'=>$gst,
                                 'total_price'=>$total_price+$cgst+$gst-($coupon_discount['discount']+$coupon_discount['user_discount'])];
     session()->put('prices', $price_data);
@@ -438,8 +486,15 @@ class OrderController extends Controller
     }else{
       $coupon_discount = session('coupon_discount');
     }
+
+    $discount = $coupon_discount['discount'];
+    if ($coupon_discount['percent']) {
+      $discount = $total_price*($coupon_discount['discount']/100);
+    }
+    session()->put("coupon_discount", ['coupon'=>$coupon_discount['coupon'], 
+                                        'discount'=>$discount, 'percent'=>$coupon_discount['percent'],'user_discount'=> $coupon_discount['user_discount']]);
     $price_data = ['estimated_price'=> $total_price, 'cgst'=>$cgst, 'gst'=>$gst,
-                                'total_price'=>$total_price+$cgst+$gst-($coupon_discount['discount']+$coupon_discount['user_discount'])];     
+                                'total_price'=>$total_price+$cgst+$gst-($discount+$coupon_discount['user_discount'])];     
     
 
     session()->put('prices', $price_data);
@@ -522,8 +577,13 @@ class OrderController extends Controller
     $coupon_discount['user_discount']=$request->input('discount');
     session()->put("coupon_discount", $coupon_discount);
 
-    $discount = $coupon_discount['discount']+$coupon_discount['user_discount'];
-
+    $cdiscount = $coupon_discount['discount'];
+    if ($coupon_discount['percent']) {
+      $cdiscount = $total_price*($coupon_discount['discount']/100);
+    }
+    $discount = $cdiscount+$coupon_discount['user_discount'];
+    session()->put("coupon_discount", ['coupon'=>$coupon_discount['coupon'], 
+                                        'discount'=>$cdiscount, 'percent'=>$coupon_discount['percent'],'user_discount'=> $coupon_discount['user_discount']]);
     $price_data = ['estimated_price'=> $total_price, 'cgst'=>$cgst, 'gst'=>$gst, 
                                 'total_price'=>$total_price+$cgst+$gst-$discount];
     session()->put('prices', $price_data);

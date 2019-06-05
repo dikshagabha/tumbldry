@@ -2,84 +2,57 @@
 @section('title', 'Create order')
 
 @section('css')
-  <link rel="stylesheet" href="{{ asset('css/chosen/bootstrap-chosen.css') }}">
-  <link rel="stylesheet" href="{{ asset('css/jquery.typeahead.min.css') }}">
-
+<link rel="stylesheet" href="{{ asset('css/chosen/bootstrap-chosen.css') }}">
+<link rel="stylesheet" href="{{ asset('css/jquery.typeahead.min.css') }}">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
-  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 <link rel="stylesheet" type="text/css" href=" https://printjs-4de6.kxcdn.com/print.min.css">
- <style type="text/css">
-    .table td {
-   text-align: center;   
+<style type="text/css">
+  .table td {
+  text-align: center;   
 }
-  
-
- </style>
-
+</style>
 @endsection
-
 @section('content')
-
-
-
 <vs-row vs-justify="center">
   <vs-col type="flex" vs-justify="center" vs-align="center" vs-w="11">
     <vs-card>
 
     <vs-breadcrumb
     :items="
-       [
-         {
+       [{
            title: 'Create Order',
-           
-         },
-         {
+        },{
            title: 'Payment',
-
            disabled:true
-          
          }
-       ]">
-            
-       </vs-breadcrumb>
-
-      <div slot="header">
+       ]"
+    >
+    </vs-breadcrumb>
+    <div slot="header">
         <h3>
           Create Order
         </h3>
       </div>
       <div>
-
         <vs-row vs-justify="center">
          <vs-col type="flex" vs-justify="center" vs-align="center" vs-w="11">
-
           <a href="{{route('store.create-order.index')}}">
-
               <vs-button color="danger" type="border" icon="arrow_back"></vs-button>
-          
-          </a>
-            <br>
-
-            {{Form::open(['url'=> route('store.create-order'), "id"=>"addFrenchise"])}}
-             
-                  @csrf
-                  @include('store.manage-order.form-without-pickup')
-
-                 <div class="ItemsAdded">
-
-                 </div>
-               <br>
-               
+          </a><br>
+          {{Form::open(['url'=> route('store.create-order'), "id"=>"addFrenchise"])}}   
+          @csrf
+          @include('store.manage-order.form-without-pickup')
+          <div class="ItemsAdded">
+          </div>
+          <br>     
       </vs-col>
-    <br>
-    </vs-row>
+      <br>
+      </vs-row>
     </div>
-    
     </vs-card>
   </vs-col>
 </vs-row>
-
-
 <div id="addressModal" class="modal fade" role="dialog">
   <div class="modal-dialog modal-lg">
     <!-- Modal content-->
@@ -146,7 +119,7 @@ $(document).ready(function(){
       source: function( request, response ) {
           $.ajax({
               dataType: "json",
-              type : 'Get',
+              type : 'get',
               url: path,
               data:{'query': request.term , 'service':$('#service').val()},
               success: function(data) {
@@ -347,7 +320,8 @@ $(document).ready(function(){
     
     $.ajax({
       url:$("#add_item").attr('href'),
-      data:{'service':$('#service').val(), 'item':$('#item').val()},
+      data:{'service':$('#service').val(), 'item':$('#item').val(), 'customer':$('#customer_id').val(),
+              'name':$('#name_order').val(), 'phone':$('#phone_order').val()},
       type:'post',
       success:function(data) {
         $(".ItemsAdded").html(data.view);

@@ -164,7 +164,10 @@ $i=1;
 					<span class="error" id="coupon_error"></span></td>
 					<td style="text-align: center;" ><button type="button" class="btn btn-danger" data-url="{{route('store.couponItemSession')}}" id="couponBtn">Apply</button></td>
 
-				</tr>	
+				</tr>
+				@if($coupon_discount['coupon'])
+					<tr> <td> Coupon Discount </td><td>{{$coupon_discount['discount']}} Rs</td></tr>
+				@endif
 
 				<tr >
 					<td style="text-align: center;" >Discount</td>
