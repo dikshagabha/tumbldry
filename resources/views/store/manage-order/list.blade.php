@@ -11,7 +11,7 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
           <th>Service</th>
           <th>Delivery Mode</th>
           <th>Payment</th>
-          <th>Date of Arrival</th>
+          <th>Order Date</th>
           <th>Estimated Time</th>
           <th width='20%'>Order Status</th>
           <th>Invoice</th>
