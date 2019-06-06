@@ -13,8 +13,12 @@ use App\Http\Requests\Runner\Auth\RegisterRequest;
 
 class AuthController extends Controller
 {
-    public function login(LoginRequest $request)
-    {
+    public function login(Request $request)
+    {   
+        $request->validate({
+            'phone_number'=>'bail|required|numeric',
+            'password'=>'required'
+        });
     	$response = HomeRepository::login($request);
 
     	//dd($response);
@@ -49,10 +53,13 @@ class AuthController extends Controller
     public function sendOtp(Request $request)
     {   
         $request->validate(['phone_number'=>'bail|required|numeric|min:0000000000|max:9999999999']);
+
         $response = HomeRepository::sendOtp($request);
-        $http_status = $response['http_status'];
-        unset($response['http_status']);
-        return response()->json($response, $http_status);
+        
+        echo $request->input('callback')."(".json_encode($response).")";   
+        // $http_status = $response['http_status'];
+        // unset($response['http_status']);
+        //return response()->json($response, $http_status);
     }
 
     public function verifyotp(Request $request)

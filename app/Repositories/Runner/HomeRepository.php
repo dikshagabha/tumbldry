@@ -120,7 +120,7 @@ class HomeRepository extends BaseRepository
             $response['code'] = 1;
             $response['details'] = ['token'=>$token, 'info'=>$user];
 
-            $response['message'] = 'User logged in successfully';
+            $response['message'] = 'Success';
         } else {
             
             $response['message'] = 'Please enter valid credentials';
@@ -145,7 +145,7 @@ class HomeRepository extends BaseRepository
 
         //$res = CommonRepository::sendmessage($request->input('phone_number'), "Hi%20$user->name%20\n%20The%20otp%20for%20your%20login%20is%20$otp.");
         if ($otp) {
-            return ['message'=>'Otp send to user.', 'http_status'=>200];
+            return ['message'=>'Success', 'code'=>1];
         }
 
         return ['message'=>'Something Went Wrong!', 'http_status'=>400];
