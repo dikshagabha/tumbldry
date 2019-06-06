@@ -16,19 +16,18 @@
 
       
         <vs-breadcrumb
-    :items="
-       [
-         {
-           title: 'Plans',
-           
-         },
-         {
-           title: 'Payment',
-           disabled: true
-           
-         }
-       ]"
-    >
+        :items="
+           [
+             {
+               title: 'Plans',
+               
+             },
+             {
+               title: 'Payment',
+               disabled: true
+               
+             }
+           ]">
       
     </vs-breadcrumb>
       <div slot="header">

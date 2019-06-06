@@ -42,7 +42,7 @@
 					<td> Total </td>
 				 </tr>
 					
-				@if($items_partial->count()==$items->count())
+				@if(!$items_partial)
 					<tr>
 						<td>1. </td>
 						<td>						
@@ -52,68 +52,67 @@
 							<br>
 							Total Pcs: {{$total}} 
 						</td>
-					
-
-					
 						<td>
 							@if($weight){{$weight}}@else -- @endif
 						</td>
-					
 						<td>						
 							{{$order->estimated_price}} Rs
 						</td>
 					</tr>
-					<tr>
-						
+					<tr>						
 						<td colspan="3">Sub Total</td>
 						<td> Rs {{$order->estimated_price}}</td>
-					</tr>
-					<tr>
-						
-						<td colspan="3"> Discount </td>
-						<td> {{$order->discount}}</td>
-					</tr>
-					<tr>
-						
+					</tr>					
+					<tr>						
 						<td colspan="3">SGST(9%)</td>
-						<td> {{$order->gst}}</td>
+						<td>  Rs {{$order->gst}}</td>
 					</tr>
 					<tr>
-						
 						<td colspan="3">CGST(9%)</td>
-						<td>{{$order->cgst}}</td>
+						<td> Rs {{$order->cgst}}</td>
 					</tr>
 					<tr>
+						<td colspan="3">Estimated Price</td>
+						<td>Rs {{$order->estimated_price+$order->cgst+$order->gst}}</td>
 						
+					</tr>
+					<tr>						
+						<td colspan="3"> Discount </td>
+						<td>Rs {{$order->discount}}</td>
+					</tr>
+					<tr>
 						<td colspan="3">Net Amount</td>
-						<td>{{$order->total_price}}</td>
+						<td>Rs {{$order->total_price}}</td>
 					</tr>
 				@else
-
 				<tr>
-						<td>1. </td>
-						<td>
-							Clothes being delivered	<br>					
+					<td>1. </td>
+					<td>
+						Clothes being delivered	<br>					
 							@foreach($items->where('status', 2) as $item)
 								{{$item->quantity}} X {{ $item->item }}  @if($item->itemimage->count()) ({{ $item->itemimage->first()->addon_name}}) @endif<br>
 							@endforeach
 							<br>
 							Total Pcs: {{$items->where('status', 2)->sum('quantity')}}
-						</td>					
-						<td>
+					</td>					
+					<td>
+						@if($items->where('status', 2)->count()!=0)
 							@if($weight){{$weight}}@else -- @endif
-						</td>
-					
-						<td>						
-							--
-						</td>
-					</tr>
 
-					<tr>
+						@else
+						--
+						@endif
+					</td>
+				
+					<td>						
+						--
+					</td>
+				</tr>
+				<tr>
 						<td>2. </td>
 						<td>
 							Pending Clothes	<br>			
-							@foreach($items->where('status', 1) as $item)
+							@foreach($items->whereIn('status', [1, 3]) as $item)
 								{{$item->quantity}} X {{ $item->item }}  @if($item->itemimage->count()) ({{ $item->itemimage->first()->addon_name}}) @endif<br>
 							@endforeach
 							<br>
@@ -126,32 +125,35 @@
 						<td>						
 							--
 						</td>
-					</tr>
-					<tr>
+				</tr>
+				<tr>
 						
-						<td colspan="3">Sub Total</td>
-						<td> -- </td>
-					</tr>
-					<tr>
-						
-						<td colspan="3"> Discount </td>
-						<td> --</td>
-					</tr>
-					<tr>
-						
-						<td colspan="3">SGST(9%)</td>
-						<td> --</td>
-					</tr>
-					<tr>
-						
-						<td colspan="3">CGST(9%)</td>
-						<td>--</td>
-					</tr>
-					<tr>
-						
-						<td colspan="3">Net Amount</td>
-						<td>--</td>
-					</tr>
+					<td colspan="3">Sub Total</td>
+					<td> -- </td>
+				</tr>
+				
+				<tr>
+					
+					<td colspan="3">SGST(9%)</td>
+					<td> --</td>
+				</tr>
+				<tr>
+					
+					<td colspan="3">CGST(9%)</td>
+					<td>--</td>
+				</tr>
+
+				<tr>
+					
+					<td colspan="3"> Discount </td>
+					<td> --</td>
+				</tr>
+
+				<tr>
+					
+					<td colspan="3">Net Amount</td>
+					<td>--</td>
+				</tr>
 				@endif
 			</table>
 		</div>

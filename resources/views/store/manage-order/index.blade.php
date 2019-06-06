@@ -278,6 +278,10 @@ $(document).ready(function(){
                 responseType: 'blob'
             },
         success:function(data){
+
+          var current_page = $(".pagination").find('.active').text();
+          load_listings(location.href+'?page='+current_page, 'serach_form');
+          
           var pdfFile = new Blob([data], {
             type: "application/pdf"
             });
@@ -306,6 +310,8 @@ $(document).ready(function(){
           var pdfFile = new Blob([data], {
             type: "application/pdf"
             });
+            var current_page = $(".pagination").find('.active').text();
+            load_listings(location.href+'?page='+current_page, 'serach_form');
             var pdfUrl = URL.createObjectURL(pdfFile);
             //window.open(pdfUrl);
             printJS(pdfUrl);
@@ -339,7 +345,9 @@ $(document).ready(function(){
                 'vendor_id': current.val(), 'service_id':current.data('service')},
         success:function(data){
           $('body').waitMe('hide');
-          $("#OrderModal").modal('hide');
+          var current_page = $(".pagination").find('.active').text();
+          load_listings(location.href+'?page='+current_page, 'serach_form');
+          //$("#OrderModal").modal('hide');
           success(data.message);
         }
       })
@@ -395,6 +403,8 @@ $(document).ready(function(){
               cache: false,
               success: function(data){
                 success(data.message);
+
+                
                 //$(".ItemsAdded").html(data.view);
                 $('body').waitMe('hide');
               }

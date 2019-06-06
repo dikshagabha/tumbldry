@@ -84,8 +84,8 @@ class PlanController extends Controller
     public function store(Request $request)
     {
       $request->validate(['customer_id'=>'bail|nullable|numeric',
-                          'name'=>'bail|required|email|string',
-                          'email'=>'bail|nullable|string',
+                          'name'=>'bail|required|string',
+                          'email'=>'bail|nullable|string|email',
                           'phone_number'=>'bail|required|string|min:10|max:12',
                           'plan'=>'bail|required|numeric',
                           //'plan_types'=>'bail|required|numeric'

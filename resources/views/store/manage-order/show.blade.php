@@ -105,7 +105,7 @@ Items:
 </div>
 @endif
 
-@if($order->payment->count())
+@if($order->payment()->count())
 Payment Details:
 <table class="table table-bordered">
 	@foreach($order->payment()->where('type', '!=', 0)->get() as $pay)

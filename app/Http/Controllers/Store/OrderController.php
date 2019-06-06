@@ -831,11 +831,13 @@ class OrderController extends Controller
      $user = $this->user;
     $total = $items->sum('quantity');
     $weight = $items->sum('weight');
-    $items_partial = $items->where('status', 1);
+    $items_partial = $items->whereIn('status', [1, 3])->count();
+
     //dd($items_partial);
-    if (! $items->where('status', 2)->count()) {
-      return response()->json(['message'=>"No items processed yet."], 400);
-    }
+    //dd($items_partial);
+    // if (! $items->where('status', 2)->count()) {
+    //   return response()->json(['message'=>"No items processed yet."], 400);
+    // }
     $pdf = PDF::loadView('store.manage-order.invoice', compact('order', 'user', 'items', 'total', 'weight','items_partial'));
     return ($pdf->download('invoice.pdf'));
 

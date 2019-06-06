@@ -15,6 +15,7 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
           <th>Estimated Time</th>
           <th width='20%'>Order Status</th>
           <th>Invoice</th>
+          <th>View</th>
 
         </tr>
       </thead>
@@ -37,7 +38,7 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
             </td>
 
             <td>
-              @if($user->payment->count())
+              @if($user->payment()->count())
                 @foreach($user->payment()->where('type', '!=', 0)->get() as $pay)
                   @if($pay->type==1)                                
                     Cash
@@ -92,13 +93,21 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
             </td>   
             <td>
               
-                @if($user->items()->where('status', 2)->count())
-                  <a href="{{ route('store.printInvoice', $user->id) }}" class="print_invoice"> <vs-button type="gradient" color="warning" > <i class="fa fa-file-pdf-o"></i> </vs-button>
+                @if($user->items()->where('status', 2)->count() || $user->payment()->count() )
+                  <a href="{{ route('store.printInvoice', $user->id) }}" class="print_invoice"> 
+                    <vs-button type="gradient" color="warning" class="btn btn-warning"> <i class="fa fa-file-pdf-o"></i> </vs-button></a>
                 @else
                   --
                 @endif
               </a>
-            </td>     
+            </td>  
+
+            <td>
+                <a  class="view" title="view order details" href="{{route('store.getOrderDetails', $user->id)}}">
+                  <vs-button type="gradient" color="success" class="btn btn-success"> <i class="fa fa-eye"></i> </vs-button>
+                </a>
+               
+            </td>   
           </tr>
           @php
           $i++;
