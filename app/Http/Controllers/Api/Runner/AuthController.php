@@ -15,10 +15,10 @@ class AuthController extends Controller
 {
     public function login(Request $request)
     {   
-        $request->validate({
+        $request->validate([
             'phone_number'=>'bail|required|numeric',
             'password'=>'required'
-        });
+        ]);
     	$response = HomeRepository::login($request);
 
     	//dd($response);
