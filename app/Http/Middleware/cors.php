@@ -1,8 +1,10 @@
-<?php namespace App\Http\Middleware;
+<?php 
+
+namespace App\Http\Middleware;
 
 use Closure;
 
-class CORS {
+class cors {
 
     /**
      * Handle an incoming request.
