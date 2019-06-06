@@ -320,11 +320,12 @@ class OrderController extends Controller
     }
     
     session()->put("coupon_discount", ['coupon'=>$coupon_discount['coupon'], 
-                                        'discount'=>$discount, 'percent'=>$coupon_discount['percent'],'user_discount'=> $coupon_discount['user_discount']]);
+                                        'discount'=>$coupon_discount['discount'], 'percent'=>$coupon_discount['percent'],'user_discount'=> $coupon_discount['user_discount']]);
     
     $price_data = ['estimated_price'=> $total_price, 'cgst'=>$cgst, 'gst'=>$gst, 
                     'total_price'=>$total_price+$cgst+$gst-($coupon_discount['discount']+$coupon_discount['user_discount'])];
     session()->put('prices', $price_data);
+
     $wallet = session()->get('customer_details');
     return response()->json(['message'=>'Item Deleted', 'view'=>view('store.manage-order.items-view', compact('items','price_data', 'coupon_discount', 'wallet'))->render(), 'items'=>$items], 200);
   }
