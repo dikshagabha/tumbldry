@@ -15,6 +15,7 @@ use App\Model\{
 };
 use Auth;
 use App\User;
+use Carbon\Carbon;
 
 class PaymentController extends Controller
 {
@@ -115,7 +116,8 @@ class PaymentController extends Controller
               array_push($paymentData , [
                                     'order_id'=>$order->id, 'price'=>$request->input('cash_pay'),
                                     'to_id'=>$this->user->id, 'type'=>1,
-                                     'user_id'=>$order->customer_id
+                                     'user_id'=>$order->customer_id, 'created_at'=>Carbon::now(),
+                                     'updated_at'=>Carbon::now()
                                   ]);
             }
       
@@ -123,8 +125,11 @@ class PaymentController extends Controller
               array_push($paymentData , [
                                     'order_id'=>$order->id, 'price'=>$request->input('wallet_pay'),
                                     'to_id'=>$this->user->id, 'type'=>2,
-                                    'user_id'=>$order->customer_id
+                                    'user_id'=>$order->customer_id, 'created_at'=>Carbon::now(),
+                                     'updated_at'=>Carbon::now()
                                   ]);
+
+              $userwallet->price = $userwallet->price - $request->input('wallet_pay');
             }
             $points = $order->total_price*40/100;
             $insert = $points;
@@ -133,7 +138,8 @@ class PaymentController extends Controller
               array_push($paymentData , [
                                     'order_id'=>$order->id, 'price'=>$request->input('loyality_points'),
                                     'to_id'=>$this->user->id, 'type'=>3,
-                                    'user_id'=>$order->customer_id
+                                    'user_id'=>$order->customer_id, 'created_at'=>Carbon::now(),
+                                     'updated_at'=>Carbon::now()
                                   ]);
               //$userwallet->loyality_points =  $userwallet->loyality_points-$request->input('loyality_points');
               $userwallet->loyality_points = $points;
@@ -141,7 +147,8 @@ class PaymentController extends Controller
             array_push($paymentData , [
                                      'order_id'=>$order->id, 'price'=>$points,
                                      'to_id'=>$order->customer_id, 'type'=>0,
-                                     'user_id'=>0
+                                     'user_id'=>0, 'created_at'=>Carbon::now(),
+                                     'updated_at'=>Carbon::now()
                                   ]);
       
             $payment= UserPayments::insert($paymentData);
@@ -185,7 +192,8 @@ class PaymentController extends Controller
               array_push($paymentData , [
                                     'order_id'=>$plan->id, 'price'=>$request->input('cash_pay'),
                                     'to_id'=>$this->user->id, 'type'=>11,
-                                     'user_id'=>$plan->user_id
+                                     'user_id'=>$plan->user_id,'created_at'=>Carbon::now(),
+                                     'updated_at'=>Carbon::now()
                                   ]);
             }
       

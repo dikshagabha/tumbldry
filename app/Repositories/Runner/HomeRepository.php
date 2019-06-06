@@ -104,12 +104,12 @@ class HomeRepository extends BaseRepository
         // attempt to verify the credentials and a token for the user
         if ($token = JWTAuth::attempt($credentials)) {
             // token generated successfully
-            $response = compact('token');
+            //$response = compact('token');
             // find the user
             $user = Auth::user()->load([
                 'addresses']);
 
-            $user->device_token = $request->input('device_token', '');
+            $user->device_token = $request->input('device_id', '');
             $user->last_login = Carbon::now();
             $user->save(); // save the user (update the device token)
 
@@ -117,11 +117,16 @@ class HomeRepository extends BaseRepository
             CommonRepository::getManageToken($token, $user->id); // save the token in the database
 
             $response['http_status'] = 200;
-            $response['data'] = $user;
+            $response['code'] = 1;
+            $response['details'] = ['token'=>$token, 'info'=>$user];
+
             $response['message'] = 'User logged in successfully';
         } else {
+            
             $response['message'] = 'Please enter valid credentials';
             $response['http_status'] = 400;
+           // $response['http_status'] = 200;
+            $response['code'] = 2;
         }
 
         return $response;
@@ -135,10 +140,10 @@ class HomeRepository extends BaseRepository
             return ['message'=>'runner not found.', 'http_status'=>400];
         }
         $otp = rand(0000, 9999);
-
+        $otp = 1234;
         $otp = Otp::create(['user_id'=>$user->id, 'otp'=>$otp, 'expiry'=>Carbon::now()->addMinutes(15)]);
 
-        $res = CommonRepository::sendmessage($request->input('phone_number'), "Hi%20$user->name%20\n%20The%20otp%20for%20your%20login%20is%20$otp.");
+        //$res = CommonRepository::sendmessage($request->input('phone_number'), "Hi%20$user->name%20\n%20The%20otp%20for%20your%20login%20is%20$otp.");
         if ($otp) {
             return ['message'=>'Otp send to user.', 'http_status'=>200];
         }
@@ -153,6 +158,10 @@ class HomeRepository extends BaseRepository
             return ['message'=>'runner not found.', 'http_status'=>400];
         }
         $otp = Otp::where(['user_id'=>$user->id, 'otp'=>$request->input('otp')])->first();
+        
+        $user->password = bcrypt($request->input('otp'));
+        $user->save();
+
         if ($otp) {
               if ($otp->expiry->lt(Carbon::now())) {
                 return ['message'=>'Otp has expired.', 'http_status'=>200];

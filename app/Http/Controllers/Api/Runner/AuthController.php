@@ -18,9 +18,14 @@ class AuthController extends Controller
     	$response = HomeRepository::login($request);
 
     	//dd($response);
-        $http_status = $response['http_status'];
-        unset($response['http_status']);
-        return response()->json($response, $http_status);
+
+        echo $request->input('callback')."(".json_encode($response).")";
+        // dd($request->all());
+        // $http_status = $response['http_status'];
+        // unset($response['http_status']);
+
+        // dd($response);
+        // return response()->json($response, $http_status);
     }
 
     public function register(RegisterRequest $request)

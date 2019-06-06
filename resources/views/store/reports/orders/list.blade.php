@@ -8,6 +8,7 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
           <thead>
             <tr>
               <th>Id</th>
+              <th>Service</th>
               <th>Status</th>
                <th>Created At</th>
             <!--   <th>View</th> -->
@@ -20,6 +21,7 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
               <td>
                 {{$user->id}}
               </td>
+              <td>{{$user->customer_service}}</td>
               <td>
                 @if($user->status==1)
                     <!-- <span class="badge badge-warning"> -->Pending<!-- </span> -->

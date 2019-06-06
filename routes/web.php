@@ -179,6 +179,7 @@ Route::prefix('store')->namespace('Store')->group(function () {
 
       Route::get('/reports/customer', 'ReportsController@customerReports')->name('store.customer-reports');
       Route::get('/reports/order', 'ReportsController@orderReports')->name('store.order-reports');
+      Route::get('/reports/accounting/ledger', 'ReportsController@ledger')->name('store.ledger-reports');
 
   });
 });
