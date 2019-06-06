@@ -86,7 +86,7 @@ class PlanController extends Controller
       $request->validate(['customer_id'=>'bail|nullable|numeric',
                           'name'=>'bail|required|string',
                           'email'=>'bail|nullable|string',
-                          'phone_number'=>'bail|required|string',
+                          'phone_number'=>'bail|required|string|min:10|max:12',
                           'plan'=>'bail|required|numeric',
                           //'plan_types'=>'bail|required|numeric'
                         ]);

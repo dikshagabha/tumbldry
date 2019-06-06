@@ -12,27 +12,23 @@
       </div>
       <div>
 
-        <vs-row vs-justify="flex-end">
-         
-          <a href="{{route('store-pickup-request.create')}}">
-            <vs-button type="gradient" color="danger">Add Pickup Request</vs-button>
-          </a>
-         </vs-row>
-           <br>
-              <div id="dataList">
-                
-               
-               @include('store.pickup-request.list')
-              </div>
-        
+      <vs-row vs-justify="flex-end">
+       <a href="{{route('store-pickup-request.create')}}">
+          <vs-button type="gradient" color="danger">Add Pickup Request</vs-button>
+        </a>
+      </vs-row>
+      <br>
+            <div id="dataList">
+              
+             
+             @include('store.pickup-request.list')
+            </div>
       </div>
       <div slot="footer">
-        
       </div>
     </vs-card>
   </vs-col>
 </vs-row>
-
 <div id="addressModal" class="modal fade" role="dialog">
   <div class="modal-dialog">
     <!-- Modal content-->
