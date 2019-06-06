@@ -90,7 +90,7 @@ class OrderController extends Controller
             $customer = $order->customer;
             //dd($customer);
             if ($customer->phone_number) {
-              //CommonRepository::sendmessage($customer->phone_number, 'Your%20order%20ORDER'.$id.'%20has%20been%20recieved%20by%20store.');
+              CommonRepository::sendmessage($customer->phone_number, 'Your%20order%20ORDER'.$id.'%20has%20been%20recieved%20by%20store.');
 
               $updateitems = OrderItems::where('order_id', $id)->update(['status'=>3]);
               $date = Carbon::now($request->header('timezone'));
@@ -659,39 +659,6 @@ class OrderController extends Controller
                                'discount'=>$coupon_discount['user_discount'], 'service_id'=>$request->input('service'),
                                'delivery_mode'=>$request->input('delivery_mode')
                             ]);
-
-      // $points = $order->total_price*40/100;
-      // $insert = $points;
-      
-      // if($wallet->wallet->loyality_points)
-      // {
-      //   $insert = $wallet->wallet->loyality_points + $points;
-      // }
-      // if ($price > $order->total_price) {       
-      //   $paymentData = [['order_id'=>$order->id,
-      //                             'user_id'=>$customer_id,
-      //                           'to_id'=>$this->user->id, 'type'=>1, 
-      //                           'price'=>$order->total_price, 'created_at'=>Carbon::now()]];
-        
-      //   //UserWallet::where('user_id', $wallet->id)->update(['price'=>$price - $order->total_price, 
-      //   //                                                 'loyality_points'=>$insert]);
-      // }else{
-      //   $paymentData = [['order_id'=>$order->id, 'to_id'=>$this->user->id, 'type'=>1, 
-      //                   'user_id'=>$customer_id,'created_at'=>Carbon::now(),
-      //                   'price'=>$price], ['order_id'=>$order->id, 
-      //                     'user_id'=>$customer_id,'to_id'=>$this->user->id, 'type'=>2, 
-      //                   'price'=>$order->total_price-$price,'created_at'=>Carbon::now()]];
-      //   $amount = $order->total_price-$price;
-        
-      //   //UserWallet::where('user_id', $wallet->id)->update(['price'=>0, 
-      //   //                                                  'loyality_points'=>$insert]);
-      // }
-      
-      //array_push($paymentData, ['order_id'=>$order->id, 'to_id'=>$customer_id, 'created_at'=>Carbon::now(),
-      //  'user_id'=>0,'type'=>3, 'price'=>$points]);
-      //$payments = UserPayments::insert($paymentData);
-      //$response = CommonRepository::sendmessage($wallet->phone_number, $message);
-
       foreach ($items as $item) {
           $item['order_id']=$order->id;
           $orderitem = OrderItems::create($item); 
@@ -702,6 +669,18 @@ class OrderController extends Controller
           }
           $order_items = OrderItemImage::insert($itemData);
       }
+      $message = SMSTemplate::where('title', 'like','%Order Created%')->select('description')->first();
+      //dd($message);
+      $message = $message->description;
+
+      $mes = str_replace('@customer_name@', $request->input('name'), $message);
+
+      $mes = str_replace('@order_id@', $order->id, $mes);
+      $mes = str_replace('@total_clothes@', $order->id, $mes);
+      
+      $mes = str_replace(' ', '%20', $mes);
+
+      CommonRepository::sendmessage($request->input('phone_number'), $mes);
       DB::commit();
       return response()->json([ 'redirectTo'=>route('store.paymentmodes', $order->id), 'message'=>'Order has been created Successfully'], 200); 
    } catch (Exception $e) {

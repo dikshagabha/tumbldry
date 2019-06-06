@@ -12,6 +12,7 @@ use App\Model\Order;
 use App\Model\Coupon;
 use App\Model\Service;
 use Carbon\Carbon;
+use textlocal;
 /**
  * Class CommonRepository.
  */
@@ -43,24 +44,51 @@ class CommonRepository extends BaseRepository
 
     public static function sendmessage($user, $message)
     {
-        $url = 'http://push.sanketik.net//api/push?accesskey=jzzUlHL4NqhWs6VHzmUkGkYTaQKD7T&to='.$user.'&text='.$message.'&from=TBLDRY';
 
-         $ch = curl_init();
-         curl_setopt($ch, CURLOPT_URL, $url);
-         curl_setopt($ch, CURLOPT_POST, 0);
-         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
-         $response = curl_exec ($ch);
-         $err = curl_error($ch);  //if you need
-         curl_close ($ch);
+           $apiKey = urlencode('22bWsKcL+Yg-854jWZTrDkqQq0ceqh1iLESIqNirQd');
+    
+            // Message details
+            $numbers = array($user);
+            $sender = urlencode('TXTLCL');
+            $message = rawurlencode($message);
          
-         //dd($response);
+            $numbers = implode(',', $numbers);
+         
+            // Prepare data for POST request
+            $data = array('apikey' => $apiKey, 'numbers' => $numbers, "sender" => $sender, "message" => $message);
+         
+            // Send the POST request with cURL
+            $ch = curl_init('https://api.textlocal.in/send/');
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            $response = curl_exec($ch);
+            curl_close($ch);
+            
+            // Process your response here
+            //echo $response;
 
-         if ($response) {
-            $response = json_decode($response);
-            $array = get_object_vars($response);
-         }
-         return $response;
+        //   $sms = new Textlocal();
+        //$response = $sms->send($message, $user);
+        // $url = 'http://push.sanketik.net//api/push?accesskey=jzzUlHL4NqhWs6VHzmUkGkYTaQKD7T&to='.$user.'&text='.$message.'&from=TBLDRY';
+
+        //  $ch = curl_init();
+        //  curl_setopt($ch, CURLOPT_URL, $url);
+        //  curl_setopt($ch, CURLOPT_POST, 0);
+        //  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        //  $response = curl_exec ($ch);
+        //  $err = curl_error($ch);  //if you need
+        //  curl_close ($ch);
+         
+        //  //dd($response);
+
+        //  if ($response) {
+        //     $response = json_decode($response);
+        //     $array = get_object_vars($response);
+        //  }
+          return $response;
     }
 
     public static function search_vendor($address, $service){

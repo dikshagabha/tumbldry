@@ -52,22 +52,24 @@ class HomeRepository extends BaseRepository
 	        //                               'landmark'=>$request->input('landmark'),
 	        //                               ]);
 
-            $url = 'http://push.sanketik.net//api/push?accesskey=jzzUlHL4NqhWs6VHzmUkGkYTaQKD7T&to='.$phone.'&text='.$pswd.'&from=TBLDRY';
 
-             $ch = curl_init();
-             curl_setopt($ch, CURLOPT_URL, $url);
-             curl_setopt($ch, CURLOPT_POST, 0);
-             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            CommonRepository::sendmessage($request->input('phone_number'), 'Welcome to Tumbedry. The password for your account is $pswd');
+            //$url = 'http://push.sanketik.net//api/push?accesskey=jzzUlHL4NqhWs6VHzmUkGkYTaQKD7T&to='.$phone.'&text='.$pswd.'&from=TBLDRY';
 
-             $response = curl_exec ($ch);
-             $err = curl_error($ch);  //if you need
-             curl_close ($ch);
-             $response = json_decode($response);
-             $array = get_object_vars($response);
-             if( $response->status == 'success') {
+             // $ch = curl_init();
+             // curl_setopt($ch, CURLOPT_URL, $url);
+             // curl_setopt($ch, CURLOPT_POST, 0);
+             // curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+             // $response = curl_exec ($ch);
+             // $err = curl_error($ch);  //if you need
+             // curl_close ($ch);
+             // $response = json_decode($response);
+             // $array = get_object_vars($response);
+             // if( $response->status == 'success') {
 	            DB::commit();
-		        return ["message"=>"Runner Added", 'redirectTo'=>route('manage-runner.index'), 'http_status'=>200];	
-             }
+		          return ["message"=>"Runner Added", 'redirectTo'=>route('manage-runner.index'), 'http_status'=>200];	
+             //}
         	return ["message"=>'Something Went Wrong!', 'http_status'=>400];
 	    }
 	    catch (\Exception $e) {

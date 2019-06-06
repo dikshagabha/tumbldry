@@ -21,6 +21,7 @@
         "laravel/tinker": "^1.0",
         "laravelcollective/html": "^5.8",
         "pusher/pusher-php-server": "^3.4",
+        "rahulreghunath/textlocal": "^1.0",
         "softon/indipay": "^1.1",
         "tymon/jwt-auth": "dev-develop"
     },

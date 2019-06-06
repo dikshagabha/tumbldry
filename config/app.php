@@ -178,6 +178,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         //Softon\Indipay\IndipayServiceProvider::class,
          Appnings\Payment\PaymentServiceProvider::class,
+         Rahulreghunath\Textlocal\ServiceProvider::class,
 
 
     ],

@@ -7,7 +7,7 @@
     <vs-card>
       <div slot="header">
         <h3>
-          Customer Details
+          Pickup Details
         </h3>
       </div>
       <div>
