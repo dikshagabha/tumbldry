@@ -329,6 +329,9 @@ $(document).ready(function(){
         data: $('#grnForm :input').serializeArray(),
         success:function(data){
           $('body').waitMe('hide');
+          var current_page = $(".pagination").find('.active').text();
+          console.log(location.href+'?page='+current_page);
+          load_listings(location.href+'?page='+current_page, 'serach_form');
           success(data.message);
         }
       })
@@ -403,8 +406,10 @@ $(document).ready(function(){
               cache: false,
               success: function(data){
                 success(data.message);
+                var current_page = $(".pagination").find('.active').text();
+                console.log(location.href+'?page='+current_page);
+                load_listings(location.href+'?page='+current_page, 'serach_form');
 
-                
                 //$(".ItemsAdded").html(data.view);
                 $('body').waitMe('hide');
               }

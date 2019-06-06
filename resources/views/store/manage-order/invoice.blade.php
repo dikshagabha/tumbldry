@@ -116,11 +116,11 @@
 								{{$item->quantity}} X {{ $item->item }}  @if($item->itemimage->count()) ({{ $item->itemimage->first()->addon_name}}) @endif<br>
 							@endforeach
 							<br>
-							Total Pcs: {{$items->where('status', 1)->sum('quantity')}}
+							Total Pcs: {{$items->whereIn('status', [1, 3])->sum('quantity')}}
 						</td>					
-						<td>
+						<!-- <td>
 							@if($weight){{$weight}}@else -- @endif
-						</td>
+						</td> -->
 					
 						<td>						
 							--

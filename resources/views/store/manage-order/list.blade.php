@@ -15,6 +15,7 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
           <th>Estimated Time</th>
           <th width='20%'>Order Status</th>
           <th>Invoice</th>
+          <th>Delivery Challan</th>
           <th>View</th>
 
         </tr>
@@ -93,9 +94,20 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
             </td>   
             <td>
               
-                @if($user->items()->where('status', 2)->count() || $user->payment()->count() )
+                @if($user->items()->where('status', 2)->count()==$user->items()->count())
                   <a href="{{ route('store.printInvoice', $user->id) }}" class="print_invoice"> 
                     <vs-button type="gradient" color="warning" class="btn btn-warning"> <i class="fa fa-file-pdf-o"></i> </vs-button></a>
+                @else
+                  --
+                @endif
+              </a>
+            </td> 
+
+            <td>
+                
+                @if(($user->items()->where('status', 2)->count() &&  $user->items()->where('status', 2)->count()!=$user->items()->count() ) || $user->payment()->count() )
+                  <a href="{{ route('store.printInvoice', $user->id) }}" class="print_invoice"> 
+                    <vs-button type="gradient" color="information" class="btn btn-info"> <i class="fa fa-file-pdf-o"></i> </vs-button></a>
                 @else
                   --
                 @endif
