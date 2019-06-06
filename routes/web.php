@@ -135,7 +135,7 @@ Route::prefix('store')->namespace('Store')->group(function () {
 
       Route::post('export/customer', 'ReportsController@exportCustomer')->name('store.export-customer');
       
-      //Route::get('/payment', 'RateCardController@index')->name('store.getRate');
+      Route::get('/payment', 'PaymentController@pay')->name('store.getRate');
       
       Route::get('/create-order/{id}', 'OrderController@create')->name('store.create-order');
       Route::post('/create-order/{id?}', 'OrderController@store')->name('store.create-order');

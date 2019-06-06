@@ -13,7 +13,26 @@
 <vs-row vs-justify="center">
   <vs-col type="flex" vs-justify="center" vs-align="center" vs-w="11">
     <vs-card>
+
+      
+        <vs-breadcrumb
+    :items="
+       [
+         {
+           title: 'Plans',
+           
+         },
+         {
+           title: 'Payment',
+           disabled: true
+           
+         }
+       ]"
+    >
+      
+    </vs-breadcrumb>
       <div slot="header">
+
         <h3>
           Create Plan 
         </h3>
