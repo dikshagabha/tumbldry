@@ -65,6 +65,7 @@ class Kernel extends HttpKernel
         'store' => \App\Http\Middleware\Store::class,
         'checkPrefix' => \App\Http\Middleware\checkPrefix::class,
         'jwtcustom' => \App\Http\Middleware\JwtAuthCustom::class,
+         'cors' => App\Http\Middleware\cors::class,
     ];
 
     /**
