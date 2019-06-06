@@ -103,7 +103,7 @@ class CommonRepository extends BaseRepository
        // dd("kasld");
         $ser = Service::where('id', $service_id)->first();
 
-        if ($ser->form_type==1) {
+        if ($ser->form_type==2) {
           $service_details = Coupon::where('coupon', '=' ,'Laundary Discount')->get();
           $service_details = $service_details->whereIn('parameter','>=', $last_order->where('service_id', $service_id)->first()->items->sum('quantity'));
           //$service_details = ($service_details->where('value', $current_order_details['weight']));  
