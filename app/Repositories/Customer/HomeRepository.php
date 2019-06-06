@@ -48,17 +48,18 @@ class HomeRepository extends BaseRepository
             }
 	        $address =  Address::insert($data);
             
-             $response = CommonRepository::sendmessage($phone, $pswd);
+            //$response = CommonRepository::sendmessage($phone, $pswd);
 	       
-             if( $response->status == 'success') {
+            // if( $response->status == 'success') {
                 DB::commit();
-                return ["message"=>"Customer Added", 'redirectTo'=>route('manage-customer.index'), 'http_status'=>200];  
-            }
-        	return ["message"=>'Something Went Wrong!', 'http_status'=>400];
+                return ["message"=>"Customer Added", 'redirectTo'=>route('manage-customer.index'), 'http_status'=>200,
+                            'code'=>1, 'msg'=>'Success', 'details'=>['data'=>$user]];  
+            //}
+        	//return ["message"=>'Something Went Wrong!', 'http_status'=>400];
 	    }
 	    catch (\Exception $e) {
 	        DB::rollback();
-	        return ["message"=>$e->getMessage(), 'http_status'=>400];
+	        return ["message"=>$e->getMessage(), 'http_status'=>400, 'code'=>2, 'msg'=>'Error'];
 	    }        
     }
 
@@ -77,11 +78,13 @@ class HomeRepository extends BaseRepository
             }
             $address =  Address::insert($data);
 	        DB::commit();
-	        return ["message"=>"Customer Updated", 'redirectTo'=>route('manage-customer.index'), 'http_status'=>200];
+	        return ["message"=>"Customer Updated", 'redirectTo'=>route('manage-customer.index'), 'http_status'=>200,
+                        'code'=>1, 'msg'=>'Success', 'details'=>['data'=>$user]
+                    ];
       }
       catch (\Exception $e) {
 	        DB::rollback();
-	        return ["message"=>$e->getMessage(), 'http_status'=>400];
+	        return ["message"=>$e->getMessage(), 'http_status'=>400, 'code'=>2, 'msg'=>'Error'];
       }      
     }
 

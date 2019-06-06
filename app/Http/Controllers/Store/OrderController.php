@@ -315,14 +315,15 @@ class OrderController extends Controller
     }else{
       $coupon_discount = session('coupon_discount');
     }
-    $discount = $coupon_discount['discount'];
-    if ($coupon_discount['percent']) {
-      $discount = $total_price*($coupon_discount['percent']/100);
+   if ($coupon_discount['percent']) {
+      $coupon_discount['discount'] = $total_price*($coupon_discount['percent']/100);
     }
+    
     session()->put("coupon_discount", ['coupon'=>$coupon_discount['coupon'], 
                                         'discount'=>$discount, 'percent'=>$coupon_discount['percent'],'user_discount'=> $coupon_discount['user_discount']]);
+    
     $price_data = ['estimated_price'=> $total_price, 'cgst'=>$cgst, 'gst'=>$gst, 
-                    'total_price'=>$total_price+$cgst+$gst-($discount+$coupon_discount['user_discount'])];
+                    'total_price'=>$total_price+$cgst+$gst-($coupon_discount['discount']+$coupon_discount['user_discount'])];
     session()->put('prices', $price_data);
     $wallet = session()->get('customer_details');
     return response()->json(['message'=>'Item Deleted', 'view'=>view('store.manage-order.items-view', compact('items','price_data', 'coupon_discount', 'wallet'))->render(), 'items'=>$items], 200);

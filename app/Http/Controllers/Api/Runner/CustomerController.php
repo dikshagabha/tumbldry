@@ -30,6 +30,7 @@ class CustomerController extends Controller
     public function store(RegisterRequest $request)
     {
         $response = HomeRepository::store($request, $this->user);
+        echo $request->input('callback')."(".json_encode($response).")";
         $http_status = $response['http_status'];
         unset($response['http_status']);
         return response()->json($response, $http_status);
@@ -39,8 +40,11 @@ class CustomerController extends Controller
     {
 
         $response['order'] =  Order::where('id', $id)->with('items')->first();;
-        $http_status = 200;
-         return response()->json($response, $http_status);
+        $response['code'] = 1;
+        $response['mes']= 'Success';
+
+        echo $request->input('callback')."(".json_encode($response).")";
+        //return response()->json($response, $http_status);
     }
 
     public function searchCustomer(Request $request, $id)
@@ -49,13 +53,23 @@ class CustomerController extends Controller
           'phone_number' => 'bail|required|numeric|min:2|max:9999999999',
           ]);
 
+
         $customer = User::where('role', 4)
                   ->where('phone_number', 'like', '%'.$request->input('phone_number').'%')->first();
-      
+        
+        $response['code'] = 1;
+        $response['mes']= 'Success';
+        $response['details']=['data'=>$customer];
+
         if ($customer) {
-            return response()->json(["message"=>"Customer Found!!", "customer" => $customer], 200);
+            echo $request->input('callback')."(".json_encode($response).")";
+            //return response()->json(["message"=>"Customer Found!!", "customer" => $customer], 200);
         }
-        return response()->json(["message"=>"Customer Not Found!!"], 400);
+        $response['code'] = 2;
+        $response['mes']= 'Customer Not Found!!';
+        $response['details']=['data'=>$customer];
+        echo $request->input('callback')."(".json_encode($response).")";
+        //return response()->json(["message"=>"Customer Not Found!!"], 400);
     }
 
 
