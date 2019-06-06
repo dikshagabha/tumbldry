@@ -29,52 +29,67 @@ class PickupController extends Controller
     public function getPickupJobs(Request $request)
     {
     	$response = PickupPickupRepository::getPickupJobs($request, $this->user);
-        $http_status = $response['http_status'];
-        unset($response['http_status']);
-        return response()->json($response, $http_status);
+        echo $request->input('callback')."(".json_encode($response).")";
+        // $http_status = $response['http_status'];
+        // unset($response['http_status']);
+        // return response()->json($response, $http_status);
     }
 
     public function getDeliveryJobs(Request $request)
     {
         $response = PickupPickupRepository::getDeliveryJobs($request, $this->user);
-        $http_status = $response['http_status'];
-        unset($response['http_status']);
-        return response()->json($response, $http_status);
+        echo $request->input('callback')."(".json_encode($response).")";
+        // $http_status = $response['http_status'];
+        // unset($response['http_status']);
+        // return response()->json($response, $http_status);
+    }
+
+    public function getJobs(Request $request)
+    {
+        $response = PickupPickupRepository::getJobs($request, $this->user);
+        echo $request->input('callback')."(".json_encode($response).")";
+        // $http_status = $response['http_status'];
+        // unset($response['http_status']);
+        // return response()->json($response, $http_status);
     }
 
     public function getPickupDetails(Request $request)
     {
         $id = $request->input('id');
         $response = PickupPickupRepository::getPickupDetails($request, $this->user, $id);
-        $http_status = $response['http_status'];
-        unset($response['http_status']);
-        return response()->json($response, $http_status);
+        echo $request->input('callback')."(".json_encode($response).")";
+        // $http_status = $response['http_status'];
+        // unset($response['http_status']);
+        // return response()->json($response, $http_status);
     }
 
     public function getOrderDetails(Request $request)
     {
         $id = $request->input('id');
         $response = PickupPickupRepository::getOrderDetails($request, $this->user, $id);
-        $http_status = $response['http_status'];
-        unset($response['http_status']);
-        return response()->json($response, $http_status);
+        echo $request->input('callback')."(".json_encode($response).")";
+        // $http_status = $response['http_status'];
+        // unset($response['http_status']);
+        // return response()->json($response, $http_status);
     }
 
     public function getLastOrderDetails(Request $request)
     {
         $id = $request->input('id');
         $response = PickupPickupRepository::getLastOrderDetails($request, $this->user, $id);
-        $http_status = $response['http_status'];
-        unset($response['http_status']);
-        return response()->json($response, $http_status);
+        echo $request->input('callback')."(".json_encode($response).")";
+        // $http_status = $response['http_status'];
+        // unset($response['http_status']);
+        // return response()->json($response, $http_status);
     }
 
     public function cancelRequest(Request $request)
     {
         $id = $request->input('id');
         $response = PickupPickupRepository::cancelRequest($request, $this->user, $id);
-        $http_status = $response['http_status'];
-        unset($response['http_status']);
-        return response()->json($response, $http_status);
+        echo $request->input('callback')."(".json_encode($response).")";
+        // $http_status = $response['http_status'];
+        // unset($response['http_status']);
+        // return response()->json($response, $http_status);
     }
 }

@@ -135,20 +135,19 @@ class HomeRepository extends BaseRepository
     public static function sendOtp($request)
     {
         $user = User::where('phone_number', $request->input('phone_number'))->whereRole(5)->first();
-
         if (!$user) {
             return ['message'=>'runner not found.', 'http_status'=>400];
         }
         $otp = rand(0000, 9999);
         $otp = 1234;
-        $otp = Otp::create(['user_id'=>$user->id, 'otp'=>$otp, 'expiry'=>Carbon::now()->addMinutes(15)]);
+        $otp = Otp::create(['user_id'=>$user->id, 'otp'=> $otp, 'expiry'=>Carbon::now()->addMinutes(15)]);
 
         //$res = CommonRepository::sendmessage($request->input('phone_number'), "Hi%20$user->name%20\n%20The%20otp%20for%20your%20login%20is%20$otp.");
         if ($otp) {
-            return ['message'=>'Success', 'code'=>1];
+            return ['message'=>'Success', 'code'=>1, 'details'=>['otp'=>$otp->otp]];
         }
 
-        return ['message'=>'Something Went Wrong!', 'http_status'=>400];
+        return ['message'=>'Something Went Wrong!', 'code'=>2];
     }
 
     public static function verifyOtp($request)
@@ -162,13 +161,13 @@ class HomeRepository extends BaseRepository
         $user->password = bcrypt($request->input('otp'));
         $user->save();
 
-        if ($otp) {
-              if ($otp->expiry->lt(Carbon::now())) {
-                return ['message'=>'Otp has expired.', 'http_status'=>200];
-              }
+        if($otp){
+              // if ($otp->expiry->lt(Carbon::now())) {
+              //   return ['message'=>'Otp has expired.', 'http_status'=>200];
+              // }
               $otp->delete();
-            return ['message'=>'Otp verified.', 'http_status'=>200];
+            return ['message'=>'Success', 'http_status'=>200, 'code'=>1];
         }
-        return ['message'=>'Something Went Wrong!', 'http_status'=>400];
+        return ['message'=>'Something Went Wrong!', 'code'=>2];
     }
 }

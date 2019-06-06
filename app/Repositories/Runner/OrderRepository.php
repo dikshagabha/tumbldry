@@ -26,14 +26,18 @@ class OrderRepository extends BaseRepository
     public static function services($request, $user){
     	$services = Service::where('type', 1)->get();
 
-    	return ['message'=>'Services found', 'data'=>$services, 'http_status'=>200];
+    	return ['message'=>'Success', 'data'=>$services, 'http_status'=>200, 
+                    'code'=>1, 'msg'=> 'Success', 'details'=>['data'=>$services]
+                ];
     }
 
     public static function addons($request, $user, $form_type){
 
     	$services = Service::where('type', 2)->where('form_type', $form_type)->get();
 
-    	return ['message'=>'Addons found', 'data'=>$services, 'http_status'=>200];
+    	return ['message'=>'Success', 'data'=>$services, 'http_status'=>200,
+                            'code'=>1, 'msg'=> 'Success', 'details'=>['data'=>$services]
+                ];
 
     }
 
@@ -65,15 +69,25 @@ class OrderRepository extends BaseRepository
 	              ->where('location', 'global')->first();
 	    }
 
-	    return ['price'=>$price->value, 'price_data'=>$price, 'service_data'=>$Service, 'item_data'=>$form_id];
+	    return ['price'=>$price->value, 'price_data'=>$price, 'service_data'=>$Service, 'item_data'=>$form_id,
+                'code'=>1, 'msg'=> 'Success', 'details'=>
+                            ['data'=>
+                                    ['price'=>$price->value, 'price_data'=>$price, 'service_data'=>$Service, 'item_data'=>$form_id]
+                            ]
+                ];
     }
 
     public static function serviceItems($request, $user){
     	$type = Service::where('id', $request->input('service_id'))->select('form_type')->first();
 	 	 
 	 	$data = Items::where('type', $type->form_type)->get();
-    	
-    	return ['message'=>'Items found', 'data'=>$data, 'http_status'=>200];
+
+        return ['message'=>'Items found', 'data'=>$data, 'http_status'=>200,
+                'code'=>1, 'msg'=> 'Success', 'details'=>
+                            [
+                                'data'=>$data
+                            ] 
+                ];
 
     }
 }

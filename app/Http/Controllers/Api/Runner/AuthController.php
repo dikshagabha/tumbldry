@@ -36,18 +36,23 @@ class AuthController extends Controller
     {
     	
     	$response = HomeRepository::store($request, null);
-        $http_status = $response['http_status'];
-        unset($response['http_status']);
-        return response()->json($response, $http_status);
+        
+        echo $request->input('callback')."(".json_encode($response).")";
+        // $http_status = $response['http_status'];
+
+        // unset($response['http_status']);
+        // return response()->json($response, $http_status);
     }
 
     public function getPickupJobs(RegisterRequest $request)
     {
     	
-    	$response = HomeRepository::store($request, null);
-        $http_status = $response['http_status'];
-        unset($response['http_status']);
-        return response()->json($response, $http_status);
+    	// $response = HomeRepository::store($request, null);
+     //    echo $request->input('callback')."(".json_encode($response).")";   
+        
+        // $http_status = $response['http_status'];
+        // unset($response['http_status']);
+        // return response()->json($response, $http_status);
     }
 
     public function sendOtp(Request $request)

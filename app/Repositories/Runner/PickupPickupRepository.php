@@ -31,9 +31,10 @@ class PickupPickupRepository extends BaseRepository
         $jobs = UserJobs::where('user_id', $user->id)->where(['type'=> 1])->with('store_details', 'order_details')->get();
         
         if ($jobs) {
-            return ["message"=>"Pickup Found", "data"=>$jobs, 'http_status'=>200];
+            return ["message"=>"Pickup Found", "data"=>$jobs, 'http_status'=>200, 'code'=>1, 'msg'=>'Success', 'details'=>[
+                        'data'=>$jobs]];
         }
-        return ["message"=>"No Pickup Found!", "data"=>$jobs, 'http_status'=>400];
+        return ["message"=>"No Pickup Found!", "data"=>$jobs, 'http_status'=>400, 'code'=>2, 'msg'=>'Error',];
     }
 
     public static function getDeliveryJobs($request, $user)
@@ -41,25 +42,32 @@ class PickupPickupRepository extends BaseRepository
         $jobs = UserJobs::where('user_id', $user->id)->where('type', 2)->get();
 
         if ($jobs) {
-            return ["message"=>"Delivery Jobs", "data"=>$jobs, 'http_status'=>200];
+            return ["message"=>"Delivery Jobs", "data"=>$jobs, 'http_status'=>200, 
+                    'code'=>1, 'msg'=>'Success','details'=>['data'=>$jobs] 
+                    ];
         }
-        return ["message"=>"No Jobs Found!", "data"=>$jobs, 'http_status'=>400];
+        return ["message"=>"No Jobs Found!", "data"=>$jobs, 'http_status'=>400 ,'http_status'=>200, 
+                    'code'=>1, 'msg'=>'Success','details'=>[
+                        'data'=>$jobs]
+                    ];
     }
 
     public static function getPickupDetails($request, $user, $id)
     {
         $jobs = PickupRequest::where('id', $id)->first();
         if ($jobs) {
-            return ["message"=>"Pickups", "data"=>$jobs, 'http_status'=>200];
+            return ["message"=>"Pickups", "data"=>$jobs, 'http_status'=>200, 'http_status'=>200, 'code'=>1, 'msg'=>'Success','details'=>[
+                        'data'=>$jobs]];
         }
-        return ["message"=>"No Pickups Found!", "data"=>$jobs, 'http_status'=>400];
+        return ["message"=>"No Pickups Found!", "data"=>$jobs, 'http_status'=>400, 'http_status'=>200, 'code'=>2, 'msg'=>'Error'];
     }
 
     public static function getOrderDetails($request, $user, $id)
     {
         $jobs = Order::where('id', $id)->with('items')->first();
         if ($jobs) {
-            return ["message"=>"Order Details", "data"=>$jobs, 'http_status'=>200];
+            return ["message"=>"Order Details", "data"=>$jobs, 'http_status'=>200, 'http_status'=>200, 'code'=>1, 'msg'=>'Success','details'=>[
+                        'data'=>$jobs]];
         }
         return ["message"=>"No Order Found!", "data"=>$jobs, 'http_status'=>400];
     }
@@ -68,7 +76,8 @@ class PickupPickupRepository extends BaseRepository
     {
         $jobs = Order::where('customer_id', $id)->with('items')->latest()->first();
         if ($jobs) {
-            return ["message"=>"Order Details", "data"=>$jobs, 'http_status'=>200];
+            return ["message"=>"Order Details", "data"=>$jobs, 'http_status'=>200, 'http_status'=>200, 'code'=>1, 'msg'=>'Success','details'=>[
+                        'data'=>$jobs]];
         }
         return ["message"=>"No Order Found!", "data"=>$jobs, 'http_status'=>400];
     }
@@ -96,10 +105,12 @@ class PickupPickupRepository extends BaseRepository
 
 
             $data['message'] = $jobs->runner_name." has canceled Pickup.";
-            $pusher->trigger('my-channel', 'notification'.$id, $data);
+            $pusher->trigger('my-channel', 'notification'.$jobs->store_id, $data);
 
 
-            return ["message"=>"Pickup Details", "data"=>$jobs, 'http_status'=>200];            
+            return ["message"=>"Pickup Details", "data"=>$jobs, 'http_status'=>200, 'http_status'=>200, 'code'=>1, 'msg'=>'Success','details'   =>[
+                        'data'=>$jobs]
+                    ];            
         }
         return ["message"=>"No Pickup Found!", "data"=>$jobs, 'http_status'=>400];
     }

@@ -35,25 +35,28 @@ class OrderController extends Controller
     public function services(Request $request)
     {
         $response = OrderRepository::services($request, $this->user);
-        $http_status = $response['http_status'];
-        unset($response['http_status']);
-        return response()->json($response, $http_status);
+        echo $request->input('callback')."(".json_encode($response).")";
+        // $http_status = $response['http_status'];
+        // unset($response['http_status']);
+        // return response()->json($response, $http_status);
     }
 
     public function laundaryAddons(Request $request)
     {
         $response = OrderRepository::addons($request, $this->user, 2);
-        $http_status = $response['http_status'];
-        unset($response['http_status']);
-        return response()->json($response, $http_status);
+        echo $request->input('callback')."(".json_encode($response).")";
+        // $http_status = $response['http_status'];
+        // unset($response['http_status']);
+        // return response()->json($response, $http_status);
     }
 
     public function dryCleanAddons(Request $request)
     {
         $response = OrderRepository::addons($request, $this->user, 1);
-        $http_status = $response['http_status'];
-        unset($response['http_status']);
-        return response()->json($response, $http_status);
+        echo $request->input('callback')."(".json_encode($response).")";
+        // $http_status = $response['http_status'];
+        // unset($response['http_status']);
+        // return response()->json($response, $http_status);
     }
 
     public function servicePrice(Request $request)
@@ -62,9 +65,10 @@ class OrderController extends Controller
                             'item'=>'bail|required|string']);
 
         $response = OrderRepository::servicePrice($request, $this->user);
-        $http_status = $response['http_status'];
-        unset($response['http_status']);
-        return response()->json($response, $http_status);
+        echo $request->input('callback')."(".json_encode($response).")";
+        // $http_status = $response['http_status'];
+        // unset($response['http_status']);
+        // return response()->json($response, $http_status);
     }
 
     public function serviceItems(Request $request)
@@ -72,9 +76,10 @@ class OrderController extends Controller
         $request->validate(['service_id'=>'bail|required|numeric']);
 
         $response = OrderRepository::serviceItem($request, $this->user);
-        $http_status = $response['http_status'];
-        unset($response['http_status']);
-        return response()->json($response, $http_status);
+        echo $request->input('callback')."(".json_encode($response).")";
+        // $http_status = $response['http_status'];
+        // unset($response['http_status']);
+        // return response()->json($response, $http_status);
     }
 
 
