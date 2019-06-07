@@ -635,9 +635,12 @@ class OrderController extends Controller
       DB::beginTransaction();
       $wallet = User::where('id', $request->input('customer_id'))->with('wallet')->first();
       $price=0;
-      if ($wallet->wallet && $wallet->wallet->count()) {
-        $price = $wallet->wallet->first()->price;
+      if ($wallet) {
+        if ($wallet->wallet && $wallet->wallet->count()) {
+          $price = $wallet->wallet->first()->price;
+        }.
       }
+        
       //dd(round($prices['total_price'], 2));
       $order = Order::create([ 'pickup_id'=>$id, 'customer_id'=>$customer_id, 
                                'address_id'=>$address_id,'runner_id'=>$assignedTo, 'store_id'=>$user->id,
