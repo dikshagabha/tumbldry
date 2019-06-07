@@ -433,8 +433,8 @@ class OrderController extends Controller
   public function addonItemSession(Request $request){
 
     $validatedData = $request->validate([
-        'addon'.$request->input('id')=>['bail','required', 'array', 'min:1', 'max:100'],
-        'addon'.$request->input('id').'.*'=>['bail','required', 'numeric', 'min:1', 'max:100']
+        'addon'.$request->input('id')=>['bail','nullable', 'array', 'min:1', 'max:100'],
+        'addon'.$request->input('id').'.*'=>['bail','nullable', 'numeric', 'min:1', 'max:100']
       ]);
 
     $items = session('add_order_items');
@@ -442,27 +442,37 @@ class OrderController extends Controller
     $addons_input = $request->input('addon'.$request->input('id'));
 
     $items[$index]['selected_addons'] =  $addons_input;
-
-    // Price of addons
-    $prices = ServicePrice::where('service_id', $request->input('service'))->whereIn('parameter', 
-                $addons_input)->where('service_type', 0)
-              ->where('location','like' ,'%'.$this->location->city_name.'%')->sum('value');
-    if(!$prices){
-      $prices = ServicePrice::where('service_id', $request->input('service'))
-                ->whereIn('parameter', $addons_input)
-              ->where('location','like' , 'global')->where('service_type', 0)->sum('value');
-    }
+    $prices = 0;
+    if ($addons_input) {
+      # code...
     
-    dd($addons_input);
-   
+      // Price of addons
+      $prices = ServicePrice::where('service_id', $request->input('service'))->whereIn('parameter', 
+                  $addons_input)->where('service_type', 0)
+                ->where('location','like' ,'%'.$this->location->city_name.'%')->sum('value');
+      if(!$prices){
+        $prices = ServicePrice::where('service_id', $request->input('service'))
+                  ->whereIn('parameter', $addons_input)
+                ->where('location','like' , 'global')->where('service_type', 0)->sum('value');
+      }
+    }
     if(Service::where(['id'=>$request->input('service'), 'selected'=>1])->count()){
-    	$prices = 0;
-    	}
-    $items[$index]['addon_estimated_price'] = $prices;
+      $prices = 0;
+    }
 
-    $items[$index]['estimated_price'] =  ( $items[$index]['price'] * $request->input('weight') ) + 
-    $items[$index]['addon_estimated_price'];
+    $items[$index]['addon_estimated_price'] = $prices;
+    
+
+    // if (!count($addons_input)) {
+    //   $items[$index]['estimated_price'] = $items[$index]['estimated_price'] - 
+    // }
+    
+
+    
+    $items[$index]['estimated_price'] =  ( $items[$index]['price'] * $request->input('weight') ) + $items[$index]['addon_estimated_price'];
   
+    //dd($items[$index]['price'] * $request->input('weight'));
+
     session()->put("add_order_items", $items);
 
     $items = session('add_order_items');

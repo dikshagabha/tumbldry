@@ -53,7 +53,7 @@ $i=1;
 									@if($item['units'])
 									<input type="checkbox" id="{{$addon['name'].'_'.$addon->id.'_'.$i}}" 
 									value="{{ $addon['id'] }}" name="addon{{$i}}[]" 									
-									@if(in_array( $addon['id'], $item['selected_addons']))
+									@if($item['selected_addons'] && in_array( $addon['id'], $item['selected_addons']))
 
 										checked
 
