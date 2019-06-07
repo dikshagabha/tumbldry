@@ -343,11 +343,13 @@ class OrderController extends Controller
 
     $items = session('add_order_items');
     $total_price = 0;
-     foreach ($items as $key => $value) {
-       if ($value) {
-         $total_price = $total_price + $value['estimated_price'];
+       
+
+       foreach ($items as $key => $value) {
+         if ($value) {
+           $total_price = $total_price + $value['estimated_price'];
+         }
        }
-     }
 
     $cgst = $total_price*($this->cgst/100);
     $gst = $total_price*($this->gst/100);
@@ -431,12 +433,14 @@ class OrderController extends Controller
   public function addonItemSession(Request $request){
 
     $validatedData = $request->validate([
-        'addon'.$request->input('id')=>['bail','required', 'array', 'min:1', 'max:100']
+        'addon'.$request->input('id')=>['bail','required', 'array', 'min:1', 'max:100'],
+        'addon'.$request->input('id').'.*'=>['bail','required', 'numeric', 'min:1', 'max:100']
       ]);
 
     $items = session('add_order_items');
     $index = $request->input('id')-1;
     $addons_input = $request->input('addon'.$request->input('id'));
+
     $items[$index]['selected_addons'] =  $addons_input;
 
     // Price of addons
@@ -449,13 +453,15 @@ class OrderController extends Controller
               ->where('location','like' , 'global')->where('service_type', 0)->sum('value');
     }
     
+    dd($addons_input);
    
     if(Service::where(['id'=>$request->input('service'), 'selected'=>1])->count()){
     	$prices = 0;
     	}
     $items[$index]['addon_estimated_price'] = $prices;
 
-    $items[$index]['estimated_price'] =  ( $items[$index]['price'] * $request->input('weight') ) + $items[$index]['addon_estimated_price'];
+    $items[$index]['estimated_price'] =  ( $items[$index]['price'] * $request->input('weight') ) + 
+    $items[$index]['addon_estimated_price'];
   
     session()->put("add_order_items", $items);
 
@@ -476,15 +482,16 @@ class OrderController extends Controller
     }
 
     $coupon_discount = session('coupon_discount');
-    //$discount = $coupon_discount['discount'];
+   
     if ($coupon_discount['percent']) {
       $coupon_discount['discount'] = $total_price*($coupon_discount['percent']/100);
     }
+   
     session()->put("coupon_discount", ['coupon'=>$coupon_discount['coupon'], 
                                         'discount'=>$coupon_discount['discount'], 'percent'=>$coupon_discount['percent'],'user_discount'=> $coupon_discount['user_discount']]);
+   
     $price_data = ['estimated_price'=> $total_price, 'cgst'=>$cgst, 'gst'=>$gst,
-                                'total_price'=>$total_price+$cgst+$gst-($discount+$coupon_discount['user_discount'])];     
-    
+                                'total_price'=>$total_price+$cgst+$gst-($coupon_discount['discount']+$coupon_discount['user_discount'])];
 
     session()->put('prices', $price_data);
     $wallet = session()->get('customer_details');
