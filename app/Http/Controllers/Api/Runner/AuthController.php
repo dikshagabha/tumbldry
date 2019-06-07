@@ -18,6 +18,7 @@ class AuthController extends Controller
     	header('Access-Control-Allow-Origin: *');
         header('Access-Control-Allow-Methods: *');
         header('Access-Control-Allow-Headers: *');
+        
         $request->validate([
             'phone_number'=>'bail|required|numeric',
             'password'=>'required'
@@ -25,13 +26,12 @@ class AuthController extends Controller
     	$response = HomeRepository::login($request);
 
     	//dd($response);
-
-        //echo $request->input('callback')."(".json_encode($response).")";
+        // echo $request->input('callback')."(".json_encode($response).")";
         // dd($request->all());
         // $http_status = $response['http_status'];
         // unset($response['http_status']);
-
         // dd($response);
+
          return response()->json($response, 200);
     }
 
