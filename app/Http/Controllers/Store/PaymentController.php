@@ -160,9 +160,7 @@ class PaymentController extends Controller
       
             $payment= UserPayments::insert($paymentData);
             $userwallet->save();
-
-            dispatch(new App\Jobs\SendInvoiceJob($order->id, $order->customer_id));
-
+            //dispatch(new App\Jobs\SendInvoiceJob($order->id, $order->customer_id));
             return response()->json(["message"=>"Payment Success", 'redirectTo'=>route('store.create-order.index')], 200);
           }catch(Exception $e){
             return response()->json(["message"=>"Something went wrong"], 400);

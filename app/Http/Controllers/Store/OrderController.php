@@ -377,7 +377,7 @@ class OrderController extends Controller
 
   public function weightItemSession(Request $request){
     $validatedData = $request->validate([
-      'weight'=>'bail|required|numeric|min:0|max:200']);
+      'weight'=>'bail|required|numeric|min:1|max:200']);
 
     $items = session('add_order_items');
     //$index = $request->input('data-id')-1;
