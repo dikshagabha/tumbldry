@@ -26,7 +26,7 @@ class AuthController extends Controller
 
     	//dd($response);
 
-        echo $request->input('callback')."(".json_encode($response).")";
+        //echo $request->input('callback')."(".json_encode($response).")";
         // dd($request->all());
         // $http_status = $response['http_status'];
         // unset($response['http_status']);
