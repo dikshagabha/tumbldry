@@ -366,7 +366,7 @@ class OrderController extends Controller
     }
     
     session()->put("coupon_discount", ['coupon'=>$coupon_discount['coupon'], 
-                                        'discount'=>$discount, 'percent'=>$coupon_discount['percent'],'user_discount'=> $coupon_discount['user_discount']]);
+                                        'discount'=>$coupon_discount['discount'], 'percent'=>$coupon_discount['percent'],'user_discount'=> $coupon_discount['user_discount']]);
 
     $price_data = ['estimated_price'=> $total_price, 'cgst'=>$cgst, 'gst'=>$gst,
                                 'total_price'=>$total_price+$cgst+$gst-($coupon_discount['user_discount']+$coupon_discount['discount'])];
@@ -473,16 +473,15 @@ class OrderController extends Controller
     $coupon_discount = 0;
     if (!session()->get('coupon_discount')) {
       session()->put("coupon_discount", ['coupon'=>null, 'discount'=>null, 'user_discount'=>null]);
-    }else{
-      $coupon_discount = session('coupon_discount');
     }
 
-    $discount = $coupon_discount['discount'];
+    $coupon_discount = session('coupon_discount');
+    //$discount = $coupon_discount['discount'];
     if ($coupon_discount['percent']) {
-      $discount = $total_price*($coupon_discount['discount']/100);
+      $coupon_discount['discount'] = $total_price*($coupon_discount['percent']/100);
     }
     session()->put("coupon_discount", ['coupon'=>$coupon_discount['coupon'], 
-                                        'discount'=>$discount, 'percent'=>$coupon_discount['percent'],'user_discount'=> $coupon_discount['user_discount']]);
+                                        'discount'=>$coupon_discount['discount'], 'percent'=>$coupon_discount['percent'],'user_discount'=> $coupon_discount['user_discount']]);
     $price_data = ['estimated_price'=> $total_price, 'cgst'=>$cgst, 'gst'=>$gst,
                                 'total_price'=>$total_price+$cgst+$gst-($discount+$coupon_discount['user_discount'])];     
     
@@ -612,8 +611,9 @@ class OrderController extends Controller
       $user = User::create(['name'=>$request->input('name'), 
                       'email'=>$request->input('email'),
                       'phone_number'=>$request->input('phone_number'),  
-                      'role'=> 4
+                      'role'=> 4, 'user_id'=>$this->user->id
                       ]);
+      $wallet  = UserWallet::create(['user_id'=>$user->id, 'price'=>0]);
 
       if (!session()->get('address')) {
         return response()->json(['errors'=>
