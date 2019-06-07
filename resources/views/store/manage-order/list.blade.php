@@ -64,7 +64,7 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
               @endif
             </td>
             <td>
-              {{$user->created_at->format('y/m/d h:i a')}}
+              {{$user->created_at->addDays(2)->format('y/m/d h:i a')}}
             </td>
             <td>
               @php
@@ -119,7 +119,7 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
                   <vs-button type="gradient" color="success" class="btn btn-success"> <i class="fa fa-eye"></i> </vs-button>
                 </a>
 
-                
+
                
             </td>   
           </tr>
