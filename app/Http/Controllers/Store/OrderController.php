@@ -328,11 +328,14 @@ class OrderController extends Controller
     
     $items[$index]['quantity'] =  $request->input('quantity');
     $form_type = Service::where('id', $request->input('service'))->first();
-
+    
+    
+    
     if ($form_type->form_type!=2) {
       $items[$index]['estimated_price'] = ($request->input('quantity')*($items[$index]['price']));
     }
-
+    
+    //dd($items[$index]);
     if ($request->input('add')) {
       $items[$index]['estimated_price'] = $items[$index]['estimated_price'] +
                                         $items[$index]['addon_estimated_price'];
@@ -344,13 +347,16 @@ class OrderController extends Controller
     $items = session('add_order_items');
     $total_price = 0;
        
-
+    if ($form_type->form_type!=2) {
        foreach ($items as $key => $value) {
          if ($value) {
            $total_price = $total_price + $value['estimated_price'];
          }
        }
-
+    }
+    else{
+      $total_price = $items[0]['estimated_price'];
+    }
     $cgst = $total_price*($this->cgst/100);
     $gst = $total_price*($this->gst/100);
    
@@ -360,18 +366,14 @@ class OrderController extends Controller
     }
     
     $coupon_discount = session('coupon_discount');
-    
-
-    //$discount = $coupon_discount['discount'];
     if ($coupon_discount['percent']) {
       $coupon_discount['discount'] = $total_price*($coupon_discount['percent']/100);
     }
-    
     session()->put("coupon_discount", ['coupon'=>$coupon_discount['coupon'], 
                                         'discount'=>$coupon_discount['discount'], 'percent'=>$coupon_discount['percent'],'user_discount'=> $coupon_discount['user_discount']]);
-
     $price_data = ['estimated_price'=> $total_price, 'cgst'=>$cgst, 'gst'=>$gst,
                                 'total_price'=>$total_price+$cgst+$gst-($coupon_discount['user_discount']+$coupon_discount['discount'])];
+
     session()->put('prices', $price_data);
     $wallet = session()->get('customer_details');
     return response()->json(['message'=>'Item Updated', 'view'=>view('store.manage-order.items-view', compact('items','price_data', 'coupon_discount', 'wallet'))->render(), 'items'=>$items], 200);
@@ -444,12 +446,11 @@ class OrderController extends Controller
     $items[$index]['selected_addons'] =  $addons_input;
     $prices = 0;
     if ($addons_input) {
-      # code...
-    
       // Price of addons
       $prices = ServicePrice::where('service_id', $request->input('service'))->whereIn('parameter', 
                   $addons_input)->where('service_type', 0)
-                ->where('location','like' ,'%'.$this->location->city_name.'%')->sum('value');
+                  ->where('location','like' ,'%'.$this->location->city_name.'%')->sum('value');
+      
       if(!$prices){
         $prices = ServicePrice::where('service_id', $request->input('service'))
                   ->whereIn('parameter', $addons_input)
