@@ -105,7 +105,7 @@ $i=1;
 			 <div id="weightForm" class="form">
 				<tr >
 					<td >
-						<input type="number" name="weight" class="weight" class="form-control" value="{{$items[0]['weight']}}"> 
+						<input type="number" name="weight" class="weight_input" class="form-control" value="{{$items[0]['weight']}}"> 
 					</td>
 					<td>kg</td>
 					<td colspan="2">

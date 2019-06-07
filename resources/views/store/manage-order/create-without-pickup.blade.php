@@ -405,7 +405,7 @@ $(document).ready(function(){
     $.ajax({
       url: current.data('url'),
       type:'post',
-      data: {'data-id': current.data('id'), 'weight':$('.weight').val()},
+      data: {'data-id': current.data('id'), 'weight':$('.weight_input').val()},
       cache: false,
       success: function(data){
         success(data.message);
