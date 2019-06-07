@@ -15,9 +15,9 @@ class AuthController extends Controller
 {
     public function login(Request $request)
     {   
-	header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: *');
-header('Access-Control-Allow-Headers: *');
+    	header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Methods: *');
+        header('Access-Control-Allow-Headers: *');
         $request->validate([
             'phone_number'=>'bail|required|numeric',
             'password'=>'required'
@@ -32,7 +32,7 @@ header('Access-Control-Allow-Headers: *');
         // unset($response['http_status']);
 
         // dd($response);
-        // return response()->json($response, $http_status);
+         return response()->json($response, 200);
     }
 
     public function register(RegisterRequest $request)
