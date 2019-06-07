@@ -638,7 +638,7 @@ class OrderController extends Controller
       if ($wallet) {
         if ($wallet->wallet && $wallet->wallet->count()) {
           $price = $wallet->wallet->first()->price;
-        }.
+        }
       }
         
       //dd(round($prices['total_price'], 2));
