@@ -46,7 +46,9 @@
 		          			<input type="checkbox" name="payment_mode[]" value="2" id="wallet" class="mode">  
 		          			<div class="2 input" id="2" style="display: none">
 		          				<input type="text" name="wallet_pay" id="wallet_pay" value="{{$order->total_price}}" class="form-control">
-		          				Wallet Money: {{$userwallet->price}} Rs
+		          				@if($userwallet)
+		          					Wallet Money: {{$userwallet->price}} Rs
+		          				@endif
 		          			</div>
 		          		</td>
 		          	</tr>
@@ -71,10 +73,15 @@
 		          		<td> 
 		          			<input type="checkbox" name="payment_mode[]" value="3" id="wallet" class="mode">  
 		          			<div class="3 input" id="3" style="display: none">
-		          				
+		          				@if($userwallet)
 		          				Loyality Points: {{round($userwallet->loyality_points, 2)}} Points <br>
 		          				Loyality Points Value: {{round($userwallet->loyality_points * (1/40) , 2)}} Rs
 		          				<input type="hidden" name="loyality_points" value="{{round($userwallet->loyality_points * (1/40) , 2)}}">
+		          				@else
+		          				Loyality Points: 0 Points <br>
+		          				Loyality Points Value: 0 Rs
+
+		          				@endif
 		          			</div>
 		          		</td>
 		          	</tr>
@@ -114,6 +121,8 @@
         	</vs-col>
 			<vs-col type="flex" vs-justify="center" vs-align="center" vs-w="5" >
 				<vs-button type="gradient" color="danger" id="pay-button"  data-href="{{route('store.payment')}}" data-id='{{$order->id}}'>Pay</vs-button>
+
+				<a href="{{ route('store.create-order.index') }}"><vs-button type="gradient" color="success">Pay Later</vs-button></a>
         	</vs-col>
 			
        	</vs-row>

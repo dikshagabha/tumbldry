@@ -191,11 +191,11 @@ $i=1;
 						@endif
 					</td>
 				</tr>
-				@if($wallet)
+				 @if(isset($wallet['wallet']))
 				<tr>
-					<td colspan="2">Customer Wallet</td><td>{{$wallet['wallet']->price}} Rs</td> 
+					<td colspan="2">Customer Wallet</td><td>{{ $wallet['wallet']->price}} Rs</td> 
 				</tr>
-				@endif
+				@endif 
 				<tr >
 					<td colspan="3" style="text-align: center;" ><button type="button" class="btn btn-warning" id="add_frenchise">Create Order</button></td>
 				</tr>		

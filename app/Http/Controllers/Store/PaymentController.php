@@ -16,6 +16,7 @@ use App\Model\{
 use Auth;
 use App\User;
 use Carbon\Carbon;
+use Mail;
 
 class PaymentController extends Controller
 {
@@ -45,6 +46,7 @@ class PaymentController extends Controller
       });
     }
     public function pay(Request $request){
+
     	
       $parameters = [
       
@@ -78,8 +80,13 @@ class PaymentController extends Controller
       try{$order = Order::where('id', $request->input('order_id'))->first();
             $payment_modes = $request->input('payment_mode');
             $userwallet = UserWallet::where('user_id', $order->customer_id)->first();
+
+            if (!$userwallet) 
+            {
+              $userwallet = UserWallet::create(['user_id'=>$order->customer_id, 'price'=>0]);
+            }
       
-            if (in_array(2, $request->input('payment_mode')) && $request->input('wallet_pay')>$userwallet->price) {
+            if ( $userwallet && in_array(2, $request->input('payment_mode')) && $request->input('wallet_pay')>$userwallet->price) {
               return response()->json(["message"=>"User does not have enough money in wallet."], 400);
             }
       
@@ -153,6 +160,9 @@ class PaymentController extends Controller
       
             $payment= UserPayments::insert($paymentData);
             $userwallet->save();
+
+            dispatch(new App\Jobs\SendInvoiceJob($order->id, $order->customer_id));
+
             return response()->json(["message"=>"Payment Success", 'redirectTo'=>route('store.create-order.index')], 200);
           }catch(Exception $e){
             return response()->json(["message"=>"Something went wrong"], 400);

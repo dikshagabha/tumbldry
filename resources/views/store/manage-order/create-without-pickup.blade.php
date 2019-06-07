@@ -70,7 +70,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" id="add_new_address">Save</button>
+        <button type="button" class="btn btn-primary" id="add_new_address" data-url="{{route('store.postAddSessionAddress') }}">Save</button>
       </div>
     </div>
 
@@ -337,18 +337,16 @@ $(document).ready(function(){
   })
   $(document).on("click", "#add_new_address", function(e){
     e.preventDefault();
-    var form = $('#formAddress')[0];
-    var data = new FormData(form);
-    data.append('user_id', $('#customer_id').val());
+    var form = $('#addressForm :input').serializeArray();
+    // /var data = new FormData(form);
+    form.push({'name':'user_id', 'value': $('#customer_id').val()});
     
     $(".error").html("");    
     $.ajax({
-      url: $('#formAddress').attr('action'),
+      url: $('#add_new_address').data('url'),
       type:'post',
-      data: data,
-      cache: false,
-      processData: false,  
-      contentType: false,      
+      data: form,
+       
       success: function(data){
         success(data.message);
         if (data.data) 

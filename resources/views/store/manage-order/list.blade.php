@@ -118,6 +118,8 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
                 <a  class="view" title="view order details" href="{{route('store.getOrderDetails', $user->id)}}">
                   <vs-button type="gradient" color="success" class="btn btn-success"> <i class="fa fa-eye"></i> </vs-button>
                 </a>
+
+                
                
             </td>   
           </tr>

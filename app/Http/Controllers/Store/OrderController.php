@@ -81,24 +81,17 @@ class OrderController extends Controller
     try{
         $order = Order::where('id', $id)->with('customer')->first();
         $order->status = $request->input('status');
-        
-
-        //dd($order->customer->phone_number);
         if ($order) {
           if ($request->input('status')==2) {
 
             $customer = $order->customer;
-            //dd($customer);
             if ($customer->phone_number) {
               CommonRepository::sendmessage($customer->phone_number, 'Your%20order%20ORDER'.$id.'%20has%20been%20recieved%20by%20store.');
-
               $updateitems = OrderItems::where('order_id', $id)->update(['status'=>3]);
               $date = Carbon::now($request->header('timezone'));
               $order->date_of_arrival = $date;
-            }
-            
+            }            
           }
-
           $order->save();
           return response()->json(['message'=>'Order Status Updated'], 200);
         }
@@ -275,13 +268,9 @@ class OrderController extends Controller
     }else{
       $coupon_discount = session('coupon_discount');
     }
-
-
     $price_data = ['estimated_price'=> $total_price, 'cgst'=>$cgst, 'gst'=>$gst, 
                     'total_price'=>$total_price+$cgst+$gst-($coupon_discount['discount']+$coupon_discount['user_discount'])];
-
     session()->put('prices', $price_data);
-    //dd($items);
     $wallet = session()->get('customer_details');
     return response()->json(['message'=>'Item Added to Cart', 'view'=>view('store.manage-order.items-view', compact('items', 'Service', 'form_id', 'price_data', 'coupon_discount', 'wallet'))->render(), 'items'=>$items,
         'price_data'=>$price_data], 200);
@@ -296,7 +285,6 @@ class OrderController extends Controller
 
     $items = array_values($items);
 
-    //dd($items);
     session()->put("add_order_items", $items);
 
     $items = session('add_order_items');
