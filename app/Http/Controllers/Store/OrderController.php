@@ -675,6 +675,7 @@ class OrderController extends Controller
                             ]);
       foreach ($items as $item) {
           $item['order_id']=$order->id;
+          $item['status'] = 3;
           $orderitem = OrderItems::create($item); 
           $itemData = [];
           foreach ($item['selected_addons'] as $key => $value) 
