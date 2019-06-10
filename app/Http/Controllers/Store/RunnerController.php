@@ -153,7 +153,7 @@ class RunnerController extends Controller
       // }
       
       if ($delete) {
-        return response()->json(["message"=>"Store deleted!"], 200);
+        return response()->json(["message"=>"Runner deleted!"], 200);
       }
       return response()->json(["message"=>"Something went wrong !"], 400);
     }

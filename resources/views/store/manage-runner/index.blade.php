@@ -81,8 +81,9 @@
 <script>
 $(document).ready(function(){
   var current_page = $(".pagination").find('.active').text();
-  $(document).on('click', '#delete', function(e){
+  $(document).on('click', '.delete', function(e){
     e.preventDefault();
+    current = $(this);
           bootbox.confirm({
           title: "Confirm",
           message: "Do you want to delete the Runner? This cannot be undone.",
@@ -101,10 +102,10 @@ $(document).ready(function(){
                 
 
                 $.ajax({
-                  url: $('#delete').attr('href'),
+                  url: current.attr('href'),
                   type:"post",
                   data:{
-                    '_method':"delete", '_token':$('#delete').data('token')
+                    '_method':"delete", '_token':current.data('token')
                   },
                   headers:{
                     'X-CSRF-TOKEN':$('meta[name="csrf-token"]').attr('content'),
