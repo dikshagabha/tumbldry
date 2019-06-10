@@ -45,7 +45,7 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
                   <a href="{{route('manage-customer.show',encrypt( $user->id))}}" class="view" title="view">
                     <vs-button type="gradient" color="success" class="btn btn-success" > <i class="fa fa-eye"></i></vs-button>
                   </a>
-                  <a href="{{route('manage-customer.destroy', encrypt( $user->id))}}" id="delete" data-token="{{csrf_token()}}" title="delete"> 
+                  <a href="{{route('manage-customer.destroy', encrypt( $user->id))}}" class="delete" data-token="{{csrf_token()}}" title="delete"> 
                     <vs-button type="gradient" color="danger" class="btn btn-danger"> <i class="fa fa-trash"></i></vs-button>
                   </a>
               </td>
