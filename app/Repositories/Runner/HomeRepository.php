@@ -23,7 +23,7 @@ class HomeRepository extends BaseRepository
      */
     public function model()
     {
-        //return YourModel::class;
+      
     }
 
 
@@ -38,36 +38,9 @@ class HomeRepository extends BaseRepository
 
 	        $user = User::create(['name'=>$request->input('name'), 'role'=>5, 'email'=> $request->input('email'), 
 	        						'password'=>bcrypt($pswd), 'phone_number'=> $request->input('phone_number'), 
-	        						'user_id'=>$user]);
-
-
-	        // $address =  Address::create([
-	        //                               'address'=>$request->input('address') ,
-	        //                               'user_id'=>$user->id,
-	        //                               'city'=>$request->input('city'),
-	        //                               'state'=>$request->input('state'),
-	        //                               'pin'=>$request->input('pin'),
-	        //                               'latitude'=>$request->input('latitude') ,
-	        //                               'longitude'=>$request->input('longitude'),
-	        //                               'landmark'=>$request->input('landmark'),
-	        //                               ]);
-
-
-            CommonRepository::sendmessage($request->input('phone_number'), 'Welcome to Tumbedry. The password for your account is $pswd');
-            //$url = 'http://push.sanketik.net//api/push?accesskey=jzzUlHL4NqhWs6VHzmUkGkYTaQKD7T&to='.$phone.'&text='.$pswd.'&from=TBLDRY';
-
-             // $ch = curl_init();
-             // curl_setopt($ch, CURLOPT_URL, $url);
-             // curl_setopt($ch, CURLOPT_POST, 0);
-             // curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-             // $response = curl_exec ($ch);
-             // $err = curl_error($ch);  //if you need
-             // curl_close ($ch);
-             // $response = json_decode($response);
-             // $array = get_object_vars($response);
-             // if( $response->status == 'success') {
-	            DB::commit();
+	        						'user_id'=>$user, 'status'=>1]);
+                  //CommonRepository::sendmessage($request->input('phone_number'), 'Welcome to Tumbedry. The password for your account is $pswd');
+              DB::commit();
 		          return ["message"=>"Runner Added", 'redirectTo'=>route('manage-runner.index'), 'http_status'=>200];	
              //}
         	return ["message"=>'Something Went Wrong!', 'http_status'=>400];

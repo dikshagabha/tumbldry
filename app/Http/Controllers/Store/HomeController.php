@@ -24,7 +24,7 @@ class HomeController extends Controller
 
         
 
-        $runners = User::where(['role'=>5, 'status'=>1])->where('user_id', Auth::user()->id)->pluck('name', 'id');
+        $runners = User::where(['role'=>5, 'status'=>1, 'deleted_at'=>null])->where('user_id', Auth::user()->id)->pluck('name', 'id');
     	$users = PickupRequest::where('store_id', Auth::user()->id)->wheredoesnthave('order')->with('order')->latest()->paginate(5);
         
     	if ($Request->ajax()) {
@@ -56,7 +56,7 @@ class HomeController extends Controller
           'phone_number' => 'bail|required|numeric|min:2|max:9999999999',
           ]);
 
-      $customer = User::where('role', 4)
+      $customer = User::where(['role'=> 4, 'deleted_at'=>null])
                   ->where('phone_number', 'like', $request->input('phone_number'))->with('wallet', 'addresses')->first();
       
 	if ($customer) {

@@ -12,20 +12,20 @@ use Carbon\Carbon;
 use App\Model\{
 	Items,
 	Service,
-    PickupRequest,
-    OrderItems,
-    Order,
-    OrderItemImage,
-    Location,
-    ServicePrice,
-    Coupon,
-    UserJobs,
-    Address,
-    LaundaryWeights,
-    UserWallet,
-    UserPayments,
-    SMSTemplate,
-    VendorItem
+  PickupRequest,
+  OrderItems,
+  Order,
+  OrderItemImage,
+  Location,
+  ServicePrice,
+  Coupon,
+  UserJobs,
+  Address,
+  LaundaryWeights,
+  UserWallet,
+  UserPayments,
+  SMSTemplate,
+  VendorItem
 };
 use App\User;
 use Session;
@@ -666,7 +666,7 @@ class OrderController extends Controller
                                'gst'=>$prices['gst'], 'total_price'=>round($prices['total_price'], 2),
                                'coupon_discount'=>$coupon_discount['discount'], 'coupon_id'=>$coupon_discount['coupon'],
                                'discount'=>$coupon_discount['user_discount'], 'service_id'=>$request->input('service'),
-                               'delivery_mode'=>$request->input('delivery_mode')
+                               'delivery_mode'=>$request->input('delivery_mode'), 'status'=>2, 'date_of_arrival'=>Carbon::now()
                             ]);
       foreach ($items as $item) {
           $item['order_id']=$order->id;
@@ -689,7 +689,7 @@ class OrderController extends Controller
       
       $mes = str_replace(' ', '%20', $mes);
 
-      CommonRepository::sendmessage($request->input('phone_number'), $mes);
+      //CommonRepository::sendmessage($request->input('phone_number'), $mes);
       DB::commit();
       return response()->json([ 'redirectTo'=>route('store.paymentmodes', $order->id), 'message'=>'Order has been created Successfully'], 200); 
    } catch (Exception $e) {
@@ -740,15 +740,15 @@ class OrderController extends Controller
     if (!$request->input('grn')) {
       return response()->json(['message'=> 'Please select an item'], 400);
     }
-    $orders = OrderItems::whereIn('id', $request->input('grn'))->with('order')->with(['itemimage'=>function($q){
+    $orders = OrderItems::whereIn('id', $request->input('grn'))->with('order', 'payment')->with(['itemimage'=>function($q){
        $q->with('addons');
       }])->get();
      $user = $this->user;
      
      $update_status = OrderItems::whereIn("id", $request->input('grn'))->update(['status'=> 4]);
      $order_update = Order::where('id', $request->input('order_id'))->update(['status'=>3]);
-     $pdf = PDF::loadView('store.grn.grn', compact('orders', 'user'));
-     return ($pdf->download('invoice.pdf')->setPaper('a5', 'landscape'));
+     $pdf = PDF::loadView('store.grn.grn', compact('orders', 'user'))->setPaper('a5');
+     return ($pdf->download('invoice.pdf'));
   }
 
 
@@ -840,8 +840,11 @@ class OrderController extends Controller
      $user = $this->user;
     $total = $items->sum('quantity');
     $weight = $items->sum('weight');
-    $items_partial = $items->whereIn('status', [1, 3])->count();
 
+    //dd($items->toArray());
+    $items_partial = $items->where('status', '!=', 2)->count();
+
+    //dd($items_partial);
     //dd($items_partial);
     //dd($items_partial);
     // if (! $items->where('status', 2)->count()) {

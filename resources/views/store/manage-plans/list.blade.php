@@ -9,6 +9,7 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
             <tr>
               <th>Plan Id</th>
               <th>Phone Number</th>
+              <th>Name</th>
               <th>Valid From</th>
               <th>Valid To</th>
               <th>Status</th>
@@ -24,6 +25,9 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
               </td>
               <td>
                 {{$user->phone_number}}
+              </td>
+               <td>
+                {{$user->name}}
               </td>
               <td>
                 {{$user->valid_from}}
