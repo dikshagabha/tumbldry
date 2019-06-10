@@ -16,7 +16,7 @@ class Store
     public function handle($request, Closure $next)
     {
       if (Auth::check()) {
-          if (Auth::user()->status == 1) {
+          if (Auth::user()->status == 1 && Auth::user()->role==3) {
             return $next($request);
           }
           Auth::logout();

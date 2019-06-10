@@ -18,17 +18,18 @@ $i=1;
 						<strong>{{$item['item']}}</strong>
 					</td>					
 					<td width="10%">
-						<input type="text" name="quantity" class="form-control quantityVal_{{$i}} " 
+						<input type="text" name="quantity" class="form-control quantityVal_{{$i}} quantity " 
+						 data-url = "{{route('store.quantityItemSession')}}" data-service = {{$item['service_id']}} data-id='{{$i}}'
 						 value="{{$item['quantity']}}"  
 						>
 						</td>
 						<td>
 
 
-						<button type="button" class="btn btn-link quantity" data-url = "{{route('store.quantityItemSession')}}" data-service = {{$item['service_id']}} data-id='{{$i}}'
+						<!-- <button type="button" class="btn btn-link quantity" data-url = "{{route('store.quantityItemSession')}}" data-service = {{$item['service_id']}} data-id='{{$i}}'
 						data-id="{{$i}}" style="color:white" title="Add Quantity"> 
 						<i class="fa fa-refresh"></i>
-						</button>
+						</button> -->
 					</td>					
 					<td>				
 						<button type="button" class="btn btn-danger deleteItemBtn" action = "{{route('store.deleteItemSession')}}" data-add=@if($item['units']) 0 @else 1 @endif data-id="{{$i}}" title="Delete"><i class="fa fa-trash"></i></button>
@@ -52,7 +53,10 @@ $i=1;
 									
 									@if($item['units'])
 									<input type="checkbox" id="{{$addon['name'].'_'.$addon->id.'_'.$i}}" 
-									value="{{ $addon['id'] }}" name="addon{{$i}}[]" 									
+									value="{{ $addon['id'] }}" name="addon{{$i}}[]"  class="addOn"
+									data-url = "{{route('store.addonItemSession')}}" title="Add Addon" data-id='{{$i}}'
+
+
 									@if($item['selected_addons'] && in_array( $addon['id'], $item['selected_addons']))
 
 										checked
@@ -62,7 +66,8 @@ $i=1;
 
 									@else
 									<input type="radio" id="{{$addon['name'].'_'.$addon->id.'_'.$i}}" 
-									value="{{ $addon['id'] }}" name="addon{{$i}}[]" 									
+									value="{{ $addon['id'] }}" name="addon{{$i}}[]"  class="addOn"
+									data-url = "{{route('store.addonItemSession')}}" title="Add Addon" data-id='{{$i}}'								
 									@if(in_array( $addon['id'], $item['selected_addons']))
 
 										checked
@@ -71,7 +76,8 @@ $i=1;
 									>
 									@endif
 
-									<label for="{{$addon['name'].'_'.$addon->id.'_'.$i}}">{{ $addon['name'] }}
+									<label for="{{$addon['name'].'_'.$addon->id.'_'.$i}}">
+										{{ $addon['name'] }}
 									</label>
 								
 							@endforeach
@@ -80,10 +86,10 @@ $i=1;
 							<input type="hidden" name="service" value="{{$item['service_id']}}">
 							<input type="hidden" name="id" value="{{$i}}">
 
-							<button type="button" class="btn btn-link addOn" data-url = "{{route('store.addonItemSession')}}" title="Add Addon" data-id='{{$i}}'
+							<!-- <button type="button" class="btn btn-link addOn" data-url = "{{route('store.addonItemSession')}}" title="Add Addon" data-id='{{$i}}'
 							data-id="{{$i}}" style="color:white"> 
 								<i class="fa fa-refresh"></i>
-							</button>
+							</button> -->
 
 
 					 </div>

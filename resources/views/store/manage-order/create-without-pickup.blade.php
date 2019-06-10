@@ -134,9 +134,10 @@ $(document).ready(function(){
       minLength: 2,
   });
 
-  $(document).on("click", ".addOn", function(e){
+  $(document).on("change", ".addOn", function(e){
       e.preventDefault();
       $(".error").html(""); 
+
       current = $(this);   
       $.ajax({
         url: current.data('url'),
@@ -379,9 +380,29 @@ $(document).ready(function(){
     })
   })
 
-  $(document).on("click", ".quantity", function(e){
+  // $(".quantity").change(function(e) {
+  //     e.preventDefault();
+  //     $(".error").html(""); 
+  //     current = $(this);   
+  //     $.ajax({
+  //       url: current.data('url'),
+  //       type:'post',
+  //       data: {'data-id': current.data('id'), 'quantity':$('.quantityVal_'+current.data('id')).val(), 
+  //                 'service':current.data('service'), 
+  //               'add':current.data('add')},
+  //       cache: false,
+  //       success: function(data){
+  //         success(data.message);
+  //         $(".ItemsAdded").html(data.view);
+  //         $('body').waitMe('hide');
+  //       }
+  //     })
+  //   });
+
+  $(document).on("change", ".quantity", function(e){
     e.preventDefault();
     $(".error").html(""); 
+    if ($(this).val().length === 0) return
     current = $(this);   
     $.ajax({
       url: current.data('url'),

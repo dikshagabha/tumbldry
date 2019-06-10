@@ -18,6 +18,14 @@ class UserPlan extends Model
         return "--";
     }
 
+     public function getNameAttribute(){
+        if ($this->customer()->count()) 
+        {
+            return $this->customer()->first()->name;
+        }
+        return "--";
+    }
+
     public function plan(){
     	return $this->hasOne('App\Model\Plan', 'id', 'plan_id');
     } 
