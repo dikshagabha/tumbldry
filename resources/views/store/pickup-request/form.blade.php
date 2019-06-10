@@ -64,13 +64,18 @@
             <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
               <label class="login2 pull-right pull-right-pro">Pickup Time</label>
             </div>
-            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
-            <input type="text" id="picker" name="request_time" class="form-control">
-
-              <!--  {!! Form::hidden('request_time',null,array('class' => 'form-control', 'maxlength'=>"10", 'id'=>"result", "placeholder"=>"Date Time")) !!} -->
-                  
-              <span class="error" id="request_time_error"></span>
-            </div>    
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+               <input type="text" id="picker" name="request_time" class="form-control">                 
+               <span class="error" id="request_time_error"></span>
+            </div>  
+             <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+               <input type="text" id="picker_start" name="start_time" class="form-control">                 
+               <span class="error" id="start_time_error"></span>
+            </div>
+             <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+               <input type="text" id="picker_end" name="end_time" class="form-control">                 
+               <span class="error" id="start_time_error"></span>
+            </div>  
         </div>
       </div>
       <br>

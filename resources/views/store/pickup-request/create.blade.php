@@ -121,9 +121,35 @@
 $(document).ready(function(){
 
   $('#service').chosen();
-  $("#picker").flatpickr({enableTime: true,
+  $("#picker").flatpickr({enableTime: false,
     defaultDate:moment(),
-    minDate:moment().add(3, 'hours').format("YYYY-MM-DD HH:mm:ss")});
+    minDate:moment().add(3, 'hours').format("YYYY-MM-DD HH:mm:ss")
+  });
+  $("#picker_start").flatpickr({
+    enableTime: true,
+    noCalendar: true,
+    dateFormat: "H:i",
+    minDate:moment().format("HH:mm"),
+    defaultDate:moment().format("HH:mm"),
+    onChange:function(data, time){
+      $("#picker_end").flatpickr({
+        enableTime: true,
+        noCalendar: true,
+        minDate:time,
+        defaultDate:time,
+      });
+    }
+  });
+
+ $("#picker_end").flatpickr({
+    enableTime: true,
+    noCalendar: true,
+    dateFormat: "H:i",
+    minDate:moment().format("HH:mm"),
+   // defaultDate:moment().format("HH:mm"),
+
+  });
+
 
   $('input[type=radio][name=property_type]').change(function() {
     if (this.value == 1) {
