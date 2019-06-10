@@ -125,7 +125,7 @@ Payment Details:
 </table>	
 @endif
 
-@if($order->customer->count())
+@if($order->customer && $order->customer->count())
 Customer Details:
 <table class="table table-bordered">
 	<tr>
