@@ -13,10 +13,10 @@ return [
     */
    
     'supportsCredentials' => false,
-    'allowedOrigins' => ['*'],
+    'allowedOrigins' => [],
     'allowedOriginsPatterns' => [],
     'allowedHeaders' => ['*'],
-    'allowedMethods' => ['*', 'options'],
+    'allowedMethods' => ['GET'],
     'exposedHeaders' => [],
     'maxAge' => 60 * 60 * 24,
 
