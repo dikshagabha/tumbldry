@@ -567,7 +567,7 @@ class OrderController extends Controller
          $total_price = $total_price + $value['estimated_price'];
        }
     }
-
+    //dd($total_price);
 
     $coupon_discount = session()->get('coupon_discount');    
     $cgst = $total_price*($this->cgst/100);
@@ -582,20 +582,25 @@ class OrderController extends Controller
     }
     
     $coupon_discount['user_discount']=$request->input('discount');
-    session()->put("coupon_discount", $coupon_discount);
+    
 
-    $cdiscount = $coupon_discount['discount'];
-    if ($coupon_discount['percent']) {
-      $cdiscount = $total_price*($coupon_discount['discount']/100);
-    }
-    $discount = $cdiscount+$coupon_discount['user_discount'];
+    // $cdiscount = $coupon_discount['discount'];
+    // if ($coupon_discount['percent']) {
+    //     $cdiscount = $total_price*($coupon_discount['discount']/100);
+    //   }
+      
+    //dd($coupon_discount['discount']);
+    $discount = $coupon_discount['discount']+$coupon_discount['user_discount'];
     session()->put("coupon_discount", ['coupon'=>$coupon_discount['coupon'], 
-                                        'discount'=>$cdiscount, 'percent'=>$coupon_discount['percent'],'user_discount'=> $coupon_discount['user_discount']]);
-    $price_data = ['estimated_price'=> $total_price, 'cgst'=>$cgst, 'gst'=>$gst, 
+                                        'discount'=>$coupon_discount['discount'], 'percent'=>$coupon_discount['percent'],'user_discount'=> $coupon_discount['user_discount']]);
+   
+   //dd($discount);
+   $price_data = ['estimated_price'=> $total_price, 'cgst'=>$cgst, 'gst'=>$gst, 
                                 'total_price'=>$total_price+$cgst+$gst-$discount];
-    session()->put('prices', $price_data);
-    $wallet = session()->get('customer_details');
-    return response()->json(['message'=>'Items Updated', 'view'=>view('store.manage-order.items-view', compact('items','price_data', 'coupon_discount', 'wallet'))->render(), 'items'=>$items], 200);
+   session()->put('prices', $price_data);
+   $wallet = session()->get('customer_details');
+   
+   return response()->json(['message'=>'Items Updated', 'view'=>view('store.manage-order.items-view', compact('items','price_data', 'coupon_discount', 'wallet'))->render(), 'items'=>$items], 200);
   }
 
 

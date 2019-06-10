@@ -100,6 +100,10 @@
 						<td colspan="3"> Discount </td>
 						<td>Rs {{$order->discount}}</td>
 					</tr>
+					<tr>						
+						<td colspan="3">Coupon Discount </td>
+						<td>Rs {{$order->coupon_discount}}</td>
+					</tr>
 					<tr>
 						<td colspan="3">Net Amount</td>
 						<td>Rs {{$order->total_price}}</td>
@@ -142,6 +146,10 @@
 					<tr>						
 						<td colspan="3"> Discount </td>
 						<td>Rs {{$order->discount}}</td>
+					</tr>
+					<tr>						
+						<td colspan="3">Coupon Discount </td>
+						<td>Rs {{$order->coupon_discount}}</td>
 					</tr>
 					<tr>
 						<td colspan="3">Net Amount</td>
