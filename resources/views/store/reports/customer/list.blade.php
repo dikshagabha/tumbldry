@@ -1,13 +1,13 @@
 
 @php
-$i = ($users->currentpage() - 1) * $users->perPage() + 1;
+$i = 1;
 @endphp
  @if($users->count())
 
-      <table class="table table-striped dataTable">
+      <table class="table display nowrap dataTable">
           <thead>
             <tr>
-              <th>S No</th>
+              <th>Id</th>
               <th>Name</th>
               <th>Status</th>
                <th>Created At</th>
@@ -19,7 +19,7 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
       @foreach($users as $user)
             <tr>
               <td>
-                {{$i}}
+                {{$user->id}}
               </td>
               <td>
                 {{$user->name}}
@@ -43,16 +43,15 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
                   
               </td> -->
 
-
+@php
+$i ++;
+@endphp
             </tr>
-              @php
-                $i++;
-              @endphp
+             
             @endforeach
           </tbody>
       </table>
 
-      {{$users->links()}}
       @else
       No Records Found
       @endif

@@ -132,7 +132,7 @@ Route::prefix('store')->namespace('Store')->group(function () {
             
             Route::post('delete-addresses-session', 'CustomerController@deleteSessionAddresses')->name('store.deleteCustomerAddresses');
 
-            Route::post('export/customer', 'ReportsController@exportCustomer')->name('store.export-customer');
+            Route::get('export/settlement', 'ReportsController@exportCustomer')->name('store.export-settlement');
             
             Route::get('/payment', 'PaymentController@pay')->name('store.getRate');
             

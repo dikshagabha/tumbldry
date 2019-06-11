@@ -1,10 +1,7 @@
 
-@php
-$i = ($users->currentpage() - 1) * $users->perPage() + 1;
-@endphp
  @if($users->count())
 
-      <table class="table table-striped dataTable">
+      <table class="table dataTable">
           <thead>
             <tr>
               <th>Id</th>
@@ -42,23 +39,12 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
                   {{$user->created_at->setTimezone($timezone)->format('y/m/d h:i a')}}
                   
               </td>
-             <!--  <td>                  
-                  <a href="{{route('store.getOrderDetails', $user->id)}}" class="view" title="view">
-                    <button type="button" class="btn btn-info "><i class="fa fa-eye"></i></button>
-                  </a>
-                  
-              </td> -->
-
-
+     
             </tr>
-              @php
-                $i++;
-              @endphp
+             
             @endforeach
           </tbody>
       </table>
-
-      {{$users->links()}}
       @else
       No Records Found
       @endif
