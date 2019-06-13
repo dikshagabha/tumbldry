@@ -670,7 +670,7 @@ class OrderController extends Controller
         
       //dd(round($prices['total_price'], 2));
       $order = Order::create([ 'pickup_id'=>$id, 'customer_id'=>$customer_id, 
-                               'address_id'=>$address_id,'runner_id'=>$assignedTo, 'store_id'=>$user->id,
+                               'address_id'=>$address_id,'runner_id'=>$assignedTo, 'store_id'=>$this->user->id,
                                'estimated_price'=>$prices['estimated_price'], 'cgst'=>$prices['cgst'],
                                'gst'=>$prices['gst'], 'total_price'=>round($prices['total_price'], 2),
                                'coupon_discount'=>$coupon_discount['discount'], 'coupon_id'=>$coupon_discount['coupon'],
