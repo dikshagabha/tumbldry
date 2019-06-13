@@ -37,6 +37,40 @@ class Order extends Model
         return $this->hasMany('App\Model\UserPayments', 'order_id', 'id');
     }
 
+    public function delivery(){
+        return $this->hasOne('App\User', 'id', 'delivery_runner_id');
+    }
+
+
+    public function getStatusNameAttribute(){
+        if ($this->status==1) {
+            return "Pending";
+        }
+
+        
+        if (! $this->items()->where('status', '!=', 2)->count()) 
+        {
+            return "Processed";
+        }
+        if ($this->status==2) {
+            return "Recieved";
+        }
+
+        if ($this->status==3) {
+            return "Processing";
+        }
+
+        if ($this->status==4) {
+            return "Processed";
+        }        
+        if ($this->status==5) {
+            return "Out for Delivery";
+        }
+
+        if ($this->status==6) {
+            return "Out for Delivery";
+        }
+    }
  	public function getCustomerPhoneNumberAttribute(){
  		if ($this->customer()->count()) 
         {
@@ -44,10 +78,18 @@ class Order extends Model
         }
         return "--";
  	}
- 	public function getCustomerNameAttribute(){
- 		if ($this->customer()->count()) 
+
+    public function getCustomerNameAttribute(){
+        if ($this->customer()->count()) 
         {
-            return $this->customer()->first()->name;
+            return $this->customer()->first()->phone_number;
+        }
+        return "--";
+    }
+ 	public function getRunnerNameAttribute(){
+ 		if ($this->delivery()->count()) 
+        {
+            return $this->delivery()->first()->name;
         }
         return "--";
  	}

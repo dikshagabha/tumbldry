@@ -44,7 +44,7 @@ Items:
 		@if($vendors)<th>Vendors</th>@endif
 
 		@if($order->service->form_type == 1 || $order->service->form_type == 2)
-		<th>GRN <input type="checkbox" name="select_all[]" title="Select All" class="select_all" value="0"><button type="button" id="grnBtn" data-url="{{route('store.getGrn')}}" class="btn btn-link" title="Download Grn"><i class="fa fa-download"></i></button>
+		<th>GRN <input type="checkbox" name="select_all[]" title="Select All" class="select_all" value="0"><button type="button" id="grnBtn" data-url="{{route('store.getGrn')}}" class="btn btn-link" title="Print Grn">Print Tag</button>
 			<span id="grn_error" class="error"></span>
 		</th>
 		@endif
@@ -63,8 +63,10 @@ Items:
 		<td class="table-modal">{{$item->service_name}}</td>
 		
 		<td class="table-modal">
+			@if($item->status==1)
 			<a href="{{route('store.mark-recieved', $item->id)}}" value="{{ $item->status }}" class="mark_status">
-				@if($item->status==1) Pending @else Recieved @endif</a>
+				 Pending </a> 
+				 @else Recieved @endif
 		</td>
 		@if($vendors)
 		<td>

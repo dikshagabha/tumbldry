@@ -145,7 +145,7 @@ class ReportsController extends Controller
                   $q->whereMonth('created_at', '=',$request->input('monthFilter'));
                 })
                 ->latest()
-                ->paginate(10);
+                ->get();
 
     
     

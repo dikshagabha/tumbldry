@@ -31,7 +31,7 @@ class HomeController extends Controller
     		return view('store.pickup-requests.list', compact('users', 'activePage', 'titlePage', 'runners', 'timezone'));
     	}
     	
-    	return view('store.pickup-requests.index', compact('users', 'activePage', 'titlePage', 'runners','timezone'));
+    	return view('store.dashboard', compact('users', 'activePage', 'titlePage', 'runners','timezone'));
     }
 
     public function getcustomerdetails(Request $Request, $id)
@@ -53,7 +53,7 @@ class HomeController extends Controller
     public function findCustomer(Request $request)
     {
       $validatedData = $request->validate([
-          'phone_number' => 'bail|required|numeric|min:2|max:9999999999',
+          'phone_number' => 'bail|required|numeric|digits_between:8,15',
           ]);
 
       $customer = User::where(['role'=> 4, 'deleted_at'=>null])

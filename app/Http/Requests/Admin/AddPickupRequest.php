@@ -26,14 +26,9 @@ class AddPickupRequest extends FormRequest
       //if ($this->method()=="PUT") {
       //  $id = decrypt($this->route('manage_store'));
         return [
-          'name'=>['bail','required', 'string', 'min:2', 'max:100'],
-          //'address_id'=>['bail','required', 'numeric'],
-          'email'=>['bail','required', 'email','unique:users,email,'.$id, 'min:2', 'max:100'],
-          
+          'name' => ['bail', 'required', 'string', 'min:2', 'max:25', new CheckName],
           'phone_number'=>['bail','required','numeric', 'unique:users,phone_number,'.$id, 'min:2', 'max:9999999999'],
-          
-          'user_id'=>['bail','nullable', 'numeric'],
-          
+          'user_id'=>['bail','nullable', 'numeric'],          
           'address'=>'bail|nullable|string|min:2|max:50',
           'city'=>'bail|nullable|string|min:2|max:50',
           'state'=>'bail|nullable|string|min:2|max:50',

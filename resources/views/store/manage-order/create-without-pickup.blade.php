@@ -197,8 +197,8 @@ $(document).ready(function(){
             error(data.responseJSON.message);
             $(".select").hide();
             $(".add").show();
-            $('#name').val('').prop('readonly', false);
-            $('#email').val('').prop('readonly', false);
+            $('#name_order').val('').prop('readonly', false);
+            $('#email_order').val('').prop('readonly', false);
             $('#phone_number').val('').prop('readonly', false);
             $('#address_order').text('');
             $("#customer_id").val("");
