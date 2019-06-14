@@ -132,12 +132,14 @@ class CommonRepository extends BaseRepository
         $ser = Service::where('id', $service_id)->first();
 
         if ($ser->form_type==2) {
-          $service_details = Coupon::where('coupon', '=' ,'Laundary Discount')->get();
-          $service_details = $service_details->whereIn('parameter','>=', $last_order->where('service_id', $service_id)->first()->items->sum('quantity'));
-          //$service_details = ($service_details->where('value', $current_order_details['weight']));  
-          if ($service_details->count()){
-                return ['type'=>3, 'value'=>$service_details->coupon_price];
-          }  
+            if($last_order->where('service_id', $service_id)->count()){
+                  $service_details = Coupon::where('coupon', '=' ,'Laundary Discount')->get();
+                  $service_details = $service_details->whereIn('parameter','>=', $last_order->where('service_id', $service_id)->first()->items->sum('quantity'));
+                      //$service_details = ($service_details->where('value', $current_order_details['weight']));  
+                      if ($service_details->count()){
+                            return ['type'=>3, 'value'=>$service_details->coupon_price];
+                      }  
+            }
         }
 
         $coupon = Coupon::where('coupon', '=','WeekDay Discount')->get();
