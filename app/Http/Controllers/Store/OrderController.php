@@ -387,6 +387,11 @@ class OrderController extends Controller
 
 
   public function filesItemSession(Request $request){
+
+    $validateData = $request->validate([
+        'files'=>'bail|required',
+        'files.*'=>'bail|required|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
+    ]);
     $items = session('add_order_items');
     $index = $request->input('id')-1;
     

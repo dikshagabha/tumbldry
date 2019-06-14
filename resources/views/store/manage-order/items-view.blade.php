@@ -22,10 +22,10 @@ $i=1;
 						<td>
 							<input type="file" name="images[]" data-url = "{{route('store.filesItemSession')}}" multiple
 								class="upload_image" data-id="{{$i}}">	
-
+								<span class="error" id="files_error"></span>
 							@if($item['images'])
 								@foreach($item['images'] as $image)
-									<a class="group"  data-fancybox="fancy" href="{{asset('uploaded_images').'/'.$image}}" style="background-color: white">
+									<a class="group"  data-fancybox="fancy" href="{{asset('uploaded_images').'/'.$image}}">
 										<img src="{{asset('uploaded_images').'/'.$image}}" alt="" width="50px" height="50px"  /></a>
 								@endforeach
 							@endif

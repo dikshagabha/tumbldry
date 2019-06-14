@@ -182,6 +182,10 @@ $(document).ready(function(){
           success(data.message);
           $(".ItemsAdded").html(data.view);
           $('body').waitMe('hide');
+        },
+        error: function(data){
+          error("Invalid File");
+          $('body').waitMe('hide');
         }
       })
     })
