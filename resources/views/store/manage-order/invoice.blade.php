@@ -62,7 +62,7 @@
 								{{$item->quantity}} X {{ $item->item }}  
 								@if($item->itemimage->count()) 
 								(
-									@foreach($item->itemimage as $addon)
+									@foreach($item->itemimage->where('addon_id', '!=', null) as $addon)
 										{{ $addon->addon_name.','}}
 									@endforeach 
 								)
@@ -114,7 +114,16 @@
 					<td>
 						Pending Clothes	<br>			
 						@foreach($items->where('status', '!=', 2) as $item)
-							{{$item->quantity}} X {{ $item->item }}  @if($item->itemimage->count()) ({{ $item->itemimage->first()->addon_name}}) @endif<br>
+							{{$item->quantity}} X {{ $item->item }}  
+
+							@if($item->itemimage->count()) 
+								(
+									@foreach($item->itemimage->where('addon_id', '!=', null) as $addon)
+										{{ $addon->addon_name.','}}
+									@endforeach 
+								)
+							@endif
+							<br>
 						@endforeach
 						<br>
 						Total Pcs: {{$items->where('status','!=' , 2)->sum('quantity')}}
@@ -161,12 +170,21 @@
 					<td>
 						Clothes being delivered	<br>					
 							@foreach($items->where('status', 2) as $item)
-								{{$item->quantity}} X {{ $item->item }}  @if($item->itemimage->count()) ({{ $item->itemimage->first()->addon_name}}) @endif<br>
+								{{$item->quantity}} X {{ $item->item }}  
+								@if($item->itemimage->count()) 
+								(
+									@foreach($item->itemimage->where('addon_id', '!=', null) as $addon)
+										{{ $addon->addon_name.','}}
+									@endforeach 
+								)
+								@endif
+								<br>
 							@endforeach
 							<br>
 							Total Pcs: {{$items->where('status', 2)->sum('quantity')}}
 					</td>					
 					<td>
+
 						@if($items->where('status', 2)->count()!=0)
 							@if($weight){{$weight}}@else -- @endif
 
@@ -184,7 +202,15 @@
 						<td>
 							Pending Clothes	<br>			
 							@foreach($items->where('status', '!=', 2) as $item)
-								{{$item->quantity}} X {{ $item->item }}  @if($item->itemimage->count()) ({{ $item->itemimage->first()->addon_name}}) @endif<br>
+								{{$item->quantity}} X {{ $item->item }}  
+								@if($item->itemimage->count()) 
+								(
+									@foreach($item->itemimage->where('addon_id', '!=', null) as $addon)
+										{{ $addon->addon_name.','}}
+									@endforeach 
+								)
+								@endif
+								<br>
 							@endforeach
 							<br>
 							Total Pcs: {{$items->where('status','!=' , 2)->sum('quantity')}}
