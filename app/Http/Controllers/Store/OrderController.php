@@ -387,6 +387,11 @@ class OrderController extends Controller
 
 
   public function filesItemSession(Request $request){
+
+    $validateData = $request->validate([
+        'files'=>'bail|required',
+        'files.*'=>'bail|required|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
+    ]);
     $items = session('add_order_items');
     $index = $request->input('id')-1;
     
@@ -721,15 +726,15 @@ class OrderController extends Controller
           
           foreach ($item['selected_addons'] as $key => $value) 
           {
-
-            //print_r($value);
-            array_push($itemData, ['order_id'=>$order->id, 'item_id'=>$orderitem->id, 'addon_id'=>$value, 'created_at'=>Carbon::now]);
+           
+            array_push($itemData, ['order_id'=>$order->id, 'item_id'=>$orderitem->id, 'addon_id'=>$value, 'created_at'=>Carbon::now(),
+              'updated_at'=>Carbon::now(), 'image'=>null]);
           }
 
           foreach ($item['images'] as $key => $value) 
           {
              //print_r($value);
-            array_push($itemData, ['order_id'=>$order->id, 'item_id'=>$orderitem->id, 'image'=>$value, 'created_at'=>Carbon::now]);
+            array_push($itemData, ['order_id'=>$order->id, 'item_id'=>$orderitem->id, 'image'=>$value, 'created_at'=>Carbon::now(), 'updated_at'=>Carbon::now(), 'addon_id'=>null]);
           }
           //die;
           $order_items = OrderItemImage::insert($itemData);
