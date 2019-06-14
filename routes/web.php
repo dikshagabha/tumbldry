@@ -158,6 +158,8 @@ Route::prefix('store')->namespace('Store')->group(function () {
           Route::post('/quantity-items-session', 'OrderController@quantityItemSession')->name('store.quantityItemSession');
           Route::post('/discount-items-session', 'OrderController@discountItemSession')->name('store.discountItemSession');
           Route::post('/addon-items-session', 'OrderController@addonItemSession')->name('store.addonItemSession');
+          Route::post('/files-items-session', 'OrderController@filesItemSession')->name('store.filesItemSession');
+
           Route::post('/weight-items-session', 'OrderController@weightItemSession')->name('store.weightItemSession');
           Route::post('/coupon', 'OrderController@couponItemSession')->name('store.couponItemSession');
 

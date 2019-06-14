@@ -37,6 +37,7 @@ use App\Jobs\sendMessage;
 use App\Rules\{
     CheckName
 };
+
 class OrderController extends Controller
 {
 	protected $user;
@@ -232,7 +233,7 @@ class OrderController extends Controller
     if ($Service->selected == 1) {
      $selected = $addon->pluck('id')->toArray();
     }
-    $data = ['service_id'=>$request->input('service'), 'item_id'=>$form_id->id, 'service_name'=>$Service->name, 'units'=>$units, 'addons'=> $addon, 'estimated_price'=>$price, 'item'=>$request->input('item'), 'price'=>$price, 'quantity'=>1, 'selected_addons'=>$selected , 'addon_estimated_price'=>0, 'weight'=>null];
+    $data = ['service_id'=>$request->input('service'), 'item_id'=>$form_id->id, 'service_name'=>$Service->name, 'units'=>$units, 'addons'=> $addon, 'estimated_price'=>$price, 'item'=>$request->input('item'), 'price'=>$price, 'quantity'=>1, 'selected_addons'=>$selected , 'addon_estimated_price'=>0, 'weight'=>null, 'images'=>null];
     if (!session()->get('add_order_items')){
           $data['units']=$units;
           $data['weight']=$weight;
@@ -380,6 +381,41 @@ class OrderController extends Controller
                                 'total_price'=>$total_price+$cgst+$gst-($coupon_discount['user_discount']+$coupon_discount['discount'])];
 
     session()->put('prices', $price_data);
+    $wallet = session()->get('customer_details');
+    return response()->json(['message'=>'Item Updated', 'view'=>view('store.manage-order.items-view', compact('items','price_data', 'coupon_discount', 'wallet'))->render(), 'items'=>$items], 200);
+  }
+
+
+  public function filesItemSession(Request $request){
+    $items = session('add_order_items');
+    $index = $request->input('id')-1;
+    
+    if ($items[$index]['images']) {
+      foreach ($items[$index]['images'] as $key => $value) {
+       unlink(public_path('uploaded_images/'.$value));
+      }       
+    }
+    $names = [];
+    foreach ($request->file('files') as $key => $value) {
+      $file = $value;
+     
+      $name = time().$file->getClientOriginalName();
+      array_push($names, $name);
+
+      $file->move(public_path('uploaded_images'), $name);
+    
+    }
+
+    $items[$index]['images'] =  $names;
+    
+    session()->put("add_order_items", $items);
+
+    $items = session('add_order_items');
+    //$total_price = 0;
+       
+    $coupon_discount = session('coupon_discount');
+   
+    $price_data = session()->get('prices');
     $wallet = session()->get('customer_details');
     return response()->json(['message'=>'Item Updated', 'view'=>view('store.manage-order.items-view', compact('items','price_data', 'coupon_discount', 'wallet'))->render(), 'items'=>$items], 200);
   }
@@ -682,10 +718,20 @@ class OrderController extends Controller
           $item['status'] = 3;
           $orderitem = OrderItems::create($item); 
           $itemData = [];
+          
           foreach ($item['selected_addons'] as $key => $value) 
           {
-            array_push($itemData, ['order_id'=>$order->id, 'item_id'=>$orderitem->id, 'addon_id'=>$value]);
+
+            //print_r($value);
+            array_push($itemData, ['order_id'=>$order->id, 'item_id'=>$orderitem->id, 'addon_id'=>$value, 'created_at'=>Carbon::now]);
           }
+
+          foreach ($item['images'] as $key => $value) 
+          {
+             //print_r($value);
+            array_push($itemData, ['order_id'=>$order->id, 'item_id'=>$orderitem->id, 'image'=>$value, 'created_at'=>Carbon::now]);
+          }
+          //die;
           $order_items = OrderItemImage::insert($itemData);
       }
       $message = SMSTemplate::where('title', 'like','%Order Created%')->select('description')->first();

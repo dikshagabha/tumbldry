@@ -6,11 +6,6 @@ $i=1;
 <div class="row">
   	<div class="col-lg-7 col-md-7 col-sm-7 col-xs-7">	
 		<table class="table table-borderless table-dark ">
-			<!-- <thead>
-				<td width="40%"><h3>Item</h3></td>
-				<td colspan="2" width="20%"><h3>Quantity</h3></td>
-				<td><h3>Action</h3></td>
-			</thead> -->
 			<tbody>
 			@foreach($items as $item)
  				<tr>
@@ -18,19 +13,25 @@ $i=1;
 						<strong>{{$item['item']}}</strong>
 					</td>					
 					<td width="10%">
-						<input type="text" name="quantity" class="form-control quantityVal_{{$i}} quantity " 
-						 data-url = "{{route('store.quantityItemSession')}}" data-service = {{$item['service_id']}} data-id='{{$i}}'
+							<input type="text" name="quantity" class="form-control quantityVal_{{$i}} quantity " 
+						 		data-url = "{{route('store.quantityItemSession')}}" data-service = {{$item['service_id']}} data-id='{{$i}}'
 						 value="{{$item['quantity']}}"  
 						>
 						</td>
+					<td>
 						<td>
+							<input type="file" name="images[]" data-url = "{{route('store.filesItemSession')}}" multiple
+								class="upload_image" data-id="{{$i}}">	
 
-
-						<!-- <button type="button" class="btn btn-link quantity" data-url = "{{route('store.quantityItemSession')}}" data-service = {{$item['service_id']}} data-id='{{$i}}'
-						data-id="{{$i}}" style="color:white" title="Add Quantity"> 
-						<i class="fa fa-refresh"></i>
-						</button> -->
-					</td>					
+							@if($item['images'])
+								@foreach($item['images'] as $image)
+									<a class="group"  data-fancybox="fancy" href="{{asset('uploaded_images').'/'.$image}}" style="background-color: white">
+										<img src="{{asset('uploaded_images').'/'.$image}}" alt="" width="50px" height="50px"  /></a>
+								@endforeach
+							@endif
+						</td>
+					</td>
+										
 					<td>				
 						<button type="button" class="btn btn-danger deleteItemBtn" action = "{{route('store.deleteItemSession')}}" data-add=@if($item['units']) 0 @else 1 @endif data-id="{{$i}}" title="Delete"><i class="fa fa-trash"></i></button>
 					</td>
