@@ -1,7 +1,5 @@
 
-@php
-$i = ($users->currentpage() - 1) * $users->perPage() + 1;
-@endphp
+
  @if($users->count())
 
       <table class="table table-striped dataTable">
@@ -12,7 +10,6 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
               <th>Price</th>
               <th>Payment Mode</th>
                <th>Payment Date</th>
-<!--               <th>View</th> -->
             </tr>
           </thead>
           <tbody>
@@ -50,23 +47,13 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
                   --
                 @endif
               </td>
-             <!--  <td>                  
-                  <a href="{{route('manage-customer.show',encrypt($user->id))}}" class="view" title="view">
-                    <vs-button type="gradient" color="warning"><i class="fa fa-eye"></i></vs-button>
-                  </a>
-                  
-              </td> -->
-
+   
 
             </tr>
-              @php
-                $i++;
-              @endphp
             @endforeach
           </tbody>
       </table>
 
-      {{$users->links()}}
       @else
       No Records Found
       @endif

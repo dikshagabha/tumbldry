@@ -34,6 +34,10 @@ use PDF;
 use App;
 use App\Repositories\CommonRepository;
 use App\Jobs\sendMessage;
+use App\Rules\{
+    CheckName
+};
+
 class OrderController extends Controller
 {
 	protected $user;
@@ -102,13 +106,15 @@ class OrderController extends Controller
 
   }
 
-  public function assignDelivery(Request $request, $id){
+  public function assignDelivery(Request $request){
    
    $validatedData = $request->validate([
-      'id'=>'bail|required|numeric|min:1']);
+      'runner_id'=>'bail|required|numeric|min:1',
+      'order_id'=>'bail|required|numeric|min:1',
+    ]);
     try {
       DB::beginTransaction();
-      $order = Order::where('id', $id)->with(['items'=>function($q){
+      $order = Order::where('id', $request->input('order_id'))->with(['items'=>function($q){
         $q->with('itemimage');
       }])->first();
       $items = $order->items;
@@ -116,34 +122,34 @@ class OrderController extends Controller
         return response()->json(['message'=>'The items have not been processed'], 400);
       }
 
-      $status = 5;
-      if ($items->where('status', 1)->count()) {
-        $status=4;
-      }
-      $order->delivery_runner_id= $request->input('id');
-      $order->status= $status;
+      // $status = 5;
+      // if ($items->where('status', 1)->count()) {
+      //   $status=4;
+      // }
+      $order->delivery_runner_id= $request->input('runner_id');
+      //$order->status= $status;
       $order->save();
 
-      $job = UserJobs::create(['user_id'=>$request->input('id'), 'order_id'=>$id, 'type'=>2, 'assigned_by'=>$this->user->id]);
+      $job = UserJobs::create(['user_id'=>$request->input('runner_id'), 'order_id'=>$request->input('order_id'), 'type'=>2, 'assigned_by'=>$this->user->id]);
 
-      $runner = User::where('id', $request->input('id'))->first();
+      $runner = User::where('id', $request->input('runner_id'))->first();
       if ($runner->phone_number) {
         
        // CommonRepository::sendmessage($runner->phone_number, 'Delivery%20of%20order%20id%20ORDER'.$id.'%20has%20been%20requested%20by'.$this->user->store_name);
       }
       DB::commit();
       
-      $user = $this->user;
+      //      $user = $this->user;
       
 
-      $total = $items->sum('quantity');
-      $weight = $items->sum('weight');
-      $items_partial = $items->where('status', 2)->count();
+      // $total = $items->sum('quantity');
+      // $weight = $items->sum('weight');
+      // $items_partial = $items->where('status', 2)->count();
 
-      $pdf = PDF::loadView('store.manage-order.invoice', compact('order', 'user', 'items', 'total', 'weight','items_partial'));
-      return ($pdf->download('invoice.pdf'));
+      //$pdf = PDF::loadView('store.manage-order.invoice', compact('order', 'user', 'items', 'total', 'weight','items_partial'));
+      //return ($pdf->download('invoice.pdf'));
 
-      //return response()->json(['message'=>'Order Updated'], 200);
+      return response()->json(['message'=>'Assigned Runner for Delivery'], 200);
     } catch (Exception $e) {
       return response()->json(['message'=>'Something went wrong'], 400);
     }   
@@ -227,7 +233,7 @@ class OrderController extends Controller
     if ($Service->selected == 1) {
      $selected = $addon->pluck('id')->toArray();
     }
-    $data = ['service_id'=>$request->input('service'), 'item_id'=>$form_id->id, 'service_name'=>$Service->name, 'units'=>$units, 'addons'=> $addon, 'estimated_price'=>$price, 'item'=>$request->input('item'), 'price'=>$price, 'quantity'=>1, 'selected_addons'=>$selected , 'addon_estimated_price'=>0, 'weight'=>null];
+    $data = ['service_id'=>$request->input('service'), 'item_id'=>$form_id->id, 'service_name'=>$Service->name, 'units'=>$units, 'addons'=> $addon, 'estimated_price'=>$price, 'item'=>$request->input('item'), 'price'=>$price, 'quantity'=>1, 'selected_addons'=>$selected , 'addon_estimated_price'=>0, 'weight'=>null, 'images'=>null];
     if (!session()->get('add_order_items')){
           $data['units']=$units;
           $data['weight']=$weight;
@@ -375,6 +381,41 @@ class OrderController extends Controller
                                 'total_price'=>$total_price+$cgst+$gst-($coupon_discount['user_discount']+$coupon_discount['discount'])];
 
     session()->put('prices', $price_data);
+    $wallet = session()->get('customer_details');
+    return response()->json(['message'=>'Item Updated', 'view'=>view('store.manage-order.items-view', compact('items','price_data', 'coupon_discount', 'wallet'))->render(), 'items'=>$items], 200);
+  }
+
+
+  public function filesItemSession(Request $request){
+    $items = session('add_order_items');
+    $index = $request->input('id')-1;
+    
+    if ($items[$index]['images']) {
+      foreach ($items[$index]['images'] as $key => $value) {
+       unlink(public_path('uploaded_images/'.$value));
+      }       
+    }
+    $names = [];
+    foreach ($request->file('files') as $key => $value) {
+      $file = $value;
+     
+      $name = time().$file->getClientOriginalName();
+      array_push($names, $name);
+
+      $file->move(public_path('uploaded_images'), $name);
+    
+    }
+
+    $items[$index]['images'] =  $names;
+    
+    session()->put("add_order_items", $items);
+
+    $items = session('add_order_items');
+    //$total_price = 0;
+       
+    $coupon_discount = session('coupon_discount');
+   
+    $price_data = session()->get('prices');
     $wallet = session()->get('customer_details');
     return response()->json(['message'=>'Item Updated', 'view'=>view('store.manage-order.items-view', compact('items','price_data', 'coupon_discount', 'wallet'))->render(), 'items'=>$items], 200);
   }
@@ -606,7 +647,6 @@ class OrderController extends Controller
 
   
   public function store(Request $request, $id=null){
-
    $user=$this->user;
    $validatedData = $request->validate(['delivery_mode'=>'bail|required|integer']);
    if ($id) {
@@ -628,8 +668,8 @@ class OrderController extends Controller
       $address_id = $request->input('address_id');
     }else{
       $validatedData = $request->validate([
-        'name'=>['bail','required', 'string', 'min:2', 'max:100'],
-        'phone_number'=>['bail','required','numeric', 'unique:users,phone_number,'.$id, 'min:2', 'max:9999999999']
+        'name'=>['bail','required', 'string', 'min:2', 'max:25', new CheckName],
+        'phone_number'=>['bail','required','numeric', 'unique:users,phone_number,'.$id, 'min:2', 'digits_between:8,15']
       ]);
       $user = User::create(['name'=>$request->input('name'), 
                       'email'=>$request->input('email'),
@@ -666,7 +706,7 @@ class OrderController extends Controller
         
       //dd(round($prices['total_price'], 2));
       $order = Order::create([ 'pickup_id'=>$id, 'customer_id'=>$customer_id, 
-                               'address_id'=>$address_id,'runner_id'=>$assignedTo, 'store_id'=>$user->id,
+                               'address_id'=>$address_id,'runner_id'=>$assignedTo, 'store_id'=>$this->user->id,
                                'estimated_price'=>$prices['estimated_price'], 'cgst'=>$prices['cgst'],
                                'gst'=>$prices['gst'], 'total_price'=>round($prices['total_price'], 2),
                                'coupon_discount'=>$coupon_discount['discount'], 'coupon_id'=>$coupon_discount['coupon'],
@@ -678,10 +718,20 @@ class OrderController extends Controller
           $item['status'] = 3;
           $orderitem = OrderItems::create($item); 
           $itemData = [];
+          
           foreach ($item['selected_addons'] as $key => $value) 
           {
-            array_push($itemData, ['order_id'=>$order->id, 'item_id'=>$orderitem->id, 'addon_id'=>$value]);
+
+            //print_r($value);
+            array_push($itemData, ['order_id'=>$order->id, 'item_id'=>$orderitem->id, 'addon_id'=>$value, 'created_at'=>Carbon::now]);
           }
+
+          foreach ($item['images'] as $key => $value) 
+          {
+             //print_r($value);
+            array_push($itemData, ['order_id'=>$order->id, 'item_id'=>$orderitem->id, 'image'=>$value, 'created_at'=>Carbon::now]);
+          }
+          //die;
           $order_items = OrderItemImage::insert($itemData);
       }
       $message = SMSTemplate::where('title', 'like','%Order Created%')->select('description')->first();
@@ -746,13 +796,14 @@ class OrderController extends Controller
     if (!$request->input('grn')) {
       return response()->json(['message'=> 'Please select an item'], 400);
     }
-    $orders = OrderItems::whereIn('id', $request->input('grn'))->with('order', 'payment')->with(['itemimage'=>function($q){
+    $orders = OrderItems::whereIn('id', $request->input('grn'))->with('order')->with(['itemimage'=>function($q){
        $q->with('addons');
       }])->get();
      $user = $this->user;
      
-     $update_status = OrderItems::whereIn("id", $request->input('grn'))->update(['status'=> 4]);
+     $update_status = OrderItems::whereIn("id", $request->input('grn'))->where('status', '!=', 2)->update(['status'=> 4]);
      $order_update = Order::where('id', $request->input('order_id'))->update(['status'=>3]);
+     
      $pdf = PDF::loadView('store.grn.grn', compact('orders', 'user'))->setPaper('a5');
      return ($pdf->download('invoice.pdf'));
   }
@@ -816,8 +867,16 @@ class OrderController extends Controller
       return response()->json(['message'=> 'Please select an item'], 400);
     }
 
+    $order  = Order::where('id', $request->input('order_id'))->first();
     $orders = OrderItems::whereIn('id', $request->input('deliver'))->update(['status'=>2]);
-
+    
+    $items = $order->items()->where('status', '!=', '2')->count();
+    //dd($items);
+    if(!$items) {
+      $order->status=4;
+      $order->save();
+    }
+    
     if ($orders) {
       return response()->json(['message'=> 'Items Updated'], 200);
     }

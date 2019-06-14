@@ -48,6 +48,9 @@
           <vs-sidebar-item index="order_reports" icon="question_answer" href="{{ route('store.order-reports') }}">
             Order
           </vs-sidebar-item>
+          <vs-sidebar-item index="settlement" icon="attachment" href="{{ route('store.export-settlement') }}">
+            Monthly Settlement
+          </vs-sidebar-item>
       </vs-sidebar-group>
       <div class="footer-sidebar" slot="footer">
       </div>

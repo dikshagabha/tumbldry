@@ -12,7 +12,7 @@ use App\User;
 use Auth;
 use App\Notifications\StoreNotifications;
 use App\Reports\MyReport;
-
+use Carbon\Carbon;
 class HomeController extends Controller
 {
     public function index(Request $Request)
@@ -25,13 +25,15 @@ class HomeController extends Controller
         
 
         $runners = User::where(['role'=>5, 'status'=>1, 'deleted_at'=>null])->where('user_id', Auth::user()->id)->pluck('name', 'id');
-    	$users = PickupRequest::where('store_id', Auth::user()->id)->wheredoesnthave('order')->with('order')->latest()->paginate(5);
-        
-    	if ($Request->ajax()) {
-    		return view('store.pickup-requests.list', compact('users', 'activePage', 'titlePage', 'runners', 'timezone'));
-    	}
-    	
-    	return view('store.pickup-requests.index', compact('users', 'activePage', 'titlePage', 'runners','timezone'));
+    	$users = PickupRequest::where('store_id', Auth::user()->id)->where('assigned_to', null)->wheredoesnthave('order')->with('order')->latest()->limit(5)->get();
+
+        $pending = PickupRequest::where('store_id', Auth::user()->id)->where('status', '!=', '3')->where(
+            'created_at', '<' , Carbon::now()->subHours(4))->limit(5)->get();
+        if ($Request->ajax()) {
+            return view('store.dashboard-list', compact('users', 'activePage', 'titlePage', 'runners','timezone', 'pending'));
+        }
+
+        return view('store.dashboard', compact('users', 'activePage', 'titlePage', 'runners','timezone', 'pending'));
     }
 
     public function getcustomerdetails(Request $Request, $id)
@@ -53,7 +55,7 @@ class HomeController extends Controller
     public function findCustomer(Request $request)
     {
       $validatedData = $request->validate([
-          'phone_number' => 'bail|required|numeric|min:2|max:9999999999',
+          'phone_number' => 'bail|required|numeric|digits_between:8,15',
           ]);
 
       $customer = User::where(['role'=> 4, 'deleted_at'=>null])

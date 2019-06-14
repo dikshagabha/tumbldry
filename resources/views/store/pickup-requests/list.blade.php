@@ -45,26 +45,9 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
               <td>
                 {{$user->status_text}}
               </td>
-
-              <!-- <td>
-                {{$user->runner_name}}
-              </td> -->
-
               <td>
                 {{Form::select("runner_id",$runners, $user->assigned_to, ["class"=>"runner_select form-control", 'placeholder'=>"Select Runner", 'href'=>route('store.assign-runner'), 'data-id'=>$user->id ])}}
               </td>
-
-              <!--  <td>
-                @if($user->status==2 && !$user->order()->count())
-                <a href="{{route('store.create-order', encrypt($user->id))}}" title="create order">
-                  <button class="btn btn-link"><i class="fa fa-plus"></i></button>
-                </a> 
-                @elseif($user->order()->count())
-                    <a  class="view" title="view order details" href="{{route('store.getOrderDetails', $user->order()->first()->id)}}">
-                      ORDER{{$user->order()->first()->id}}
-                    </a>
-                @endif
-              </td> -->
 	           </tr>
             @php
             $i++;

@@ -5,6 +5,9 @@
 <link rel="stylesheet" href="{{ asset('css/chosen/bootstrap-chosen.css') }}">
 <link rel="stylesheet" href="{{ asset('css/jquery.typeahead.min.css') }}">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+
+<link rel="stylesheet" href="{{ asset('css/jquery.dm-uploader.min.css') }}">
+
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 <link rel="stylesheet" type="text/css" href=" https://printjs-4de6.kxcdn.com/print.min.css">
 <style type="text/css">
@@ -40,14 +43,16 @@
           <a href="{{route('store.create-order.index')}}">
               <vs-button color="danger" type="border" icon="arrow_back"></vs-button>
           </a><br>
-          {{Form::open(['url'=> route('store.create-order'), "id"=>"addFrenchise"])}}   
-          @csrf
+          {{Form::open(['url'=> route('store.create-order'), "id"=>"addFrenchise", 'enctype'=>"multipart/form-data"])}}   
+              @csrf
           @include('store.manage-order.form-without-pickup')
           <div class="ItemsAdded">
           </div>
+          {{Form::close()}}
           <br>     
       </vs-col>
       <br>
+
       </vs-row>
     </div>
     </vs-card>
@@ -108,12 +113,15 @@
 <script src="https://printjs-4de6.kxcdn.com/print.min.js"></script>
 <script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
 
+<script src="{{ asset('js/jquery.dm-uploader.min.js') }}"></script>
+
 <script>
 
  
 $(document).ready(function(){ 
   
   $("#service").chosen();
+  $('[data-fancybox="fancy"]').fancybox();
   var path = "{{ route('store.get-items') }}";  
   $( "#item" ).autocomplete({
       source: function( request, response ) {
@@ -134,16 +142,42 @@ $(document).ready(function(){
       minLength: 2,
   });
 
+  
+
   $(document).on("change", ".addOn", function(e){
       e.preventDefault();
       $(".error").html(""); 
-
+      console.log(current.data('url'));
       current = $(this);   
       $.ajax({
         url: current.data('url'),
         type:'post',
         data: $('#addonForm'+current.data('id')+' :input').serializeArray(),
         cache: false,
+        success: function(data){
+          success(data.message);
+          $(".ItemsAdded").html(data.view);
+          $('body').waitMe('hide');
+        }
+      })
+    })
+
+   $(document).on("change", ".upload_image", function(e){
+      e.preventDefault();
+      $(".error").html(""); 
+      current = $(this);
+      i = current.data('id');
+      var data = new FormData();
+      data.append('id', current.data('id'));
+      $.each(current.prop('files'), function(i, file) {
+         data.append('files[]', file)
+      });
+      $.ajax({
+        url: current.data('url'),
+        type:'post',
+        data: data,
+        contentType: false,
+        processData: false,
         success: function(data){
           success(data.message);
           $(".ItemsAdded").html(data.view);
@@ -197,8 +231,8 @@ $(document).ready(function(){
             error(data.responseJSON.message);
             $(".select").hide();
             $(".add").show();
-            $('#name').val('').prop('readonly', false);
-            $('#email').val('').prop('readonly', false);
+            $('#name_order').val('').prop('readonly', false);
+            $('#email_order').val('').prop('readonly', false);
             $('#phone_number').val('').prop('readonly', false);
             $('#address_order').text('');
             $("#customer_id").val("");
@@ -308,7 +342,7 @@ $(document).ready(function(){
       data: data, 
       success: function(data){
         success(data.message);
-        window.location = data.redirectTo;
+        //window.location = data.redirectTo;
         $('body').waitMe('hide');
       }
     })

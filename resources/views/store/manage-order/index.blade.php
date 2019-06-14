@@ -60,6 +60,31 @@
   </div>
 </div>
 
+<div id="DeliverModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+         <h4 class="modal-title">Select Runner</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        {{Form::open(["id"=>'deliveryForm', 'route'=>'store.order.assign-delivery'])}}
+          {{
+            Form::select('runner_id', $runner, null,['class'=>'form-control', 'placeholder'=>'Select Runner'])
+          }}
+          {{Form::hidden('order_id', null, ['id'=>'deliver_order_id'])}}
+        {{Form::close()}}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-success assign_runner" data-dismiss="modal" >Assign</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
 @endsection
 @push('js')
 <script src="{{asset('js/bootbox.js')}}"></script>
@@ -239,29 +264,30 @@ $(document).ready(function(){
         
     });
 
+  $(document).on("click",".deliver",function(e) {
+      e.preventDefault();
+      //alert();
+      $('body').waitMe();
+      current = $(this).data('order_id');
+      $('#deliver_order_id').val(current);
+      $("#DeliverModal").modal('show');
+      $('body').waitMe('hide');
+
+
+    });
+
   $(document).on("click",".assign_runner",function(e) {
       e.preventDefault();
       $('body').waitMe();
       current = $(this)
       $.ajax({
-        url:current.data('url'),
-        method:'post',
-        xhrFields: {
-                responseType: 'blob'
-            },
-        data:{'id':$('#runner'+current.data('id')).val()},
+        url:$('#deliveryForm').attr('action'),
+        method:'post',        
+        data:$('#deliveryForm').serializeArray(),
         success:function(data){
-          var pdfFile = new Blob([data], {
-            type: "application/pdf"
-            });
-            var pdfUrl = URL.createObjectURL(pdfFile);
-            //window.open(pdfUrl);
-              printJS(pdfUrl);
-          // var current_page = $(".pagination").find('.active').text();
-          // load_listings(location.href+'?page='+current_page, 'serach_form');
-
-
-          // success(data.message);
+          var current_page = $(".pagination").find('.active').text();
+          load_listings(location.href+'?page='+current_page, 'serach_form');
+          success(data.message);
           $('body').waitMe('hide');
         }
       })
