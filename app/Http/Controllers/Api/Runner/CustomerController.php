@@ -32,8 +32,13 @@ class CustomerController extends Controller
         $response = HomeRepository::store($request, $this->user);
         echo $request->input('callback')."(".json_encode($response).")";
         $http_status = $response['http_status'];
-        unset($response['http_status']);
-        return response()->json($response, $http_status);
+        //unset($response['http_status']);
+        if($request->input('callback'))
+        {
+            echo $request->input('callback')."(".json_encode($response).")";
+        }else{
+            return response()->json($response, 200);
+        }
     }
 
     public function orderDetails(Request $request, $id)
@@ -43,7 +48,12 @@ class CustomerController extends Controller
         $response['code'] = 1;
         $response['mes']= 'Success';
 
-        echo $request->input('callback')."(".json_encode($response).")";
+        if($request->input('callback'))
+        {
+            echo $request->input('callback')."(".json_encode($response).")";
+        }else{
+            return response()->json($response, 200);
+        }
         //return response()->json($response, $http_status);
     }
 
@@ -68,7 +78,12 @@ class CustomerController extends Controller
         $response['code'] = 2;
         $response['mes']= 'Customer Not Found!!';
         $response['details']=['data'=>$customer];
-        echo $request->input('callback')."(".json_encode($response).")";
+        if($request->input('callback'))
+        {
+            echo $request->input('callback')."(".json_encode($response).")";
+        }else{
+            return response()->json($response, 200);
+        }
         //return response()->json(["message"=>"Customer Not Found!!"], 400);
     }
 

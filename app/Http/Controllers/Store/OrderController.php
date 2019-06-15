@@ -78,6 +78,18 @@ class OrderController extends Controller
     return view('store.manage-order.index', compact('users', 'activePage', 'titlePage', 'runner'));
   }
 
+  public function getItemsForm(Request $request, $id){
+    $activePage="order";
+    $titlePage="Orders";
+    $users = Order::where('id', $id)->with('items')->first();
+    $items = $users->items;
+    //$runner = User::where('user_id', $this->user->id)->where('role', 5)->pluck('name', 'id');
+    if ($request->ajax()) {
+      return view('store.manage-order.grn_print', compact('users', 'items'));
+    }
+    //return view('store.manage-order.index', compact('users', 'activePage', 'titlePage', 'runner'));
+  }
+
   public function status(Request $request, $id){
     $activePage="order";
     $titlePage="Orders";

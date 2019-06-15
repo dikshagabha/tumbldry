@@ -29,7 +29,12 @@ class PickupController extends Controller
     public function getPickupJobs(Request $request)
     {
     	$response = PickupPickupRepository::getPickupJobs($request, $this->user);
-        echo $request->input('callback')."(".json_encode($response).")";
+       if($request->input('callback'))
+        {
+            echo $request->input('callback')."(".json_encode($response).")";
+        }else{
+            return response()->json($response, 200);
+        }
         // $http_status = $response['http_status'];
         // unset($response['http_status']);
         // return response()->json($response, $http_status);
@@ -38,7 +43,12 @@ class PickupController extends Controller
     public function getDeliveryJobs(Request $request)
     {
         $response = PickupPickupRepository::getDeliveryJobs($request, $this->user);
-        echo $request->input('callback')."(".json_encode($response).")";
+        if($request->input('callback'))
+        {
+            echo $request->input('callback')."(".json_encode($response).")";
+        }else{
+            return response()->json($response, 200);
+        }
         // $http_status = $response['http_status'];
         // unset($response['http_status']);
         // return response()->json($response, $http_status);
@@ -47,7 +57,12 @@ class PickupController extends Controller
     public function getJobs(Request $request)
     {
         $response = PickupPickupRepository::getJobs($request, $this->user);
-        echo $request->input('callback')."(".json_encode($response).")";
+       if($request->input('callback'))
+        {
+            echo $request->input('callback')."(".json_encode($response).")";
+        }else{
+            return response()->json($response, 200);
+        }
         // $http_status = $response['http_status'];
         // unset($response['http_status']);
         // return response()->json($response, $http_status);
@@ -57,7 +72,12 @@ class PickupController extends Controller
     {
         $id = $request->input('id');
         $response = PickupPickupRepository::getPickupDetails($request, $this->user, $id);
-        echo $request->input('callback')."(".json_encode($response).")";
+        if($request->input('callback'))
+        {
+            echo $request->input('callback')."(".json_encode($response).")";
+        }else{
+            return response()->json($response, 200);
+        }
         // $http_status = $response['http_status'];
         // unset($response['http_status']);
         // return response()->json($response, $http_status);
@@ -67,7 +87,12 @@ class PickupController extends Controller
     {
         $id = $request->input('id');
         $response = PickupPickupRepository::getOrderDetails($request, $this->user, $id);
-        echo $request->input('callback')."(".json_encode($response).")";
+        if($request->input('callback'))
+        {
+            echo $request->input('callback')."(".json_encode($response).")";
+        }else{
+            return response()->json($response, 200);
+        }
         // $http_status = $response['http_status'];
         // unset($response['http_status']);
         // return response()->json($response, $http_status);
@@ -77,7 +102,12 @@ class PickupController extends Controller
     {
         $id = $request->input('id');
         $response = PickupPickupRepository::getLastOrderDetails($request, $this->user, $id);
-        echo $request->input('callback')."(".json_encode($response).")";
+       if($request->input('callback'))
+        {
+            echo $request->input('callback')."(".json_encode($response).")";
+        }else{
+            return response()->json($response, 200);
+        }
         // $http_status = $response['http_status'];
         // unset($response['http_status']);
         // return response()->json($response, $http_status);
@@ -87,7 +117,12 @@ class PickupController extends Controller
     {
         $id = $request->input('id');
         $response = PickupPickupRepository::cancelRequest($request, $this->user, $id);
-        echo $request->input('callback')."(".json_encode($response).")";
+        if($request->input('callback'))
+        {
+            echo $request->input('callback')."(".json_encode($response).")";
+        }else{
+            return response()->json($response, 200);
+        }
         // $http_status = $response['http_status'];
         // unset($response['http_status']);
         // return response()->json($response, $http_status);
