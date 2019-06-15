@@ -935,4 +935,15 @@ class OrderController extends Controller
     return ($pdf->download('invoice.pdf'));
 
   }
+
+  public function getDeliveryDetails(Request $request, $id){
+
+    $user = Order::where('id', $id)->with(['items'=>function($q){
+        $q->with('itemimage');
+      }])->first();
+   
+    $runner = User::where('user_id', $this->user->id)->where('role', 5)->pluck('name', 'id');
+     
+    return response()->json(['view'=>view('store.manage-order.assign_runner', compact('user', 'runner', 'id') )->render() ], 200);
+  }
 }

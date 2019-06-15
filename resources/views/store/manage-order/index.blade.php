@@ -68,13 +68,8 @@
          <h4 class="modal-title">Select Runner</h4>
         <button type="button" class="close" data-dismiss="modal">&times;</button>
       </div>
-      <div class="modal-body">
-        {{Form::open(["id"=>'deliveryForm', 'route'=>'store.order.assign-delivery'])}}
-          {{
-            Form::select('runner_id', $runner, null,['class'=>'form-control', 'placeholder'=>'Select Runner'])
-          }}
-          {{Form::hidden('order_id', null, ['id'=>'deliver_order_id'])}}
-        {{Form::close()}}
+      <div class="modal-body" id="assignRunner">
+        
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -305,12 +300,17 @@ $(document).ready(function(){
       e.preventDefault();
       //alert();
       $('body').waitMe();
-      current = $(this).data('order_id');
-      $('#deliver_order_id').val(current);
-      $("#DeliverModal").modal('show');
-      $('body').waitMe('hide');
-
-
+      current = $(this);
+      $.ajax({
+          url:current.attr('href'),
+          method:'get',
+          success:function(data){
+            $('body').waitMe('hide');
+            $('#assignRunner').html(data.view);
+            $("#DeliverModal").modal('show');
+     
+          }
+      })
     });
 
   $(document).on("click",".assign_runner",function(e) {

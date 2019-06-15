@@ -157,18 +157,16 @@ class PaymentController extends Controller
 
               $userwallet->price = $userwallet->price - $request->input('wallet_pay');
             }
-            //dd($paymentData);
             $points = $order->total_price*40/100;
             $insert = $points;
             $userwallet->loyality_points =  $userwallet->loyality_points+$points;
-            if (in_array(3, $request->input('payment_mode'))) {
+            if(in_array(3, $request->input('payment_mode'))){
               array_push($paymentData , [
                                     'order_id'=>$order->id, 'price'=>$request->input('loyality_points'),
                                     'to_id'=>$this->user->id, 'type'=>3,'transaction_id'=>null,
                                     'user_id'=>$order->customer_id, 'created_at'=>Carbon::now(),
                                      'updated_at'=>Carbon::now()
                                   ]);
-              //$userwallet->loyality_points =  $userwallet->loyality_points-$request->input('loyality_points');
               $userwallet->loyality_points = $points;
             }
             array_push($paymentData , [
@@ -180,7 +178,6 @@ class PaymentController extends Controller
       
             $payment= UserPayments::insert($paymentData);
             $userwallet->save();
-            //dispatch(new App\Jobs\SendInvoiceJob($order->id, $order->customer_id));
             return response()->json(["message"=>"Payment Success", 'redirectTo'=>route('store.create-order.index')], 200);
           }catch(Exception $e){
             return response()->json(["message"=>"Something went wrong"], 400);

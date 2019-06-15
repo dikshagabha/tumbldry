@@ -16,8 +16,7 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
           <th>Order Status</th>
           <th>Print Grn</th>
           <th>Processed Items</th>
-          <th>Assign Partial Delivery to Runner</th>
-          <th>Assign Full Delivery to Runner</th>
+          <th>Assign Runner</th>
           <th>Invoice</th>
           <th>Delivery Challan</th>
           <th>Payment Reciept</th>
@@ -92,25 +91,12 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
               </a>
               </td> 
 
-            <td>
-              @if($user->items()->where('status', 2)->count()> 0 && $user->items()->where('status', 2)->count()< $user->items()->count() && $user->delivery_mode==2)
-
-                  @if(!$user->delivery_runner_id)
-                  <a href="{{ route('store.printInvoice', $user->id) }}" class="deliver" data-order_id="{{$user->id}}"> 
-                      <vs-button type="gradient" color="light" class="btn btn-light"> <i class="fa fa-car"></i> </vs-button>
-                  </a>
-                  @else
-                    {{$user->runner_name}}
-                  @endif
-              @else
-                --
-              @endif
-            </td>  
+            
 
              <td>
-              @if($user->items()->where('status', 2)->count() == $user->items()->count() && $user->delivery_mode==2)
-               @if(!$user->delivery_runner_id)
-                  <a href="{{ route('store.printInvoice', $user->id) }}" class="deliver" data-order_id="{{$user->id}}"> 
+             @if($user->delivery_mode==2 && $user->items()->where('status', 2)->count() > 0)
+                 @if(!$user->delivery_runner_id)
+                  <a href="{{ route('store.assignDeliver', $user->id) }}" class="deliver" data-order_id="{{$user->id}}"> 
                       <vs-button type="gradient" color="light" class="btn btn-light"> <i class="fa fa-car"></i> </vs-button>
                   </a>
                   @else
@@ -119,6 +105,7 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
               @else
                 --
               @endif
+           
             </td>  
             <td>
               

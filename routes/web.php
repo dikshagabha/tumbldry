@@ -126,6 +126,7 @@ Route::prefix('store')->namespace('Store')->group(function () {
           Route::get('get-order-items/{id}', 'OrderController@getItemsForm')->name('store.getItemsForm');
 
           Route::get('/orders/', 'OrderController@index')->name('store.create-order.index');
+          Route::get('/orders/assign-deliver/{id}', 'OrderController@getDeliveryDetails')->name('store.assignDeliver');
           
           Route::post('set-address-session', 'CustomerController@setSessionAddress')->name('store.postAddSessionAddress');
           Route::post('set-addresses-session', 'CustomerController@setSessionAddresses')->name('store.addCustomerAddresses');

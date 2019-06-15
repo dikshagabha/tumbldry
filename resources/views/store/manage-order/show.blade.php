@@ -40,6 +40,11 @@ Items:
 		<th>Item</th>
 		<th>Quantity</th>
 		<th>Service</th>
+		@if($order->service->form_type == 1 || $order->service->form_type == 2)
+		<th class="table-modal">
+			AddOns
+		 </th>
+		@endif
 		<th>Status</th>
 		@if($vendors)<th>Vendors</th>@endif
 
@@ -61,12 +66,20 @@ Items:
 		<td class="table-modal">{{round($item->quantity, 2)}}</td>
 		
 		<td class="table-modal">{{$item->service_name}}</td>
-		
+		@if($order->service->form_type == 1 || $order->service->form_type == 2)
+		<td>
+			
+
+		</td>
+		@endif
 		<td class="table-modal">
 			@if($item->status==1)
-			<a href="{{route('store.mark-recieved', $item->id)}}" value="{{ $item->status }}" class="mark_status">
-				 Pending </a> 
-				 @else Recieved @endif
+				<a href="{{route('store.mark-recieved', $item->id)}}" value="{{ $item->status }}" class="mark_status">
+					 Pending 
+				</a> 
+				 @else 
+					 Recieved
+				 @endif
 		</td>
 		@if($vendors)
 		<td>
