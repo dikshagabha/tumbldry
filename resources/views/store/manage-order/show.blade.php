@@ -69,7 +69,13 @@ Items:
 		@if($order->service->form_type == 1 || $order->service->form_type == 2)
 		<td>
 			
-
+			@if($item->itemimage->count()) 
+			
+				@foreach($item->itemimage->where('addon_id', '!=', null) as $addon)
+					{{ $addon->addon_name.','}}
+				@endforeach 
+			
+			@endif
 		</td>
 		@endif
 		<td class="table-modal">
@@ -81,6 +87,7 @@ Items:
 					 Recieved
 				 @endif
 		</td>
+		
 		@if($vendors)
 		<td>
 			@if($order->vendor->count())
