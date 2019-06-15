@@ -104,27 +104,7 @@
 
   </div>
 </div>
-<div id="selectAddressModal" class="modal fade" role="dialog">
-  <div class="modal-dialog modal-lg">
-    <!-- Modal content-->
-    <div class="modal-content">
-      <div class="modal-header">
-        
-        <h4 class="modal-title">Print Grn</h4>
-      </div>
-      <div class="modal-body">
-        <div id="printGrnForm">
-            
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" >Save</button>
-      </div>
-    </div>
 
-  </div>
-</div>
 @endsection
 
 @push('js')
@@ -162,26 +142,6 @@ $(document).ready(function(){
       },
       minLength: 2,
   });
-
-
-  $(document).on("click", ".print_grn", function(e){
-      e.preventDefault();
-      alert();
-      $(".error").html(""); 
-      current = $(this);   
-      
-      $.ajax({
-        url: current.attr('href'),
-        type:'get',
-        //data: $('#addonForm'+current.data('id')+' :input').serializeArray(),
-        cache: false,
-        success: function(data){
-          
-        }
-      })
-    })
-  
-
   $(document).on("change", ".addOn", function(e){
       e.preventDefault();
       $(".error").html(""); 
@@ -228,6 +188,63 @@ $(document).ready(function(){
       })
     })
 
+  $(document).on('focusout', '#phone_order', function(e){
+    
+      e.preventDefault(); 
+      $(".error").html("")
+      $('body').waitMe(); 
+      
+      $.ajax({
+        url: $('#search-user').data('url'),
+        type:'post',
+        data: {'phone_number':$('#phone_order').val()},
+        success: function(data){
+          success(data.message);
+          if (data.customer) 
+          {
+              $('#name_order').val(data.customer['name']).prop('readonly', true);
+            $('#email_order').val(data.customer['email']).prop('readonly', true);
+            $('#phone_number').val(data.customer['phone_number']).prop('readonly', true);
+
+              $('#address_order').text(data.customer.address);
+              $("#customer_id").val(data.customer.id);
+              $("#address_id").val(data.customer.address_id);
+              if (data.address) {
+                $('#address_order').text(data.address.address);
+                $("#address_id").val(data.address.id);
+             }
+
+             $(".select").show();
+             $(".add").hide();
+              
+          }
+          $('body').waitMe('hide');
+        },
+        error: function(data){
+
+           if (data.status==422) {
+            $('body').waitMe('hide');
+                    var errors = data.responseJSON;
+                    for (var key in errors.errors) {
+                      console.log(errors.errors[key][0])
+                        $("#"+key+"_error").html(errors.errors[key][0])
+                      }
+          }else{
+            error(data.responseJSON.message);
+            $(".select").hide();
+            $(".add").show();
+            $('#name_order').val('').prop('readonly', false);
+            $('#email_order').val('').prop('readonly', false);
+            $('#phone_number').val('').prop('readonly', false);
+            $('#address_order').text('');
+            $("#customer_id").val("");
+            $("#address_id").val("");
+             $('body').waitMe('hide');
+           }
+        }
+
+      })
+  })
 
   $(document).on('click', '#search-user', function(e){
       e.preventDefault(); 

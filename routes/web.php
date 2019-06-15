@@ -122,6 +122,7 @@ Route::prefix('store')->namespace('Store')->group(function () {
           Route::post('set-store-timezone', 'HomeController@setTimezone')->name('store.set-timezone');
 
           Route::get('get-customer-addresses', 'HomeController@getCustomerAddresses')->name('store.getCustomerAddresses');
+
           Route::get('get-order-items/{id}', 'OrderController@getItemsForm')->name('store.getItemsForm');
 
           Route::get('/orders/', 'OrderController@index')->name('store.create-order.index');

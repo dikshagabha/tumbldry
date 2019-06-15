@@ -29,11 +29,13 @@ class HomeController extends Controller
 
         $pending = PickupRequest::where('store_id', Auth::user()->id)->where('status', '!=', '3')->where(
             'created_at', '<' , Carbon::now()->subHours(4))->limit(5)->get();
+
+        $current_time = Carbon::now();
         if ($Request->ajax()) {
-            return view('store.dashboard-list', compact('users', 'activePage', 'titlePage', 'runners','timezone', 'pending'));
+            return view('store.dashboard-list', compact('users', 'activePage', 'titlePage', 'runners','timezone', 'pending', 'current_time'));
         }
 
-        return view('store.dashboard', compact('users', 'activePage', 'titlePage', 'runners','timezone', 'pending'));
+        return view('store.dashboard', compact('users', 'activePage', 'titlePage', 'runners','timezone', 'pending', 'current_time'));
     }
 
     public function getcustomerdetails(Request $Request, $id)

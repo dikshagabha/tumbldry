@@ -98,7 +98,7 @@ class PaymentController extends Controller
                 return response()->json(["message"=>"Please enter valid price."], 400);
               }
             }
-            $cash_pay = $wallet_pay = $loyality_pay=0;
+            $cash_pay = $wallet_pay = $loyality_pay=$card_pay=0;
             if (in_array(1, $request->input('payment_mode'))) {
               $cash_pay = $request->input('cash_pay');
             }
@@ -110,8 +110,15 @@ class PaymentController extends Controller
             if (in_array(3, $request->input('payment_mode'))) {
               $loyality_pay = $request->input('loyality_points');
             }
+            if (in_array(4, $request->input('payment_mode'))) {
+              $request->validate([
+                'transaction_id'=>'bail|required|string|min:1|max:50',
+                'card_price'=>'bail|required|numeric|min:1|max:20000000'
+               ]);
+              $card_pay = $request->input('card_price');
+            }
 
-            if ($cash_pay+$loyality_pay+$wallet_pay != $order->total_price) {
+            if ($cash_pay+$loyality_pay+$wallet_pay+$card_pay != $order->total_price) {
               return response()->json(["message"=>"Please enter valid price."], 400);
             }
 
@@ -122,7 +129,7 @@ class PaymentController extends Controller
             if (in_array(1, $request->input('payment_mode'))) {
               array_push($paymentData , [
                                     'order_id'=>$order->id, 'price'=>$request->input('cash_pay'),
-                                    'to_id'=>$this->user->id, 'type'=>1,
+                                    'to_id'=>$this->user->id, 'type'=>1,'transaction_id'=>null,
                                      'user_id'=>$order->customer_id, 'created_at'=>Carbon::now(),
                                      'updated_at'=>Carbon::now()
                                   ]);
@@ -131,20 +138,33 @@ class PaymentController extends Controller
             if (in_array(2, $request->input('payment_mode'))) {
               array_push($paymentData , [
                                     'order_id'=>$order->id, 'price'=>$request->input('wallet_pay'),
-                                    'to_id'=>$this->user->id, 'type'=>2,
+                                    'to_id'=>$this->user->id, 'type'=>2,'transaction_id'=>null,
                                     'user_id'=>$order->customer_id, 'created_at'=>Carbon::now(),
                                      'updated_at'=>Carbon::now()
                                   ]);
 
               $userwallet->price = $userwallet->price - $request->input('wallet_pay');
             }
+
+            if (in_array(4, $request->input('payment_mode'))) {
+              array_push($paymentData , [
+                                    'order_id'=>$order->id, 'price'=>$request->input('card_price'),
+                                    'to_id'=>$this->user->id, 'type'=>4, 
+                                    'transaction_id'=>$request->input('transaction_id'),
+                                    'user_id'=>$order->customer_id, 'created_at'=>Carbon::now(),
+                                     'updated_at'=>Carbon::now()
+                                  ]);
+
+              $userwallet->price = $userwallet->price - $request->input('wallet_pay');
+            }
+            //dd($paymentData);
             $points = $order->total_price*40/100;
             $insert = $points;
             $userwallet->loyality_points =  $userwallet->loyality_points+$points;
             if (in_array(3, $request->input('payment_mode'))) {
               array_push($paymentData , [
                                     'order_id'=>$order->id, 'price'=>$request->input('loyality_points'),
-                                    'to_id'=>$this->user->id, 'type'=>3,
+                                    'to_id'=>$this->user->id, 'type'=>3,'transaction_id'=>null,
                                     'user_id'=>$order->customer_id, 'created_at'=>Carbon::now(),
                                      'updated_at'=>Carbon::now()
                                   ]);
@@ -153,7 +173,7 @@ class PaymentController extends Controller
             }
             array_push($paymentData , [
                                      'order_id'=>$order->id, 'price'=>$points,
-                                     'to_id'=>$order->customer_id, 'type'=>0,
+                                     'to_id'=>$order->customer_id, 'type'=>0,'transaction_id'=>null,
                                      'user_id'=>0, 'created_at'=>Carbon::now(),
                                      'updated_at'=>Carbon::now()
                                   ]);

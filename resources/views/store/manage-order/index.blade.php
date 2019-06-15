@@ -85,6 +85,29 @@
   </div>
 </div>
 
+
+<div id="selectGrnModal" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-lg">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        
+        <h4 class="modal-title">Print Grn</h4>
+      </div>
+      <div class="modal-body">
+        <div id="printGrnForm">
+            
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+       <!--  <button type="button" class="btn btn-primary" >Save</button> -->
+      </div>
+    </div>
+
+  </div>
+</div>
+
 @endsection
 @push('js')
 <script src="{{asset('js/bootbox.js')}}"></script>
@@ -92,10 +115,6 @@
 <script>
 $(document).ready(function(){
   var current_page = $(".pagination").find('.active').text();
-   
-
-  
-
   $(document).on('click', '#delete', function(e){
     e.preventDefault();
           bootbox.confirm({
@@ -147,6 +166,24 @@ $(document).ready(function(){
           }
       });
   })
+
+  $(document).on("click", ".print_grn", function(e){
+      e.preventDefault();
+      //alert();
+      $(".error").html(""); 
+      current = $(this);   
+      
+      $.ajax({
+        url: current.attr('href'),
+        type:'get',
+        //data: $('#addonForm'+current.data('id')+' :input').serializeArray(),
+        cache: false,
+        success: function(data){
+          $("#printGrnForm").html(data.view);
+          $("#selectGrnModal").modal('show');
+        }
+      })
+    })
 
   $(document).on("click","#reset-button",function(e) {
       e.preventDefault();

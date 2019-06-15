@@ -20,7 +20,9 @@
 	          </thead>
 	          <tbody>
 	     		 @foreach($users as $user)
-	            <tr>
+	            <tr @if($user->created_at->addHours(2)->lt($current_time)) 
+	            		style="background-color: rgba(255, 0, 0, 0.3)" 
+	            	@endif>
 	              <td>
 	                {{$user->id}}
 	              </td>

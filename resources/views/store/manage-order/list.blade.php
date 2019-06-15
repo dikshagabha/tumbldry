@@ -15,6 +15,7 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
           <th>Estimated Time</th>
           <th>Order Status</th>
           <th>Print Grn</th>
+          <th>Processed Items</th>
           <th>Assign Partial Delivery to Runner</th>
           <th>Assign Full Delivery to Runner</th>
           <th>Invoice</th>
@@ -49,6 +50,8 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
                     Cash
                   @elseif($pay->type==2)
                     Wallet
+                  @elseif($pay->type==4)
+                    Card Pay
                   @else
                     Loyality Points
                   @endif
@@ -75,13 +78,20 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
             </td> 
             <td>
                @if($user->service->form_type == 1 || $user->service->form_type == 2)
-               <a href="{{ route('store.getItemsForm', $user->id) }}" class="print_grn" data-order_id="{{$user->id}}"> 
-                  <vs-button type="gradient" color="danger" class="btn btn-danger"> <i class="fa fa-print"></i> </vs-button>
-               </a>
+                 <a href="{{ route('store.getItemsForm', ['id'=>$user->id, 'type'=>1]) }}" class="print_grn"  title ="Print Grn" data-order_id="{{$user->id}}"> 
+                    <vs-button type="gradient" color="danger" class="btn btn-danger"> <i class="fa fa-print"></i> </vs-button>
+                 </a>
                @else
                --
                @endif
             </td> 
+
+             <td>
+              <a href="{{ route('store.getItemsForm', ['id'=>$user->id, 'type'=>2]) }}" class="print_grn" title ="Mark items processed" data-order_id="{{$user->id}}"> 
+                    <vs-button type="gradient" color="blue" class="btn"><i class="fa fa-check"></i> </vs-button>
+              </a>
+              </td> 
+
             <td>
               @if($user->items()->where('status', 2)->count()> 0 && $user->items()->where('status', 2)->count()< $user->items()->count() && $user->delivery_mode==2)
 

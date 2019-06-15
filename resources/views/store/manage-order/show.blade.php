@@ -43,16 +43,16 @@ Items:
 		<th>Status</th>
 		@if($vendors)<th>Vendors</th>@endif
 
-		@if($order->service->form_type == 1 || $order->service->form_type == 2)
+		<!-- @if($order->service->form_type == 1 || $order->service->form_type == 2)
 		<th>GRN <input type="checkbox" name="select_all[]" title="Select All" class="select_all" value="0"><button type="button" id="grnBtn" data-url="{{route('store.getGrn')}}" class="btn btn-link" title="Print Grn">Print Tag</button>
 			<span id="grn_error" class="error"></span>
 		</th>
-		@endif
-		<th>Processed 
+		@endif -->
+		<!-- <th>Processed 
 			<input type="checkbox" name="select_all_deliver[]" title="Select All" class="select_all_deliver" value="0">
 			<button type="button" id="deliverBtn"  data-url="{{route('store.itemsDeliver')}}" class="btn btn-link" title="Items Ready to be delivered"><i class="fa fa-car"></i></button>
 			<span id="deliver_error" class="error"></span>
-		</th>
+		</th> -->
 	</tr>
 	
 	@foreach($order->items as $item)
@@ -82,7 +82,7 @@ Items:
 			@endif
 		</td>
 		@endif
-		@if($order->service->form_type == 1 || $order->service->form_type == 2)
+		<!-- @if($order->service->form_type == 1 || $order->service->form_type == 2)
 		<td class="table-modal">
 			@if($item->status != 1)
 				<input type="checkbox" name="grn[]" value="{{$item['id']}}" @if($item->status == 4 ||  $item->status==2 ) checked @endif class="grn_units">
@@ -90,14 +90,14 @@ Items:
 				--
 			@endif
 		 </td>
-		@endif
-		<td class="table-modal">
+		@endif -->
+		<!-- <td class="table-modal">
 			@if($item->status != 1)
 				<input type="checkbox" @if($item->status == 2) checked @endif name="deliver[]"  value="{{ $item['id'] }}" class="deliver_units"> 
 			@else
 				--
 			@endif
-		</td>
+		</td> -->
 
 	</tr>
 	@endforeach
