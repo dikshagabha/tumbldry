@@ -24,7 +24,7 @@ Route::group([
 	
     Route::get('login', 'AuthController@login');
     Route::post('register', 'AuthController@register');
-    Route::post('otp', 'AuthController@sendOtp');
+    Route::get('otp', 'AuthController@sendOtp');
     Route::post('verify-otp', 'AuthController@verifyotp');
 
 
@@ -37,6 +37,9 @@ Route::group([
     
     Route::get('pickup-jobs', 'PickupController@getPickupJobs');
     Route::get('delivery-jobs', 'PickupController@getDeliveryJobs');
+
+    Route::get('get-jobs', 'PickupController@getJobs');
+
     Route::get('pickup-details', 'PickupController@getPickupDetails');
 
     Route::post('customer/register', 'CustomerController@store');

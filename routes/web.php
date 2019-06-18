@@ -75,6 +75,12 @@ Route::prefix('admin')->group(function () {
   });
 });
 
+ 
+  Route::get('/payment/{id}', 'Store\PaymentController@pay')->name('order.pay');
+  Route::get('/payment/response', 'Store\PaymentController@response')->name('pay');
+  Route::post('/payment/cancel', 'Store\PaymentController@cancel')->name('pay');
+  
+  
 
 Route::prefix('store')->namespace('Store')->group(function () {
 
@@ -83,7 +89,7 @@ Route::prefix('store')->namespace('Store')->group(function () {
         Route::post('/login', 'LoginController@postLogin')->name('store.login');
 
       });
-
+ 
   Route::group(['middleware' => ['web', 'checkPrefix']], function () {
       Route::get('/', function () {
           return redirect()->route('store.login');
@@ -101,9 +107,12 @@ Route::prefix('store')->namespace('Store')->group(function () {
             'manage-plans' => 'PlanController',
             ]);
            
-          Route::get('/payment', 'PaymentController@pay')->name('pay');
+         
 
           Route::get('order/payment/{id}', 'PaymentController@getPaymentMode')->name('store.paymentmodes');
+
+
+          Route::get('order/send-payment-link', 'PaymentController@sendPaymentLink')->name('store.sendPaymentLink');
           
           Route::post('order/payment/', 'PaymentController@payment')->name('store.payment');
           

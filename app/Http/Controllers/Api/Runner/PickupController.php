@@ -40,6 +40,24 @@ class PickupController extends Controller
         // return response()->json($response, $http_status);
     }
 
+    public function getJobs(Request $request)
+    {
+       $pickup = PickupPickupRepository::getPickupJobs($request, $this->user);
+
+       $delivery = PickupPickupRepository::getDeliveryJobs($request, $this->user);
+
+       $response = ['pickup'=>$pickup, 'delivery'=>$delivery, 'code'=>1, 'message'=>'Success'];
+       if($request->input('callback'))
+        {
+            echo $request->input('callback')."(".json_encode($response).")";
+        }else{
+            return response()->json($response, 200);
+        }
+        // $http_status = $response['http_status'];
+        // unset($response['http_status']);
+        // return response()->json($response, $http_status);
+    }
+
     public function getDeliveryJobs(Request $request)
     {
         $response = PickupPickupRepository::getDeliveryJobs($request, $this->user);
@@ -54,19 +72,21 @@ class PickupController extends Controller
         // return response()->json($response, $http_status);
     }
 
-    public function getJobs(Request $request)
-    {
-        $response = PickupPickupRepository::getJobs($request, $this->user);
-       if($request->input('callback'))
-        {
-            echo $request->input('callback')."(".json_encode($response).")";
-        }else{
-            return response()->json($response, 200);
-        }
-        // $http_status = $response['http_status'];
-        // unset($response['http_status']);
-        // return response()->json($response, $http_status);
-    }
+    // public function getJobs(Request $request)
+    // {
+    //     //$response = PickupPickupRepository::getJobs($request, $this->user);
+       
+
+    //    if($request->input('callback'))
+    //     {
+    //         echo $request->input('callback')."(".json_encode($response).")";
+    //     }else{
+    //         return response()->json($response, 200);
+    //     }
+    //     // $http_status = $response['http_status'];
+    //     // unset($response['http_status']);
+    //     // return response()->json($response, $http_status);
+    // }
 
     public function getPickupDetails(Request $request)
     {

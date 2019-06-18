@@ -12,7 +12,7 @@ return [
 
     'gateway' => 'CCAvenue', // Making this option for implementing multiple gateways in future
 
-    'testMode' => true, // True for Testing the Gateway [For production false]
+    'testMode' => false, // True for Testing the Gateway [For production false]
 
     'ccavenue' => [ // CCAvenue Parameters
         'merchantId' => env('CCAVENUE_MERCHANT_ID', ''),

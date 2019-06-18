@@ -39,8 +39,7 @@ class PickupPickupRepository extends BaseRepository
 
     public static function getDeliveryJobs($request, $user)
     {
-        $jobs = UserJobs::where('user_id', $user->id)->where('type', 2)->get();
-
+        $jobs = UserJobs::where('user_id', $user->id)->where(['type'=> 2])->with('store_details', 'order_details')->get();
         if ($jobs) {
             return ["message"=>"Delivery Jobs", "data"=>$jobs, 'http_status'=>200, 
                     'code'=>1, 'msg'=>'Success','details'=>['data'=>$jobs] 

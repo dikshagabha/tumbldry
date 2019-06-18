@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Repositories\Customer\HomeRepository;
 use JWTAuth;
 use App\Requests\Customer\Auth\RegisterRequest;
+use App\User;
 
 class CustomerController extends Controller
 {
@@ -30,7 +31,7 @@ class CustomerController extends Controller
     public function store(RegisterRequest $request)
     {
         $response = HomeRepository::store($request, $this->user);
-        echo $request->input('callback')."(".json_encode($response).")";
+        //echo $request->input('callback')."(".json_encode($response).")";
         $http_status = $response['http_status'];
         //unset($response['http_status']);
         if($request->input('callback'))
@@ -57,7 +58,7 @@ class CustomerController extends Controller
         //return response()->json($response, $http_status);
     }
 
-    public function searchCustomer(Request $request, $id)
+    public function searchCustomer(Request $request)
     {
         $validatedData = $request->validate([
           'phone_number' => 'bail|required|numeric|min:2|max:9999999999',
@@ -68,21 +69,26 @@ class CustomerController extends Controller
                   ->where('phone_number', 'like', '%'.$request->input('phone_number').'%')->first();
         
         $response['code'] = 1;
-        $response['mes']= 'Success';
+        $response['message']= 'Success';
         $response['details']=['data'=>$customer];
 
         if ($customer) {
-            echo $request->input('callback')."(".json_encode($response).")";
-            //return response()->json(["message"=>"Customer Found!!", "customer" => $customer], 200);
+             if($request->input('callback'))
+                {
+                    echo $request->input('callback')."(".json_encode($response).")";
+                    return;
+                }else{
+                    return response()->json($response, 200);
+                }
         }
         $response['code'] = 2;
-        $response['mes']= 'Customer Not Found!!';
+        $response['message']= 'Customer Not Found!!';
         $response['details']=['data'=>$customer];
         if($request->input('callback'))
         {
             echo $request->input('callback')."(".json_encode($response).")";
         }else{
-            return response()->json($response, 200);
+            return response()->json($response, 400);
         }
         //return response()->json(["message"=>"Customer Not Found!!"], 400);
     }

@@ -100,7 +100,26 @@
 		          			</div>
 		          		</td>
 		          	</tr>
-		        </table>
+
+		          	<tr>
+		          		
+		          			<td><label for = 'payment_link'>Send Payment Link to Phone</label></td>
+
+		          			<td><input type="checkbox" name="send_link" value="5" id="payment_link" class="mode">
+
+		          				<div class="5 input" id="5" style="display: none">
+		          				
+		          					<input type="text" name="phone_number"
+		          					 value="{{$order->customer->phone_number}}" placeholder="Phone Number" id="phone" class="form-control">
+		          					<span class="error" id="transaction_id_error"></span>
+		          				
+		          			</div>
+		          			</td>
+
+		          		
+		          	</tr>
+		          </table>
+
 		        <input type="hidden" name="order_id" value="{{$order->id}}">
 			</vs-col>
 			<vs-col type="flex" vs-justify="right" vs-align="right" vs-w="2">
