@@ -77,12 +77,15 @@ Route::prefix('admin')->group(function () {
 
  
   Route::get('/payment/{id}', 'Store\PaymentController@pay')->name('order.pay');
-  Route::get('/payment/response', 'Store\PaymentController@response')->name('pay');
-  Route::post('/payment/cancel', 'Store\PaymentController@cancel')->name('pay');
+ 
   
+     Route::post('/payment/response', 'Store\PaymentController@response')->name('pay');
+    Route::post('/payment/cancel', 'Store\PaymentController@cancel')->name('pay');
+    Route::get('/payment/success', 'PaymentController@success')->name('pay');
   
 
 Route::prefix('store')->namespace('Store')->group(function () {
+
 
    Route::group(['middleware' => 'guest'], function () {
         Route::get('/login', 'LoginController@getLogin')->name('store.login');

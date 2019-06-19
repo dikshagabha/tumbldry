@@ -401,8 +401,8 @@ $(document).ready(function(){
       data: data, 
       success: function(data){
         success(data.message);
-        //window.location = data.redirectTo;
-        $('body').waitMe('hide');
+        window.location = data.redirectTo;
+        $('body').windowaitMe('hide');
       }
     })
   

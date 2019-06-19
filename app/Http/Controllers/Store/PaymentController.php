@@ -77,12 +77,30 @@ class PaymentController extends Controller
 
     public function response(Request $request)
     {
+
+
+        $response = Payment::response($request);
+
+        $order = Order::where('id', $response['order_id'])->first();
+        
+        UserPayments::insert( [
+                                    'order_id'=>$response['order_id'], 'price'=>$response['amount'],
+                                    'to_id'=>$order->store_id, 'type'=>5, 'payment_mode'=>$response['payment_mode'],
+                                    'transaction_id'=>$response['tracking_id'],
+                                    'user_id'=>$order->customer_id, 'created_at'=>Carbon::now(),
+                                     'updated_at'=>Carbon::now()
+                                  ]);
+
+        return view('success');
+    
+    }  
+
+    public function success(Request $request)
+    {
         // For default Gateway
         $response = Payment::response($request);
         
-        // For Otherthan Default Gateway
-        $response = Payment::gateway('CCAvenue')->response($request);
-
+        
         dd($response);
     
     }  

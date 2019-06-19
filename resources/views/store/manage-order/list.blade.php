@@ -45,12 +45,14 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
             <td>
               @if($user->payment()->count())
                 @foreach($user->payment()->where('type', '!=', 0)->get() as $pay)
-                  @if($pay->type==1)                                
+                  @if($pay->type==1)                     
                     Cash
                   @elseif($pay->type==2)
                     Wallet
                   @elseif($pay->type==4)
-                    Card Pay
+                    Card Pay [ {{$pay->transaction_id} }] 
+                 @elseif($pay->type==5)
+                    {{$pay->payment_mode}}
                   @else
                     Loyality Points
                   @endif
