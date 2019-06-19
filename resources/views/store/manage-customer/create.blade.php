@@ -1,4 +1,4 @@
-@extends('store.layouts.app')
+@extends('store.layout-new.app')
 @section('title', 'Manage Customer')
 @section('css')
   <link rel="stylesheet" href="{{ asset('css/chosen/bootstrap-chosen.css') }}">

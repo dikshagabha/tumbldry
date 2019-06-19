@@ -1,4 +1,4 @@
-@extends('store.layouts.app')
+@extends('store.layout-new.app')
 @section('title', 'Pickup Request')
 @section('css')
   <link rel="stylesheet" href="{{ asset('css/chosen/bootstrap-chosen.css') }}">
@@ -11,8 +11,7 @@
 
 <vs-row vs-justify="center">
   <vs-col type="flex" vs-justify="center" vs-align="center" vs-w="11">
-    <vs-card>
-      <div slot="header">
+    <div slot="header">
         <h3>
           Create Pickup Request
         </h3>
@@ -52,12 +51,10 @@
     <br>
     </vs-row>
     </div>
-    
-    </vs-card>
   </vs-col>
 </vs-row>
 
-<div id="addressModal" class="modal fade" role="dialog">
+<div id="addressModal" class="modal" role="dialog">
   <div class="modal-dialog modal-lg">
     <!-- Modal content-->
     <div class="modal-content">
@@ -81,7 +78,7 @@
   </div>
 </div>
 
-<div id="selectAddressModal" class="modal fade" role="dialog">
+<div id="selectAddressModal" class="modal" role="dialog">
   <div class="modal-dialog modal-lg">
     <!-- Modal content-->
     <div class="modal-content">

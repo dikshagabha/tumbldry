@@ -1,4 +1,4 @@
-@extends('store.layouts.app')
+@extends('store.layout-new.app')
 @section('title', 'Manage Runner')
 
 @section('content')
@@ -6,8 +6,7 @@
 
 <vs-row vs-justify="center">
   <vs-col type="flex" vs-justify="center" vs-align="center" vs-w="11">
-    <vs-card>
-      <div slot="header">
+    <div slot="header">
         <h3>
           Edit Runner
         </h3>
@@ -43,8 +42,6 @@
     <br>
     </vs-row>
     </div>
-    
-    </vs-card>
   </vs-col>
 </vs-row>
 

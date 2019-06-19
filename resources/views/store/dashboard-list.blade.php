@@ -5,9 +5,9 @@
 	      Runners Not Assigned
 	    </h3>
 	  </div>
-	  <div>     
-		@if($users->count())
-	      <table class="table dataTable " style="overflow-x:auto;">
+	  <div>    
+	  @if($users->count())
+	      <table class="table dataTable table-borderless" style="overflow-x:auto;">
 	          <thead>
 	            <tr>
 	              <th>Id</th>
@@ -72,7 +72,7 @@
 	  <div>
 	  <br>
 	     @if($pending->count())
-	      <table class="table dataTable " style="overflow-x:auto;">
+	      <table class="table dataTable  table-borderless" style="overflow-x:auto;">
 	          <thead>
 	            <tr>
 	              <th>Id</th>

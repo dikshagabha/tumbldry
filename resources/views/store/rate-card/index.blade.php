@@ -1,4 +1,4 @@
-@extends('store.layouts.app', ['activePage' => 'rates', 'titlePage' => __('Rates')])
+@extends('store.layout-new.app', ['activePage' => 'rates', 'titlePage' => __('Rates')])
 @section('title', 'Rates')
 @section('css')
   <link rel="stylesheet" href="{{ asset('css/chosen/bootstrap-chosen.css') }}">
@@ -11,8 +11,7 @@
 
 <vs-row vs-justify="center">
   <vs-col type="flex" vs-justify="center" vs-align="center" vs-w="11">
-    <vs-card>
-      <div slot="header">
+    <div slot="header">
         <h3>
           Rate Card
         </h3>
@@ -60,7 +59,6 @@
     </vs-row>
     </div>
     
-    </vs-card>
   </vs-col>
 </vs-row>
 

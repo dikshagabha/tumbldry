@@ -2,7 +2,7 @@
 $i = ($users->currentpage() - 1) * $users->perPage() + 1;
 @endphp
  @if($users->count())
-  <table class="table table-borderless dataTable">
+  <table class="table table-borderless dataTable table-responsive" > 
       <thead>
         <tr>
          <!--  <th>S No</th> -->
@@ -50,7 +50,7 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
                   @elseif($pay->type==2)
                     Wallet
                   @elseif($pay->type==4)
-                    Card Pay [ {{$pay->transaction_id} }] 
+                    Card Pay [ {{$pay->transaction_id}}] 
                  @elseif($pay->type==5)
                     {{$pay->payment_mode}}
                   @else
@@ -80,7 +80,7 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
             <td>
                @if($user->service->form_type == 1 || $user->service->form_type == 2)
                  <a href="{{ route('store.getItemsForm', ['id'=>$user->id, 'type'=>1]) }}" class="print_grn"  title ="Print Grn" data-order_id="{{$user->id}}"> 
-                    <vs-button type="gradient" color="danger" class="btn btn-danger"> <i class="fa fa-print"></i> </vs-button>
+                    <button class="btn btn-danger"> <i class="fa fa-print"></i> </button>
                  </a>
                @else
                --
@@ -89,7 +89,7 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
 
              <td>
               <a href="{{ route('store.getItemsForm', ['id'=>$user->id, 'type'=>2]) }}" class="print_grn" title ="Mark items processed" data-order_id="{{$user->id}}"> 
-                    <vs-button type="gradient" color="blue" class="btn"><i class="fa fa-check"></i> </vs-button>
+                    <button type="gradient" color="blue" class="btn btn-information"><i class="fa fa-check"></i> </button>
               </a>
               </td> 
 
@@ -99,7 +99,7 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
              @if($user->delivery_mode==2 && $user->items()->where('status', 2)->count() > 0)
                  @if(!$user->delivery_runner_id)
                   <a href="{{ route('store.assignDeliver', $user->id) }}" class="deliver" data-order_id="{{$user->id}}"> 
-                      <vs-button type="gradient" color="light" class="btn btn-light"> <i class="fa fa-car"></i> </vs-button>
+                      <button type="gradient" color="light" class="btn btn-light"> <i class="fa fa-car"></i> </button>
                   </a>
                   @else
                     {{$user->runner_name}}
@@ -113,7 +113,7 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
               
                 @if($user->items()->where('status', 2)->count() == $user->items()->count())
                   <a href="{{ route('store.printInvoice', $user->id) }}" class="print_invoice"> 
-                    <vs-button type="gradient" color="warning" class="btn btn-warning"> <i class="fa fa-file-pdf-o"></i> </vs-button></a>
+                    <button type="gradient" color="warning" class="btn btn-warning"> <i class="fa fa-file-pdf-o"></i> </button></a>
                 @else
                   --
                 @endif
@@ -124,7 +124,7 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
                 
                 @if( $user->items()->where('status', 2)->count()> 0 && $user->items()->where('status', 2)->count()< $user->items()->count())
                   <a href="{{ route('store.printInvoice', $user->id) }}" class="print_invoice"> 
-                    <vs-button type="gradient" color="information" class="btn btn-info"> <i class="fa fa-file-pdf-o"></i> </vs-button></a>
+                    <button type="gradient" color="information" class="btn btn-info"> <i class="fa fa-file-pdf-o"></i> </button></a>
                 @else
                   --
                 @endif
@@ -136,7 +136,7 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
                 @if($user->payment()->count())
                   <a href="{{ route('store.printInvoice', $user->id) }}" class="print_invoice"> 
                   
-                    <vs-button type="gradient" color="dark" class="btn btn btn-dark"> <i class="fa fa-file-pdf-o"></i> </vs-button>
+                    <button type="gradient" color="dark" class="btn btn btn-dark"> <i class="fa fa-file-pdf-o"></i> </button>
                   
                   </a>
                 @else
@@ -147,7 +147,7 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
 
             <td>
                 <a  class="view" title="view order details" href="{{route('store.getOrderDetails', $user->id)}}">
-                  <vs-button type="gradient" color="success" class="btn btn-success"> <i class="fa fa-eye"></i> </vs-button>
+                  <button type="gradient" color="success" class="btn btn-success"> <i class="fa fa-eye"></i> </button>
                 </a>
 
 

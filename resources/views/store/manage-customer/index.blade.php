@@ -1,11 +1,10 @@
-@extends('store.layouts.app')
+@extends('store.layout-new.app')
 @section('title', 'Manage Customer')
 @section('content')
 
 <vs-row vs-justify="center">
   <vs-col type="flex" vs-justify="center" vs-align="center" vs-w="11">
-    <vs-card>
-      <div slot="header">
+    <div slot="header">
         <h3>
           Customer Details
         </h3>
@@ -25,15 +24,15 @@
                   {{ Form::text('search', '', ['class' => 'form-control', 'placeholder' => 'Search by Name or E-mail or Phone', 'maxlength'=>'50']) }}
                 </vs-col>
 
-                <vs-col vs-type="flex" vs-justify="center" vs-align="center" vs-w="2">                  
+               <!--  <vs-col vs-type="flex" vs-justify="center" vs-align="center" vs-w="2">                  
                  {{ Form::select('sort_type', ['' => 'Select Status', '1' => 'Active', '0' => 'Inactive'], null, ['class' => 'form-control', 'id' => 'sort_type']) }}
-                </vs-col>
+                </vs-col> -->
                 
                 <vs-col vs-type="flex" vs-justify="center" vs-align="center" vs-w="1">
-                  <vs-button type="gradient" color="success" id="search-button">Filter</vs-button>
+                  <button type="gradient" color="success" id="search-button" class="btn btn-success">Filter</button>
                 </vs-col>
                  <vs-col vs-type="flex" vs-justify="center" vs-align="center" vs-w="1">
-                  <vs-button type="gradient" color="danger"id="reset-button" >Reset</vs-button>
+                  <button type="gradient" color="danger"id="reset-button" class="btn btn-danger">Reset</button>
                 </vs-col>
               {{ Form::close() }}
 
@@ -50,7 +49,7 @@
       <div slot="footer">
         
       </div>
-    </vs-card>
+    
   </vs-col>
 </vs-row>
 <div id="addressModal" class="modal fade" role="dialog">

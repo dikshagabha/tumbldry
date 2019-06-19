@@ -1,12 +1,11 @@
-@extends('store.layouts.app')
+@extends('store.layout-new.app')
 @section('title', 'Reports')
 
 @section('content')
 
 <vs-row vs-justify="center">
   <vs-col type="flex" vs-justify="center" vs-align="center" vs-w="11">
-    <vs-card>
-      <div slot="header">
+   <div slot="header">
         <h3>
           Customers Reports
         </h3>
@@ -48,11 +47,10 @@
       <div slot="footer">
         
       </div>
-    </vs-card>
   </vs-col>
 </vs-row>
 
-<div id="addressModal" class="modal fade" role="dialog">
+<div id="addressModal" class="modal" role="dialog">
   <div class="modal-dialog">
     <!-- Modal content-->
     <div class="modal-content">

@@ -1,4 +1,4 @@
-@extends('store.layouts.app')
+@extends('store.layout-new.app')
 @section('title', 'Manage Plans')
 @section('css')
   <link rel="stylesheet" href="{{ asset('css/chosen/bootstrap-chosen.css') }}">
@@ -11,10 +11,7 @@
 
 
 <vs-row vs-justify="center">
-  <vs-col type="flex" vs-justify="center" vs-align="center" vs-w="11">
-    <vs-card>
-
-      
+  <vs-col type="flex" vs-justify="center" vs-align="center" vs-w="11">    
         <vs-breadcrumb
         :items="
            [
@@ -65,14 +62,10 @@
       </vs-col>
     <br>
     </vs-row>
-    </div>
-    
-    </vs-card>
+    </div>    
   </vs-col>
 </vs-row>
-
 @endsection
-
 @push('js')
 <script>
 $(document).ready(function(){

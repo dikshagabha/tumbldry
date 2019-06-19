@@ -1,4 +1,4 @@
-@extends('store.layouts.app')
+@extends('store.layout-new.app')
 @section('title', 'Create order')
 
 @section('css')
@@ -19,19 +19,13 @@
 @section('content')
 <vs-row vs-justify="center">
   <vs-col type="flex" vs-justify="center" vs-align="center" vs-w="11">
-    <vs-card>
-
-    <vs-breadcrumb
-    :items="
-       [{
-           title: 'Create Order',
-        },{
-           title: 'Payment',
-           disabled:true
-         }
-       ]"
-    >
-    </vs-breadcrumb>
+      <ol class="breadcrumb">
+          <li class="breadcrumb-item active">Create Order</li>
+         
+          <li class="breadcrumb-item">Payment</li>
+          
+      </ol>
+    
     <div slot="header">
         <h3>
           Create Order
@@ -41,8 +35,9 @@
         <vs-row vs-justify="center">
          <vs-col type="flex" vs-justify="center" vs-align="center" vs-w="11">
           <a href="{{route('store.create-order.index')}}">
-              <vs-button color="danger" type="border" icon="arrow_back"></vs-button>
-          </a><br>
+              <vs-button  type="gradient" color="danger" icon="arrow_back"></vs-button>    
+          </a>
+          <br>
           {{Form::open(['url'=> route('store.create-order'), "id"=>"addFrenchise", 'enctype'=>"multipart/form-data"])}}   
               @csrf
           @include('store.manage-order.form-without-pickup')
@@ -55,10 +50,9 @@
 
       </vs-row>
     </div>
-    </vs-card>
   </vs-col>
 </vs-row>
-<div id="addressModal" class="modal fade" role="dialog">
+<div id="addressModal" class="modal" role="dialog">
   <div class="modal-dialog modal-lg">
     <!-- Modal content-->
     <div class="modal-content">
@@ -81,7 +75,7 @@
 
   </div>
 </div>
-<div id="selectAddressModal" class="modal fade" role="dialog">
+<div id="selectAddressModal" class="modal" role="dialog">
   <div class="modal-dialog modal-lg">
     <!-- Modal content-->
     <div class="modal-content">

@@ -4,7 +4,7 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
 @endphp
  @if($users->count())
 
-      <table class="table table-striped dataTable">
+      <table class="table table-responsive table-borderless dataTable">
           <thead>
             <tr>
               <th>Id</th>

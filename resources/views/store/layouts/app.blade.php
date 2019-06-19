@@ -299,14 +299,11 @@ a.dropdown-menu-header {
         <script src="{{ asset('js/moment.min.js') }}" type="text/javascript"></script>
         <script src="{{ asset('js/moment-timezone.min.js') }}" type="text/javascript"></script>
 
-         <script src="https://unpkg.com/vue/dist/vue.js"></script>
-      <script src="https://cdn.jsdelivr.net/npm/vuesax/dist/vuesax.umd.js"></script>
+        <script src="https://unpkg.com/vue/dist/vue.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vuesax/dist/vuesax.umd.js"></script>
         
         <script src="https://js.pusher.com/4.4/pusher.min.js"></script>
-        @auth()
-
-
-          
+        @auth()          
           <script type="text/javascript">
 
              new Vue({

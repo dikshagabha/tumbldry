@@ -1,4 +1,4 @@
-@extends('store.layouts.app')
+@extends('store.layout-new.app')
 @section('title', 'Manage Store')
 
 @section('css')
@@ -6,39 +6,7 @@
 <link rel="stylesheet" type="text/css" href=" https://printjs-4de6.kxcdn.com/print.min.css">
 @endsection
 @section('content')
-
-
-<vs-row vs-justify="center">
-  <vs-col type="flex" vs-justify="center" vs-align="center" vs-w="11">
-    <vs-card>
-      <div slot="header">
-        <h3>
-          Orders Details
-        </h3>
-      </div>
-      <div>
-
-        <vs-row vs-justify="flex-end">
-         
-          <a href="{{route('store.orderWithoutPickup')}}">
-            <vs-button type="gradient" color="danger">Create Order</vs-button>
-          </a>
-         </vs-row>
-           <br>
-              <div id="dataList">
-                
-               
-               @include('store.manage-order.list')
-              </div>
-        
-      </div>
-      <div slot="footer">
-        
-      </div>
-    </vs-card>
-  </vs-col>
-</vs-row>
-<div id="OrderModal" class="modal fade" role="dialog">
+<div id="OrderModal" class="modal in" role="dialog">
   <div class="modal-dialog modal-lg">
     <!-- Modal content-->
     <div class="modal-content">
@@ -56,11 +24,9 @@
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
       </div>
     </div>
-
   </div>
 </div>
-
-<div id="DeliverModal" class="modal fade" role="dialog">
+<div id="DeliverModal" class="modal in" role="dialog">
   <div class="modal-dialog">
     <!-- Modal content-->
     <div class="modal-content">
@@ -76,17 +42,12 @@
         <button type="button" class="btn btn-success assign_runner" data-dismiss="modal" >Assign</button>
       </div>
     </div>
-
   </div>
 </div>
-
-
-<div id="selectGrnModal" class="modal fade" role="dialog">
-  <div class="modal-dialog modal-lg">
-    <!-- Modal content-->
+<div id="selectGrnModal" class="modal in" role="dialog">
+  <div class="modal-dialog modal-lg">    
     <div class="modal-content">
-      <div class="modal-header">
-        
+      <div class="modal-header">        
         <h4 class="modal-title">Print Grn</h4>
       </div>
       <div class="modal-body">
@@ -96,12 +57,24 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-       <!--  <button type="button" class="btn btn-primary" >Save</button> -->
       </div>
     </div>
-
   </div>
 </div>
+
+<div>
+  <h3>   Orders Details </h3>
+  <div class="col-md-3 pull-right">
+    <a href="{{route('store.orderWithoutPickup')}}">
+      <button type="button" class="btn btn-danger">Create Order</button>
+    </a>
+   </div>
+   <br>
+  <div id="dataList">
+   @include('store.manage-order.list')
+  </div>
+</div>
+
 
 @endsection
 @push('js')
