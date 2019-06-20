@@ -3,6 +3,7 @@
 @section("css")
 <link rel="stylesheet" type="text/css" href="{{asset('css/chosen/bootstrap-chosen.css')}}">
 <link rel="stylesheet" type="text/css" href="{{asset('css/jcf.css')}}">
+<link rel="stylesheet" type="text/css" href="{{asset('css/chartist.css')}}">
 @endsection
 @section('content')
 <!-- <vs-row vs-justify="center"  id="dataList">
@@ -35,8 +36,22 @@
 @endsection
 
 @push('js')
+<script src="{{ asset('js/chartist.js') }}"></script>
 
 <script type="text/javascript">
+
+  $.ajax({
+    url:'{{route("store.newCustomers")}}',
+    success: function(data){
+      new Chartist.Line('#chart1', {
+          labels: data.values,
+          series: [data.data]
+        });
+    }
+  })
+  
+
+
 $(document).ready(function(){
 	 $(document).on("change",".runner_select",function(e) {
       e.preventDefault();
@@ -62,8 +77,7 @@ $(document).ready(function(){
             })
       }     
 	});
-
-	 $(document).on("click",".view",function(e) {
+	$(document).on("click",".view",function(e) {
       e.preventDefault();
       $('body').waitMe();
       current = $(this)

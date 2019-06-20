@@ -108,6 +108,7 @@ Route::prefix('store')->namespace('Store')->group(function () {
         Route::get('/change-password', 'HomeController@changePassword')->name('store.change-password');
         Route::post('/change-password', 'HomeController@postchangePassword')->name('store.change-password');
 
+        Route::get('/new-customers', 'HomeController@newCustomers')->name('store.newCustomers');
 
          Route::get('/edit-profile', 'HomeController@editProfile')->name('store.edit-profile');
         Route::put('/edit-profile', 'HomeController@posteditProfile')->name('store.edit-profile');
