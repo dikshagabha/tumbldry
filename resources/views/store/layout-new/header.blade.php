@@ -24,10 +24,8 @@
               position: relative;
               padding: 10px;
               border-bottom: 1px solid #c8ced3;" > 
-            {{ $notifications->message }} 
-                  
+              {{ $notifications->message }} 
             </div>
-
         @endforeach
         </div>
         <!-- vs-navbar-item icon="bell">
@@ -60,7 +58,7 @@
       </div>
       </vs-navbar-item> -->
 
-      <li><a class="dropdown-item" href="{{ route('logout') }}">{{ __('Log out') }}</a></li>
+      <li><a href="{{ route('logout') }}"><button class="btn btn-danger"> {{ __('Log out') }} </button></a></li>
       
       </ul>
       
