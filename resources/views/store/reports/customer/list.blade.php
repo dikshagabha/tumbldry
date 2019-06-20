@@ -9,7 +9,7 @@ $i = 1;
             <tr>
               <th>Id</th>
               <th>Name</th>
-              <th>Status</th>
+             <!--  <th>Status</th> -->
                <th>Created At</th>
 <!--               <th>View</th> -->
             </tr>
@@ -24,14 +24,14 @@ $i = 1;
               <td>
                 {{$user->name}}
               </td>
-              <td>
+              <!-- <td>
                 @if($user->status==0)
                   
                    Inactive
                 @else
                   Active
                 @endif
-              </td>
+              </td> -->
               <td>
                   {{$user->created_at->setTimezone($timezone)->format('y/m/d h:i a')}}
                   

@@ -27,7 +27,7 @@ class LoginController extends Controller
     	//$checked = ;
     	//dd($checked);
 
-    	$credentials = $Request->only('email', 'password');
+    	$credentials = $Request->only('phone_number', 'password');
         $credentials['role'] = 3;
         $credentials['status'] = 1;
         

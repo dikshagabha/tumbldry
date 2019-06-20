@@ -43,12 +43,12 @@
                       <i class="fa fa-user"></i>
                     </span>
                   </div>
-                   <input type="text" class="form-control" placeholder="Email" name="email">
+                   <input type="text" class="form-control" placeholder="Phone Number" name="phone_number">
                    <!-- <span class="error" id="email_error"></span> -->
                                    
                 </div>
                 <div class="input-group mb-3">
-                   <span class="error" id="email_error"></span>
+                   <span class="error" id="phone_number_error"></span>
                                    
                 </div>
                 <div class="input-group mb-4">
