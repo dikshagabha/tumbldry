@@ -5,10 +5,10 @@
 <link rel="stylesheet" type="text/css" href="{{asset('css/jcf.css')}}">
 @endsection
 @section('content')
-<vs-row vs-justify="center" vs-align="flex-start" id="dataList">
-	@include('store.dashboard-list')
-</vs-row>
-
+<!-- <vs-row vs-justify="center"  id="dataList">
+ -->	@include('store.dashboard-list')
+<!-- </vs-row>
+ -->
 
 <div id="addressModal" class="modal fade" role="dialog">
   <div class="modal-dialog">

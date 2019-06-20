@@ -1,4 +1,5 @@
-<vs-col type="flex" vs-justify="center" vs-align="left" vs-w="5">
+<div class="row">
+<div class="col-md-6 col-sm-6 col-lg-6">
 	<vs-card>
 	  <div slot="header">
 	    <h3>
@@ -59,10 +60,10 @@
 	  </div>
 	  
 	</vs-card>
-</vs-col>
-<vs-col type="flex" vs-justify="center" vs-align="right" vs-w="1">  
-</vs-col>
-<vs-col type="flex" vs-justify="center" vs-align="right" vs-w="5">
+</div>
+<!-- <vs-col type="flex" vs-justify="center" vs-align="right" vs-w="0.5">  
+</vs-col> -->
+<div class="col-md-6 col-sm-6 col-lg-6">
 	<vs-card>
 	  <div slot="header">
 	    <h3>
@@ -120,4 +121,5 @@
 	      @endif  	    
 	  </div>
 	</vs-card>
-</vs-col>
+</div>
+</div>
