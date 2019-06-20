@@ -43,6 +43,27 @@ class HomeController extends Controller
         return view('store.dashboard', compact('users', 'activePage', 'titlePage', 'runners','timezone', 'pending', 'current_time'));
     }
 
+    public function newCustomers(Request $Request)
+    {
+        $date = Carbon::now();
+        $user = User::where("user_id", Auth::user()->id)->get();
+        $values = [];
+        $data = [];
+        for ($i=1; $i <= 6; $i++) { 
+            //print_r($date);
+            array_push($values,  $date->subMonth()->format('F'));
+            $date = Carbon::now();
+
+            array_push($data, 
+                User::where("user_id", Auth::user()->id)->whereMonth('created_at', $date->subMonth($i))->count());
+        }
+
+        $values = array_reverse($values);
+        $data = array_reverse($data);
+        return response()->json(['values'=>$values, 'data'=>$data], 200);
+    }
+
+
     public function getcustomerdetails(Request $Request, $id)
     {
        

@@ -60,6 +60,17 @@
 	  </div>
 	  
 	</vs-card>
+
+	<vs-card>
+	  <div slot="header">
+	    <h3>
+	      New Customers
+	    </h3>
+	  </div>
+	  <div>
+	    <div class="ct-chart ct-golden-section" id="chart1"></div>
+	  </div>
+	</vs-card>
 </div>
 <!-- <vs-col type="flex" vs-justify="center" vs-align="right" vs-w="0.5">  
 </vs-col> -->
@@ -122,4 +133,8 @@
 	  </div>
 	</vs-card>
 </div>
+
+
+
+
 </div>
