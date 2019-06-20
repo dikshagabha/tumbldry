@@ -132,18 +132,17 @@ $('body').addClass(current.data('toggle'));
 })
 
 $(document).on('click', '.notifications', function(e){
-e.preventDefault();
-current = $(this);
+  e.preventDefault();
+  current = $(this);
 
-if($('.dropdown-menu').hasClass('show')){
-$('.dropdown-menu').removeClass('show');       
-}else{
-$('.dropdown-menu').removeClass('show');
-$('.dropdown-menu').addClass('show');
+  if($('.dropdown-menu').hasClass('show')){
+  $('.dropdown-menu').removeClass('show');       
+  }else{
+  $('.dropdown-menu').removeClass('show');
+  $('.dropdown-menu').addClass('show');
 
-}
-})
-
+  }
+  })
 })
 
 var user_timezone;

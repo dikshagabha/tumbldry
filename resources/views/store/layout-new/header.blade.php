@@ -12,25 +12,24 @@
     
       <ul class="nav navbar-nav ml-auto">
         <li class="nav-item d-md-down-none">
-          <a class="nav-link notifications" href="#" >
+          <a class="nav-link notifications" href="{{ route('notifications.mark-read') }}" >
             <i class="fa fa-bell"></i>
-            <span class="badge badge-pill badge-danger"> {{Auth::user()->notifications()->where('read_at',null)->count()}}</span>
+            <span class="badge badge-pill badge-danger notif-count"> {{Auth::user()->notifications()->where('read_at',null)->count()}}</span>
           </a>
         </li>
-        <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg">
-              
-              @foreach(Auth::user()->notifications()->limit(5)->get() as $notifications)
-                 <div class="col-md-12 notification" style="font-size: 12px;
-                    background: #fdfdfd;
-                    position: relative;
-                    padding: 10px;
-                    border-bottom: 1px solid #c8ced3;" > 
-                  {{ $notifications->message }} 
-                        
-                  </div>
+        <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg">              
+        @foreach(Auth::user()->notifications()->limit(5)->get() as $notifications)
+           <div class="col-md-12 notification" style="font-size: 12px;
+              background: #fdfdfd;
+              position: relative;
+              padding: 10px;
+              border-bottom: 1px solid #c8ced3;" > 
+            {{ $notifications->message }} 
+                  
+            </div>
 
-              @endforeach
-              </div>
+        @endforeach
+        </div>
         <!-- vs-navbar-item icon="bell">
         <div class="dropdown" style="float: right; padding: 13px">
           <a href="#" onclick="return false;" role="button" data-toggle="dropdown" id="dropdownMenu1" data-target="#" style="float: left" aria-expanded="true">
