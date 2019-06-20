@@ -63,7 +63,6 @@
 </div>
 
 <div>
- 
   <div class="col-md-3 pull-right">
     <a href="{{route('store.orderWithoutPickup')}}">
       <button type="button" class="btn btn-danger">Create Order</button>
