@@ -5,7 +5,7 @@
   <link rel="icon" type="image/png" href="../assets/paper_img/favicon.ico">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   
-  <title>Login</title>
+  <title>Forgot Password</title>
 
   <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
     <meta name="viewport" content="width=device-width" />
@@ -34,9 +34,12 @@
           <div class="card-group">
             <div class="card p-4">
               <div class="card-body">
-                <h1>Login</h1>
-                <p class="text-muted">Sign In to your account</p>
-                {{Form::open(['route'=>'store.login', 'id'=>'loginForm', 'method'=>'post'])}}
+                <h1>Forgot Password</h1>
+                <!-- <p class="text-muted">Forgot Password</p> -->
+
+                <br>
+
+                {{Form::open(['route'=>'store.forget-password', 'id'=>'loginForm', 'method'=>'post'])}}
                 <div class="input-group mb-3">
                   <div class="input-group-prepend">
                     <span class="input-group-text">
@@ -51,7 +54,7 @@
                    <span class="error" id="phone_number_error"></span>
                                    
                 </div>
-                <div class="input-group mb-4">
+               <!--  <div class="input-group mb-4">
                   <div class="input-group-prepend">
                     <span class="input-group-text">
                       <i class="fa fa-lock"></i>
@@ -64,15 +67,15 @@
                  <div class="input-group mb-3">
                     <span class="error" id="password_error"></span>
                                    
-                </div>
+                </div> -->
                 <div class="row">
                   <div class="col-6">
-                    <button class="btn btn-primary px-4" type="button" id="login">Login</button>
+                    <button class="btn btn-primary px-4" type="button" id="login">Send Message</button>
                   </div>
                   </form>
-                  <div class="col-6 text-right">
+                 <!--  <div class="col-6 text-right">
                     <a href=" {{ route('store.forget-password')}} "><button class="btn-link px-0" type="button">Forgot password?</button></a>
-                  </div>
+                  </div> -->
                 </div>
               </div>
             </div>

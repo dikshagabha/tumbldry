@@ -17,6 +17,8 @@
     <link href="https://cdn.jsdelivr.net/npm/vuesax/dist/vuesax.css" rel="stylesheet">
     <link href="{{asset('store/css/style.css')}}" rel="stylesheet">
     <link href="{{asset('store/css/timeline.css')}}" rel="stylesheet">
+    <link rel="stylesheet" href="{{asset('css/waitMe.css')}}">
+    <link rel="stylesheet" href="{{asset('css/pnotify.custom.min.css')}}">
     
   </head>
   <style type="text/css">
@@ -34,9 +36,15 @@
         <div class="container-fluid">
           <div class="animated fadeIn">
           <div class="row">
+
               <div class="col-md-12">
-                <div class="card">                  
+                <div class="card">                
                   <div class="card-body">
+
+                     <div class="col-sm-5">
+                        <h4 class="card-title mb-0">{{$titlePage}}</h4>
+                        <br>
+                    </div>
                    @yield('content')                    
                   </div>
                 </div>
@@ -48,19 +56,6 @@
     </div>
   </body>
 </html>
-<script src="{{ asset('material') }}/js/core/jquery.min.js"></script>
-<script src="{{ asset('material') }}/js/core/popper.min.js"></script>
-<!-- <script src="{{asset('store/js/charts.js')}}"></script>
-<script src="{{asset('store/js/colors.js')}}"></script>
-<script src="{{asset('store/js/widgets.js')}}"></script>
-<script src="{{asset('store/js/popovers.js')}}"></script> -->
-
-<script src="{{asset('store/js/main.js')}}"></script>
-
-<script type="text/javascript">
-  
-  
-</script>
 
 
 <!-- jQuery library -->
@@ -134,16 +129,41 @@ $('body').addClass(current.data('toggle'));
 $(document).on('click', '.notifications', function(e){
   e.preventDefault();
   current = $(this);
-
-  if($('.dropdown-menu').hasClass('show')){
-  $('.dropdown-menu').removeClass('show');       
+  $('.settings-dropdown').removeClass('show'); 
+  if($('.notifications-dropdown-menu').hasClass('show')){
+  $('.notifications-dropdown-menu').removeClass('show');       
   }else{
-  $('.dropdown-menu').removeClass('show');
-  $('.dropdown-menu').addClass('show');
+  $('.notifications-dropdown-menu').removeClass('show');
+  $('.notifications-dropdown-menu').addClass('show');
+
+  }
+  })
+
+$('body').click(function(evt){    
+       if(evt.target.id == "notifications-dropdown-menu" || evt.target.id == "notifications"
+          || evt.target.id == "settings" || evt.target.id == "settings-dropdown")
+          return;
+       //For descendants of menu_content being clicked, remove this check if you do not want to put constraint on descendants.
+       // if($(evt.target).closest('.settings').length)
+       //    return;             
+       $('.notifications-dropdown-menu').removeClass('show'); 
+        $('.settings-dropdown').removeClass('show'); 
+      //Do processing of click event here for every element except with id menu_content
+});
+$(document).on('click', '.settings', function(e){
+  e.preventDefault();
+  current = $(this);
+  $('.notifications-dropdown-menu').removeClass('show'); 
+  if($('.settings-dropdown').hasClass('show')){
+  $('.settings-dropdown').removeClass('show');       
+  }else{
+  $('.settings-dropdown').removeClass('show');
+  $('.settings-dropdown').addClass('show');
 
   }
   })
 })
+
 
 var user_timezone;
 $(document).ready(function(){
@@ -238,9 +258,7 @@ $(document).ready(function(){
       }
       else{
          $('body').waitMe('hide');
-         //console.log(data);
          if (data.responseJSON) {error(data.responseJSON.message);}
-         
          else {
           error("Something went wrong")}
          

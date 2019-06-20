@@ -7,6 +7,9 @@ use App\Http\Controllers\Controller;
 use Auth;
 use App\User;
 use App\Http\Requests\Store\LoginRequest;
+use App\Repositories\CommonRepository;
+use Illuminate\Validation\Rule;
+
 class LoginController extends Controller
 {
 	public function __construct(){
@@ -23,10 +26,6 @@ class LoginController extends Controller
     }
 
     public function postLogin(LoginRequest $Request){
-    	
-    	//$checked = ;
-    	//dd($checked);
-
     	$credentials = $Request->only('phone_number', 'password');
         $credentials['role'] = 3;
         $credentials['status'] = 1;
@@ -45,5 +44,31 @@ class LoginController extends Controller
 
         return redirect()->route('store.login');
     }
+
+    public function forgetPassword(Request $Request){
+
+        $titlePage  = "Forget Password";
+        return view('store.auth.forget-password', compact('titlePage'));
+    }
+
+    public function postforgetPassword(Request $Request){
+
+        $Request->validate([ 'phone_number' => ['bail', 'required', 'numeric', 'digits_between:8,15',
+                        Rule::exists('users')->where(function($q) {
+                            $q->where('role', 3)->where(['status'=> 1, 'deleted_at'=>null]);
+                        })
+                    ]
+                ]);
+        $pswd=CommonRepository::random_str();
+
+        $user = User::where('phone_number', $Request->input('phone_number'))->update(['password'=>bcrypt($pswd)]);
+
+        $data = urlencode('Hello, <br> Use '.$pswd.' as your password to login.');
+
+        CommonRepository::sendmessage($Request->input('phone_number'), $data);
+
+        return response()->json(["message"=>"Password sent to phone.", "redirectTo"=>route('store.home')], 200);
+    }
+
 
 }

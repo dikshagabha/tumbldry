@@ -8,11 +8,16 @@ use App\Http\Controllers\Controller;
 use App\Model\PickupRequest;
 use App\Model\Address;
 use App\Model\Order;
+use App\Model\StoreFields;
 use App\User;
 use Auth;
 use App\Notifications\StoreNotifications;
 use App\Reports\MyReport;
 use Carbon\Carbon;
+use App\Http\Requests\Store\editProfileRequest;
+
+use App\Repositories\Store\HomeRepository;
+
 class HomeController extends Controller
 {
     public function index(Request $Request)
@@ -98,4 +103,55 @@ class HomeController extends Controller
         return response()->json(['message' => 'Addresses Found', 'view'=>view('store.displayAddress', compact('address'))->render()], 200);
     }
 
+
+    public function changePassword(Request $Request){
+
+        $titlePage  = "Change Password";
+        return view('store.auth.change-password', compact('titlePage'));
+    }
+
+    public function postchangePassword(Request $Request){
+
+        $validate = $Request->validate([
+            'old_password'=>'bail|required|string|min:2|max:15',
+            'password'=>'bail|required|string|min:2|max:15|confirmed'
+        ]);
+
+
+        $user = Auth::user();
+
+        if(!password_verify($Request->input('old_password'),$user->password)){
+            return response()->json(['message' => 'The old password doesnot match.'], 400);
+        }
+        $user->password = bcrypt($Request->input('password'));
+        if ($user->save()) {
+            return response()->json(['message' => 'Password Changed.', 'redirectTo'=>route('store.home')], 200);
+        }
+
+         return response()->json(['message' => 'Something went wrong.'], 400);
+    }
+
+
+    public function editProfile(Request $Request){
+
+        $titlePage  = "Edit Profile";
+
+        $user = Auth::user();
+        $users = User::where(['role'=>2, 'status'=>1])->pluck('store_name', 'id');
+
+        $fields = StoreFields::get();
+        $machines = $fields->where('type', 1)->pluck('name', 'id');
+        $boiler = $fields->where('type', 2)->pluck('name', 'id');
+
+        return view('store.auth.edit-profile', compact('titlePage', 'user', 'users', 'fields', 'machines', 'boiler'));
+    }
+
+    public function posteditProfile(editProfileRequest $Request){
+      $id = Auth::user()->id;
+      $response = HomeRepository::update($Request, $id);
+      $http_status = $response['http_status'];
+      $response['redirectTo'] = route('store.home');
+      unset($response['http_status']);
+      return response()->json($response, $http_status); 
+    }
 }

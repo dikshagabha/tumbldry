@@ -91,6 +91,9 @@ Route::prefix('store')->namespace('Store')->group(function () {
         Route::get('/login', 'LoginController@getLogin')->name('store.login');
         Route::post('/login', 'LoginController@postLogin')->name('store.login');
 
+        Route::get('/forget-password', 'LoginController@forgetPassword')->name('store.forget-password');
+        Route::post('/forget-password', 'LoginController@postforgetPassword')->name('store.forget-password');
+
       });
  
   Route::group(['middleware' => ['web', 'checkPrefix']], function () {
@@ -100,7 +103,15 @@ Route::prefix('store')->namespace('Store')->group(function () {
 
      
      Route::group(['middleware' => ['store']], function () {
-         Route::get('/home', 'HomeController@index')->name('store.home');
+        Route::get('/home', 'HomeController@index')->name('store.home');
+
+        Route::get('/change-password', 'HomeController@changePassword')->name('store.change-password');
+        Route::post('/change-password', 'HomeController@postchangePassword')->name('store.change-password');
+
+
+         Route::get('/edit-profile', 'HomeController@editProfile')->name('store.edit-profile');
+        Route::put('/edit-profile', 'HomeController@posteditProfile')->name('store.edit-profile');
+
 
          Route::resources([
             'manage-runner' => 'RunnerController',
