@@ -157,6 +157,64 @@ $(document).ready(function(){
     }
   });
 
+  $(document).on('focusout', '#phone', function(e){
+    
+      e.preventDefault(); 
+      $(".error").html("")
+      $('body').waitMe(); 
+      
+      $.ajax({
+        url: $('#search-user').data('url'),
+        type:'post',
+        data: {'phone_number':$('#phone').val()},
+        success: function(data){
+          success(data.message);
+          if (data.customer) 
+          {
+              $('#name').val(data.customer['name']).prop('readonly', true);
+            $('#email').val(data.customer['email']).prop('readonly', true);
+            $('#phone').val(data.customer['phone_number']).prop('readonly', true);
+
+              $('#address_form').text(data.customer.address);
+              $("#customer_id").val(data.customer.id);
+              $("#address_id").val(data.customer.address_id);
+              if (data.address) {
+                $('#address').text(data.address.address);
+                $("#address_id").val(data.address.id);
+             }
+
+             $(".select").show();
+             $(".add").hide();
+              
+          }
+          $('body').waitMe('hide');
+        },
+        error: function(data){
+
+           if (data.status==422) {
+            $('body').waitMe('hide');
+                    var errors = data.responseJSON;
+                    for (var key in errors.errors) {
+                      console.log(errors.errors[key][0])
+                        $("#"+key+"_error").html(errors.errors[key][0])
+                      }
+          }else{
+            error(data.responseJSON.message);
+            $(".select").hide();
+            $(".add").show();
+            $('#name').val('').prop('readonly', false);
+            $('#email').val('').prop('readonly', false);
+            $('#phone').val('').prop('readonly', false);
+            $('#address_form').text('');
+            $("#customer_id").val("");
+            $("#address_id").val("");
+             $('body').waitMe('hide');
+           }
+        }
+
+      })
+  })
+
   $(document).on('click', '#search-user', function(e){
     e.preventDefault(); 
     $(".error").html("")
