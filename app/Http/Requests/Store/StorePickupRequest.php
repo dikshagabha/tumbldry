@@ -4,6 +4,9 @@ namespace App\Http\Requests\Store;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Request;
+use App\Rules\{
+    CheckName
+};
 class StorePickupRequest extends FormRequest
 {
     /**
@@ -24,10 +27,7 @@ class StorePickupRequest extends FormRequest
     public function rules(Request $request)
     {
           return [
-            'name'=>['bail','required', 'string', 'min:2', 'max:100'],
-            //'address_id'=>['bail','required', 'numeric'],
-            'email'=>['bail','required', 'email', 'min:2', 'max:100'],
-            
+            'name'=>['bail','required', 'string', 'min:2', 'max:100',  new CheckName],
             'phone_number'=>['bail','required','numeric', 'min:2', 'max:9999999999'],
             'service'=>'bail|required|numeric',
             'request_time'=>'bail|required|string'

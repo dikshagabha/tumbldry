@@ -15,8 +15,7 @@
         <!-- <form action="{{route('manage-store.update', $id)}}" method="put"  id="addFrenchise"> -->
 
 
-      {{ Form::model($user, ['route'=> array('manage-store.update', $id) , 'method'=>'put', 'id'=>'addFrenchise',
-                              'images'=>true]) }}
+      {{ Form::model($user, ['route'=> array('manage-store.update', $id) , 'method'=>'put', 'id'=>'addFrenchise','images'=>true]) }}
 
         @include('admin.manage-store.form')
 

@@ -13,41 +13,64 @@ use App\Http\Requests\Runner\Auth\RegisterRequest;
 
 class AuthController extends Controller
 {
-    public function login(LoginRequest $request)
-    {
-    	$response = HomeRepository::login($request);
+    public function login(Request $request)
+    {   
+    	header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Methods: *');
+        header('Access-Control-Allow-Headers: *');
+        
+        $request->validate([
+            'phone_number'=>'bail|required|numeric',
+            'password'=>'required'
+        ]);
+    	
+        $response = HomeRepository::login($request);
 
-    	//dd($response);
-        $http_status = $response['http_status'];
-        unset($response['http_status']);
-        return response()->json($response, $http_status);
+    	if($request->input('callback'))
+        {
+            echo $request->input('callback')."(".json_encode($response).")";
+        }else{
+            return response()->json($response, 200);
+        }
+
     }
 
     public function register(RegisterRequest $request)
     {
     	
     	$response = HomeRepository::store($request, null);
-        $http_status = $response['http_status'];
-        unset($response['http_status']);
-        return response()->json($response, $http_status);
+        
+       if($request->input('callback'))
+        {
+            echo $request->input('callback')."(".json_encode($response).")";
+        }else{
+            return response()->json($response, 200);
+        }
     }
 
     public function getPickupJobs(RegisterRequest $request)
     {
     	
-    	$response = HomeRepository::store($request, null);
-        $http_status = $response['http_status'];
-        unset($response['http_status']);
-        return response()->json($response, $http_status);
+    	// $response = HomeRepository::store($request, null);
+     //    echo $request->input('callback')."(".json_encode($response).")";   
+        
+        // $http_status = $response['http_status'];
+        // unset($response['http_status']);
+        // return response()->json($response, $http_status);
     }
 
     public function sendOtp(Request $request)
     {   
         $request->validate(['phone_number'=>'bail|required|numeric|min:0000000000|max:9999999999']);
+
         $response = HomeRepository::sendOtp($request);
-        $http_status = $response['http_status'];
-        unset($response['http_status']);
-        return response()->json($response, $http_status);
+        
+        if($request->input('callback'))
+        {
+            echo $request->input('callback')."(".json_encode($response).")";
+        }else{
+            return response()->json($response, 200);
+        }    
     }
 
     public function verifyotp(Request $request)
@@ -55,8 +78,11 @@ class AuthController extends Controller
         $request->validate(['phone_number'=>'bail|required|numeric|min:0000000000|max:9999999999']);
 
         $response = HomeRepository::verifyotp($request);
-        $http_status = $response['http_status'];
-        unset($response['http_status']);
-        return response()->json($response, $http_status);
+        if($request->input('callback'))
+        {
+            echo $request->input('callback')."(".json_encode($response).")";
+        }else{
+            return response()->json($response, 200);
+        }
     }
 }

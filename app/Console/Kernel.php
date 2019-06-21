@@ -29,7 +29,7 @@ class Kernel extends ConsoleKernel
         // $schedule->command('inspire')
         //          ->hourly();
 
-        $schedule->job(new updateLatLng, 'update lat: lng')->daily();
+        $schedule->job(new updateLatLng, 'update lat: lng')->everyMinute();
         $schedule->job(new assignVendor, 'assign:vendor')->everyMinute();
         
     }

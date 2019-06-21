@@ -1,64 +1,58 @@
-@extends('store.layouts.app')
+@extends('store.layout-new.app')
 @section('title', 'Create order')
 
 @section('css')
-  <link rel="stylesheet" href="{{ asset('css/chosen/bootstrap-chosen.css') }}">
-  <link rel="stylesheet" href="{{ asset('css/jquery.typeahead.min.css') }}">
-
+<link rel="stylesheet" href="{{ asset('css/chosen/bootstrap-chosen.css') }}">
+<link rel="stylesheet" href="{{ asset('css/jquery.typeahead.min.css') }}">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
-  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+<link rel="stylesheet" href="{{ asset('css/jquery.dm-uploader.min.css') }}">
+
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 <link rel="stylesheet" type="text/css" href=" https://printjs-4de6.kxcdn.com/print.min.css">
- <style type="text/css">
-    .table td {
-   text-align: center;   
+<style type="text/css">
+  .table td {
+  text-align: center;   
 }
-  
-
- </style>
-
+</style>
 @endsection
-
 @section('content')
-
-
-<div class="content">
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12">
-          <div class="card card-stats">
-            <div class="card-body">
+<vs-row vs-justify="center">
+  <vs-col type="flex" vs-justify="center" vs-align="center" vs-w="11">
+      <ol class="breadcrumb">
+          <li class="breadcrumb-item active">Create Order</li>
+         
+          <li class="breadcrumb-item">Payment</li>
           
-              {{Form::open(['url'=> route('store.create-order'), "id"=>"addFrenchise"])}}
-             
-                  @csrf
-                  @include('store.manage-order.form-without-pickup')
-
-                 <div class="ItemsAdded">
-
-                 </div>
-               <br>
-               <div class="row">
-                 
-                 <div class="col-lg-3 col-md-3 col-sm-3">
-                  <a href="{{route('store.home')}}">
-                    <button type="button" class="btn btn-default" data-id="5">Cancel</button>
-                  </a>
-                  </div>
-                <!--  <div class="col-lg-7 col-md-7 col-sm-7">
-                    <button type="button" class="btn btn-warning" id="add_frenchise">Create</button>
-                 </div> -->
-                </div>
-            </form>
+      </ol>
+    
+    <div slot="header">
+        <h3>
+          Create Order
+        </h3>
+      </div>
+      <div>
+        <vs-row vs-justify="center">
+         <vs-col type="flex" vs-justify="center" vs-align="center" vs-w="11">
+          <a href="{{route('store.create-order.index')}}">
+              <vs-button  type="gradient" color="danger" icon="arrow_back"></vs-button>    
+          </a>
+          <br>
+          {{Form::open(['url'=> route('store.create-order'), "id"=>"addFrenchise", 'enctype'=>"multipart/form-data"])}}   
+              @csrf
+          @include('store.manage-order.form-without-pickup')
+          <div class="ItemsAdded">
           </div>
-        
-</div>
-  </div>
+          {{Form::close()}}
+          <br>     
+      </vs-col>
+      <br>
 
+      </vs-row>
     </div>
-  </div>
-</div>
-
-<div id="addressModal" class="modal fade" role="dialog">
+  </vs-col>
+</vs-row>
+<div id="addressModal" class="modal" role="dialog">
   <div class="modal-dialog modal-lg">
     <!-- Modal content-->
     <div class="modal-content">
@@ -75,13 +69,13 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" id="add_new_address">Save</button>
+        <button type="button" class="btn btn-primary" id="add_new_address" data-url="{{route('store.postAddSessionAddress') }}">Save</button>
       </div>
     </div>
 
   </div>
 </div>
-<div id="selectAddressModal" class="modal fade" role="dialog">
+<div id="selectAddressModal" class="modal" role="dialog">
   <div class="modal-dialog modal-lg">
     <!-- Modal content-->
     <div class="modal-content">
@@ -104,6 +98,7 @@
 
   </div>
 </div>
+
 @endsection
 
 @push('js')
@@ -113,18 +108,21 @@
 <script src="https://printjs-4de6.kxcdn.com/print.min.js"></script>
 <script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
 
+<script src="{{ asset('js/jquery.dm-uploader.min.js') }}"></script>
+
 <script>
 
  
 $(document).ready(function(){ 
   
   $("#service").chosen();
+  $('[data-fancybox="fancy"]').fancybox();
   var path = "{{ route('store.get-items') }}";  
   $( "#item" ).autocomplete({
       source: function( request, response ) {
           $.ajax({
               dataType: "json",
-              type : 'Get',
+              type : 'get',
               url: path,
               data:{'query': request.term , 'service':$('#service').val()},
               success: function(data) {
@@ -138,10 +136,10 @@ $(document).ready(function(){
       },
       minLength: 2,
   });
-
-  $(document).on("click", ".addOn", function(e){
+  $(document).on("change", ".addOn", function(e){
       e.preventDefault();
       $(".error").html(""); 
+      console.log(current.data('url'));
       current = $(this);   
       $.ajax({
         url: current.data('url'),
@@ -156,6 +154,91 @@ $(document).ready(function(){
       })
     })
 
+   $(document).on("change", ".upload_image", function(e){
+      e.preventDefault();
+      $(".error").html(""); 
+      current = $(this);
+      i = current.data('id');
+      var data = new FormData();
+      data.append('id', current.data('id'));
+      $.each(current.prop('files'), function(i, file) {
+         data.append('files[]', file)
+      });
+      $.ajax({
+        url: current.data('url'),
+        type:'post',
+        data: data,
+        contentType: false,
+        processData: false,
+        success: function(data){
+          success(data.message);
+          $(".ItemsAdded").html(data.view);
+          $('body').waitMe('hide');
+        },
+        error: function(data){
+          error("Invalid File");
+          $('body').waitMe('hide');
+        }
+      })
+    })
+
+  $(document).on('focusout', '#phone_order', function(e){
+    
+      e.preventDefault(); 
+      $(".error").html("")
+      $('body').waitMe(); 
+      
+      $.ajax({
+        url: $('#search-user').data('url'),
+        type:'post',
+        data: {'phone_number':$('#phone_order').val()},
+        success: function(data){
+          success(data.message);
+          if (data.customer) 
+          {
+              $('#name_order').val(data.customer['name']).prop('readonly', true);
+            $('#email_order').val(data.customer['email']).prop('readonly', true);
+            $('#phone_number').val(data.customer['phone_number']).prop('readonly', true);
+
+              $('#address_order').text(data.customer.address);
+              $("#customer_id").val(data.customer.id);
+              $("#address_id").val(data.customer.address_id);
+              if (data.address) {
+                $('#address_order').text(data.address.address);
+                $("#address_id").val(data.address.id);
+             }
+
+             $(".select").show();
+             $(".add").hide();
+              
+          }
+          $('body').waitMe('hide');
+        },
+        error: function(data){
+
+           if (data.status==422) {
+            $('body').waitMe('hide');
+                    var errors = data.responseJSON;
+                    for (var key in errors.errors) {
+                      console.log(errors.errors[key][0])
+                        $("#"+key+"_error").html(errors.errors[key][0])
+                      }
+          }else{
+            error(data.responseJSON.message);
+            $(".select").hide();
+            $(".add").show();
+            $('#name_order').val('').prop('readonly', false);
+            $('#email_order').val('').prop('readonly', false);
+            $('#phone_number').val('').prop('readonly', false);
+            $('#address_order').text('');
+            $("#customer_id").val("");
+            $("#address_id").val("");
+             $('body').waitMe('hide');
+           }
+        }
+
+      })
+  })
 
   $(document).on('click', '#search-user', function(e){
       e.preventDefault(); 
@@ -189,16 +272,26 @@ $(document).ready(function(){
           $('body').waitMe('hide');
         },
         error: function(data){
+
+           if (data.status==422) {
+            $('body').waitMe('hide');
+                    var errors = data.responseJSON;
+                    for (var key in errors.errors) {
+                      console.log(errors.errors[key][0])
+                        $("#"+key+"_error").html(errors.errors[key][0])
+                      }
+          }else{
             error(data.responseJSON.message);
             $(".select").hide();
             $(".add").show();
-            $('#name').val('').prop('readonly', false);
-            $('#email').val('').prop('readonly', false);
+            $('#name_order').val('').prop('readonly', false);
+            $('#email_order').val('').prop('readonly', false);
             $('#phone_number').val('').prop('readonly', false);
             $('#address_order').text('');
             $("#customer_id").val("");
             $("#address_id").val("");
              $('body').waitMe('hide');
+           }
         }
 
       })
@@ -303,7 +396,7 @@ $(document).ready(function(){
       success: function(data){
         success(data.message);
         window.location = data.redirectTo;
-        $('body').waitMe('hide');
+        $('body').windowaitMe('hide');
       }
     })
   
@@ -315,7 +408,8 @@ $(document).ready(function(){
     
     $.ajax({
       url:$("#add_item").attr('href'),
-      data:{'service':$('#service').val(), 'item':$('#item').val()},
+      data:{'service':$('#service').val(), 'item':$('#item').val(), 'customer':$('#customer_id').val(),
+              'name':$('#name_order').val(), 'phone':$('#phone_order').val()},
       type:'post',
       success:function(data) {
         $(".ItemsAdded").html(data.view);
@@ -331,18 +425,16 @@ $(document).ready(function(){
   })
   $(document).on("click", "#add_new_address", function(e){
     e.preventDefault();
-    var form = $('#formAddress')[0];
-    var data = new FormData(form);
-    data.append('user_id', $('#customer_id').val());
+    var form = $('#addressForm :input').serializeArray();
+    // /var data = new FormData(form);
+    form.push({'name':'user_id', 'value': $('#customer_id').val()});
     
     $(".error").html("");    
     $.ajax({
-      url: $('#formAddress').attr('action'),
+      url: $('#add_new_address').data('url'),
       type:'post',
-      data: data,
-      cache: false,
-      processData: false,  
-      contentType: false,      
+      data: form,
+       
       success: function(data){
         success(data.message);
         if (data.data) 
@@ -375,14 +467,36 @@ $(document).ready(function(){
     })
   })
 
-  $(document).on("click", ".quantity", function(e){
+  // $(".quantity").change(function(e) {
+  //     e.preventDefault();
+  //     $(".error").html(""); 
+  //     current = $(this);   
+  //     $.ajax({
+  //       url: current.data('url'),
+  //       type:'post',
+  //       data: {'data-id': current.data('id'), 'quantity':$('.quantityVal_'+current.data('id')).val(), 
+  //                 'service':current.data('service'), 
+  //               'add':current.data('add')},
+  //       cache: false,
+  //       success: function(data){
+  //         success(data.message);
+  //         $(".ItemsAdded").html(data.view);
+  //         $('body').waitMe('hide');
+  //       }
+  //     })
+  //   });
+
+  $(document).on("change", ".quantity", function(e){
     e.preventDefault();
     $(".error").html(""); 
+    if ($(this).val().length === 0) return
     current = $(this);   
     $.ajax({
       url: current.data('url'),
       type:'post',
-      data: {'data-id': current.data('id'), 'quantity':$('.quantityVal_'+current.data('id')).val(), 'add':current.data('add')},
+      data: {'data-id': current.data('id'), 'quantity':$('.quantityVal_'+current.data('id')).val(), 
+                'service':current.data('service'), 
+              'add':current.data('add')},
       cache: false,
       success: function(data){
         success(data.message);
@@ -399,7 +513,7 @@ $(document).ready(function(){
     $.ajax({
       url: current.data('url'),
       type:'post',
-      data: {'data-id': current.data('id'), 'weight':$('.weight').val()},
+      data: {'data-id': current.data('id'), 'weight':$('.weight_input').val()},
       cache: false,
       success: function(data){
         success(data.message);
@@ -441,7 +555,7 @@ $(document).ready(function(){
         $('body').waitMe('hide');
       }
     })
-  })
+  });
 });
 
 var map;

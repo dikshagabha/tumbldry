@@ -4,15 +4,34 @@
 		<th width="50%">Order Id</th>
 		<td>ORDER{{$order->id}}</td>
 	</tr>
+	
+	<tr>
+		<th>Total Amount</th>
+		<td>{{$order->estimated_price}} Rs</td>
+	</tr>
+	<tr>
+		<th>GST</th>
+		<td>{{$order->gst}} Rs</td>
+	</tr>
+	<tr>
+		<th>CGST</th>
+		<td>{{$order->cgst}} Rs</td>
+	</tr>
+	<tr>
+		<th>Discount</th>
+		<td>@if($order->discount){{$order->discount}} Rs @endif</td>
+	</tr>
 	<tr>
 		<th>Coupon Applied</th>
 		<td>{{$order->coupon_id}}</td>
 	</tr>
 	<tr>
-		<th>Total Amount</th>
+		<th>Payable Amount Amount</th>
 		<td>{{$order->total_price}} Rs</td>
 	</tr>
 </table>
+
+
 @if($order->items->count())
 Items:
 <div id="grnForm">
@@ -21,23 +40,84 @@ Items:
 		<th>Item</th>
 		<th>Quantity</th>
 		<th>Service</th>
-		<th>GRN <input type="checkbox" name="select_all[]" title="Select All" class="select_all" value="0"><button type="button" id="grnBtn" data-url="{{route('store.getGrn')}}" class="btn btn-link" title="Download Grn"><i class="fa fa-download"></i></button>
+		@if($order->service->form_type == 1 || $order->service->form_type == 2)
+		<th class="table-modal">
+			AddOns
+		 </th>
+		@endif
+		<th>Status</th>
+		@if($vendors)<th>Vendors</th>@endif
+
+		<!-- @if($order->service->form_type == 1 || $order->service->form_type == 2)
+		<th>GRN <input type="checkbox" name="select_all[]" title="Select All" class="select_all" value="0"><button type="button" id="grnBtn" data-url="{{route('store.getGrn')}}" class="btn btn-link" title="Print Grn">Print Tag</button>
 			<span id="grn_error" class="error"></span>
 		</th>
-		<th>Processed 
+		@endif -->
+		<!-- <th>Processed 
 			<input type="checkbox" name="select_all_deliver[]" title="Select All" class="select_all_deliver" value="0">
 			<button type="button" id="deliverBtn"  data-url="{{route('store.itemsDeliver')}}" class="btn btn-link" title="Items Ready to be delivered"><i class="fa fa-car"></i></button>
 			<span id="deliver_error" class="error"></span>
-		</th>
+		</th> -->
 	</tr>
 	
 	@foreach($order->items as $item)
 	<tr>
 		<td class="table-modal">{{$item->item}}</td>
 		<td class="table-modal">{{round($item->quantity, 2)}}</td>
+		
 		<td class="table-modal">{{$item->service_name}}</td>
-		<td class="table-modal"><input type="checkbox" name="grn[]"  value="{{ $item['id'] }}" class="grn_units"> </td>
-		<td class="table-modal"><input type="checkbox" @if($item->status == 2) checked @endif name="deliver[]"  value="{{ $item['id'] }}" class="deliver_units"> </td>
+		@if($order->service->form_type == 1 || $order->service->form_type == 2)
+		<td>
+			
+			@if($item->itemimage->count()) 
+			
+				@foreach($item->itemimage->where('addon_id', '!=', null) as $addon)
+					{{ $addon->addon_name.','}}
+				@endforeach 
+			
+			@endif
+		</td>
+		@endif
+		<td class="table-modal">
+			@if($item->status==1)
+				<a href="{{route('store.mark-recieved', $item->id)}}" value="{{ $item->status }}" class="mark_status">
+					 Pending 
+				</a> 
+				 @else 
+					 Recieved
+				 @endif
+		</td>
+		
+		@if($vendors)
+		<td>
+			@if($order->vendor->count())
+				{{ $order->vendor()->where('item_id', $item->id)->first()->vendor_name }}
+			@else
+				{{
+					Form::select('vendor', $vendors, null, ["placeholder"=>"Select Vendor", 
+					'id'=>'selectVendor', 'data-order'=>$order->id, 'data-item'=>$item->id, 
+					 'data-service'=>$item->service_id,
+					 "class"=>'form-control selectVendor', 'data-url'=>route('store.assignVendor')])
+				}}
+			@endif
+		</td>
+		@endif
+		<!-- @if($order->service->form_type == 1 || $order->service->form_type == 2)
+		<td class="table-modal">
+			@if($item->status != 1)
+				<input type="checkbox" name="grn[]" value="{{$item['id']}}" @if($item->status == 4 ||  $item->status==2 ) checked @endif class="grn_units">
+			@else
+				--
+			@endif
+		 </td>
+		@endif -->
+		<!-- <td class="table-modal">
+			@if($item->status != 1)
+				<input type="checkbox" @if($item->status == 2) checked @endif name="deliver[]"  value="{{ $item['id'] }}" class="deliver_units"> 
+			@else
+				--
+			@endif
+		</td> -->
 
 	</tr>
 	@endforeach
@@ -46,7 +126,28 @@ Items:
 </table>
 </div>
 @endif
-@if($order->customer->count())
+
+@if($order->payment()->count())
+Payment Details:
+<table class="table table-bordered">
+	@foreach($order->payment()->where('type', '!=', 0)->get() as $pay)
+	<tr>
+		<th class="table-modal">@if($pay->type==1)
+								
+									Cash
+								@elseif($pay->type==2)
+									Wallet
+								@else
+									Loyality Points
+								@endif</th>
+
+		<td class="table-modal">{{$pay->price}} Rs</td>
+	</tr>
+	@endforeach
+</table>	
+@endif
+
+@if($order->customer && $order->customer->count())
 Customer Details:
 <table class="table table-bordered">
 	<tr>

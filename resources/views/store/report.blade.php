@@ -1,0 +1,6 @@
+
+<?php 
+
+	$report->run()->render(); 
+
+?>

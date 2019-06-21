@@ -63,7 +63,7 @@ class PickupController extends Controller
     public function store(StorePickupRequest $request)
     {
 
-      try{
+      //try{
         DB::beginTransaction();
         if ($request->input('customer_id')==null) {
           $user = User::create(['name'=>$request->input('name'), 
@@ -81,11 +81,12 @@ class PickupController extends Controller
         }
         $id= Auth::user()->id;
 
-        $date = Carbon::createFromFormat('Y-m-d H:i', $request->input('request_time'), $request->header('timezone'));
+        $date = Carbon::createFromFormat('Y-m-d', $request->input('request_time'), $request->header('timezone'));
         $pickup = PickupRequest::create(['customer_id'=>$request->input('customer_id'),
                                 'address'=>$request->input('address_id'),
                                  'store_id'=> $id, 'request_time'=>$date->setTimezone('UTC'),
-                                'request_mode'=>1, 'status'=>1, 'service'=>$request->input('service')]);
+                                'request_mode'=>1, 'status'=>1, 'service'=>$request->input('service'),
+                                'start_time'=>$request->input('start_time'), 'end_time'=>$request->input('end_time')]);
         //if ($id) {
           // Send Notification to store
           not::dispatch($pickup, 1);
@@ -113,16 +114,16 @@ class PickupController extends Controller
             $mes = str_replace('@id@', $pickup->id, $mes);
             $mes = str_replace(' ', '%20', $mes);
 
-            CommonRepository::sendmessage($request->input('phone_number'), $mes);          
+            //CommonRepository::sendmessage($request->input('phone_number'), $mes);          
         //}
         
 
         DB::commit();
         return response()->json(["message"=>"Pickup Request successfull !", 'redirectTo'=>route('pickup-request.index')], 200);
-        }catch (\Exception $e) {
+        //}catch (\Exception $e) {
             DB::rollback();
             return response()->json(["message"=>$e->getMessage()], 400);
-        }
+        //}
       }
 
     /**

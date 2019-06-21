@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class OrderItems extends Model
 {
-    protected $fillable = ['service_id', 'service_name', 'quantity', 'item', 'item_id', 'order_id', 'weight'];
+    protected $fillable = ['service_id', 'service_name', 'quantity', 'item', 'item_id', 'order_id', 'weight', 'status'];
 
     public function service(){
  		return $this->hasOne('App\Model\Service', 'id', 'service_id');

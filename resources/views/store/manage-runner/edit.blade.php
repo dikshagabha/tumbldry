@@ -1,33 +1,49 @@
-@extends('store.layouts.app')
+@extends('store.layout-new.app')
 @section('title', 'Manage Runner')
 
 @section('content')
-<div class="content">
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12">
-          <div class="card card-stats">
-            {{ Form::model($user, ['route'=> array('manage-runner.update', $id) , 'method'=>'put', 'id'=>'addFrenchise', 'images'=>true]) }}
+
+
+<vs-row vs-justify="center">
+  <vs-col type="flex" vs-justify="center" vs-align="center" vs-w="11">
+    <div slot="header">
+        <h3>
+          Edit Runner
+        </h3>
+      </div>
+      <div>
+
+        <vs-row vs-justify="center">
+         <vs-col type="flex" vs-justify="center" vs-align="center" vs-w="11">
+
+           <a href="{{route('manage-runner.index')}}">
+              <vs-button color="danger" type="border" icon="arrow_back"></vs-button>
+            </a>
+            <br>
+
+       {{ Form::model($user, ['route'=> array('manage-runner.update', $id) , 'method'=>'put', 'id'=>'addFrenchise', 'images'=>true]) }}
             @include('store.manage-runner.form')
 
               <div class="row">
                <div class="col-lg-3 col-md-3 col-sm-3">
                </div>
-               <div class="col-lg-3 col-md-3 col-sm-3">
+               <!-- <div class="col-lg-3 col-md-3 col-sm-3">
                 <a href="{{route('manage-runner.index')}}">
                   <button type="button" class="btn btn-default" data-id="5" data-url="{{route('manage-runner.index')}}">Cancel</button>
                 </a>
-                </div>
+                </div> -->
                <div class="col-lg-5 col-md-5 col-sm-5">
                   <button type="button" class="btn btn-warning" id="add_frenchise" data-url="{{route('manage-runner.update', $id )}}">Edit</button>
                </div>
               </div>
             {{Form::close()}}
-        </div>
-      </div>
+       
+      </vs-col>
+    <br>
+    </vs-row>
     </div>
-  </div>
-</div>
+  </vs-col>
+</vs-row>
 
 @endsection
 

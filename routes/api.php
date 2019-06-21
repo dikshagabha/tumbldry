@@ -16,36 +16,40 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', 'Api\Runner\AuthController@register');
 
 Route::group([
-//	'middleware'=>'auth:api',
+	'middleware'=>'PreflightResponse',
     'namespace' => 'Api\Runner',
     'prefix' => 'v1/runner'
 
 ], function ($router) {
 	
-    Route::post('login', 'AuthController@login');
+    Route::get('login', 'AuthController@login');
     Route::post('register', 'AuthController@register');
-    Route::post('otp', 'AuthController@sendOtp');
+    Route::get('otp', 'AuthController@sendOtp');
     Route::post('verify-otp', 'AuthController@verifyotp');
 
 
-    Route::post('services', 'OrderController@services');
-    Route::post('laundary-addons', 'OrderController@laundaryAddons');
-    Route::post('dryclean-addons', 'OrderController@dryCleanAddons');
-    Route::post('service-price', 'OrderController@servicePrice');
-    Route::post('service-items', 'OrderController@serviceItems');
+    Route::get('services', 'OrderController@services');
+    Route::get('laundary-addons', 'OrderController@laundaryAddons');
+    Route::get('dryclean-addons', 'OrderController@dryCleanAddons');
+    Route::get('service-price', 'OrderController@servicePrice');
+    Route::get('service-items', 'OrderController@serviceItems');
 
     
-    Route::post('pickup-jobs', 'PickupController@getPickupJobs');
-    Route::post('delivery-jobs', 'PickupController@getDeliveryJobs');
-    Route::post('pickup-details', 'PickupController@getPickupDetails');
+    Route::get('pickup-jobs', 'PickupController@getPickupJobs');
+    Route::get('delivery-jobs', 'PickupController@getDeliveryJobs');
+
+    Route::get('get-jobs', 'PickupController@getJobs');
+
+    Route::get('pickup-details', 'PickupController@getPickupDetails');
 
     Route::post('customer/register', 'CustomerController@store');
 
-    Route::post('order-details', 'PickupController@getOrderDetails');
-    Route::post('last-order-details', 'PickupController@getLastOrderDetails');
+    Route::get('order-details', 'PickupController@getOrderDetails');
+    Route::get('last-order-details', 'PickupController@getLastOrderDetails');
+    
     Route::post('cancel-request', 'PickupController@cancelRequest');
 
-    Route::post('search-customer', 'CustomerController@searchCustomer');
+    Route::get('search-customer', 'CustomerController@searchCustomer');
 
 
     // Route::post('refresh', 'AuthController@refresh');

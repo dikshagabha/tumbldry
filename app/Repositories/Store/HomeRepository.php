@@ -31,7 +31,7 @@ class HomeRepository extends BaseRepository
 	        DB::beginTransaction();
 
 	        $user = User::create(['name'=>$request->input('name'), 'role'=>3, 'email'=> $request->input('email')
-	                            , 'phone_number'=> $request->input('phone_number'), 'store_name'=> $request->input('store_name'), 'user_id'=>$request->input('user_id')]);
+	                            , 'phone_number'=> $request->input('phone_number'), 'store_name'=> $request->input('store_name'), 'user_id'=>$request->input('user_id'), 'status'=>1]);
 	        $machines =  UserMachines::create([
 	                                          'user_id'=>$user->id,
 	                                          'machine_count'=>$request->input('machine_count'),

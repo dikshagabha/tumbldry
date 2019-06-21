@@ -7,20 +7,21 @@
                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
                  <label class="login2 pull-right pull-right-pro">Phone Number</label>
                </div>
-               <div class="col-lg-7 col-md-7 col-sm-7 col-xs-7">
+               <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
                 {!! Form::text('phone_number',null,array('class' => 'form-control', "maxlength"=>20,
-                                "id"=>'phone')) !!}
+                                "id"=>'phone' )) !!}
                 <span class="error" id="phone_number_error"></span>
                </div>
 
-               <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
-                <button type="button" class="btn btn-detail" id="search-user" data-url = "{{route('store.findCustomer')}}"><i class="fa fa-search"></i></button>
+              <div class="col-md-2 col-lg-2 col-sm-2" style="display: none">
+                   <button type="button" class="btn btn-detail" id="search-user" data-url = "{{route('store.findCustomer')}}"><i class="fa fa-search"></i></button>
+              </div>
                 <input type="hidden" name="customer_id" id="customer_id">
                 <input type="hidden" name="address_id" id="address_id">
-               </div>
+               
           </div>
         </div>
-
+        <br>
         <div class="form-group-inner">
           <div class="row">
                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
@@ -64,13 +65,18 @@
             <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
               <label class="login2 pull-right pull-right-pro">Pickup Time</label>
             </div>
-            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
-            <input type="text" id="picker" name="request_time" class="form-control">
-
-              <!--  {!! Form::hidden('request_time',null,array('class' => 'form-control', 'maxlength'=>"10", 'id'=>"result", "placeholder"=>"Date Time")) !!} -->
-                  
-              <span class="error" id="request_time_error"></span>
-            </div>    
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+               <input type="text" id="picker" name="request_time" class="form-control">                 
+               <span class="error" id="request_time_error"></span>
+            </div>  
+             <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+               <input type="text" id="picker_start" name="start_time" class="form-control">                 
+               <span class="error" id="start_time_error"></span>
+            </div>
+             <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+               <input type="text" id="picker_end" name="end_time" class="form-control">                 
+               <span class="error" id="start_time_error"></span>
+            </div>  
         </div>
       </div>
       <br>

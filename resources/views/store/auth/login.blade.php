@@ -14,80 +14,83 @@
     <link href="{{ asset('store/assets/css/ct-paper.css') }}" rel="stylesheet"/>
     <link href="{{ asset('store/assets/css/demo.css') }} " rel="stylesheet" /> 
     <link href="{{ asset('store/assets/css/examples.css') }}" rel="stylesheet" /> 
-        
+     <link href="{{asset('store/css/style.css')}}" rel="stylesheet">
     <!--     Fonts and icons     -->
     <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
     <link href='http://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css'>
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="{{asset('css/waitMe.css')}}">
     <link rel="stylesheet" href="{{asset('css/pnotify.custom.min.css')}}">
+    <style type="text/css">
+      .error{color: red}
+    </style>
 </head>
 <body>
-    <nav class="navbar navbar-ct-transparent navbar-fixed-top" role="navigation-demo" id="register-navbar">
-      <div class="container">
-        <!-- Brand and toggle get grouped for better mobile display -->
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navigation-example-2">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="#">Tumbldry</a>
-        </div>
-    
-        <!-- Collect the nav links, forms, and other content for toggling -->
-        <!-- <div class="collapse navbar-collapse" id="navigation-example-2">
-          <ul class="nav navbar-nav navbar-right">
-            <li>
-                <a href="#" class="btn btn-simple">Components</a>
-            </li>
-            <li>
-                <a href="#" class="btn btn-simple">Tutorial</a>
-            </li>
-            <li>
-                <a href="#" target="_blank" class="btn btn-simple"><i class="fa fa-twitter"></i></a>
-            </li>
-            <li>
-                <a href="#" target="_blank" class="btn btn-simple"><i class="fa fa-facebook"></i></a>
-            </li>
-           </ul>
-        </div>
-      </div> /.container-->
-    </nav> 
-    
-    <div class="wrapper">
-        <div class="register-background" > 
-            <div class="filter-black"></div>
-                <div class="container">
-                    <div class="row">
-                        <div class="col-md-4 col-md-offset-4 col-sm-6 col-sm-offset-3 col-xs-10 col-xs-offset-1 ">
-                            <div class="register-card" style="background-color: #ece9e1; color: black">
-                                <h3 class="title">Welcome</h3>
-                                  {{Form::open(['route'=>'store.login', 'id'=>'loginForm', 'method'=>'post'])}}
-                                    <label>Email</label>
-                                    <input type="text" class="form-control" placeholder="Email" name="email">
-                                    <span class="error" id="email_error"></span>
-                                    <br>
-                                    <label>Password</label>
-                                    <input type="password" class="form-control" name= 'password' placeholder="Password">
-                                    <span class="error" id="password_error"></span>
-                                    <br>
-                                    <button class="btn btn-danger btn-block" id="login">Login</button>
-                                  </form>
-                                <div class="forgot">
-                                    <!-- <a href="#" class="btn btn-simple btn-danger">Forgot password?</a> -->
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>     
-            <div class="footer register-footer text-center">
-                    <h6>&copy; 2019</h6>
-            </div>
-        </div>
-    </div>      
 
+  <body class="app flex-row align-items-center">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-md-8">
+          <div class="card-group">
+            <div class="card p-4">
+              <div class="card-body">
+                <h1>Login</h1>
+                <p class="text-muted">Sign In to your account</p>
+                {{Form::open(['route'=>'store.login', 'id'=>'loginForm', 'method'=>'post'])}}
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">
+                      <i class="fa fa-user"></i>
+                    </span>
+                  </div>
+                   <input type="text" class="form-control" placeholder="Phone Number" name="phone_number">
+                   <!-- <span class="error" id="email_error"></span> -->
+                                   
+                </div>
+                <div class="input-group mb-3">
+                   <span class="error" id="phone_number_error"></span>
+                                   
+                </div>
+                <div class="input-group mb-4">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">
+                      <i class="fa fa-lock"></i>
+                    </span>
+                  </div>
+                  <input type="password" class="form-control" name= 'password' placeholder="Password">
+                                    
+                 
+                </div>
+                 <div class="input-group mb-3">
+                    <span class="error" id="password_error"></span>
+                                   
+                </div>
+                <div class="row">
+                  <div class="col-6">
+                    <button class="btn btn-primary px-4" type="button" id="login">Login</button>
+                  </div>
+                  </form>
+                  <div class="col-6 text-right">
+                    <a href=" {{ route('store.forget-password')}} "><button class="btn-link px-0" type="button">Forgot password?</button></a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card text-white bg-primary py-5 d-md-down-none" style="width:44%">
+              <div class="card-body text-center">
+                <div>
+                  <h2>TumbleDry</h2>
+                  <p></p>
+                  
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    
 </body>
 
 <script src="{{asset('store/assets/js/jquery-1.10.2.js')}}" type="text/javascript"></script>

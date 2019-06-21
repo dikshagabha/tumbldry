@@ -24,9 +24,11 @@ class LoginRequest extends FormRequest
     public function rules()
     {
         return [
-            'email' => ['bail', 'required', 'email', Rule::exists('users')->where(function($q) {
-                        $q->where('role', 3)->where('status', 1);
-                    })],
+            'phone_number' => ['bail', 'required', 'numeric', 'digits_between:8,15',
+                        Rule::exists('users')->where(function($q) {
+                            $q->where('role', 3)->where(['status'=> 1, 'deleted_at'=>null]);
+                        })
+                    ],
             'password' => 'required',
         ];
     }

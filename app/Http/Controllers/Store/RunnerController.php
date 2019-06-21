@@ -48,7 +48,7 @@ class RunnerController extends Controller
                   });
                 })->when(($request->filled('sort_type') && in_array($request->input('sort_type'), [0, 1])), function($query) use($request) {
                 $query->where('status', $request->input('sort_type'));
-               })
+               })->where('deleted_at', null)
                ->latest()->paginate(10);
       if ($request->ajax()) {
         //dd($users);
@@ -140,9 +140,20 @@ class RunnerController extends Controller
      */
     public function destroy($id)
     {
-      $delete = User::where(['id'=>decrypt($id)])->delete();
+      $delete = null;
+      
+      $pickup = PickupRequest::where(["assigned_to"=>decrypt($id), 'status'=>2])->count();
+      
+      if ($pickup) {
+       return response()->json(["message"=>"The runner has been assigned an pickup."], 400);
+      }
+     
+      // if (!$pickup) {
+        $delete = User::where(['id'=>decrypt($id)])->delete();
+      // }
+      
       if ($delete) {
-        return response()->json(["message"=>"Store deleted!"], 200);
+        return response()->json(["message"=>"Runner deleted!"], 200);
       }
       return response()->json(["message"=>"Something went wrong !"], 400);
     }

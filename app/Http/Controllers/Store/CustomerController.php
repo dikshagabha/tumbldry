@@ -146,7 +146,13 @@ class CustomerController extends Controller
      */
     public function destroy($id)
     {
-      $delete = User::where(['id'=>decrypt($id)])->delete();
+
+
+      //$delete =  null
+      //if (!$pickup) {
+        $delete = User::where(['id'=>decrypt($id)])->delete();
+      //}
+
       if ($delete) {
         return response()->json(["message"=>"Store deleted!"], 200);
       }

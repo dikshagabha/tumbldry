@@ -15,8 +15,6 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-//Auth::routes();
-
 Route::prefix('admin')->group(function () {
   // Auth Routes
   Auth::routes(['register' => false]);
@@ -77,15 +75,27 @@ Route::prefix('admin')->group(function () {
   });
 });
 
+ 
+  Route::get('/payment/{id}', 'Store\PaymentController@pay')->name('order.pay');
+ 
+  
+     Route::post('/payment/response', 'Store\PaymentController@response')->name('pay');
+    Route::post('/payment/cancel', 'Store\PaymentController@cancel')->name('pay');
+    Route::get('/payment/success', 'PaymentController@success')->name('pay');
+  
 
 Route::prefix('store')->namespace('Store')->group(function () {
+
 
    Route::group(['middleware' => 'guest'], function () {
         Route::get('/login', 'LoginController@getLogin')->name('store.login');
         Route::post('/login', 'LoginController@postLogin')->name('store.login');
 
-      });
+        Route::get('/forget-password', 'LoginController@forgetPassword')->name('store.forget-password');
+        Route::post('/forget-password', 'LoginController@postforgetPassword')->name('store.forget-password');
 
+      });
+ 
   Route::group(['middleware' => ['web', 'checkPrefix']], function () {
       Route::get('/', function () {
           return redirect()->route('store.login');
@@ -93,78 +103,117 @@ Route::prefix('store')->namespace('Store')->group(function () {
 
      
      Route::group(['middleware' => ['store']], function () {
-         Route::get('/home', 'HomeController@index')->name('store.home');
+        Route::get('/home', 'HomeController@index')->name('store.home');
+
+        Route::get('/change-password', 'HomeController@changePassword')->name('store.change-password');
+        Route::post('/change-password', 'HomeController@postchangePassword')->name('store.change-password');
+
+        Route::get('/new-customers', 'HomeController@newCustomers')->name('store.newCustomers');
+
+         Route::get('/edit-profile', 'HomeController@editProfile')->name('store.edit-profile');
+        Route::put('/edit-profile', 'HomeController@posteditProfile')->name('store.edit-profile');
+
 
          Route::resources([
             'manage-runner' => 'RunnerController',
             'manage-customer' => 'CustomerController',
             // 'manage-vendor' => 'VendorController',
             'store-pickup-request' => 'PickupController',
-          ]);
-      });
-      
-      Route::get('/payment', 'PaymentController@pay')->name('pay');
-      
+            'manage-plans' => 'PlanController',
+            ]);
+           
+         
+
+          Route::get('order/payment/{id}', 'PaymentController@getPaymentMode')->name('store.paymentmodes');
 
 
-      Route::get('logout', 'LoginController@logout')->name('logout');
+          Route::get('order/send-payment-link', 'PaymentController@sendPaymentLink')->name('store.sendPaymentLink');
+          
+          Route::post('order/payment/', 'PaymentController@payment')->name('store.payment');
+          
+          Route::get('/plans-payment/{id}', 'PaymentController@getPlansPayment')->name('plans.payment');
+          Route::post('/plans-payment/', 'PaymentController@plansPayment')->name('store.plans.payment');
 
-      Route::post('set-store-timezone', 'HomeController@setTimezone')->name('store.set-timezone');
+          Route::get('logout', 'LoginController@logout')->name('logout');
 
-      Route::get('get-customer-addresses', 'HomeController@getCustomerAddresses')->name('store.getCustomerAddresses');
+          Route::get('order/print/{id}', 'OrderController@invoice')->name('store.printInvoice');
+          Route::post('order/assignvendor/', 'OrderController@assignvendor')->name('store.assignVendor');
 
-      Route::get('/orders/', 'OrderController@index')->name('store.create-order.index');
-      
-      Route::post('set-address-session', 'CustomerController@setSessionAddress')->name('store.postAddSessionAddress');
-      Route::post('set-addresses-session', 'CustomerController@setSessionAddresses')->name('store.addCustomerAddresses');
+          Route::post('plans/get-plans/', 'PlanController@getPlans')->name('store.getPlans');
 
-      Route::post('store-service-input', 'OrderController@setServiceInput')->name('store.service.input');
-      
-      Route::post('delete-addresses-session', 'CustomerController@deleteSessionAddresses')->name('store.deleteCustomerAddresses');
-      
-      //Route::get('/payment', 'RateCardController@index')->name('store.getRate');
-      
-      Route::get('/create-order/{id}', 'OrderController@create')->name('store.create-order');
-      Route::post('/create-order/{id?}', 'OrderController@store')->name('store.create-order');
+         
 
-      Route::get('/view-order/{id}', 'OrderController@view')->name('store.getOrderDetails');
+          Route::post('set-store-timezone', 'HomeController@setTimezone')->name('store.set-timezone');
 
-      Route::post('/order/get-grn', 'OrderController@getGrn')->name('store.getGrn');
-      Route::post('/order/deliver-items', 'OrderController@itemsDeliver')->name('store.itemsDeliver');
-      Route::get('/create-order', 'OrderController@createWithoutPickup')->name('store.orderWithoutPickup');
+          Route::get('get-customer-addresses', 'HomeController@getCustomerAddresses')->name('store.getCustomerAddresses');
 
-      Route::post('/rate-card', 'RateCardController@getRate')->name('store.getRate');
-      Route::get('/rate-card', 'RateCardController@index')->name('store.getRate');
-      Route::get('/services', 'RateCardController@getServices')->name('store.getServices');
+          Route::get('get-order-items/{id}', 'OrderController@getItemsForm')->name('store.getItemsForm');
 
-      Route::get('/get-items', 'OrderController@getItems')->name('store.get-items');
-      Route::post('/add-items-session', 'OrderController@addItemSession')->name('store.addItemSession');
-      Route::post('/delete-items-session', 'OrderController@deleteItemSession')->name('store.deleteItemSession');
-      Route::post('/quantity-items-session', 'OrderController@quantityItemSession')->name('store.quantityItemSession');
-      Route::post('/discount-items-session', 'OrderController@discountItemSession')->name('store.discountItemSession');
-      Route::post('/addon-items-session', 'OrderController@addonItemSession')->name('store.addonItemSession');
-      Route::post('/weight-items-session', 'OrderController@weightItemSession')->name('store.weightItemSession');
-      Route::post('/coupon', 'OrderController@couponItemSession')->name('store.couponItemSession');
+          Route::get('/orders/', 'OrderController@index')->name('store.create-order.index');
+          Route::get('/orders/assign-deliver/{id}', 'OrderController@getDeliveryDetails')->name('store.assignDeliver');
+          
+          Route::post('set-address-session', 'CustomerController@setSessionAddress')->name('store.postAddSessionAddress');
+          Route::post('set-addresses-session', 'CustomerController@setSessionAddresses')->name('store.addCustomerAddresses');
 
-      Route::post('/order/status/{id}', 'OrderController@status')->name('store.order.status');
-      Route::post('/order/assigndelivery/{id}', 'OrderController@assignDelivery')->name('store.order.assign-delivery');
+          Route::post('store-service-input', 'OrderController@setServiceInput')->name('store.service.input');
+          
+          Route::post('delete-addresses-session', 'CustomerController@deleteSessionAddresses')->name('store.deleteCustomerAddresses');
 
-      Route::post('/find-customer', 'HomeController@findCustomer')->name('store.findCustomer');
+          Route::get('export/settlement', 'ReportsController@exportCustomer')->name('store.export-settlement');
+          
+          Route::get('/payment', 'PaymentController@pay')->name('store.getRate');
+          
+          Route::get('/create-order/{id}', 'OrderController@create')->name('store.create-order');
+          Route::post('/create-order/{id?}', 'OrderController@store')->name('store.create-order');
 
-      Route::post('/runner/status/{id}', 'RunnerController@status')->name('manage-runner.status');
-      Route::post('/customer/status/{id}', 'CustomerController@status')->name('manage-customer.status');
-      //Route::post('/vendor/status/{id}', 'VendorController@status')->name('manage-vendor.status');
+          Route::get('/view-order/{id}', 'OrderController@view')->name('store.getOrderDetails');
 
-      Route::post('/notifications/read-all', 'NotificationsController@markRead')->name('notifications.mark-read'); 
 
-      Route::post('/runner/assign-runner', 'RunnerController@assignRunner')->name('store.assign-runner');
+          Route::post('/order/get-grn', 'OrderController@getGrn')->name('store.getGrn');
+          Route::post('/order/deliver-items', 'OrderController@itemsDeliver')->name('store.itemsDeliver');
+          Route::get('/create-order', 'OrderController@createWithoutPickup')->name('store.orderWithoutPickup');
+          
 
-      Route::get('/reports/customer', 'ReportsController@customerReports')->name('store.customer-reports');
-      Route::get('/reports/order', 'ReportsController@orderReports')->name('store.order-reports');
+          Route::get('/input-rate-card', 'RateCardController@getRate')->name('store.getInputRate');
 
+          Route::get('/rate-card', 'RateCardController@index')->name('store.getRate');
+          Route::get('/services', 'RateCardController@getServices')->name('store.getServices');
+
+          Route::get('/get-items', 'OrderController@getItems')->name('store.get-items');
+          Route::post('/add-items-session', 'OrderController@addItemSession')->name('store.addItemSession');
+          Route::post('/delete-items-session', 'OrderController@deleteItemSession')->name('store.deleteItemSession');
+          Route::post('/quantity-items-session', 'OrderController@quantityItemSession')->name('store.quantityItemSession');
+          Route::post('/discount-items-session', 'OrderController@discountItemSession')->name('store.discountItemSession');
+          Route::post('/addon-items-session', 'OrderController@addonItemSession')->name('store.addonItemSession');
+          Route::post('/files-items-session', 'OrderController@filesItemSession')->name('store.filesItemSession');
+
+          Route::post('/weight-items-session', 'OrderController@weightItemSession')->name('store.weightItemSession');
+          Route::post('/coupon', 'OrderController@couponItemSession')->name('store.couponItemSession');
+
+
+          Route::post('/order/status/{id}', 'OrderController@status')->name('store.order.status');
+          
+          Route::post('/order/assigndelivery', 'OrderController@assignDelivery')->name('store.order.assign-delivery');
+          Route::post('/order/mark-recieved/{id}', 'OrderController@markRecieved')->name('store.mark-recieved');
+
+          Route::post('/find-customer', 'HomeController@findCustomer')->name('store.findCustomer');
+
+          Route::post('/runner/status/{id}', 'RunnerController@status')->name('manage-runner.status');
+          Route::post('/customer/status/{id}', 'CustomerController@status')->name('manage-customer.status');
+          //Route::post('/vendor/status/{id}', 'VendorController@status')->name('manage-vendor.status');
+
+          Route::post('/notifications/read-all', 'NotificationsController@markRead')->name('notifications.mark-read'); 
+
+          Route::post('/runner/assign-runner', 'RunnerController@assignRunner')->name('store.assign-runner');
+
+          Route::get('/reports/customer', 'ReportsController@customerReports')->name('store.customer-reports');
+          Route::get('/reports/order', 'ReportsController@orderReports')->name('store.order-reports');
+          Route::get('/reports/accounting/ledger', 'ReportsController@ledger')->name('store.ledger-reports');
+    });
   });
 });
 
 
 Route::get('/customer-details/{id?}', 'Store\HomeController@getcustomerdetails')->name('getcustomerdetails');
 Route::get('/address-details/{id}', 'Store\HomeController@getaddressdetails')->name('getaddressdetails');
+

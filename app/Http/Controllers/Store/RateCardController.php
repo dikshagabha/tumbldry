@@ -35,20 +35,31 @@ class RateCardController extends Controller
       $validatedData = $request->validate([
           'service' => 'bail|required|numeric',
           ]);
-      $prices = ServicePrice::where(['location'=>$this->location->city, 
-                                      'service_id'=>$request->input('service')])->where('service_type', '!=', 0)->paginate(5);
 
-      //dd( );      
+      //dd($request->all());
+      $prices = ServicePrice::where(['location'=>$this->location->city, 
+                                      'service_id'=>$request->input('service')])
+                ->when($request->filled('search'), function($q) use($request){
+                  $q->whereHas('item_details', function($q) use($request){
+                    $q->where('name', 'like', '%'.$request->input('search').'%');
+                  });
+                })->where('service_type', '!=', 0)->paginate(5);            
       if (!$prices->total()) {
       	$prices = ServicePrice::where(['location'=>'global', 
-                                      'service_id'=>$request->input('service')])->where('service_type', '!=', 0)->paginate(5);
+                                      'service_id'=>$request->input('service')])
+                                      ->when($request->filled('search'), function($q) use($request){
+                                          $q->whereHas('item_details', function($q) use($request){
+                                            $q->where('name', 'like', '%'.$request->input('search').'%');
+                                          });
+                                      })->where('service_type', '!=', 0)->paginate(5);
       }
 
+      $search = $request->input('search');
       $type = $request->input('type');
       $edit = $prices->count();
       if ($request->ajax()) 
       {
-        return view("store.rate-card.rates-table", compact('type', 'prices', 'edit'));
+        return view("store.rate-card.rates-table", compact('type', 'prices', 'edit', 'search'));
       }
       return response()->json(["message"=>"Data Recieved", 'prices'=>view("store.rate-card.rates-table",
                             compact('type', 'prices', 'edit'))->render()], 200);
@@ -67,5 +78,29 @@ class RateCardController extends Controller
       $service = Service::where('form_type', $request->type)->where('type', 1)->pluck('name', 'id');
       return response()->json(["message"=>"Data Recieved", 'service'=>$service], 200);
     }
+
+    // public function getRate(Request $request)
+    // {
+      
+    //   $validatedData = $request->validate([
+    //       'search' => 'bail|required|numeric',
+    //       ]);
+
+    //   $prices = ServicePrice::where(['location'=>$this->location->city, 
+    //                                   'service_id'=>$request->input('service')])->where('service_type', '!=', 0)->paginate(5);            
+    //   if (!$prices->total()) {
+    //     $prices = ServicePrice::where(['location'=>'global', 
+    //                                   'service_id'=>$request->input('service')])->where('service_type', '!=', 0)->paginate(5);
+    //   }
+
+    //   $type = $request->input('type');
+    //   $edit = $prices->count();
+    //   if ($request->ajax()) 
+    //   {
+    //     return view("store.rate-card.rates-table", compact('type', 'prices', 'edit'));
+    //   }
+    //   return response()->json(["message"=>"Data Recieved", 'prices'=>view("store.rate-card.rates-table",
+    //                         compact('type', 'prices', 'edit'))->render()], 200);
+    // }
 
 }

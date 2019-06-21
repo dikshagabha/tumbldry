@@ -5,24 +5,38 @@
 <link rel="stylesheet" type="text/css" href="{{asset('css/jcf.css')}}">
 @endsection
 @section('content')
-<div class="content">
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12">
-          <div class="card card-stats">
-              <div class="row">
-                <div class="col-md-9">
-                </div>               
-              </div>
-              <br><br>
-              <div id="dataList">                
+
+
+<vs-row vs-justify="center">
+  <vs-col type="flex" vs-justify="center" vs-align="center" vs-w="11">
+    <vs-card>
+      <div slot="header">
+        <h3>
+          Pickup Requests
+        </h3>
+      </div>
+      <div>
+
+        <vs-row vs-justify="flex-end">
+         
+         
+         </vs-row>
+           <br>
+              <div id="dataList">
+                
+               
                @include('store.pickup-requests.list')
               </div>
-            </div>
-        </div>
+        
       </div>
-    </div>
-</div>
+      <div slot="footer">
+        
+      </div>
+    </vs-card>
+  </vs-col>
+</vs-row>
+
+
 <div id="addressModal" class="modal fade" role="dialog">
   <div class="modal-dialog">
     <!-- Modal content-->

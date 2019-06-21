@@ -4,7 +4,7 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
 @endphp
  @if($users->count())
 
-      <table class="table table-striped dataTable">
+      <table class="table table-responsive table-borderless dataTable">
           <thead>
             <tr>
               <th>Id</th>
@@ -36,23 +36,20 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
                 <td>
                   
                   @if($user->request_time)
-                    {{$user->request_time->setTimezone($timezone)->format('l y/m/d h:i a')}}
+                 
+                    {{$user->request_time->setTimezone($timezone)->format('y/m/d')}}
+                    
+                    {{ $user->start_time}} -
+
+                    {{$user->end_time}}
+                 
                   @else
                     --
                   @endif
                 </td>
 
                 <td>
-                @if($user->status==2 && !$user->order()->count())
-               <!--  <a href="{{route('store.create-order', encrypt($user->id))}}" title="create order">
-                  <button class="btn btn-link"><i class="fa fa-plus"></i></button>
-                </a>  -->
-
-                @elseif($user->order()->count())
-                    <a  class="view" title="view order details" href="{{route('store.getOrderDetails', $user->order()->first()->id)}}">
-                      ORDER{{$user->order()->first()->id}}
-                    </a>
-                @endif
+             
               </td>
 
             </tr>

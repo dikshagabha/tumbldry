@@ -4,6 +4,9 @@ namespace App\Http\Requests\Admin;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Request;
+use App\Rules\{
+    CheckName
+};
 class StorePickupRequest extends FormRequest
 {
     /**
@@ -27,15 +30,12 @@ class StorePickupRequest extends FormRequest
       //  $id = decrypt($this->route('manage_store'));
         if ($request->input('customer_id')) {
           return [
-            'name'=>['bail','required', 'string', 'min:2', 'max:100'],
+            'name' => ['bail', 'required', 'string', 'min:2', 'max:25', new CheckName],
             //'address_id'=>['bail','required', 'numeric'],
-            'email'=>['bail','required', 'email', 'min:2', 'max:100'],
-            
-            'phone_number'=>['bail','required','numeric', 'min:2', 'max:9999999999'],
-            
+            //'email'=>['bail','required', 'email', 'min:2', 'max:100'],            
+            'phone_number'=>['bail','required','numeric', 'min:2', 'max:9999999999'],            
             'customer_id'=>['bail','nullable', 'numeric'],
-            'address_id'=>['bail','nullable', 'numeric'],
-            
+            'address_id'=>['bail','nullable', 'numeric'],           
             'address'=>'bail|required|string|min:2|max:50',
             'city'=>'bail|nullable|string|min:2|max:50',
             'state'=>'bail|nullable|string|min:2|max:50',
@@ -51,9 +51,9 @@ class StorePickupRequest extends FormRequest
         return [
           'name'=>['bail','required', 'string', 'min:2', 'max:100'],
           //'address_id'=>['bail','required', 'numeric'],
-          'email'=>['bail','required', 'email', 'unique:users,email','min:2', 'max:100'],
+          'email'=>['bail','nullable', 'email', 'unique:users,email','min:2', 'max:100'],
           
-          'phone_number'=>['bail','required','numeric', 'min:2', 'unique:users,phone_number','max:9999999999'],
+          'phone_number'=>['bail','required','numeric', 'unique:users,phone_number', 'digits_between:8,15'],
           
           'user_id'=>['bail','nullable', 'numeric'],
           

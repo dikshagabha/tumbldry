@@ -1,4 +1,4 @@
-@extends('store.layouts.app')
+@extends('store.layout-new.app')
 @section('title', 'Manage Store')
 
 @section('css')
@@ -6,54 +6,7 @@
 <link rel="stylesheet" type="text/css" href=" https://printjs-4de6.kxcdn.com/print.min.css">
 @endsection
 @section('content')
-
-
-<div class="content">
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12">
-          <div class="card card-stats">
-              <div class="row">
-                <div class="col-md-9">
-                </div>
-                <div class="col-md-3">
-                  <a href="{{route('store.orderWithoutPickup')}}"><button class="btn btn-danger">Add Order</button></a>
-                </div>
-              </div>
-              
-               <!-- <div class="">
-                {{ Form::open(['method' => 'get', 'id' => 'store-search', 'name' => 'serach_form']) }}
-                <div class="form-group-inner">
-                    <div class="row">
-                      <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
-                      </div>
-                         <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
-                          {{ Form::text('search', '', ['class' => 'form-control', 'placeholder' => 'Search by Name or E-mail or Phone', 'maxlength'=>'50']) }}
-                         </div>
-                         <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
-                          {{ Form::select('sort_type', ['' => 'Select Status', '1' => 'Active', '0' => 'Inactive'], null, ['class' => 'form-control', 'id' => 'sort_type']) }}
-                           
-                         </div>
-                         <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
-                          <button type="submit" id="search-button" class="btn btn-success margin-bottom-20">Filter</button>
-                        <button type="submit" id="reset-button" class="btn btn-danger margin-bottom-20">Reset</button>
-                         </div>
-                       </div>
-                  </div>
-                  {{ Form::close() }}
-              </div> -->
-
-              <br>
-              <div id="dataList">
-                
-               @include('store.manage-order.list')
-              </div>
-            </div>
-        </div>
-      </div>
-    </div>
-</div>
-<div id="OrderModal" class="modal fade" role="dialog">
+<div id="OrderModal" class="modal in" role="dialog">
   <div class="modal-dialog modal-lg">
     <!-- Modal content-->
     <div class="modal-content">
@@ -71,9 +24,56 @@
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
       </div>
     </div>
-
   </div>
 </div>
+<div id="DeliverModal" class="modal in" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+         <h4 class="modal-title">Select Runner</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" id="assignRunner">
+        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-success assign_runner" data-dismiss="modal" >Assign</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="selectGrnModal" class="modal in" role="dialog">
+  <div class="modal-dialog modal-lg">    
+    <div class="modal-content">
+      <div class="modal-header">        
+        <h4 class="modal-title">Print Grn</h4>
+      </div>
+      <div class="modal-body">
+        <div id="printGrnForm">
+            
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div>
+  <div class="col-md-3 pull-right">
+    <a href="{{route('store.orderWithoutPickup')}}">
+      <button type="button" class="btn btn-danger">Create Order</button>
+    </a>
+   </div>
+   <br>
+  <div id="dataList">
+   @include('store.manage-order.list')
+  </div>
+</div>
+
 
 @endsection
 @push('js')
@@ -82,10 +82,6 @@
 <script>
 $(document).ready(function(){
   var current_page = $(".pagination").find('.active').text();
-   
-
-  
-
   $(document).on('click', '#delete', function(e){
     e.preventDefault();
           bootbox.confirm({
@@ -137,6 +133,24 @@ $(document).ready(function(){
           }
       });
   })
+
+  $(document).on("click", ".print_grn", function(e){
+      e.preventDefault();
+      //alert();
+      $(".error").html(""); 
+      current = $(this);   
+      
+      $.ajax({
+        url: current.attr('href'),
+        type:'get',
+        //data: $('#addonForm'+current.data('id')+' :input').serializeArray(),
+        cache: false,
+        success: function(data){
+          $("#printGrnForm").html(data.view);
+          $("#selectGrnModal").modal('show');
+        }
+      })
+    })
 
   $(document).on("click","#reset-button",function(e) {
       e.preventDefault();
@@ -254,30 +268,61 @@ $(document).ready(function(){
         
     });
 
+  $(document).on("click",".deliver",function(e) {
+      e.preventDefault();
+      //alert();
+      $('body').waitMe();
+      current = $(this);
+      $.ajax({
+          url:current.attr('href'),
+          method:'get',
+          success:function(data){
+            $('body').waitMe('hide');
+            $('#assignRunner').html(data.view);
+            $("#DeliverModal").modal('show');
+     
+          }
+      })
+    });
+
   $(document).on("click",".assign_runner",function(e) {
       e.preventDefault();
       $('body').waitMe();
       current = $(this)
       $.ajax({
-        url:current.data('url'),
-        method:'post',
+        url:$('#deliveryForm').attr('action'),
+        method:'post',        
+        data:$('#deliveryForm').serializeArray(),
+        success:function(data){
+          var current_page = $(".pagination").find('.active').text();
+          load_listings(location.href+'?page='+current_page, 'serach_form');
+          success(data.message);
+          $('body').waitMe('hide');
+        }
+      })
+    });
+
+    $(document).on("click",".print_invoice",function(e) {
+      e.preventDefault();
+      $('body').waitMe();
+      current = $(this)
+      $.ajax({
+        url: current.attr('href'),
+        method:'get',
         xhrFields: {
                 responseType: 'blob'
             },
-        data:{'id':$('#runner'+current.data('id')).val()},
         success:function(data){
+
+          var current_page = $(".pagination").find('.active').text();
+          load_listings(location.href+'?page='+current_page, 'serach_form');
+          
           var pdfFile = new Blob([data], {
             type: "application/pdf"
             });
             var pdfUrl = URL.createObjectURL(pdfFile);
-            //window.open(pdfUrl);
               printJS(pdfUrl);
-          // var current_page = $(".pagination").find('.active').text();
-          // load_listings(location.href+'?page='+current_page, 'serach_form');
-
-
-          // success(data.message);
-          $('body').waitMe('hide');
+             $('body').waitMe('hide');
         }
       })
     });
@@ -300,55 +345,11 @@ $(document).ready(function(){
           var pdfFile = new Blob([data], {
             type: "application/pdf"
             });
+            var current_page = $(".pagination").find('.active').text();
+            load_listings(location.href+'?page='+current_page, 'serach_form');
             var pdfUrl = URL.createObjectURL(pdfFile);
             //window.open(pdfUrl);
             printJS(pdfUrl);
-            //var printwWindow = $window.open(pdfUrl);
-        //printwWindow.print();
-
-          // var filename = "";                   
-          //       var disposition = xhr.getResponseHeader('Content-Disposition');
-
-          //        if (disposition) {
-          //           var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
-          //           var matches = filenameRegex.exec(disposition);
-          //           if (matches !== null && matches[1]) filename = matches[1].replace(/['"]/g, '');
-          //       } 
-          //       var linkelem = document.createElement('a');
-          //       try {
-          //           var blob = new Blob([response], { type: 'application/pdf' });                        
-
-          //           if (typeof window.navigator.msSaveBlob !== 'undefined') {
-          //               //   IE workaround for "HTML7007: One or more blob URLs were revoked by closing the blob for which they were created. These URLs will no longer resolve as the data backing the URL has been freed."
-          //               window.navigator.msSaveBlob(blob, filename);
-          //           } else {
-          //               var URL = window.URL || window.webkitURL;
-          //               var downloadUrl = URL.createObjectURL(blob);
-
-          //               if (filename) { 
-          //                   // use HTML5 a[download] attribute to specify filename
-          //                   var a = document.createElement("a");
-
-          //                   // safari doesn't support this yet
-          //                   if (typeof a.download === 'undefined') {
-          //                       window.location = downloadUrl;
-          //                   } else {
-
-          //                       window.print = downloadUrl;
-          //                       // a.href = downloadUrl;
-          //                       // a.download = filename;
-          //                       // document.body.appendChild(a);
-          //                       // a.target = "_blank";
-          //                       // a.click();
-          //                   }
-          //               } else {
-          //                   window.location = downloadUrl;
-          //               }
-          //           }   
-
-          //       } catch (ex) {
-          //           console.log(ex);
-          //       } 
         }
       })
     });
@@ -363,6 +364,28 @@ $(document).ready(function(){
         data: $('#grnForm :input').serializeArray(),
         success:function(data){
           $('body').waitMe('hide');
+          var current_page = $(".pagination").find('.active').text();
+          console.log(location.href+'?page='+current_page);
+          load_listings(location.href+'?page='+current_page, 'serach_form');
+          success(data.message);
+        }
+      })
+    });
+
+  $(document).on("change",".selectVendor",function(e) {
+      e.preventDefault();
+      $('body').waitMe();
+      current = $(this)
+      $.ajax({
+        url:current.data('url'),
+        method:'post',
+        data: {'order_id': current.data('order'), 'item_id': current.data('item'),
+                'vendor_id': current.val(), 'service_id':current.data('service')},
+        success:function(data){
+          $('body').waitMe('hide');
+          var current_page = $(".pagination").find('.active').text();
+          load_listings(location.href+'?page='+current_page, 'serach_form');
+          //$("#OrderModal").modal('hide');
           success(data.message);
         }
       })
@@ -387,6 +410,50 @@ $(document).ready(function(){
       $(".deliver_units").prop("checked", false);
     }
   })
+
+  $(document).on("click", ".mark_status", function(e){
+    e.preventDefault();
+    $(".error").html(""); 
+    current = $(this);
+    $("#OrderModal").modal('hide');
+    text = 'pending';
+    if (current.attr('value')==1) {
+        text = 'recieved';
+    }
+
+    bootbox.confirm({
+        title: "Confirm",
+        message: "Mark order item as "+text+" ?",
+        buttons: {
+            cancel: {
+                label: '<i class="fa fa-times"></i> Cancel'
+            },
+            confirm: {
+                label: '<i class="fa fa-check"></i> Confirm'
+            }
+        },
+        callback: function (result) {
+          if (result) {
+            $.ajax({
+              url: current.attr('href'),
+              type:'post',
+              data:{"status": current.attr('value'), "data":"dl;fdsf"},
+              cache: false,
+              success: function(data){
+                success(data.message);
+                var current_page = $(".pagination").find('.active').text();
+                console.log(location.href+'?page='+current_page);
+                load_listings(location.href+'?page='+current_page, 'serach_form');
+
+                //$(".ItemsAdded").html(data.view);
+                $('body').waitMe('hide');
+              }
+            })
+          }
+            
+        }
+      });
+    })
 })
 </script>
 

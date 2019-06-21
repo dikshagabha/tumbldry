@@ -1,17 +1,17 @@
 
 @php
-$i = ($users->currentpage() - 1) * $users->perPage() + 1;
+$i = 1;
 @endphp
  @if($users->count())
 
-      <table class="table table-striped dataTable">
+      <table class="table display nowrap dataTable">
           <thead>
             <tr>
-              <th>S No</th>
+              <th>Id</th>
               <th>Name</th>
-              <th>Status</th>
+             <!--  <th>Status</th> -->
                <th>Created At</th>
-              <th>View</th>
+<!--               <th>View</th> -->
             </tr>
           </thead>
           <tbody>
@@ -19,42 +19,39 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
       @foreach($users as $user)
             <tr>
               <td>
-                {{$i}}
+                {{$user->id}}
               </td>
               <td>
                 {{$user->name}}
               </td>
-              <td>
+              <!-- <td>
                 @if($user->status==0)
                   
-                    <span class="badge badge-warning">Inactive</span>
-                  
+                   Inactive
                 @else
-                  <span class="badge badge-success">Active</span>
-                  
+                  Active
                 @endif
-              </td>
+              </td> -->
               <td>
                   {{$user->created_at->setTimezone($timezone)->format('y/m/d h:i a')}}
                   
               </td>
-              <td>                  
+             <!--  <td>                  
                   <a href="{{route('manage-customer.show',encrypt($user->id))}}" class="view" title="view">
-                    <button type="button" class="btn btn-info "><i class="fa fa-eye"></i></button>
+                    <vs-button type="gradient" color="warning"><i class="fa fa-eye"></i></vs-button>
                   </a>
                   
-              </td>
+              </td> -->
 
-
+@php
+$i ++;
+@endphp
             </tr>
-              @php
-                $i++;
-              @endphp
+             
             @endforeach
           </tbody>
       </table>
 
-      {{$users->links()}}
       @else
       No Records Found
       @endif

@@ -23,7 +23,7 @@ class HomeRepository extends BaseRepository
      */
     public function model()
     {
-        //return YourModel::class;
+      
     }
 
 
@@ -38,36 +38,11 @@ class HomeRepository extends BaseRepository
 
 	        $user = User::create(['name'=>$request->input('name'), 'role'=>5, 'email'=> $request->input('email'), 
 	        						'password'=>bcrypt($pswd), 'phone_number'=> $request->input('phone_number'), 
-	        						'user_id'=>$user]);
-
-
-	        // $address =  Address::create([
-	        //                               'address'=>$request->input('address') ,
-	        //                               'user_id'=>$user->id,
-	        //                               'city'=>$request->input('city'),
-	        //                               'state'=>$request->input('state'),
-	        //                               'pin'=>$request->input('pin'),
-	        //                               'latitude'=>$request->input('latitude') ,
-	        //                               'longitude'=>$request->input('longitude'),
-	        //                               'landmark'=>$request->input('landmark'),
-	        //                               ]);
-
-            $url = 'http://push.sanketik.net//api/push?accesskey=jzzUlHL4NqhWs6VHzmUkGkYTaQKD7T&to='.$phone.'&text='.$pswd.'&from=TBLDRY';
-
-             $ch = curl_init();
-             curl_setopt($ch, CURLOPT_URL, $url);
-             curl_setopt($ch, CURLOPT_POST, 0);
-             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-             $response = curl_exec ($ch);
-             $err = curl_error($ch);  //if you need
-             curl_close ($ch);
-             $response = json_decode($response);
-             $array = get_object_vars($response);
-             if( $response->status == 'success') {
-	            DB::commit();
-		        return ["message"=>"Runner Added", 'redirectTo'=>route('manage-runner.index'), 'http_status'=>200];	
-             }
+	        						'user_id'=>$user, 'status'=>1]);
+                  //CommonRepository::sendmessage($request->input('phone_number'), 'Welcome to Tumbedry. The password for your account is $pswd');
+              DB::commit();
+		          return ["message"=>"Runner Added", 'redirectTo'=>route('manage-runner.index'), 'http_status'=>200];	
+             //}
         	return ["message"=>'Something Went Wrong!', 'http_status'=>400];
 	    }
 	    catch (\Exception $e) {
@@ -102,14 +77,14 @@ class HomeRepository extends BaseRepository
         $credentials['status'] = 1;
         //dd(JWTAuth::attempt($credentials));
         // attempt to verify the credentials and a token for the user
-        if ($token = JWTAuth::attempt($credentials)) {
+        if ($token = JWTAuth::attempt($credentials,  ['exp' => Carbon::now()->addDays(7)->timestamp])) {
             // token generated successfully
-            $response = compact('token');
+            //$response = compact('token');
             // find the user
             $user = Auth::user()->load([
                 'addresses']);
 
-            $user->device_token = $request->input('device_token', '');
+            $user->device_token = $request->input('device_id', '');
             $user->last_login = Carbon::now();
             $user->save(); // save the user (update the device token)
 
@@ -117,11 +92,16 @@ class HomeRepository extends BaseRepository
             CommonRepository::getManageToken($token, $user->id); // save the token in the database
 
             $response['http_status'] = 200;
-            $response['data'] = $user;
-            $response['message'] = 'User logged in successfully';
+            $response['code'] = 1;
+            $response['details'] = ['token'=>$token, 'info'=>$user];
+
+            $response['message'] = 'Success';
         } else {
+            
             $response['message'] = 'Please enter valid credentials';
             $response['http_status'] = 400;
+           // $response['http_status'] = 200;
+            $response['code'] = 2;
         }
 
         return $response;
@@ -130,20 +110,24 @@ class HomeRepository extends BaseRepository
     public static function sendOtp($request)
     {
         $user = User::where('phone_number', $request->input('phone_number'))->whereRole(5)->first();
-
         if (!$user) {
-            return ['message'=>'runner not found.', 'http_status'=>400];
+            return ['message'=>'runner not found.', 'http_status'=>400, 'code'=>2];
         }
         $otp = rand(0000, 9999);
+        //$otp = 1234;
+        $otp = Otp::create(['user_id'=>$user->id, 'otp'=> $otp, 'expiry'=>Carbon::now()->addMinutes(15)]);
 
-        $otp = Otp::create(['user_id'=>$user->id, 'otp'=>$otp, 'expiry'=>Carbon::now()->addMinutes(15)]);
-
-        $res = CommonRepository::sendmessage($request->input('phone_number'), "Hi%20$user->name%20\n%20The%20otp%20for%20your%20login%20is%20$otp.");
+        $res = CommonRepository::sendmessage($request->input('phone_number'), "Hi%20$user->name,%20%20The%20otp%20for%20your%20login%20is%20".$otp->otp.".");
+        
+        //dd($res);
+        
+        $user->password = bcrypt($otp->otp);
+        $user->save();
         if ($otp) {
-            return ['message'=>'Otp send to user.', 'http_status'=>200];
+            return ['message'=>'Success', 'code'=>1, 'details'=>['otp'=>$otp->otp]];
         }
 
-        return ['message'=>'Something Went Wrong!', 'http_status'=>400];
+        return ['message'=>'Something Went Wrong!', 'code'=>2];
     }
 
     public static function verifyOtp($request)
@@ -153,13 +137,17 @@ class HomeRepository extends BaseRepository
             return ['message'=>'runner not found.', 'http_status'=>400];
         }
         $otp = Otp::where(['user_id'=>$user->id, 'otp'=>$request->input('otp')])->first();
-        if ($otp) {
-              if ($otp->expiry->lt(Carbon::now())) {
-                return ['message'=>'Otp has expired.', 'http_status'=>200];
-              }
+        
+        $user->password = bcrypt($request->input('otp'));
+        $user->save();
+
+        if($otp){
+              // if ($otp->expiry->lt(Carbon::now())) {
+              //   return ['message'=>'Otp has expired.', 'http_status'=>200];
+              // }
               $otp->delete();
-            return ['message'=>'Otp verified.', 'http_status'=>200];
+            return ['message'=>'Success', 'http_status'=>200, 'code'=>1];
         }
-        return ['message'=>'Something Went Wrong!', 'http_status'=>400];
+        return ['message'=>'Something Went Wrong!', 'code'=>2];
     }
 }

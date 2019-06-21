@@ -4,13 +4,13 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
 @endphp
  @if($users->count())
 
-      <table class="table table-striped dataTable">
+      <table class="table table-borderless dataTable">
           <thead>
             <tr>
               <th>S No</th>
               <th>Name</th>
               <th>Phone Number</th>
-              <th>Status</th>
+             <!--  <th>Status</th> -->
               <th>Options</th>
             </tr>
           </thead>
@@ -27,26 +27,26 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
               <td>
                 {{$user->phone_number}}
               </td>
-              <td>
+             <!--  <td>
                 @if($user->status==0)
                   <a href="{{route('manage-customer.status', $user->id)}}" class="status" data-status="1">
-                    <span class="badge badge-warning">Inactive</span>
+                   Inactive
                   </a>
                 @else
                   <a href="{{route('manage-customer.status', $user->id)}}" class="status" data-status="0">
-                    <span class="badge badge-success">Active</span>
+                   Active
                   </a>
                 @endif
-              </td>
+              </td> -->
               <td>
                   <a href="{{route('manage-customer.edit',encrypt( $user->id))}}" title="edit">
-                    <button type="button" class="btn btn-primary"><i class="fa fa-edit"></i></button>
+                    <button type="gradient" color="warning" class="btn btn-warning" ><i class="fa fa-edit"></i></button>
                   </a>
                   <a href="{{route('manage-customer.show',encrypt( $user->id))}}" class="view" title="view">
-                    <button type="button" class="btn btn-info "><i class="fa fa-eye"></i></button>
+                    <button type="gradient" color="success" class="btn btn-success" > <i class="fa fa-eye"></i></button>
                   </a>
-                  <a href="{{route('manage-customer.destroy', encrypt( $user->id))}}" id="delete" data-token="{{csrf_token()}}" title="delete"> 
-                    <button type="button" class="btn btn-danger"><i class="fa fa-trash"></i></button>
+                  <a href="{{route('manage-customer.destroy', encrypt( $user->id))}}" class="delete" data-token="{{csrf_token()}}" title="delete"> 
+                    <button type="gradient" color="danger" class="btn btn-danger"> <i class="fa fa-trash"></i></button>
                   </a>
               </td>
             </tr>

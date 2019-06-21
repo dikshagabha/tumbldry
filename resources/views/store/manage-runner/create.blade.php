@@ -1,4 +1,4 @@
-@extends('store.layouts.app')
+@extends('store.layout-new.app')
 @section('title', 'Manage Runner')
 @section('css')
   <link rel="stylesheet" href="{{ asset('css/chosen/bootstrap-chosen.css') }}">
@@ -10,37 +10,50 @@
 @section('content')
 
 
-<div class="content">
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12">
-          <div class="card card-stats">
-
-<form action="{{route('manage-runner.store')}}" method="post"  id="addFrenchise" enctype="multipart/form-data">
- 
-  @csrf
-  @include('store.manage-runner.form')
-
-   <div class="row">
-     <div class="col-lg-3 col-md-3 col-sm-3">
-     </div>
-     <div class="col-lg-3 col-md-3 col-sm-3">
-      <a href="{{route('manage-runner.index')}}">
-        <button type="button" class="btn btn-default" data-id="5">Cancel</button>
-      </a>
+<vs-row vs-justify="center">
+  <vs-col type="flex" vs-justify="center" vs-align="center" vs-w="11">
+      <div slot="header">
+        <h3>
+          Create Runner
+        </h3>
       </div>
-     <div class="col-lg-5 col-md-5 col-sm-5">
-        <button type="button" class="btn btn-warning" id="add_frenchise" data-url="{{route('manage-runner.store')}}">Create</button>
-     </div>
-    </div>
-</form>
+      <div>
 
-</div>
-  </div>
+        <vs-row vs-justify="center">
+         <vs-col type="flex" vs-justify="center" vs-align="center" vs-w="11">
 
+          <a href="{{route('manage-runner.index')}}">
+
+              <vs-button color="danger" type="border" icon="arrow_back"></vs-button>
+          
+          </a>
+            <br>
+         <form action="{{route('manage-runner.store')}}" method="post"  id="addFrenchise" enctype="multipart/form-data">
+        @csrf
+        @include('store.manage-runner.form')
+
+         <div class="row">
+           <div class="col-lg-3 col-md-3 col-sm-3">
+           </div>
+           <!--<div class="col-lg-3 col-md-3 col-sm-3">
+             <a href="{{route('manage-customer.index')}}">
+              <vs-button color="danger" type="border">Cancel</vs-button>
+            </a>
+            </div> -->
+           <div class="col-lg-5 col-md-5 col-sm-5">
+            <vs-button color="primary" type="border"  id="add_frenchise" data-url="{{ route('manage-runner.store') }}">
+              Create
+            </vs-button>
+           </div>
+          </div>
+        </form>
+      </vs-col>
+    <br>
+    </vs-row>
     </div>
-  </div>
-</div>
+  </vs-col>
+</vs-row>
+
 @endsection
 
 @push('js')
@@ -66,7 +79,7 @@ $(document).ready(function(){
       contentType: false,      
       success: function(data){
         success(data.message);
-        //window.location=data.redirectTo;
+        window.location=data.redirectTo;
         $('body').waitMe('hide');
       }
     })

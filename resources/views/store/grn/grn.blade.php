@@ -20,7 +20,7 @@ $i = 1;
 	</tr>	
 	@if($order->itemimage->count())
 	<tr>
-		@foreach($order->itemimage as $item)
+		@foreach($order->itemimage->where('addon_id', '!=', null) as $item)
 			<td style="text-align: center;">
 				{{$item->addons->name}}
 			</td>

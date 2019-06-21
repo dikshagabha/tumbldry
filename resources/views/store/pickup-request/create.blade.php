@@ -1,23 +1,34 @@
-@extends('store.layouts.app')
+@extends('store.layout-new.app')
 @section('title', 'Pickup Request')
-
-@section('content')
 @section('css')
   <link rel="stylesheet" href="{{ asset('css/chosen/bootstrap-chosen.css') }}">
   <link rel="stylesheet" href="{{ asset('css/jcf.css') }}">
   <link rel="stylesheet" href="{{ asset('css/jquery.datetimepicker.css') }}">
-  <!-- <style type="text/css">
-    div[data-acc-content] { display: none;  }
-  </style> -->
 @endsection
+@section('content')
 
-<div class="content">
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12">
-          <div class="card card-stats">
 
-<form action="{{route('store-pickup-request.store')}}" method="post"  id="addFrenchise" enctype="multipart/form-data">
+
+<vs-row vs-justify="center">
+  <vs-col type="flex" vs-justify="center" vs-align="center" vs-w="11">
+    <div slot="header">
+        <h3>
+          Create Pickup Request
+        </h3>
+      </div>
+      <div>
+
+        <vs-row vs-justify="center">
+         <vs-col type="flex" vs-justify="center" vs-align="center" vs-w="11">
+
+          <a href="{{route('store-pickup-request.index')}}">
+
+              <vs-button color="danger" type="border" icon="arrow_back"></vs-button>
+          
+          </a>
+            <br>
+
+            <form action="{{route('store-pickup-request.store')}}" method="post"  id="addFrenchise" enctype="multipart/form-data">
  <br>
   @csrf
   @include('store.pickup-request.form')
@@ -25,28 +36,25 @@
    <div class="row">
      <div class="col-lg-3 col-md-3 col-sm-3">
      </div>
-     <div class="col-lg-3 col-md-3 col-sm-3">
-      <a href="{{route('store-pickup-request.index')}}">
-        <button type="button" class="btn btn-default" data-url="{{route('pickup-request.index')}}">Cancel</button>
-      </a>
-      </div>
      <div class="col-lg-5 col-md-5 col-sm-5">
+
        <a href="{{route('store-pickup-request.store')}}" id="add_frenchise">
-          
-          <button type="submit" class="btn btn-success">Save</button>
+            
+          <vs-button color="primary" type="border">
+              Create
+            </vs-button>
        </a>
      </div>
     </div>
 </form>
-
-</div>
-  </div>
-
+      </vs-col>
+    <br>
+    </vs-row>
     </div>
-  </div>
-</div>
+  </vs-col>
+</vs-row>
 
-<div id="addressModal" class="modal fade" role="dialog">
+<div id="addressModal" class="modal" role="dialog">
   <div class="modal-dialog modal-lg">
     <!-- Modal content-->
     <div class="modal-content">
@@ -70,7 +78,7 @@
   </div>
 </div>
 
-<div id="selectAddressModal" class="modal fade" role="dialog">
+<div id="selectAddressModal" class="modal" role="dialog">
   <div class="modal-dialog modal-lg">
     <!-- Modal content-->
     <div class="modal-content">
@@ -110,9 +118,35 @@
 $(document).ready(function(){
 
   $('#service').chosen();
-  $("#picker").flatpickr({enableTime: true,
+  $("#picker").flatpickr({enableTime: false,
     defaultDate:moment(),
-    minDate:moment().add(3, 'hours').format("YYYY-MM-DD HH:mm:ss")});
+    minDate:moment().add(3, 'hours').format("YYYY-MM-DD HH:mm:ss")
+  });
+  $("#picker_start").flatpickr({
+    enableTime: true,
+    noCalendar: true,
+    dateFormat: "H:i",
+    minDate:moment().format("HH:mm"),
+    defaultDate:moment().format("HH:mm"),
+    onChange:function(data, time){
+      $("#picker_end").flatpickr({
+        enableTime: true,
+        noCalendar: true,
+        minDate:time,
+        defaultDate:time,
+      });
+    }
+  });
+
+ $("#picker_end").flatpickr({
+    enableTime: true,
+    noCalendar: true,
+    dateFormat: "H:i",
+    minDate:moment().format("HH:mm"),
+   // defaultDate:moment().format("HH:mm"),
+
+  });
+
 
   $('input[type=radio][name=property_type]').change(function() {
     if (this.value == 1) {
@@ -122,6 +156,64 @@ $(document).ready(function(){
          $(".lease_data").hide()
     }
   });
+
+  $(document).on('focusout', '#phone', function(e){
+    
+      e.preventDefault(); 
+      $(".error").html("")
+      $('body').waitMe(); 
+      
+      $.ajax({
+        url: $('#search-user').data('url'),
+        type:'post',
+        data: {'phone_number':$('#phone').val()},
+        success: function(data){
+          success(data.message);
+          if (data.customer) 
+          {
+              $('#name').val(data.customer['name']).prop('readonly', true);
+            $('#email').val(data.customer['email']).prop('readonly', true);
+            $('#phone').val(data.customer['phone_number']).prop('readonly', true);
+
+              $('#address_form').text(data.customer.address);
+              $("#customer_id").val(data.customer.id);
+              $("#address_id").val(data.customer.address_id);
+              if (data.address) {
+                $('#address').text(data.address.address);
+                $("#address_id").val(data.address.id);
+             }
+
+             $(".select").show();
+             $(".add").hide();
+              
+          }
+          $('body').waitMe('hide');
+        },
+        error: function(data){
+
+           if (data.status==422) {
+            $('body').waitMe('hide');
+                    var errors = data.responseJSON;
+                    for (var key in errors.errors) {
+                      console.log(errors.errors[key][0])
+                        $("#"+key+"_error").html(errors.errors[key][0])
+                      }
+          }else{
+            error(data.responseJSON.message);
+            $(".select").hide();
+            $(".add").show();
+            $('#name').val('').prop('readonly', false);
+            $('#email').val('').prop('readonly', false);
+            $('#phone').val('').prop('readonly', false);
+            $('#address_form').text('');
+            $("#customer_id").val("");
+            $("#address_id").val("");
+             $('body').waitMe('hide');
+           }
+        }
+
+      })
+  })
 
   $(document).on('click', '#search-user', function(e){
     e.preventDefault(); 
@@ -156,6 +248,14 @@ $(document).ready(function(){
         $('body').waitMe('hide');
       },
       error: function(data){
+          if (data.status==422) {
+            $('body').waitMe('hide');
+                    var errors = data.responseJSON;
+                    for (var key in errors.errors) {
+                      console.log(errors.errors[key][0])
+                        $("#"+key+"_error").html(errors.errors[key][0])
+                      }
+          }else{
             error(data.responseJSON.message);
             $(".select").hide();
             $(".add").show();
@@ -166,6 +266,8 @@ $(document).ready(function(){
             $("#customer_id").val("");
             $("#address_id").val("");
              $('body').waitMe('hide');
+          }
+            
       }
     })
   })
