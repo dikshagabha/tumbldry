@@ -49,7 +49,7 @@
                <i class="material-icons">question_answer</i> Orders</a>
               </li>
               <li class="nav-item ">
-              <a class="nav-link" href="{{ route('store.export-settlement') }}">
+              <a class="nav-link" href="{{ route('store.settlement-reports') }}">
                 <i class="material-icons">money</i> Settlement Sheet</a>
               </li>
 

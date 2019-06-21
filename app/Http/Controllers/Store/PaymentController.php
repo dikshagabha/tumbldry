@@ -83,13 +83,12 @@ class PaymentController extends Controller
 
         $order = Order::where('id', $response['order_id'])->first();
         
-        UserPayments::insert( [
-                                    'order_id'=>$response['order_id'], 'price'=>$response['amount'],
-                                    'to_id'=>$order->store_id, 'type'=>5, 'payment_mode'=>$response['payment_mode'],
-                                    'transaction_id'=>$response['tracking_id'],
-                                    'user_id'=>$order->customer_id, 'created_at'=>Carbon::now(),
-                                     'updated_at'=>Carbon::now()
-                                  ]);
+        UserPayments::insert( ['order_id'=>$response['order_id'], 'price'=>$response['amount'],
+                              'to_id'=>$order->store_id, 'type'=>5, 'payment_mode'=>$response['payment_mode'],
+                              'transaction_id'=>$response['tracking_id'],
+                              'user_id'=>$order->customer_id, 'created_at'=>Carbon::now(),
+                               'updated_at'=>Carbon::now()
+                            ]);
 
         return view('success');
     
@@ -127,7 +126,6 @@ class PaymentController extends Controller
     }
 
     public function payment(Request $request){
-       
        $order_id =  $request->input('order_id');
        //dd($request->input('payment_mode'));
        if ($request->input('send_link')) {
@@ -182,7 +180,6 @@ class PaymentController extends Controller
                ]);
               $card_pay = $request->input('card_price');
             }
-
             if ($cash_pay+$loyality_pay+$wallet_pay+$card_pay != $order->total_price) {
               return response()->json(["message"=>"Please enter valid price."], 400);
             }

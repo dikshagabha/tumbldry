@@ -29,7 +29,7 @@
         @endforeach
         </div>
         <li class="nav-item d-md-down-none">
-          <a class="nav-link settings" >
+          <a class="nav-link settings" href="#">
             <i class="fa fa-cog"></i>
           </a>
         </li>

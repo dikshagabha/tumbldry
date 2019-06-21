@@ -9,7 +9,10 @@ use App\Model\{
 	Address,
 	Location,
   Order,
-  UserPayments
+  UserPayments,
+  Service,
+  UserFranchiseShare,
+  Items
 };
 use Carbon\Carbon;
 use App\User;
@@ -17,15 +20,32 @@ use Excel;
 use App\Exports\SettlementExport;
 class ReportsController extends Controller
 {
-    protected $user;
+  protected $user;
 	protected $useraddress;
 	protected $location;
 
+  protected $gst;
+  protected $cgst;
+  //protected $gst;
+  
 	public function __construct(){
     $this->middleware(function($request, $next) {
         $this->user = Auth::user()->load('addresses');
         $this->useraddress = $this->user->addresses->first();
         $this->location = Location::where('pincode', $this->useraddress->pin)->first();
+
+        $this->gst = 9;
+        $this->cgst = 9;
+        
+        if ($this->user->gst) {
+          $this->gst = 0;
+          $this->cgst = 0;
+          if ($this->user->gst->enabled) {
+            $this->gst = $user->gst->gst;
+            $this->cgst = $user->gst->cgst;
+          }
+        }
+
         return $next($request);
     });
   }
@@ -155,6 +175,71 @@ class ReportsController extends Controller
     
     return view('store.reports.accounting.ledger.index', compact('users', 'activePage', 'titlePage', 'timezone', 'months'));
   
+  }
+
+  public function settlement(Request $request){
+    $activePage = 'reports';
+    $titlePage = 'Settlement Reports';
+    $timezone = $request->session()->get('user_timezone', 'Asia/Calcutta');
+    
+    
+      $month = Carbon::now()->month-1;
+      $payments = UserPayments::where('to_id', $this->user->id)->with('order')
+                  ->whereIn('type', [1, 5])
+                  ->when($request->filled('start_date'), function ($q) use($request){
+                      $q->where('created_at', '>=',$request->input('start_date'));
+                  })
+                  ->when($request->filled('end_date'), function ($q) use($request){
+                      $q->where('created_at', '<=',$request->input('end_date'));
+                  })
+                  ->get();
+      
+      $services = Service::get();
+      $laundary = $services->where('form_type', 2)->where('type', 1)->pluck('id');
+      $dryclean =  $services->where('form_type', 1)->where('type', 1)->pluck('id');
+      $other =  $services->wherenotIn('form_type', [1, 2])->where('type', 1)->pluck('id');
+
+
+      $A=$B=$C=0;
+
+      foreach ($payments as $key => $value) {
+        $order = $value->order;
+        if (!$order) {
+          break;    
+        }
+        if (in_array($order->service_id, $laundary->toArray())) {
+          $A+=$value->price;
+        }
+        if (in_array($order->service_id, $dryclean->toArray())) {
+          $B+=$value->price;
+        }
+        if (in_array($order->service_id, $other->toArray())) {
+          $C+=$value->price;
+        }
+      }
+
+      $D = $payments->where('type', '1')->sum('price');
+      $E = $payments->where('type', '5')->sum('price'); 
+      
+      $shares = UserFranchiseShare::where('user_id', $this->user->id)->first();
+      $items  = Items::where('type', 11)->get();
+
+      $payments = UserPayments::whereIn('order_id', $items->pluck('id'))->where('type', 21)->get();
+
+      $total_billing = $payments->sum('price');
+      if (!$shares) {
+        $shares = UserFranchiseShare::where('user_id', 0)->first();
+      }
+
+      $gst = $this->gst;
+      $cgst = $this->cgst;
+
+      if ($request->ajax()) {
+        return view('store.reports.settlement.list', compact('users', 'A', 'B', 'C', 'D','E', 'shares', 'items', 'payments',
+      'total_billing', 'gst', 'cgst'));
+      }
+      
+      return view('store.reports.settlement.index', compact('users', 'activePage', 'titlePage', 'A', 'B', 'C', 'D','E',  'shares', 'items', 'payments', 'total_billing' , 'gst', 'cgst')); 
   }
 
 }
