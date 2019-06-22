@@ -11,6 +11,8 @@ use App\Repositories\CommonRepository;
 use JWTAuth;
 use Ixudra\Curl\Facades\Curl;
 use Carbon\Carbon;
+
+use App\Model\Otp;
 /**
  * Class HomeRepository.
  */
@@ -74,6 +76,8 @@ class HomeRepository extends BaseRepository
             $data = [];
             foreach ($address as $key => $value) {
                 $value['user_id']=$id;
+                $value['created_at']=Carbon::now();
+                $value['updated_at']=Carbon::now();
                 array_push($data, $value);
             }
             $address =  Address::insert($data);
@@ -91,12 +95,13 @@ class HomeRepository extends BaseRepository
      public static function login($request)
     {
         // get the user email
-        $credentials = $request->only('email', 'password');
+        $credentials = $request->only('phone_number', 'password');
         $credentials['role'] = 4;
         $credentials['status'] = 1;
         //dd(JWTAuth::attempt($credentials));
         // attempt to verify the credentials and a token for the user
         if ($token = JWTAuth::attempt($credentials)) {
+            
             // token generated successfully
             $response = compact('token');
             // find the user
@@ -106,12 +111,10 @@ class HomeRepository extends BaseRepository
             $user->device_token = $request->input('device_token', '');
             $user->last_login = Carbon::now();
             $user->save(); // save the user (update the device token)
-
-            // $common = new CommonRepositary;
-            // $common->getManageToken($token, $user->id); // save the token in the database
+            CommonRepository::getManageToken($token, $user->id);
 
             $response['http_status'] = 200;
-            $response['data'] = $user;
+            $response['details'] = $user;
             $response['message'] = 'User logged in successfully';
         } else {
             $response['message'] = 'Please enter valid credentials';
@@ -119,5 +122,52 @@ class HomeRepository extends BaseRepository
         }
 
         return $response;
+    }
+
+     public static function sendOtp($request)
+    {
+        $user = User::where('phone_number', $request->input('phone_number'))->first();
+        
+        $otp = rand(0000, 9999);
+        
+        if ( $user ) {
+            if ($user->role != 4) {
+                return ['message'=>'The phone number has already been taken for another user.', 'code'=>2 , 
+                            'http_status'=>400];
+            }
+        }
+        if (!$user) {
+            $user = User::create(['phone_number'=>$request->input('phone_number')]);
+        }
+        $res = CommonRepository::sendmessage($request->input('phone_number'), "Hi $user->name,\n The otp for your login is ".$otp.".");
+
+        $user->password = bcrypt($otp);
+        $user->save();
+
+        if ($otp) {
+            return ['message'=>'Success', 'code'=>1, 'details'=>['otp'=>$otp], 'http_status'=>200];
+        }
+        return ['message'=>'Something Went Wrong!', 'code'=>2 , 'http_status'=>400];
+    }
+
+    public static function verifyOtp($request)
+    {
+        $user = User::where('phone_number', $request->input('phone_number'))->whereRole(5)->first();
+        if (!$user) {
+            return ['message'=>'runner not found.', 'http_status'=>400];
+        }
+        $otp = Otp::where(['user_id'=>$user->id, 'otp'=>$request->input('otp')])->first();
+        
+        $user->password = bcrypt($request->input('otp'));
+        $user->save();
+
+        if($otp){
+              // if ($otp->expiry->lt(Carbon::now())) {
+              //   return ['message'=>'Otp has expired.', 'http_status'=>200];
+              // }
+              $otp->delete();
+            return ['message'=>'Success', 'http_status'=>200, 'code'=>1];
+        }
+        return ['message'=>'Something Went Wrong!', 'code'=>2, 'http_status'=>400];
     }
 }

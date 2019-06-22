@@ -73,9 +73,12 @@ class CommonRepository extends BaseRepository
         //$response = $sms->send($message, $user);
         
         //dd('kasldll');
+        $message  = urlencode($message);
         $url = 'https://push.sanketik.net//api/push?accesskey=jzzUlHL4NqhWs6VHzmUkGkYTaQKD7T&to='.$user.'&text='.$message.'&from=TBLDRY';
 
-        //dd($url);
+        //$url = str_replace(' ', '%20', $url);
+
+         //$url = urlencode($message);
          $ch = curl_init();
          curl_setopt($ch, CURLOPT_URL, $url);
          curl_setopt($ch, CURLOPT_POST, 0);
@@ -84,8 +87,8 @@ class CommonRepository extends BaseRepository
          $response = curl_exec ($ch);
          $err = curl_error($ch);  //if you need
          curl_close ($ch);
-         
-         //dd($url);
+          //dd($response);
+        
 
          if ($response) {
             $response = json_decode($response);
