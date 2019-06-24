@@ -3,67 +3,62 @@
     <ul class="nav">
       <li class="nav-item active-link">
         <a class="nav-link" href="{{ route('store.home') }}">
-          <i class="material-icons">person</i>  Dashboard
+          <i class="fa fa-tachometer" aria-hidden="true"></i> Dashboard
         </a>
       </li>
 
        <li class="nav-item">
         <a class="nav-link" href="{{ route('manage-runner.index') }}">
-          <i class="material-icons">person</i> Runner
+         <i class="fa fa-id-badge" aria-hidden="true"></i> Runner
         </a>
       </li>
 
        <li class="nav-item active-link">
         <a class="nav-link" href="{{ route('manage-customer.index') }}">
-          <i class="material-icons">verified_user</i>  Customer
+          <i class="fa fa-check-circle-o" aria-hidden="true"></i>  Customer
         </a>
       </li>
 
        <li class="nav-item active-link">
         <a class="nav-link" href="{{ route('store-pickup-request.index') }}">
-          <i class="material-icons">account_box</i> Pickup Request
+          <i class="fa fa-address-book-o" aria-hidden="true"></i> Pickup Request
         </a>
       </li>
        <li class="nav-item active-link">
         <a class="nav-link" href="{{ route('store.create-order.index') }}">
-          <i class="material-icons">question_answer</i> Orders</a>
+          <i class="fa fa-compass" aria-hidden="true"></i> Orders</a>
       </li>
        <li class="nav-item active-link">
         <a class="nav-link" href="{{ route('manage-plans.index') }}">
-          <i class="material-icons">money_off</i> Plans
+          <i class="fa fa-link" aria-hidden="true"></i> Plans
         </a>
       </li>
 
       <li class="nav-item active-link">
         <a class="nav-link" href="{{ route('store.getRate') }}">
-          <i class="material-icons">money</i> Rates
+          <i class="fa fa-money" aria-hidden="true"></i> Rates
         </a>
       </li>
       <li class="nav-title">Reports</li>
-            <li class="nav-item ">
-              <a class="nav-link" href="{{ route('store.customer-reports') }}">
-                <i class="material-icons">verified_user</i> Customer</a>
-              </li>
-              <li class="nav-item ">
-              <a class="nav-link" href="{{ route('store.order-reports')  }}">
-               <i class="material-icons">question_answer</i> Orders</a>
-              </li>
+        <li class="nav-item ">
+          <a class="nav-link" href="{{ route('store.customer-reports') }}">
+            <i class="fa fa-check-circle-o" aria-hidden="true"></i>  Customer
+          </a>
+          </li>
+          <li class="nav-item ">
+          <a class="nav-link" href="{{ route('store.order-reports')  }}">
+           <i class="fa fa-compass" aria-hidden="true"></i> Orders</a>
+          </li>
 
-              <li class="nav-item ">
-              <a class="nav-link" href="{{ route('store.ledger-reports')  }}">
-               <i class="material-icons">question_answer</i> Ledger</a>
-              </li>
+          <li class="nav-item ">
+          <a class="nav-link" href="{{ route('store.ledger-reports')  }}">
+           <i class="fa fa-book" aria-hidden="true"></i> Ledger</a>
+          </li>
 
-              <li class="nav-item ">
-              <a class="nav-link" href="{{ route('store.settlement-reports') }}">
-                <i class="material-icons">money</i> Settlement Sheet</a>
-              </li>
-
-              </ul>
-            </li>
-        
-
-      
+          <li class="nav-item ">
+          <a class="nav-link" href="{{ route('store.settlement-reports') }}">
+            <i class="fa fa-money" aria-hidden="true"></i> Settlement Sheet</a>
+          </li>      
     </ul>
   </nav>
 </div>

@@ -4,7 +4,7 @@
 
 <vs-row vs-justify="center">
   <vs-col type="flex" vs-justify="center" vs-align="center" vs-w="11">
-    <vs-card>
+    
       <div slot="header">
         <h3>
           Plans Details
@@ -25,9 +25,7 @@
         
       </div>
       <div slot="footer">
-        
       </div>
-    </vs-card>
   </vs-col>
 </vs-row>
 <div id="addressModal" class="modal fade" role="dialog">

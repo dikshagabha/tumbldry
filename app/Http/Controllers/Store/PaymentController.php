@@ -131,11 +131,9 @@ class PaymentController extends Controller
        if ($request->input('send_link')) {
          $validate=$request->validate([
           'phone_number'=>'bail|required|numeric|digits_between:8,15']);
-          CommonRepository::sendmessage($request->input('phone_number'), route('order.pay', $order_id));
-
-          return response()->json(["message"=>"Payment Success", 'redirectTo'=>route('store.create-order.index')], 200);
+         $response =  CommonRepository::sendmessage($request->input('phone_number'), "Hello, \n Please use link for payment ".route('order.pay', $order_id));
+         return response()->json(["message"=>"Payment Success", 'redirectTo'=>route('store.create-order.index')], 200);
        }
-
        $request->validate([
         'payment_mode'=>'bail|required|array',
         'order_id'=>'bail|required|numeric'
