@@ -16422,16 +16422,12 @@ body {
       margin: 8px 10px 12px;
     }
     .btn-danger {background-image: linear-gradient(to right, #DD5E89 0%, #F7BB97 51%, #DD5E89 100%)}
-    .btn-danger:hover { background-position: right center; }
-
+    
     .btn-warning {background-image: linear-gradient(to right, #2BC0E4 0%, #EAECC6 51%, #2BC0E4 100%)}
-    .btn-warning:hover { background-position: right center; }
-
+    
     .btn-success {background-image: linear-gradient(to right, #7474BF 0%, #348AC7 51%, #7474BF 100%)}
-    .btn-success:hover { background-position: right center; }
-
+    
     .btn-information {background-image: linear-gradient(to right, #00d2ff 0%, #3a7bd5 51%, #00d2ff 100%)}
-    .btn-information:hover { background-position: right center; }
-
+    
     .btn-light {background-image: linear-gradient(to right, blue 0%, indigo 51%, violet 100%)}
-    .btn-light:hover { background-position: right center; }
+    

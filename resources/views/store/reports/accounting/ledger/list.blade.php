@@ -36,8 +36,8 @@
                   Wallet
                 @elseif($user->type==3)
                   Loyality Points Redemption
-                @elseif($user->type==4)
-                  Internet Banking
+                @elseif($user->type==5)
+                  {{$user->payment_mode}}
                 @endif
               </td>
               <td>

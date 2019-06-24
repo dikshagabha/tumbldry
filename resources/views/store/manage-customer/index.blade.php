@@ -52,7 +52,7 @@
     
   </vs-col>
 </vs-row>
-<div id="addressModal" class="modal fade" role="dialog">
+<div id="addressModal" class="modal" role="dialog">
   <div class="modal-dialog">
     <!-- Modal content-->
     <div class="modal-content">
