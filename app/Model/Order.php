@@ -82,7 +82,7 @@ class Order extends Model
     public function getCustomerNameAttribute(){
         if ($this->customer()->count()) 
         {
-            return $this->customer()->first()->phone_number;
+            return $this->customer()->first()->name;
         }
         return "--";
     }

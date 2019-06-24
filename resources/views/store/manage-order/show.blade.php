@@ -2,7 +2,7 @@
 <table class="table table-bordered">
 	<tr >
 		<th width="50%">Order Id</th>
-		<td>ORDER{{$order->id}}</td>
+		<td>{{$order->id}}</td>
 	</tr>
 	
 	<tr>
@@ -11,11 +11,11 @@
 	</tr>
 	<tr>
 		<th>GST</th>
-		<td>{{$order->gst}} Rs</td>
+		<td>{{round($order->gst, 2)}} Rs</td>
 	</tr>
 	<tr>
 		<th>CGST</th>
-		<td>{{$order->cgst}} Rs</td>
+		<td>{{round($order->cgst, 2)}} Rs</td>
 	</tr>
 	<tr>
 		<th>Discount</th>
@@ -47,17 +47,6 @@ Items:
 		@endif
 		<th>Status</th>
 		@if($vendors)<th>Vendors</th>@endif
-
-		<!-- @if($order->service->form_type == 1 || $order->service->form_type == 2)
-		<th>GRN <input type="checkbox" name="select_all[]" title="Select All" class="select_all" value="0"><button type="button" id="grnBtn" data-url="{{route('store.getGrn')}}" class="btn btn-link" title="Print Grn">Print Tag</button>
-			<span id="grn_error" class="error"></span>
-		</th>
-		@endif -->
-		<!-- <th>Processed 
-			<input type="checkbox" name="select_all_deliver[]" title="Select All" class="select_all_deliver" value="0">
-			<button type="button" id="deliverBtn"  data-url="{{route('store.itemsDeliver')}}" class="btn btn-link" title="Items Ready to be delivered"><i class="fa fa-car"></i></button>
-			<span id="deliver_error" class="error"></span>
-		</th> -->
 	</tr>
 	
 	@foreach($order->items as $item)
@@ -70,11 +59,16 @@ Items:
 		<td>
 			
 			@if($item->itemimage->count()) 
-			
-				@foreach($item->itemimage->where('addon_id', '!=', null) as $addon)
-					{{ $addon->addon_name.','}}
+				
+				@foreach($item->itemimage->where('addon_id', '!=', null) as $key=>$addon)
+					
+					 
+					        {{ $addon->addon_name.','}}
+					
+					
 				@endforeach 
-			
+			@else
+			--
 			@endif
 		</td>
 		@endif
@@ -83,8 +77,10 @@ Items:
 				<a href="{{route('store.mark-recieved', $item->id)}}" value="{{ $item->status }}" class="mark_status">
 					 Pending 
 				</a> 
+				 @elseif($item->status==2)
+				 	Processed
 				 @else 
-					 Recieved
+					Recieved
 				 @endif
 		</td>
 		

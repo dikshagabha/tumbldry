@@ -1,35 +1,64 @@
 <html>
 <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 <script type="text/javascript" src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-<div class="container">
+<div class="container" style="font-size: 13px">
 	<h3 style="text-align: center;">Tax Invoice</h3>
 	<div class="row">
-		<div class="col-md-6 col-sm-6 col-lg-6">
-			<img src="{{asset('images/logo.png')}}" width="100px" height="100px">
-		</div>
-			ORDER # {{$order->id}}
+		<table class="table table-borderless">
+			<tr>
+				<td style="text-align: left;">
+					<img src="{{asset('images/logo.png')}}" width="40%" height="30%" >
+				</td>
+				<td style="text-align: right;">
+					ORDER #{{$order->id}}
+				</td>
+			</tr>
+		</table>
 	</div>
+
 	<hr>
 	<div class="row">
-		<div class="col-md-6 col-sm-6 col-lg-6 pull-left">
-			<strong>Billed To</strong>
-			<br>
-			{{$order->customer_name}}<br>{{$order->customer_phone_number}}<br>{{$order->customer_address}}
-
-		</div>
-		<div class="col-md-6 col-sm-6 col-lg-6 pull-right">
-			{{$user->store_name}}<br>{{$user->phone_number}}<br>{{$user->address}}
-		</div>
+		<table class="table table-borderless">
+			<tr>
+				<td>
+					<strong>Billed To</strong>
+					<br>
+						{{$order->customer_name}}<br>
+						{{$order->customer_phone_number}}<br>
+						{{$order->customer_address}}
+				</td>
+				<td style="text-align: right;">
+					{{$user->store_name}}<br>
+					{{$user->phone_number}}<br>
+					{{$user->address}}<br>
+					@if($user->gst)
+					<strong>GSTIN</strong>{{$user->gst}}
+					@endif
+				</td>
+			</tr>
+		</table>
+		
 	</div>
 	<br>
 	<div class="row">
-		<div class="col-md-6 col-sm-6 col-lg-6 pull-left">
-			<strong>Order Date</strong>
+
+		<table class="table table-borderless">
+			<tr>
+				<td>
+					<strong>Order Date</strong>
 			{{$order->created_at->format('d-m-y')}}
+				</td>
+				<td style="text-align: right;">
+					<strong>Arrival Date</strong>
+						{{$order->date_of_arrival->format('d-m-y')}}
+				</td>
+			</tr>
+		</table>
+		<div class="col-md-6 col-sm-6 col-lg-6 pull-left">
+			
 		</div>
 		<div class="col-md-6 col-sm-6 col-lg-6 pull-right">
-			<strong>Arrival Date</strong>
-			{{$order->date_of_arrival->format('d-m-y')}}
+			
 		</div>
 	</div>
 
@@ -41,8 +70,7 @@
 			@else
 				Unpaid
 			@endif
-		</div>
-		
+		</div>		
 	</div>
 	<div class="row">
 		<div class="col-md-12 col-sm-12 col-lg-12">
@@ -254,6 +282,12 @@
 				@endif
 			</table>
 		</div>
+	</div>
+	<div class="row"  style="text-align: center;">
+		Toll Free: 1800-1031-831 email:hello@tumbledry.in web: www.tumbledry.in 
+	</div>
+	<div class="row" style="font-size: 8px !important; text-align: center;">
+		 This is a computer generated Invoice no signature required.
 	</div>
 </div>
 </html>
