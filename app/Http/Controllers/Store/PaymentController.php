@@ -26,25 +26,25 @@ class PaymentController extends Controller
     protected $gst;
     protected $cgst;
 
-    // public function __construct(){
-    //   $this->middleware(function($request, $next) {
-    //       $this->user = Auth::user()->load('addresses', 'gst');
-    //       $this->useraddress = $this->user->addresses->first();
-    //       $this->location = Location::where('pincode', $this->useraddress->pin)->first();
-    //       $this->gst = 9;
-    //       $this->cgst = 9;
+    public function __construct(){
+      $this->middleware(function($request, $next) {
+          $this->user = Auth::user()->load('addresses', 'gst');
+          $this->useraddress = $this->user->addresses->first();
+          $this->location = Location::where('pincode', $this->useraddress->pin)->first();
+          $this->gst = 9;
+          $this->cgst = 9;
           
-    //       if ($this->user->gst) {
-    //         $this->gst = 0;
-    //         $this->cgst = 0;
-    //         if ($this->user->gst->enabled) {
-    //           $this->gst = $user->gst->gst;
-    //           $this->cgst = $user->gst->cgst;
-    //         }
-    //       }
-    //       return $next($request);
-    //   });
-    // }
+          if ($this->user->gst) {
+            $this->gst = 0;
+            $this->cgst = 0;
+            if ($this->user->gst->enabled) {
+              $this->gst = $user->gst->gst;
+              $this->cgst = $user->gst->cgst;
+            }
+          }
+          return $next($request);
+      });
+    }
     public function pay(Request $request, $id){
       $order = Order::where('id', $id)->first();
       $parameters = [

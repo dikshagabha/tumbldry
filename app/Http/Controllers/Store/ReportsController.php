@@ -201,12 +201,17 @@ class ReportsController extends Controller
 
 
       $A=$B=$C=0;
-
+     // echo "<pre>";
+      //
       foreach ($payments as $key => $value) {
         $order = $value->order;
+        
+         //print_r($value->toArray());
         if (!$order) {
-          break;    
+          continue;    
         }
+
+       
         if (in_array($order->service_id, $laundary->toArray())) {
           $A+=$value->price;
         }
@@ -217,7 +222,7 @@ class ReportsController extends Controller
           $C+=$value->price;
         }
       }
-
+     // die;
       $D = $payments->where('type', '1')->sum('price');
       $E = $payments->where('type', '5')->sum('price'); 
       
