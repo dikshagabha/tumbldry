@@ -90,4 +90,24 @@ class OrderRepository extends BaseRepository
                 ];
 
     }
+
+
+    public static function sendLink($request, $id){
+        $order = Order::where('id', $id)->first();
+
+        $phone = $order->customer_phone_number;
+        if ($request->input('phone_number')) {
+            $phone = $request->input('phone_number');
+        }
+        
+        $response = CommonRepository::sendmessage($request->input('phone_number'), route('order.pay', $id));
+        if ($response) {
+            return ['message'=>'Message Sent', 'http_status'=>200,
+                        'code'=>1, 'details'=>['response_data'=>$response]];
+        }
+
+        return ['message'=>'Message not Sent', 'http_status'=>400,
+                        'code'=>2, 'details'=>['response_data'=>$response]];
+        
+    }
 }

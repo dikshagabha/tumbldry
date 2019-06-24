@@ -50,6 +50,7 @@ Route::group([
     Route::post('cancel-request', 'PickupController@cancelRequest');
 
     Route::get('search-customer', 'CustomerController@searchCustomer');
+    Route::get('send-payment-link/{id}', 'OrderController@sendLink');
 
 
     // Route::post('refresh', 'AuthController@refresh');

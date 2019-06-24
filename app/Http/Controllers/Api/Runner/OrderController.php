@@ -108,5 +108,19 @@ class OrderController extends Controller
     }
 
 
+     public function sendLink(Request $request, $id)
+    {
+        
+        $response = OrderRepository::serviceItem($request, $id);
+       
+
+        if($request->input('callback'))
+        {
+            echo $request->input('callback')."(".json_encode($response).")";
+        }else{
+            return response()->json($response, 200);
+        }
+    }
+
 
 }
