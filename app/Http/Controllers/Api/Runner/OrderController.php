@@ -111,7 +111,7 @@ class OrderController extends Controller
      public function sendLink(Request $request, $id)
     {
         
-        $response = OrderRepository::serviceItem($request, $id);
+        $response = OrderRepository::sendLink($request, $id);
        
 
         if($request->input('callback'))
