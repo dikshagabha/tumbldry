@@ -65,7 +65,6 @@ Route::group([
 ], function ($router) {
 
     Route::get('otp', 'AuthController@sendOtp');
-    
     Route::get('addresses', 'HomeController@getcustomeraddresses');
     Route::get('update', 'HomeController@update');
     Route::post('login', 'AuthController@login');
