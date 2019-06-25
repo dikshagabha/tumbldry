@@ -95,7 +95,7 @@ class OrderController extends Controller
     {
         $request->validate(['service_id'=>'bail|required|numeric']);
 
-        $response = OrderRepository::serviceItem($request, $this->user);
+        $response = OrderRepository::serviceItems($request, $this->user);
        if($request->input('callback'))
         {
             echo $request->input('callback')."(".json_encode($response).")";
