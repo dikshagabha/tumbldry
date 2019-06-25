@@ -5,10 +5,11 @@ namespace App\Repositories\Runner;
 use JasonGuru\LaravelMakeRepository\Repository\BaseRepository;
 
 use App\Model\{
-	Service,
-	ServicePrice
+	Service, Order,
+	ServicePrice, Items
 };
 use App\User;
+use App\Repositories\CommonRepository;
 /**
  * Class OrderRepository.
  */
@@ -100,7 +101,7 @@ class OrderRepository extends BaseRepository
             $phone = $request->input('phone_number');
         }
         
-        $response = CommonRepository::sendmessage($request->input('phone_number'), route('order.pay', $id));
+        $response = CommonRepository::sendmessage($phone, route('order.pay', $id));
         if ($response) {
             return ['message'=>'Message Sent', 'http_status'=>200,
                         'code'=>1, 'details'=>['response_data'=>$response]];
