@@ -41,11 +41,12 @@
           {{Form::open(['url'=> route('store.create-order'), "id"=>"addFrenchise", 'enctype'=>"multipart/form-data"])}}   
               @csrf
           @include('store.manage-order.form-without-pickup')
+           </vs-col>
           <div class="ItemsAdded">
           </div>
           {{Form::close()}}
           <br>     
-      </vs-col>
+     
       <br>
 
       </vs-row>

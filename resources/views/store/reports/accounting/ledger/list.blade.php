@@ -1,11 +1,14 @@
 
 
+@php
+$i = 1;
+@endphp
  @if($users->count())
 
       <table class="table table-striped dataTable">
           <thead>
             <tr>
-              <th>Id</th>
+              <th>S.No.</th>
               <th>Type</th>
               <th>Price</th>
               <th>Payment Mode</th>
@@ -17,7 +20,7 @@
       @foreach($users as $user)
             <tr>
               <td>
-                {{$user->order_id}}
+                {{ $i }}
               </td>
               <td>
                 @if($user->type==11)
@@ -47,12 +50,16 @@
                   --
                 @endif
               </td>
-   
+          @php
+            $i++;
+            @endphp
 
             </tr>
             @endforeach
           </tbody>
       </table>
+
+
 
       @else
       No Records Found

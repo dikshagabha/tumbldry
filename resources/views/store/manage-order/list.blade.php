@@ -6,8 +6,8 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
       <thead>
         <tr>
          <!--  <th>S No</th> -->
-          <th>Order</th>
-          <th>Customer Id</th>
+          <th width="5%">Order</th>
+          <th width="5%">Customer Id</th>
           <th>Service</th>
           <th>Delivery Mode</th>
           <th>Payment</th>

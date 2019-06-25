@@ -3,10 +3,16 @@ $i=1;
 @endphp
 <hr>
 @if(count($items))
-<div class="row">
+<!-- <div class="row">
   	<div class="col-lg-7 col-md-7 col-sm-7 col-xs-7">	
-		<table class="table table-borderless table-dark ">
+	 -->
+
+	 <table>
+<tr>
+	 <td width="60%" valign="top">	
+	<table class="table table-borderless table-dark ">
 			<tbody>
+				<tr></tr>
 			@foreach($items as $item)
  				<tr>
 					<td width="40%">
@@ -14,14 +20,13 @@ $i=1;
 					</td>					
 					<td width="10%">
 							<input type="text" name="quantity" class="form-control quantityVal_{{$i}} quantity " 
-						 		data-url = "{{route('store.quantityItemSession')}}" data-service = {{$item['service_id']}} data-id='{{$i}}'
-						 value="{{$item['quantity']}}"  
-						>
-						</td>
+						 		data-url = "{{route('store.quantityItemSession')}}" data-service = {{$item['service_id']}} data-id='{{$i}}' style="color: black;width: 44px;" 
+						 value="{{$item['quantity']}}">
+					</td>
 					<td>
 						<td>
 							<input type="file" name="images[]" data-url = "{{route('store.filesItemSession')}}" multiple
-								class="upload_image" data-id="{{$i}}">	
+								class="upload_image form-control" data-id="{{$i}}">	
 								<span class="error" id="files_error"></span>
 							@if($item['images'])
 								@foreach($item['images'] as $image)
@@ -30,8 +35,7 @@ $i=1;
 								@endforeach
 							@endif
 						</td>
-					</td>
-										
+					</td>										
 					<td>				
 						<button type="button" class="btn btn-danger deleteItemBtn" action = "{{route('store.deleteItemSession')}}" data-add=@if($item['units']) 0 @else 1 @endif data-id="{{$i}}" title="Delete"><i class="fa fa-trash"></i></button>
 					</td>
@@ -86,25 +90,13 @@ $i=1;
 							<input type="hidden" name="weight" value="{{$item['weight']}}">
 							<input type="hidden" name="service" value="{{$item['service_id']}}">
 							<input type="hidden" name="id" value="{{$i}}">
-
-							<!-- <button type="button" class="btn btn-link addOn" data-url = "{{route('store.addonItemSession')}}" title="Add Addon" data-id='{{$i}}'
-							data-id="{{$i}}" style="color:white"> 
-								<i class="fa fa-refresh"></i>
-							</button> -->
-
-
 					 </div>
 					</td>
-
-					</tr>
-					
-
+				</tr>
 				@endif
-
-			
-			@php
-				$i++;
-			@endphp
+		@php
+			$i++;
+		@endphp
 		@endforeach
 		
 
@@ -131,15 +123,17 @@ $i=1;
 
 			<span class="error" id="quantity_error"></span>
 			<span class="error" id="addon_error"></span>
-	</div>
-	
+
+	</td>
+	<td  valign="top">
 	@if( $items[0]['weight'] )
-		<div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
+		<div style="float: right">
 			<table class="table-dark">
 				<thead>
 					<!-- <td width="50%"><h4>Item</h4></td>
 					<td width="50%"><h4>Price</h4></td> -->
 				</thead>
+				<tr></tr>
 				<tr>
 					<td style="text-align: center;" colspan="2"><strong>Price</strong></td>
 					<td style="text-align: center;">@if($price_data['estimated_price'])
@@ -167,13 +161,13 @@ $i=1;
 				</tr>
 				<tr >
 					<td style="text-align: center;" >Coupon</td>
-					<td style="text-align: center;" ><input type="text" name="coupon" id="coupon" class="form-control" value="{{$coupon_discount['coupon']}}" >
+					<td style="text-align: center;     width: 41%;" ><input type="text" name="coupon" id="coupon" class="form-control" value="{{$coupon_discount['coupon']}}" >
 					<span class="error" id="coupon_error"></span></td>
 					<td style="text-align: center;" ><button type="button" class="btn btn-danger" data-url="{{route('store.couponItemSession')}}" id="couponBtn">Apply</button></td>
 
 				</tr>
 				@if($coupon_discount['coupon'])
-					<tr> <td> Coupon Discount </td><td>{{$coupon_discount['discount']}} Rs</td></tr>
+					<tr> <td colspan="3" style="text-align: center;"> Coupon Discount: {{$coupon_discount['discount']}} Rs</td></tr>
 				@endif
 
 				<tr >
@@ -186,11 +180,9 @@ $i=1;
 					 </td>
 				</tr>
 				<tr >
-					<td colspan="2" style="text-align: center;">
-						TOTAL PRICE
-					</td>
-					<td style="text-align: center;">
-
+					<td colspan="3" style="text-align: center;">
+						TOTAL PRICE:
+					
 						@if($price_data['total_price'])
 							{{$price_data['total_price']}}
 						@else
@@ -200,7 +192,7 @@ $i=1;
 				</tr>
 				 @if(isset($wallet['wallet']))
 				<tr>
-					<td colspan="2">Customer Wallet</td><td>{{ $wallet['wallet']->price}} Rs</td> 
+					<td colspan="3" style="text-align: center;">Customer Wallet: {{ $wallet['wallet']->price}} Rs</td>
 				</tr>
 				@endif 
 				<tr >
@@ -209,7 +201,9 @@ $i=1;
 			</table>
 		</div>
 	@endif
-</div>
+</td>
+</tr>
+</table>
 @else
 
 @endif

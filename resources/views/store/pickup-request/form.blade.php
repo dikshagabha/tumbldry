@@ -66,15 +66,15 @@
               <label class="login2 pull-right pull-right-pro">Pickup Time</label>
             </div>
             <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-               <input type="text" id="picker" name="request_time" class="form-control">                 
+               <input type="text" id="picker" name="request_time" class="form-control" placeholder="Date">                 
                <span class="error" id="request_time_error"></span>
             </div>  
              <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-               <input type="text" id="picker_start" name="start_time" class="form-control">                 
+               <input type="text" id="picker_start" name="start_time" placeholder="From" class="form-control">                 
                <span class="error" id="start_time_error"></span>
             </div>
              <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-               <input type="text" id="picker_end" name="end_time" class="form-control">                 
+               <input type="text" id="picker_end" name="end_time" placeholder="To" class="form-control">                 
                <span class="error" id="start_time_error"></span>
             </div>  
         </div>

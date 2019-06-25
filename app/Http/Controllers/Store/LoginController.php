@@ -63,7 +63,7 @@ class LoginController extends Controller
 
         $user = User::where('phone_number', $Request->input('phone_number'))->update(['password'=>bcrypt($pswd)]);
 
-        $data = urlencode('Hello, Use '.$pswd.' as your password to login.');
+        $data = 'Hello, Use '.$pswd.' as your password to login.';
 
         CommonRepository::sendmessage($Request->input('phone_number'), $data);
 

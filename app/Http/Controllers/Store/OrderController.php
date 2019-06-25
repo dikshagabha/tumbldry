@@ -101,7 +101,7 @@ class OrderController extends Controller
 
             $customer = $order->customer;
             if ($customer->phone_number) {
-              CommonRepository::sendmessage($customer->phone_number, 'Your%20order%20ORDER'.$id.'%20has%20been%20recieved%20by%20store.');
+              CommonRepository::sendmessage($customer->phone_number, 'Your order '.$id.' has been recieved by store');
               $updateitems = OrderItems::where('order_id', $id)->update(['status'=>3]);
               $date = Carbon::now($request->header('timezone'));
               $order->date_of_arrival = $date;
@@ -146,7 +146,7 @@ class OrderController extends Controller
       $runner = User::where('id', $request->input('runner_id'))->first();
       if ($runner->phone_number) {
         
-       // CommonRepository::sendmessage($runner->phone_number, 'Delivery%20of%20order%20id%20ORDER'.$id.'%20has%20been%20requested%20by'.$this->user->store_name);
+       // CommonRepository::sendmessage($runner->phone_number, 'Delivery of order id ORDER'.$id.' has been requested by'.$this->user->store_name);
       }
       DB::commit();
       
@@ -762,9 +762,9 @@ class OrderController extends Controller
       $mes = str_replace('@order_id@', $order->id, $mes);
       $mes = str_replace('@total_clothes@', $order->id, $mes);
       
-      $mes = str_replace(' ', '%20', $mes);
+      $mes = str_replace(' ', ' ', $mes);
 
-      //CommonRepository::sendmessage($request->input('phone_number'), $mes);
+      CommonRepository::sendmessage($request->input('phone_number'), $mes);
       DB::commit();
       return response()->json([ 'redirectTo'=>route('store.paymentmodes', $order->id), 'message'=>'Order has been created Successfully'], 200); 
    } catch (Exception $e) {
@@ -893,6 +893,8 @@ class OrderController extends Controller
     //dd($items);
     if(!$items) {
       $order->status=4;
+
+      CommonRepository::sendmessage($order->customer_phone_number, 'Hello '. $order->customer_name.' Your order is processed');
       $order->save();
     }
     

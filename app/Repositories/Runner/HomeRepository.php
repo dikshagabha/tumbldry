@@ -117,7 +117,7 @@ class HomeRepository extends BaseRepository
         //$otp = 1234;
         $otp = Otp::create(['user_id'=>$user->id, 'otp'=> $otp, 'expiry'=>Carbon::now()->addMinutes(15)]);
 
-        $res = CommonRepository::sendmessage($request->input('phone_number'), "Hi%20$user->name,%20%20The%20otp%20for%20your%20login%20is%20".$otp->otp.".");
+        $res = CommonRepository::sendmessage($request->input('phone_number'), "Hi $user->name,  The otp for your login is ".$otp->otp);
         
         //dd($res);
         
