@@ -7,13 +7,13 @@
 		@if($type==1)
 		<th>GRN 
 			<input type="checkbox" name="select_all[]" title="Select All" class="select_all" value="0">
-			<button type="button" id="grnBtn" data-url="{{route('store.getGrn')}}" class="btn btn-link" title="Print Grn">Print Tag</button>
+			@if($order->status != 6)<button type="button" id="grnBtn" data-url="{{route('store.getGrn')}}" class="btn btn-link" title="Print Grn">Print Tag</button>@endif
 			<span id="grn_error" class="error"></span>
 		</th>
 		@else
 		<th>Processed 
 			<input type="checkbox" name="select_all_deliver[]" title="Select All" class="select_all_deliver" value="0">
-			<button type="button" id="deliverBtn"  data-url="{{route('store.itemsDeliver')}}" class="btn btn-link" title="Items Ready to be delivered"><i class="fa fa-car"></i></button>
+			@if($order->status != 6)<button type="button" id="deliverBtn"  data-url="{{route('store.itemsDeliver')}}" class="btn btn-link" title="Items Ready to be delivered"><i class="fa fa-car"></i></button>@endif
 			<span id="deliver_error" class="error"></span>
 		</th>
 

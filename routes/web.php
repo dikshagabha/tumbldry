@@ -169,6 +169,8 @@ Route::prefix('store')->namespace('Store')->group(function () {
           Route::get('/create-order/{id}', 'OrderController@create')->name('store.create-order');
           Route::post('/create-order/{id?}', 'OrderController@store')->name('store.create-order');
 
+          Route::post('/order-complete/{id}', 'OrderController@complete')->name('store.order.complete');
+
           Route::get('/view-order/{id}', 'OrderController@view')->name('store.getOrderDetails');
 
 

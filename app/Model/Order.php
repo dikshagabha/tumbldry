@@ -46,7 +46,9 @@ class Order extends Model
         if ($this->status==1) {
             return "Pending";
         }
-
+        if ($this->status==6) {
+            return "Delivered";
+        }
         
         if (! $this->items()->where('status', '!=', 2)->count()) 
         {
@@ -67,9 +69,7 @@ class Order extends Model
             return "Out for Delivery";
         }
 
-        if ($this->status==6) {
-            return "Delivered";
-        }
+        
     }
  	public function getCustomerPhoneNumberAttribute(){
  		if ($this->customer()->count()) 

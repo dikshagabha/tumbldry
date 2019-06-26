@@ -7,7 +7,11 @@
 		
 		<th>GRN 
 			<input type="checkbox" name="select_all[]" title="Select All" class="select_all" value="0">
-			<button type="button" id="grnBtn" data-url="{{route('store.getGrn')}}" class="btn btn-link" title="Print Grn">Print Tag</button>
+			
+				@if($user->status != 6)
+				<button type="button" id="grnBtn" data-url="{{route('store.getGrn')}}" class="btn btn-link" title="Print Grn">Print Tag</button>
+
+				@endif
 			<span id="grn_error" class="error"></span>
 		</th>
 		

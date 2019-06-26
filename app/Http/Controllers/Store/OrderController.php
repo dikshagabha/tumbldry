@@ -951,4 +951,14 @@ class OrderController extends Controller
      
     return response()->json(['view'=>view('store.manage-order.assign_runner', compact('user', 'runner', 'id') )->render() ], 200);
   }
+
+  public function complete(Request $request, $id){
+
+    $user = Order::where('id', $id)->update(['status'=> 6]);
+    $orders = OrderItems::whereIn('order_id', $id)->update(['status'=>4]);
+    if ($user) {
+      return response()->json(['message'=>'Order Delivered' ], 200);
+    }
+    return response()->json(['message'=> 'Something went Wrong'], 400);
+  }
 }

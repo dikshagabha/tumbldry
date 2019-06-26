@@ -300,7 +300,7 @@
     }
 
     if (options.animate === true) {
-      dialog.addClass('fade');
+      //dialog.addClass('fade');
     }
 
     if (options.className) {

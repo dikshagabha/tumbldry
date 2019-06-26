@@ -73,8 +73,6 @@
    @include('store.manage-order.list')
   </div>
 </div>
-
-
 @endsection
 @push('js')
 <script src="{{asset('js/bootbox.js')}}"></script>
@@ -82,11 +80,12 @@
 <script>
 $(document).ready(function(){
   var current_page = $(".pagination").find('.active').text();
-  $(document).on('click', '#delete', function(e){
+  $(document).on('click', '.complete', function(e){
     e.preventDefault();
+    current  = $(this);
           bootbox.confirm({
-          title: "Confirm",
-          message: "Do you want to delete the store? This cannot be undone.",
+          title: "",
+          message: "Do you want to mark order as delivered? This can not be undone.",
           buttons: {
               cancel: {
                   label: '<i class="fa fa-times"></i> Cancel'
@@ -98,36 +97,16 @@ $(document).ready(function(){
           callback: function (result) {
               if(result){
                 $('body').waitMe();
-                //console.log($('#dataList tr').length)
-                
-
                 $.ajax({
-                  url: $('#delete').attr('href'),
+                  url: current.attr('href'),
                   type:"post",
-                  data:{
-                    '_method':"delete", '_token':$('#delete').data('token')
-                  },
-                  headers:{
-                    'X-CSRF-TOKEN':$('meta[name="csrf-token"]').attr('content'),
-                    'method':'delete'
-                  },
                   success: function(){
                     $('body').waitMe("hide");
-                    if($('#dataList tr').length<=2)
-                    {
-                    var current_page = $(".pagination").find('.active').text()-1;
-                    
-                    load_listings(location.href+'?page='+current_page);
-                    }
-
-                    else
-                    {
-                    
                     var current_page = $(".pagination").find('.active').text();
-                    load_listings(location.href+'?page='+current_page, 'serach_form');
-                    }
-                    //window.location.reload()
-                  },
+                    // reload the list
+                    load_listings(location.href, 'serach_form');
+
+                  }
                 })
               }
           }

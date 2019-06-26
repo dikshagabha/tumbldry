@@ -39,7 +39,13 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
               {{$user->service->name}}
             </td>
             <td>
-              @if($user->delivery_mode==1) Self Pickup @else Home Delivery @endif
+              @if($user->delivery_mode==1) Self Pickup 
+              @if($user->items()->where('status', 2)->count() == $user->items()->count() && $user->status != 6)
+                  <a href="{{ route('store.order.complete', $user->id)}}" class="complete" title="Mark as Delivered"> <i class="fa fa-car"></i> </a>
+                @endif
+              
+
+              @else Home Delivery @endif
             </td>
 
             <td>
