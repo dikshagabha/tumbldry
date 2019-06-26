@@ -955,7 +955,7 @@ class OrderController extends Controller
   public function complete(Request $request, $id){
 
     $user = Order::where('id', $id)->update(['status'=> 6]);
-    $orders = OrderItems::whereIn('order_id', $id)->update(['status'=>4]);
+    $orders = OrderItems::where('order_id', $id)->update(['status'=>4]);
     if ($user) {
       return response()->json(['message'=>'Order Delivered' ], 200);
     }
