@@ -3,7 +3,7 @@
         <span class="navbar-toggler-icon"></span>
       </button>
       <a class="navbar-brand" href="{{route('store.home')}}">
-        <img class="navbar-brand-full" src="{{asset('images/logo.png')}}" width="200" height="50" alt="CoreUI Logo">
+        <img class="navbar-brand-full" src="{{asset('images/logo.png')}}" width="70%" height="50" alt="CoreUI Logo">
         <img class="navbar-brand-minimized" src="{{asset('images/logo.png')}}" width="30" height="30" alt="CoreUI Logo">
       </a>
       <button class="navbar-toggler sidebar-toggler d-md-down-none" type="button" data-toggle="sidebar-lg-show">

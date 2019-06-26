@@ -8,7 +8,7 @@ class Order extends Model
 {
     protected $fillable = ['pickup_id', 'customer_id', 'address_id','runner_id', 'store_id', 'status',
  							'estimated_price', 'gst','cgst','total_price', 'coupon_id', 'coupon_discount', 'delivery_runner_id', 'date_of_arrival', 'discount', 'service_id', 'weight', 'delivery_mode'];
- 	protected $dates = ['date_of_arrival', 'created_at', 'modified_at'];
+ 	protected $dates = ['date_of_arrival', 'created_at', 'modified_at', 'date_of_delivery'];
  	public function items(){
  		return $this->hasMany('App\Model\OrderItems', 'order_id', 'id');
  	}
@@ -68,7 +68,7 @@ class Order extends Model
         }
 
         if ($this->status==6) {
-            return "Out for Delivery";
+            return "Delivered";
         }
     }
  	public function getCustomerPhoneNumberAttribute(){

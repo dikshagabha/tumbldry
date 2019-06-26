@@ -60,6 +60,16 @@
 	  </div>
 	  
 	</vs-card>
+	<vs-card>
+	  <div slot="header">
+	    <h3>
+	      New Orders
+	    </h3>
+	  </div>
+	  <div>
+	    <div class="ct-chart ct-golden-section" id="chart2"></div>
+	  </div>
+	</vs-card>
 
 	<vs-card>
 	  <div slot="header">
@@ -132,9 +142,28 @@
 	      @endif  	    
 	  </div>
 	</vs-card>
+	<vs-card>
+	  <div slot="header">
+	    <h3>
+	      Orders Completed V/S Pending Orders
+	    </h3>
+	  </div>
+	  <div>
+	    <div class="ct-chart ct-golden-section" id="chart3"></div>
+	  </div>
+	</vs-card>
+	
+
 </div>
-
-
-
-
 </div>
+<div class="row">
+<div class='my-legend'>
+	<div class='legend-scale'>
+	  <ul class='legend-labels'>
+	    
+	    <li><span style='background:#b2d236;'></span>Order Creation</li>
+	    <li><span style='background:#fec713;'></span>Order Delivered</li>
+	  </ul>
+	</div>
+</div>
+<div id='calendar'></div>
