@@ -954,7 +954,7 @@ class OrderController extends Controller
 
   public function complete(Request $request, $id){
 
-    $user = Order::where('id', $id)->update(['status'=> 6]);
+    $user = Order::where('id', $id)->update(['status'=> 6, 'date_of_delivery'=>Carbon::now()]);
     $orders = OrderItems::where('order_id', $id)->update(['status'=>4]);
     if ($user) {
       return response()->json(['message'=>'Order Delivered' ], 200);
