@@ -122,9 +122,6 @@
               for (var key in data.data) {
                 event_array.push(data.data[key]);
               }
-              
-              console.log(event_array);
-
               var calendar = new FullCalendar.Calendar(calendarEl, {
               plugins: [ 'dayGrid' ],
               events: data.data,
@@ -161,7 +158,7 @@
 
         var options = {
           labelInterpolationFnc: function(value) {
-            return value[0]
+            return value
           },
           donut: true,
           donutWidth: 60,
@@ -184,7 +181,7 @@
             chartPadding: 20
           }]
         ];
-        new Chartist.Pie('#chart3', data1, options, responsiveOptions, );
+        new Chartist.Pie('#chart3', data1, options );
       
     }
   })
