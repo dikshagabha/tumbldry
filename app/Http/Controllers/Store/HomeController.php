@@ -75,7 +75,6 @@ class HomeController extends Controller
             //print_r($date);
             array_push($values,  $date->subMonth()->format('F'));
             $date = Carbon::now();
-
             array_push($data, 
                 Order::where("store_id", Auth::user()->id)->whereMonth('created_at', $date->subMonth($i))->count());
         }
@@ -108,9 +107,9 @@ class HomeController extends Controller
         $delivered = $user->where('status', 6)->count();
         $data = [];
         foreach ($user as $key => $value) {
-            array_push($data, ['title'=>$value->id, 'start'=>$value->created_at->format('Y-m-d'), 'color'=>'#b2d236']);
+            array_push($data, ['title'=>$value->id, 'start'=>$value->created_at->format('Y-m-d'), 'color'=>'#fec713']);
             if ($value->date_of_delivery) {
-                array_push($data, ['title'=>$value->id, 'start'=>$value->date_of_delivery->format('Y-m-d'), 'color'=>'#fec713']);
+                array_push($data, ['title'=>$value->id, 'start'=>$value->date_of_delivery->format('Y-m-d'), 'color'=>'#b2d236']);
             }
             
         }

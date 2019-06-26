@@ -157,12 +157,12 @@
 </div>
 </div>
 <div class="row">
-<div class='my-legend'>
+<div class='my-legend col-12'>
 	<div class='legend-scale'>
-	  <ul class='legend-labels'>
+	  <ul class='legend-labels' style="float: right !important">
 	    
-	    <li><span style='background:#b2d236;'></span>Order Creation</li>
-	    <li><span style='background:#fec713;'></span>Order Delivered</li>
+	    <li><span style='background:#fec713;'></span>Order Created</li>
+	    <li><span style='background:#b2d236;'></span>Order Delivered</li>
 	  </ul>
 	</div>
 </div>
