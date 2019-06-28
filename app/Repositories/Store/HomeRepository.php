@@ -11,7 +11,9 @@ use App\Model\UserProperty;
 use App\Model\UserMachines;
 use App\Model\UserImages;
 use App\Model\StoreFields;
+use App\Model\UserFranchiseShare;
 use DB;
+use Carbon\Carbon;
 /**
  * Class HomeRepository.
  */
@@ -85,10 +87,14 @@ class HomeRepository extends BaseRepository
 	                array_push($img_array, [$value=>$name]);
 	                       
 	             }
-	         }
+             }
+  	        $images =  UserImages::create($img_array);
 
-	         
-	        $images =  UserImages::create($img_array);
+  	        $fen_data = [['type'=>1, 'user_id'=>$user->id, 'percent'=>$request->input('laundary_share'), 'created_at'=>Carbon::now()],
+  	    		['type'=>2, 'user_id'=>$user->id, 'percent'=>$request->input('dry_clean_share'), 'created_at'=>Carbon::now()],
+  	    	['type'=>3, 'user_id'=>$user->id, 'percent'=>$request->input('other_services_share'), 'created_at'=>Carbon::now()]];
+
+  	    	UserFranchiseShare::insert($fen_data);
 	        DB::commit();
 	        return ["message"=>"Store Added", 'redirectTo'=>route('manage-store.index'), 'http_status'=>200];
 	    }
@@ -135,6 +141,14 @@ class HomeRepository extends BaseRepository
 
 	         
 	        $images =  UserImages::where('user_id', $id)->update($img_array);
+
+
+	        $account =  UserFranchiseShare::where(['user_id'=> $id, 'type'=>1])->update(['percent'=>$request->input('laundary_share')]);
+
+	        $account =  UserFranchiseShare::where(['user_id'=> $id, 'type'=>2])->update(['percent'=>$request->input('dry_clean_share')]);
+
+	        $account =  UserFranchiseShare::where(['user_id'=> $id, 'type'=>3])->update(['percent'=>$request->input('other_services_share')]);
+
 	        DB::commit();
 	        return ["message"=>"Store Updated", 'redirectTo'=>route('manage-store.index'), 'http_status'=>200];
       }

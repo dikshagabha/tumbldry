@@ -30,7 +30,9 @@ class StorePickupRequest extends FormRequest
             'name'=>['bail','required', 'string', 'min:2', 'max:100',  new CheckName],
             'phone_number'=>['bail','required','numeric', 'min:2', 'max:9999999999'],
             'service'=>'bail|required|numeric',
-            'request_time'=>'bail|required|string'
+            'request_time'=>'bail|required|string',
+            'end_time'=>'bail|required|string',
+            'start_time'=>'bail|required|string',
         ];  
       
     }

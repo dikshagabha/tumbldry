@@ -112,18 +112,16 @@ class PickupController extends Controller
             $mes = str_replace('@customer_name@', $request->input('name'), $message);
 
             $mes = str_replace('@id@', $pickup->id, $mes);
-            $mes = str_replace(' ', '%20', $mes);
-
-            //CommonRepository::sendmessage($request->input('phone_number'), $mes);          
-        //}
+            CommonRepository::sendmessage($request->input('phone_number'), $mes);          
+        }
         
 
         DB::commit();
         return response()->json(["message"=>"Pickup Request successfull !", 'redirectTo'=>route('pickup-request.index')], 200);
-        //}catch (\Exception $e) {
+        }catch (\Exception $e) {
             DB::rollback();
             return response()->json(["message"=>$e->getMessage()], 400);
-        //}
+        }
       }
 
     /**

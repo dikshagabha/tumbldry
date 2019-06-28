@@ -96,27 +96,27 @@
                 
               </a>
             </li>
-            <!-- <li>
+            <li>
               <a class="nav-link" href="{{ route('admin.getRateCard', ['type'=>4]) }}">
-                <i><img style="width:25px" src="{{ asset('images/icons/car.png') }}"></i>
+                <i><img style="width:25px" src="{{ asset('images/icons/shoe.png') }}"></i>
                 <p>{{ __('Shoe Clean') }}</p>
                 
               </a>
             </li>
              <li>
               <a class="nav-link" href="{{ route('admin.getRateCard', ['type'=>5]) }}">
-                <i><img style="width:25px" src="{{ asset('images/icons/car.png') }}"></i>
+                <i><img style="width:25px" src="{{ asset('images/icons/sofa.png') }}"></i>
                 <p>{{ __('Sofa Clean') }}</p>
                 
               </a>
             </li>
             <li>
               <a class="nav-link" href="{{ route('admin.getRateCard', ['type'=>6]) }}">
-                <i><img style="width:25px" src="{{ asset('images/icons/car.png') }}"></i>
+                <i><img style="width:25px" src="{{ asset('images/icons/home.png') }}"></i>
                 <p>{{ __('Home Clean') }}</p>
                 
               </a>
-            </li> -->
+            </li>
           </ul>
         </div>
       </li>  
@@ -125,6 +125,20 @@
         <a class="nav-link" href="{{ route('pickup-request.index') }}">
           <i><img style="width:25px" src="{{ asset('images/icons/pickup.png') }}"></i>
           <p>{{ __('Pickup Request') }}</p>
+          
+        </a>
+      </li>  
+       <li class="nav-item{{ $activePage == 'plans' ? ' active' : '' }}">
+        <a class="nav-link" href="{{ route('admin-manage-plans.index') }}">
+          <i><img style="width:25px" src="{{ asset('images/icons/plan.png') }}"></i>
+          <p>{{ __('Plans') }}</p>
+          
+        </a>
+      </li>  
+       <li class="nav-item{{ $activePage == 'supplies' ? ' active' : '' }}">
+        <a class="nav-link" href="{{ route('manage-supplies.index') }}">
+          <i><img style="width:25px" src="{{ asset('images/icons/supply.png') }}"></i>
+          <p>{{ __('Supplies') }}</p>
           
         </a>
       </li>   

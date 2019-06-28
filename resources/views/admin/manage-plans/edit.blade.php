@@ -1,31 +1,41 @@
 @extends('layouts.app')
-@section('title', 'Manage Store')
+@section('title', 'Manage Franchise')
 
 @section('content')
 @section('css')
   <link rel="stylesheet" href="{{ asset('css/chosen/bootstrap-chosen.css') }}">
 @endsection
-
-
+<br>
 <div class="content">
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12">
-          <div class="card card-stats">
-        <!-- <form action="{{route('manage-store.update', $id)}}" method="put"  id="addFrenchise"> -->
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-lg-12 col-md-12 col-sm-12">
+        <div class="card card-stats">
+          <br>
 
+          {{Form::model($user, ['route'=> array('admin-manage-plans.update', $id) , 'method'=>'put', "id"=>"addFrenchise"])}}
 
-      {{ Form::model($user, ['route'=> array('manage-store.update', $id) , 'method'=>'put', 'id'=>'addFrenchise','images'=>true]) }}
-
-        @include('admin.manage-store.form')
-
-      {{Form::close()}}
-    </div>
-  </div>
-
+              @include('admin.manage-plans.form')
+            {{Form::close()}}
+             <div class="form-group-inner">
+               <div class="row">
+                 <div class="col-lg-3 col-md-3 col-sm-3">
+                </div>
+                 <div class="col-lg-3 col-md-3 col-sm-3">
+                  <a href="{{route('admin-manage-plans.index')}}"> <button type="button" class="btn">Cancel</button> </a>
+                 </div>
+                 <div class="col-lg-5 col-md-5 col-sm-5">
+                   <button type="submit" class="btn btn-primary" id="add_frenchise" >Save</button>
+                 </div>
+                </div>
+              </div>
+          <br>
+        </div>
+      </div>
     </div>
   </div>
 </div>
+
 <div id="addressModal" class="modal fade" role="dialog">
   <div class="modal-dialog">
 
@@ -40,7 +50,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" id="add_new_address">Add Address</button>
+        <button type="button" class="btn btn-primary" id="add_new_address">Save</button>
       </div>
     </div>
 
@@ -52,27 +62,8 @@
 <script src="{{asset('js/chosen/chosen.jquery.min.js')}}"></script>
 <script>
 $(document).ready(function(){
-
-  
-  $('#collapseTwo, #collapseThree, #collapseFour, #collapseFive , #collapseSix , #collapseSeven').addClass('show');
-  $('.1, .2, .3, .4, .5, .6, .7').prop('disabled', false);
-
-	$('#parent').chosen();
-
-  if ($('#leased_property_type').attr("checked") == 'checked') {
-    $(".lease_data").show()
-  }
-  $('input[type=radio][name=property_type]').change(function() {
-    if (this.value == 1) {
-        $(".lease_data").show()
-    }
-    else if (this.value == 2) {
-         $(".lease_data").hide()
-    }
-  });
-
-  $(".next").hide();
-  $(document).on('click', '#add_address', function(e){
+  //$("#address_select").chosen();
+    $(document).on('click', '#add_address', function(e){
     e.preventDefault();
     $('body').waitMe();
     $.ajax({
@@ -85,9 +76,22 @@ $(document).ready(function(){
         $('#addressModal').modal('show');
         //$("#pinchange").chosen();
       },
-      error:function(){
+      
+    })
+  })
 
-      }
+  $(document).on('click', '#edit_address', function(e){
+    e.preventDefault();
+    $('body').waitMe();
+    $.ajax({
+      url: $('#edit_address').attr('data-url'),
+      type:'get',
+      dataType:'html',
+      success: function(data){
+        $('#addressForm').html(data);
+        $('body').waitMe('hide');
+        $('#addressModal').modal('show');
+      },
     })
   })
 
@@ -101,32 +105,30 @@ $(document).ready(function(){
       data: $('#formAddress').serializeArray(),
       dataType:'json',
       success: function(data){
-        success("New Address Added!");
+        success(data.message);
+        $('#formAddress')[0].reset();
         $('#addressModal').modal('hide');
-
+        
+        $('#added_address').html(data.address.address+', '+data.address.city+', '+data.address.state+', '+data.address.pin);
+        $("#address_id").val(data.address.id);
+        $('#edit_address').attr('data-url', data.url);
+        $('#edit_address').show();
         $('body').waitMe('hide');
-        window.location.reload();
+
       }
     })
   })
 
+
   $(document).on('click', '#add_frenchise', function(e){
     e.preventDefault();
     $('body').waitMe();
-
-    var form = $('#addFrenchise')[0];
-
-    var data = new FormData(form);
-
-    console.log(data.values())
-    $(".error").html("");
+    $(".error").html("")
     $.ajax({
       url: $('#addFrenchise').attr('action'),
-      type:'post',
-      data: data,
-      cache: false,
-      processData: false,  
-      contentType: false,      
+      type: $('#addFrenchise').attr('method'),
+      data: $('#addFrenchise').serializeArray(),
+      dataType:'json',
       success: function(data){
         success(data.message);
         window.location=data.redirectTo;

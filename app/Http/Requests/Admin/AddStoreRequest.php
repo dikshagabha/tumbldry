@@ -28,7 +28,7 @@ class AddStoreRequest extends FormRequest
         return [
           'name'=>['bail','required', 'string', 'min:2', 'max:100'],
           //'address_id'=>['bail','required', 'numeric'],
-          'email'=>['bail','required', 'email','unique:users,email,'.$id, 'min:2', 'max:100'],
+          'email'=>['bail','nullable', 'email','unique:users,email,'.$id, 'min:2', 'max:100'],
           
           'store_name'=>['bail','nullable','string', 'min:2', 'max:100'],
           'phone_number'=>['bail','required','numeric', 'unique:users,phone_number,'.$id, 'min:2', 'max:9999999999'],
@@ -78,7 +78,7 @@ class AddStoreRequest extends FormRequest
         ];
       }else{
         return [
-          'email' => 'bail|required|unique:users,email',
+          'email' => 'bail|nullable|unique:users,email',
           'name' => 'bail|required|min:2|max:50|string',
           
           'address'=>'bail|nullable|string|min:2|max:50',

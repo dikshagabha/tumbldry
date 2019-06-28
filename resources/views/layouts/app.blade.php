@@ -173,14 +173,10 @@
                   }
                   else{
                      $('body').waitMe('hide');
-                        errors = data.responseJSON;
-
-                        if(errors.hasOwnProperty('message')) {
-                            error(errors.message);
-                        }
-                        else {
-                            error('Something went wrong!');
-                        }
+                     if (data.responseJSON) {error(data.responseJSON.message);}
+                     else {
+                      error("Something went wrong")}
+                     
                   }
                 }
               })

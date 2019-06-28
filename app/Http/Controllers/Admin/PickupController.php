@@ -117,7 +117,8 @@ class PickupController extends Controller
         $pickup = PickupRequest::create(['customer_id'=>$request->input('customer_id'),
                                 'address'=>$request->input('address_id'),
                                  'store_id'=>$id, 'request_time'=>$date->setTimezone('UTC'),
-                                'request_mode'=>1, 'status'=>1, 'service'=>$request->input('service')]);
+                                 'request_mode'=>1, 'status'=>1, 'service'=>$request->input('service'),
+                                'start_time'=>$request->input('start_time'), 'end_time'=>$request->input('end_time') ]);
 
         //dd($pickup);
         if ($id) {
@@ -136,7 +137,16 @@ class PickupController extends Controller
 
 
             $data['message'] = $request->input('name')." has requested a pickup.";
-            $pusher->trigger('my-channel', 'notification'.$id, $data);            
+            $pusher->trigger('my-channel', 'notification'.$id, $data); 
+
+            $message = SMSTemplate::where('title', 'like','%Pick Up Scheduled%')->select('description')->first();
+            //dd($message);
+            $message = $message->description;
+
+            $mes = str_replace('@customer_name@', $request->input('name'), $message);
+
+            $mes = str_replace('@id@', $pickup->id, $mes);
+            CommonRepository::sendmessage($request->input('phone_number'), $mes);            
         }
         
 
@@ -214,7 +224,44 @@ class PickupController extends Controller
 
 
     }
+    public function setSessionAddresses(AddressRequest $request)
+    { 
+     $details = $request->only('address', 'city', 'state', 'pin', 'landmark', 'latitude', 'longitude');
+     if ($request->input('user_id')) {
+       $details['user_id']=$request->input('user_id');
+       $address = Address::create($details);
+       $details['address_id']=$address->id;
+     }
+     $data = session()->get('address');
+     if ($data) {
+       array_push($data, $details);
+       session()->put('address', $data);
+     }else{
+      session()->put('address', [$details]);
+     }
 
+     $data = session()->get('address');
+
+     
+     if ($data) {
+      return response()->json(["message"=>'Address Saved', 'view'=> view('store.showMultipleAddressess', compact('data'))->render()], 200);
+     }
+     return response()->json(["message"=>'Address Not Saved', 'data'=>$data], 400);
+    }
+
+    public function deleteSessionAddresses(Request $request){
+    $items = session('address');
+    $index = $request->input('data-id')-1;
+    
+    unset($items[$index]);
+
+    $items = array_values($items);
+    session()->put("address", $items);
+
+    $data = session('address');
+   
+    return response()->json(['message'=>'Address Deleted', 'view'=> view('store.showMultipleAddressess', compact('data'))->render()], 200);
+    }
 
 
 }

@@ -101,6 +101,11 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasOne('App\Model\UserAccount', 'user_id', 'id');
     }
 
+     public function shares()
+    {
+        return $this->hasOne('App\Model\UserFranchiseShare', 'user_id', 'id');
+    }
+
     public function parent()
     {
         return $this->hasOne('App\User', 'id', 'user_id');
@@ -332,4 +337,23 @@ class User extends Authenticatable implements JWTSubject
         }
         return "";
     } 
+
+    public function getDryCleanShareAttribute()
+    {
+        if ($this->shares()->count()) 
+        return $this->shares()->where('type', 2)->first()->percent; //some logic to return numbers
+        return "";
+    }
+    public function getLaundaryShareAttribute()
+    {
+        if ($this->shares()->count()) 
+        return $this->shares()->where('type', 1)->first()->percent; //some logic to return numbers
+        return "";
+    }
+    public function getOtherServicesShareAttribute()
+    {
+        if ($this->shares()->count()) 
+        return $this->shares()->where('type', 3)->first()->percent; //some logic to return numbers
+        return "";
+    }
 }
