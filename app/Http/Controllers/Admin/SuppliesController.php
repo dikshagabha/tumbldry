@@ -101,10 +101,9 @@ class SuppliesController extends Controller
      */
     public function update(Request $request, $id)
     {
+      $request->validate(['name'=>'bail|required|string|min:3|max:20']);
       $user = Items::where('id', decrypt($id))->update(['name'=>$request->input('name')]);
-      //$delete = UserAddress::where(['user_id'=>decrypt($id)])->delete();
-      //$add = UserAddress::create(['user_id'=>decrypt($id), 'address_id'=>$request->input('address_id')]);
-
+      
       return response()->json(["message"=>"Supply Updated", "redirectTo"=>route('manage-frenchise.index')], 200);
     }
 
