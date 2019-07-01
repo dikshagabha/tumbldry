@@ -151,7 +151,7 @@ $(document).ready(function(){
       data: $('#addFrenchise').serializeArray(),     
       success: function(data){
         success(data.message);
-        //window.location=data.redirectTo;
+        window.location=data.redirectTo;
         $('body').waitMe('hide');
       }
     })

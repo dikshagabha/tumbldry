@@ -44,7 +44,11 @@ Route::prefix('admin')->group(function () {
    
     Route::post('/vendor/status/{id}', 'Admin\VendorController@status')->name('manage-vendor.status');
 
-      Route::post('set-providers-session', 'Admin\VendorController@setSessionProviders')->name('admin.postAddSessionProviders');
+    Route::get('/billing/excel', 'Admin\BillingController@downloadExcel')->name('billing.downloadExcel');
+    Route::get('/billing', 'Admin\BillingController@index')->name('billing.index');
+    Route::post('/billing', 'Admin\BillingController@importBilling')->name('billing.importBilling');
+
+    Route::post('set-providers-session', 'Admin\VendorController@setSessionProviders')->name('admin.postAddSessionProviders');
     Route::post('/store/status/{id}', 'Admin\StoreController@status')->name('manage-store.status');
     Route::post('/pickp/assign-store/{id}', 'HomeController@assignStore')->name('admin.assignStore');
 
