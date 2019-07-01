@@ -27,8 +27,12 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
                 
               </td>
               <td>
+                @if($user->store_id)
                  <a href="{{route('getcustomerdetails', $user->store_id)}}" id="getCustomer">
                   {{$user->store_phone}}</a>
+                  @else
+                  --
+                  @endif
                 
               </td>
 		            <td>
