@@ -60,34 +60,24 @@ class PickupController extends Controller
 
       try{
         DB::beginTransaction();
-        if ($request->input('customer_id')==null) {
+        if($request->input('customer_id')==null) {
           $user = User::create(['name'=>$request->input('name'), 
                         'email'=>$request->input('email'),
                         'phone_number'=>$request->input('phone_number'),  
                         'role'=> 4
                         ]);
-          $address = Address::create(['address'=>$request->input('address'),
-                            'pin'=>$request->input('pin'),
-                            'city'=>$request->input('city'),
-                            'state'=>$request->input('state'),
-                            'user_id'=>$user->id,
-                            'latitude'=>$request->input('latitude'),
-                            'longitude'=>$request->input('longitude'),
-                            'landmark'=>$request->input('landmark')
-                          ]);
+
+          $address = session()->get('address');
+          $address['user_id'] = $user->id;
+          $address = Address::create($address);
 
           $request->merge(['customer_id' => $user->id]);
           $request->merge(['address_id' => $address->id]);
         }
-
-
         $pin = $request->input('pin');
-
         $address = Address::where('pin', $pin)->pluck('user_id')->toArray();  
-
         $address = User::where(['role'=> 3, 'status'=>1])->whereIn('id', $address)->first();
-
-        if (!$address) {
+        if (!$address ) {
           $origLat = $request->input('latitude');
           $origLon = $request->input('longitude');
           $dist = 10; 
@@ -101,19 +91,27 @@ class PickupController extends Controller
                       and latitude between ($origLat-($dist/69)) 
                       and ($origLat+($dist/69)) 
                          ORDER BY distance limit 1"; 
-          $address = Address::whereRaw($whereRaw)
+         
+          if ($origLat && $origLon) {
+            $address = Address::whereRaw($whereRaw)
                       ->select($query)->pluck('user_id')->toArray();
+          }
+          
         }
 
-
-        $address = User::where(['role'=> 3, 'status'=>1])->whereIn('id', $address)->first();
+        if ($address) {
+          $address = User::where(['role'=> 3, 'status'=>1])->whereIn('id', $address)->first();
+        }
+       
         
         $id=null;
         if ($address) {
           $id=$address->id;
         }
+        //dd($request->header('timezone'));
+        $date = Carbon::createFromFormat('Y-m-d', $request->input('request_time'), $request->header('timezone'));
+       // dd($date);
 
-        $date = Carbon::createFromFormat('Y-m-d H:i', $request->input('request_time'), $request->header('timezone'));
         $pickup = PickupRequest::create(['customer_id'=>$request->input('customer_id'),
                                 'address'=>$request->input('address_id'),
                                  'store_id'=>$id, 'request_time'=>$date->setTimezone('UTC'),
@@ -151,7 +149,7 @@ class PickupController extends Controller
         
 
         DB::commit();
-        return response()->json(["message"=>"Pickup Request successfull !", 'redirectTo'=>route('pickup-request.index')], 200);
+        return response()->json(["message"=>"Pickup Request successfull !", 'redirectTo'=>route('admin-pickup-request.index')], 200);
         }catch (\Exception $e) {
             DB::rollback();
             return response()->json(["message"=>$e->getMessage()], 400);
@@ -224,27 +222,22 @@ class PickupController extends Controller
 
 
     }
-    public function setSessionAddresses(AddressRequest $request)
+    public function setSessionAddresses(Request $request)
     { 
-     $details = $request->only('address', 'city', 'state', 'pin', 'landmark', 'latitude', 'longitude');
-     if ($request->input('user_id')) {
-       $details['user_id']=$request->input('user_id');
-       $address = Address::create($details);
-       $details['address_id']=$address->id;
-     }
-     $data = session()->get('address');
-     if ($data) {
-       array_push($data, $details);
-       session()->put('address', $data);
-     }else{
-      session()->put('address', [$details]);
-     }
 
-     $data = session()->get('address');
-
+      $data = $request->only('address', 'city', 'state', 'pin', 'landmark', 'latitude', 'longitude');
      
+     if ($request->input('user_id')) {
+       $data['user_id']=$request->input('user_id');
+       $address = Address::create($data);
+       $data['address_id']=$address->id;
+     }
+
+     $data = session()->put('address', $data);
+
+     $data = session()->get('address');
      if ($data) {
-      return response()->json(["message"=>'Address Saved', 'view'=> view('store.showMultipleAddressess', compact('data'))->render()], 200);
+      return response()->json(["message"=>'Address Saved', 'data'=> $data], 200);
      }
      return response()->json(["message"=>'Address Not Saved', 'data'=>$data], 400);
     }

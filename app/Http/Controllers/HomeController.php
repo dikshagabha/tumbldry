@@ -192,8 +192,10 @@ class HomeController extends Controller
         return response()->json(['message' => 'Timezone set successfully!'], 200);
       }
 
-      public function setSessionAddress(sessionAddressRequest $request)
+      public function setSessionAddress(Request $request)
     { 
+
+      dd("akdsask");
      $data = $request->only('address', 'city', 'state', 'pin', 'landmark', 'latitude', 'longitude');
      
      if ($request->input('user_id')) {

@@ -17,7 +17,7 @@
         <div class="col-lg-12 col-md-12 col-sm-12">
           <div class="card card-stats">
 
-<form action="{{route('pickup-request.store')}}" method="post"  id="addFrenchise" enctype="multipart/form-data">
+<form action="{{route('admin-pickup-request.store')}}" method="post"  id="addFrenchise" enctype="multipart/form-data">
  <br>
   @csrf
   @include('admin.pickup-request.form')
@@ -26,12 +26,12 @@
      <div class="col-lg-3 col-md-3 col-sm-3">
      </div>
      <div class="col-lg-3 col-md-3 col-sm-3">
-      <a href="{{route('pickup-request.index')}}">
-        <button type="button" class="btn btn-default" data-url="{{route('pickup-request.index')}}">Cancel</button>
+      <a href="{{route('admin-pickup-request.index')}}">
+        <button type="button" class="btn btn-default" data-url="{{route('admin-pickup-request.index')}}">Cancel</button>
       </a>
       </div>
      <div class="col-lg-5 col-md-5 col-sm-5">
-       <a href="{{route('pickup-request.store')}}" id="add_frenchise">
+       <a href="{{route('admin-pickup-request.store')}}" id="add_frenchise">
           
           <button type="submit" class="btn btn-success">Save</button>
        </a>
@@ -252,7 +252,7 @@ $(document).ready(function(){
       data: data,    
       success: function(data){
         success(data.message);
-       window.location=data.redirectTo;
+       //window.location=data.redirectTo;
         $('body').waitMe('hide');
       }
     })
@@ -301,26 +301,26 @@ $(document).ready(function(){
     $(".error").html("");   
 
     console.log($('#formAddress').attr('action')) 
-    // $.ajax({
-    //   url: $('#formAddress').attr('action'),
-    //   type:'post',
-    //   data: data,
-    //   cache: false,
-    //   processData: false,  
-    //   contentType: false,      
-    //   success: function(data){
-    //     success(data.message);
-    //     if (data.data) 
-    //     {
-    //       for (var key in data.data) {
-    //           $("#"+key+'_form').text(data.data[key]);
-    //       }
-    //     }
-    //     $('#address_id').val(data.data.address_id);
-    //     $("#addressModal").modal('hide');
-    //     $('body').waitMe('hide');
-    //   }
-    // })
+    $.ajax({
+      url: $('#formAddress').attr('action'),
+      type:'post',
+      data: data,
+      cache: false,
+      processData: false,  
+      contentType: false,      
+      success: function(data){
+        success(data.message);
+        if (data.data) 
+        {
+          for (var key in data.data) {
+              $("#"+key+'_form').text(data.data[key]);
+          }
+        }
+        $('#address_id').val(data.data.address_id);
+        $("#addressModal").modal('hide');
+        $('body').waitMe('hide');
+      }
+    })
   })
 
 })

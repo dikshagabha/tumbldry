@@ -8,8 +8,8 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
           <thead>
             <tr>
               <th>S No</th>
-              <th>Customer Email</th>
-              <th>Store Email</th>
+              <th>Customer Phone</th>
+              <th>Store Phone</th>
 	            <th> Service </th>
               <th> Pickup Time </th>
             </tr>
@@ -23,12 +23,12 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
               </td>
               <td>
                 <a href="{{route('getcustomerdetails', $user->customer_id)}}" id="getCustomer">
-                {{$user->customer_email}}</a>
+                {{$user->customer_phone}}</a>
                 
               </td>
               <td>
                  <a href="{{route('getcustomerdetails', $user->store_id)}}" id="getCustomer">
-                  {{$user->store_email}}</a>
+                  {{$user->store_phone}}</a>
                 
               </td>
 		            <td>
@@ -37,7 +37,7 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
                 <td>
                   
                   @if($user->request_time)
-                    {{$user->request_time->setTimezone($timezone)->format('l y/m/d h:i a')}}
+                    {{$user->request_time->setTimezone($timezone)->format('y/m/d')}} {{$user->start_time}} - {{$user->end_time}}
                   @else
                     --
                   @endif

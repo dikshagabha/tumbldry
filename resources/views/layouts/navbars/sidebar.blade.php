@@ -122,7 +122,7 @@
       </li>  
 
       <li class="nav-item{{ $activePage == 'pickup-request' ? ' active' : '' }}">
-        <a class="nav-link" href="{{ route('pickup-request.index') }}">
+        <a class="nav-link" href="{{ route('admin-pickup-request.index') }}">
           <i><img style="width:25px" src="{{ asset('images/icons/pickup.png') }}"></i>
           <p>{{ __('Pickup Request') }}</p>
           
@@ -139,6 +139,14 @@
         <a class="nav-link" href="{{ route('manage-supplies.index') }}">
           <i><img style="width:25px" src="{{ asset('images/icons/supply.png') }}"></i>
           <p>{{ __('Supplies') }}</p>
+          
+        </a>
+      </li>   
+
+      <li class="nav-item{{ $activePage == 'coupon' ? ' active' : '' }}">
+        <a class="nav-link" href="{{ route('edit-coupons.index') }}">
+          <i><img style="width:25px" src="{{ asset('images/icons/coupon.png') }}"></i>
+          <p>{{ __('Coupons') }}</p>
           
         </a>
       </li>   

@@ -63,7 +63,7 @@ class PickupController extends Controller
     public function store(StorePickupRequest $request)
     {
 
-      //try{
+      try{
         DB::beginTransaction();
         if ($request->input('customer_id')==null) {
           $user = User::create(['name'=>$request->input('name'), 

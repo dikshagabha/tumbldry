@@ -34,12 +34,14 @@ Route::prefix('admin')->group(function () {
       'manage-frenchise' => 'Admin\FranchiseController',
       'manage-store' => 'Admin\StoreController',
       'manage-service' => 'Admin\ServiceController',
-      'pickup-request' => 'Admin\PickupController',
+      'admin-pickup-request' => 'Admin\PickupController',
       'manage-vendor' => 'Admin\VendorController',
       'admin-manage-plans' => 'Admin\PlansController',
       'manage-supplies' => 'Admin\SuppliesController',
+      'edit-coupons' => 'Admin\CouponController',
     ]);
     
+   
     Route::post('/vendor/status/{id}', 'Admin\VendorController@status')->name('manage-vendor.status');
 
       Route::post('set-providers-session', 'Admin\VendorController@setSessionProviders')->name('admin.postAddSessionProviders');
@@ -53,7 +55,6 @@ Route::prefix('admin')->group(function () {
     
     Route::post('/address', 'HomeController@postAddAddress')->name('admin.postAddAddress');
     
-    Route::post('/session-address', 'HomeController@setSessionAddress')->name('admin.setSessionAddress');
     
     Route::get('/edit-address', 'HomeController@editAddress')->name('admin.editAddress');
     Route::post('/edit-address', 'HomeController@postEditAddress')->name('admin.postEditAddress');
@@ -81,6 +82,11 @@ Route::prefix('admin')->group(function () {
 
   });
 });
+
+ Route::resources([
+      'admin-pickup-request' => 'Admin\PickupController'
+    ]);
+ Route::post('/admin-session-address', 'Admin\PickupController@setSessionAddresses')->name('admin.setSessionAddresses');
 
  
   Route::get('/payment/{id}', 'Store\PaymentController@pay')->name('order.pay');
