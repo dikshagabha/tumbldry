@@ -63,11 +63,63 @@
           </div>
         </div>
                    
-          {{Form::close()}}
+          {{ Form::close() }}
           <br>
+
+           <hr>
+           <div >
+             
+              {{Form::open(['route'=>'billing.carryForward', 'method'=>'post', 'id'=>'addBilling', 'name'=>'form_data'])}}
+             <div class="row">
+           <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
+            <div class="form-group-inner">
+              <div class="row">
+                   <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                     <label class="login2 pull-right pull-right-pro">Select Store</label>
+                   </div>
+                   <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+                    {{Form::select('user',$users, null, ['class'=>"form-control store", 'placeholder'=>"Select Store"])}} 
+                     <span class="error" id="user_error"></span>
+                   </div>
+                 </div>
+            </div>
+            <br>
+            <div class="form-group-inner">
+              <div class="row">
+                   <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                     <label class="login2 pull-right pull-right-pro">Amount</label>
+                   </div>
+                   <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+                    {{Form::text('price',null,['class'=>"form-control"])}} 
+                     <span class="error" id="price_error"></span>
+                   </div>
+                 </div>
+            </div>
+            <br>
+            <div class="form-group-inner">
+              <div class="row">
+                   <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                     <label class="login2 pull-right pull-right-pro"></label>
+                   </div>
+                   <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+                    {{Form::submit('Submit',['class'=>"btn btn-success save_amount", 'id'=>'save_amount'])}} 
+                    {{Form::close()}}
+                   </div>
+                 </div>
+            </div>
+
+
+
+          </div>
+        </div>
+           </div>
         </div>
       </div>
     </div>
+
+     
+
+
   </div>
 </div>
 
@@ -103,6 +155,29 @@ $(document).ready(function(){
         $('body').waitMe('hide');
         $('#addFrenchise')[0].reset();
       }
+
+    })
+  })
+
+  $(document).on('click', '#save_amount', function(e){
+    e.preventDefault();
+    $('body').waitMe();
+
+    var form = $('#addBilling')[0];
+    var data = new FormData(form);
+    $(".error").html("");
+    $.ajax({
+      url: $('#addBilling').attr('action'),
+      type:'post',
+      data: data,
+      processData:false,
+      contentType:false,
+      success: function(data){
+        success(data.message);
+        $('body').waitMe('hide');
+        $('#addBilling')[0].reset();
+      }
+
     })
   })
 })

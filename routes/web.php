@@ -47,6 +47,7 @@ Route::prefix('admin')->group(function () {
     Route::get('/billing/excel', 'Admin\BillingController@downloadExcel')->name('billing.downloadExcel');
     Route::get('/billing', 'Admin\BillingController@index')->name('billing.index');
     Route::post('/billing', 'Admin\BillingController@importBilling')->name('billing.importBilling');
+    Route::post('/carry-forward', 'Admin\BillingController@carryForward')->name('billing.carryForward');
 
     Route::post('set-providers-session', 'Admin\VendorController@setSessionProviders')->name('admin.postAddSessionProviders');
     Route::post('/store/status/{id}', 'Admin\StoreController@status')->name('manage-store.status');
