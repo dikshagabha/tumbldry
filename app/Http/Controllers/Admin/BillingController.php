@@ -37,9 +37,10 @@ class BillingController extends Controller
 
     public function importBilling(Request $request)
     {
-
-        $path = $request->file('sheet')->getRealPath();
-        
+        $request->validate([
+            'users'=>'bail|required|numeric',
+            'sheet'=>'bail|required|file'
+        ]);
         $import = Excel::import(new BillingImport($request->input('users')), $request->file('sheet'));
         
         return response()->json(['message'=>'Data Imported.'], 200);

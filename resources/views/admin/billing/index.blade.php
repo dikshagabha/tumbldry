@@ -41,7 +41,7 @@
                    </div>
                    <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
                     {{Form::file('sheet',['class'=>"form-control", 'placeholder'=>"Select Store"])}} 
-                     <span class="error" id="users_error"></span>
+                     <span class="error" id="sheet_error"></span>
                    </div>
                  </div>
             </div>
@@ -102,10 +102,6 @@ $(document).ready(function(){
         success(data.message);
         $('body').waitMe('hide');
         $('#addFrenchise')[0].reset();
-      },
-      error: function(data){
-        $('body').waitMe('hide');
-        
       }
     })
   })

@@ -149,7 +149,14 @@
           <p>{{ __('Coupons') }}</p>
           
         </a>
-      </li>   
+      </li>
+
+      <li class="nav-item{{ $activePage == 'billing' ? ' active' : '' }}">
+        <a class="nav-link" href="{{ route('billing.index') }}">
+          <i><img style="width:25px" src="{{ asset('images/icons/billing.png') }}"></i>
+          <p>{{ __('Billing') }}</p>          
+        </a>
+      </li>        
     </ul>
   </div>
 </div>

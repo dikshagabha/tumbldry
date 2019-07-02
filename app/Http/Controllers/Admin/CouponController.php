@@ -107,9 +107,8 @@ class CouponController extends Controller
      */
     public function update(Request $request, $id)
     {
-
-      //dd($request->only('title', 'coupon_price', 'parameter', 'value'));
-      
+      $request->validate(['coupon'=>'bail|required|string|min:3|max:20',
+                            'coupon_price'=>'bail|required|numeric|min:1|max:100']);      
       $user = Coupon::where('id', decrypt($id))->update($request->only('coupon', 'coupon_price', 'parameter', 'value'));
       
       return response()->json(["message"=>"Coupon Updated", "redirectTo"=>route('edit-coupons.index')], 200);
