@@ -182,8 +182,6 @@ class HomeController extends Controller
 
       public function setSessionAddress(Request $request)
     { 
-
-      dd("akdsask");
      $data = $request->only('address', 'city', 'state', 'pin', 'landmark', 'latitude', 'longitude');
      
      if ($request->input('user_id')) {

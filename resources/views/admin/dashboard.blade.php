@@ -274,14 +274,14 @@
                         <td class="table-modal">Pin</td>
                         <td class="table-modal" id="pin"></td>
                       </tr>
-                      <tr>
+                      <!-- <tr>
                         <td class="table-modal">Latitude</td>
                         <td class="table-modal" id="latitude"></td>
                       </tr>
                       <tr>
                         <td class="table-modal">Longitude</td>
                         <td class="table-modal" id="longitude"></td>
-                      </tr>
+                      </tr> -->
                       <tr>
                         <td class="table-modal">Landmark</td>
                         <td class="table-modal" id="landmark"></td>
@@ -370,7 +370,7 @@
         }
         else{
           $('#customerForm')[0].reset();
-          $("#Userist").hide();
+          $("#UserList").hide();
         }
 
          $('body').waitMe('hide');
