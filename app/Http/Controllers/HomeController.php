@@ -168,7 +168,7 @@ class HomeController extends Controller
        
         return response()->json(["message"=>"User Found!!", "user" => $customer], 200);
       }
-        return response()->json(["message"=>"Customer Not Found!!"], 400);
+        return response()->json(["message"=>"User Not Found!!"], 400);
 
       }
 
