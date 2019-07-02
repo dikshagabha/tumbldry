@@ -225,7 +225,7 @@
                     </div>                    
                      <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
                         {{ Form::submit('Submit', ['class' => 'btn btn-warning',
-                        'id' => 'search_customer', 'data-url'=>route('admin.getRate')]) }}
+                        'id' => 'search_customer']) }}
 
                         {{ Form::button('Reset', ['class' => 'btn btn-danger reset', 'data-type'=>2]) }}
                   
@@ -398,6 +398,7 @@
         $(".error").html("");
         $('body').waitMe();
         $('#UserList').hide();
+
         $.ajax({
           url:$('#customerForm').attr('action'),
           data:$('#customerForm').serializeArray(),
@@ -406,6 +407,7 @@
           success: function(data){
             if (data.user) 
             {
+              console.log(data);
 
               for(key in data.user)
               {

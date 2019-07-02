@@ -49,8 +49,7 @@ class BillingController extends Controller
 
     public function carryForward(Request $request)
     {
-
-       $request->validate([
+        $request->validate([
             'user'=>'bail|required|numeric',
             'price'=>'bail|required|numeric|min:1|max:30000'
         ]);

@@ -161,24 +161,12 @@ class HomeController extends Controller
           'phone_number' => 'bail|required|numeric|digits_between:8,15',
           ]);
 
-      $customer = User::where(['role'=> 4, 'deleted_at'=>null])
+      $customer = User::where(['deleted_at'=>null])
                   ->where('phone_number', 'like', $request->input('phone_number'))->with('wallet', 'addresses')->first();
       
       if ($customer) {
-        $address = $customer->addresses;
-        $orders = Order::where('customer_id', $customer->id)->latest()->first();
-        if ($orders) {
-            $address = null;
-            if ($orders->count()) {
-             $address = Address::where('id', $orders->address_id)->first();
-            }
-           
-        }
-      $wallet = $customer->wallet;
-        session()->put('customer_details', ['user'=>$customer, 'wallet'=>$wallet]);
-      
-        return response()->json(["message"=>"Customer Found!!", "customer" => $customer, 'wallet'=>$wallet, 
-                                  'address'=>$address], 200);
+       
+        return response()->json(["message"=>"User Found!!", "user" => $customer], 200);
       }
         return response()->json(["message"=>"Customer Not Found!!"], 400);
 
