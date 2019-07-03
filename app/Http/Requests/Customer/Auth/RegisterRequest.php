@@ -42,7 +42,7 @@ class RegisterRequest extends FormRequest
             
             'phone_number' => ['bail', 'required', 'numeric', 'digits_between:8,15', Rule::unique('users', 'phone_number')
                 ->where(function ($query) {
-                    $query->where('deleted_at', null);
+                    $query->where('deleted_at', null)->where('role', 3);
                 })
             ],
             // 'address' => 'bail|required|string|max:500',

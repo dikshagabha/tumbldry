@@ -128,15 +128,18 @@ Payment Details:
 <table class="table table-bordered">
 	@foreach($order->payment()->where('type', '!=', 0)->get() as $pay)
 	<tr>
-		<th class="table-modal">@if($pay->type==1)
-								
-									Cash
-								@elseif($pay->type==2)
-									Wallet
-								@else
-									Loyality Points
-								@endif</th>
-
+		<th class="table-modal">
+								 @if($pay->type==1)                     
+                    Cash
+                  @elseif($pay->type==2)
+                    Wallet
+                  @elseif($pay->type==4)
+                    Card Pay [ {{$pay->transaction_id}}] 
+                 @elseif($pay->type==5)
+                    {{$pay->payment_mode}}
+                  @else
+                    Loyality Points
+                  @endif
 		<td class="table-modal">{{$pay->price}} Rs</td>
 	</tr>
 	@endforeach

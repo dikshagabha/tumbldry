@@ -10,12 +10,8 @@
 @section('content')
 <vs-row vs-justify="center">
   <vs-col type="flex" vs-justify="center" vs-align="center" vs-w="11">
-    <vs-card>
-      <div slot="header">
-        <h3>
-          Create Customer
-        </h3>
-      </div>
+    <!-- <vs-card>
+      -->
       <div>
 
         <vs-row vs-justify="center">
@@ -49,10 +45,10 @@
     </vs-row>
     </div>
     
-    </vs-card>
+    <!-- </vs-card> -->
   </vs-col>
 </vs-row>
-<div id="addressModal" class="modal fade " role="dialog">
+<div id="addressModal" class="modal " role="dialog">
   <div class="modal-dialog  modal-lg">
     <!-- Modal content-->
     <div class="modal-content">

@@ -309,6 +309,7 @@ $(document).ready(function(){
   $(document).on("click","#grnBtn",function(e) {
       e.preventDefault();
       $('body').waitMe();
+      console.log($('#grnForm').serializeArray())
       current = $(this)
       $.ajax({
         url:current.data('url'),
@@ -336,6 +337,9 @@ $(document).ready(function(){
   $(document).on("click","#deliverBtn",function(e) {
       e.preventDefault();
       $('body').waitMe();
+      
+      console.log($('#grnForm :input').serializeArray());
+
       current = $(this)
       $.ajax({
         url:current.data('url'),

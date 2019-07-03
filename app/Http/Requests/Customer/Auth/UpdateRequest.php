@@ -37,7 +37,10 @@ class UpdateRequest extends FormRequest
             'email' => ['bail', 'nullable', 'email', 'max:120', Rule::unique('users', 'email')->ignore(decrypt($this->route('manage_customer')), 'id') ],
             
             
-            'phone_number' => ['bail', 'required', 'numeric', 'digits_between:8,15', Rule::unique('users', 'phone_number')->ignore(decrypt($this->route('manage_customer')), 'id')],
+            'phone_number' => ['bail', 'required', 'numeric', 'digits_between:8,15', Rule::unique('users', 'phone_number')
+                                ->where(function ($query){
+                                        return $query->where('role', 3);
+                                    })->ignore(decrypt($this->route('manage_customer')), 'id')],
 
             // 'address' => 'bail|required|string|max:500',
             // 'city' => 'bail|required|max:255',

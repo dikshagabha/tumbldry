@@ -76,12 +76,12 @@ Route::prefix('admin')->group(function () {
 });
 
  
-  Route::get('/payment/{id}', 'Store\PaymentController@pay')->name('order.pay');
+  Route::get('/payment/{id}', 'PaymentLinkController@pay')->name('order.pay');
  
   
-     Route::post('/payment/response', 'Store\PaymentController@response')->name('pay');
-    Route::post('/payment/cancel', 'Store\PaymentController@cancel')->name('pay');
-    Route::get('/payment/success', 'PaymentController@success')->name('pay');
+     Route::post('/payment/response', 'PaymentLinkController@response')->name('pay');
+    Route::post('/payment/cancel', 'PaymentLinkController@cancel')->name('pay');
+    Route::get('/payment/success', 'PaymentLinkController@success')->name('pay');
   
 
 Route::prefix('store')->namespace('Store')->group(function () {

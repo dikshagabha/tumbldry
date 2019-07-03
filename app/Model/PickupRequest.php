@@ -79,7 +79,10 @@ class PickupRequest extends Model
 
     public function getCustomerPhoneAttribute()
     {
-        return $this->customer()->first()->phone_number; //some logic to return numbers
+        if ($this->customer()->first()) {
+           return $this->customer()->first()->phone_number; //some logic to return numbers
+        }
+        return ""; //some logic to return numbers
     }
 
     public function getCustomerAddressStringAttribute()
@@ -90,7 +93,10 @@ class PickupRequest extends Model
 
     public function getCustomerNameAttribute()
     {
-        return $this->customer()->first()->name; //some logic to return numbers
+        if ($this->customer()->first()) {
+           return $this->customer()->first()->name; //some logic to return numbers
+        }
+        return ""; //some logic to return numbers
     }
 
     public function getStoreEmailAttribute()
