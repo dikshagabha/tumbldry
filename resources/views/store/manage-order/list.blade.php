@@ -78,7 +78,7 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
               @endif
             </td>
             <td>
-              {{$user->created_at->addDays(2)->format('y/m/d h:i a')}}
+              {{$user->created_at->setTimezone($timezone)->addDays(2)->format('y/m/d h:i a')}}
             </td>
             <td>
              {{$user->status_name}}

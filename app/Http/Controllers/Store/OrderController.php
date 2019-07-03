@@ -70,12 +70,14 @@ class OrderController extends Controller
   public function index(Request $request){
     $activePage="order";
     $titlePage="Orders";
+
+       $timezone = $request->session()->get('user_timezone', 'Asia/Calcutta'); 
     $users = Order::where('store_id', $this->user->id)->with('items')->latest()->paginate(10);
     $runner = User::where('user_id', $this->user->id)->where('role', 5)->pluck('name', 'id');
     if ($request->ajax()) {
-      return view('store.manage-order.list', compact('users', 'runner'));
+      return view('store.manage-order.list', compact('users', 'runner', 'timezone'));
     }
-    return view('store.manage-order.index', compact('users', 'activePage', 'titlePage', 'runner'));
+    return view('store.manage-order.index', compact('users', 'activePage', 'titlePage', 'runner', 'timezone'));
   }
 
   public function getItemsForm(Request $request, $id){
