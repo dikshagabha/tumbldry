@@ -1,5 +1,5 @@
 @extends('store.layout-new.app')
-@section('title', 'Manage Store')
+@section('title', 'Manage order')
 
 @section('css')
 
