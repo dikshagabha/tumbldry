@@ -155,24 +155,19 @@ class HomeController extends Controller
 
       public function findUser(Request $request)
       {
-        
-        
       $validatedData = $request->validate([
           'phone_number' => 'bail|required|numeric|digits_between:8,15',
           ]);
-
       $customer = User::where(['deleted_at'=>null])
                   ->where('phone_number', 'like', $request->input('phone_number'))->with('wallet', 'addresses')->first();
-      
       if ($customer) {
-       
-        return response()->json(["message"=>"User Found!!", "user" => $customer], 200);
+       return response()->json(["message"=>"User Found!!", "user" => $customer], 200);
       }
-        return response()->json(["message"=>"User Not Found!!"], 400);
+      return response()->json(["message"=>"User Not Found!!"], 400);
 
       }
 
-       public function setTimezone(Request $request)
+      public function setTimezone(Request $request)
       {
         if ($request->filled('timezone')) {
             $request->session()->put('user_timezone', $request->input('timezone'));
@@ -180,7 +175,7 @@ class HomeController extends Controller
         return response()->json(['message' => 'Timezone set successfully!'], 200);
       }
 
-      public function setSessionAddress(Request $request)
+    public function setSessionAddress(Request $request)
     { 
      $data = $request->only('address', 'city', 'state', 'pin', 'landmark', 'latitude', 'longitude');
      

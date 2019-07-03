@@ -7,7 +7,8 @@ use App\Http\Controllers\Controller;
 use App\User;
 use App\Model\{
   PickupRequest,
-  Address
+  Address,
+  Order
 };
 use Auth;
 use App\Repositories\Customer\HomeRepository;
@@ -224,5 +225,37 @@ class CustomerController extends Controller
     $data = session('address');
    
     return response()->json(['message'=>'Address Deleted', 'view'=> view('store.showMultipleAddressess', compact('data'))->render()], 200);
+    }
+
+    public function customerDetails(Request $request, $id){
+      $activePage = 'customer';
+      $titlePage = 'Customer Details';
+      $orders = Order::where(['customer_id'=>$id, 'store_id'=>$this->user->id])->latest()->get();
+      
+      $pending = $orders->where('status', '!=', 6);
+      $delivered = $orders->where('status', 6);
+      $total = $orders->count();
+       $timezone = $request->session()->get('user_timezone', 'Asia/Calcutta');
+      if ($request->ajax()) {
+        return view('store.manage-customer.details-list', compact('orders', 'pending', 'total', 'activePage', 'titlePage','timezone', 'delivered'));
+      }
+        return view('store.manage-customer.details', compact('orders', 'pending', 'total', 'activePage', 'titlePage','timezone', 'delivered'));
+
+    }
+
+    public function latestcustomerDetails(Request $request, $id){
+      $activePage = 'customer';
+      $titlePage = 'Customer Details';
+      $orders = Order::where(['customer_id'=>$id, 'store_id'=>$this->user->id])->latest()->get();
+      $pending = Order::where(['customer_id'=>$id, 'store_id'=>$this->user->id])->where('status', '!=', 6)->latest()->limit(5)->get();
+      $delivered = Order::where(['customer_id'=>$id, 'store_id'=>$this->user->id])->where('status', 6)->latest()->limit(5)->get();
+      $total = $orders->count();
+       $timezone = $request->session()->get('user_timezone', 'Asia/Calcutta');
+      if ($request->ajax()) {
+        return view('store.manage-customer.details-list', compact('orders', 'pending', 'total', 'activePage', 'titlePage','timezone', 'delivered', 'id'));
+      }
+        return view('store.manage-customer.details', compact('orders', 'pending', 'total', 'activePage', 'titlePage','timezone', 'delivered'
+      , 'id'));
+
     }
 }

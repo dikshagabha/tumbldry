@@ -4,6 +4,9 @@
       
         <div class="form-group-inner">
           <div class="row">
+
+            
+
                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
                  <label class="login2 pull-right pull-right-pro">Phone Number</label>
                </div>
@@ -11,7 +14,11 @@
                 {!! Form::text('customer_phone',null, array('class' => 'form-control', "maxlength"=>20,
                                 "id"=>'phone', 'readonly'=>true)) !!}
                 <span class="error" id="phone_number_error"></span>
+
+
                </div>
+
+               
                <!-- <button type="button" class="btn btn-detail" id="search-user" data-url = "{{route('admin.findCustomer')}}"><i class="fa fa-search"></i></button> -->
                   <input type="hidden" name="customer_id" id="customer_id">
                   <input type="hidden" name="address_id" id="address_id">

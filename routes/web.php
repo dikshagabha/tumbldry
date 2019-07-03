@@ -162,7 +162,9 @@ Route::prefix('store')->namespace('Store')->group(function () {
 
           Route::post('plans/get-plans/', 'PlanController@getPlans')->name('store.getPlans');
 
-         
+          Route::get('customer/details/{id}', 'CustomerController@customerDetails')->name('store.customerDetails');
+
+          Route::get('customer/latest-details/{id}', 'CustomerController@latestcustomerDetails')->name('store.latestcustomerDetails');
 
           Route::post('set-store-timezone', 'HomeController@setTimezone')->name('store.set-timezone');
 

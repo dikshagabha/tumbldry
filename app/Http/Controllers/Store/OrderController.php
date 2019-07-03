@@ -205,8 +205,14 @@ class OrderController extends Controller
     $phone  = $request->input('phone');
 
     $Service = Service::where("id", $request->input('service'))->first();
+    $form_id = Items::where("name", 'LIKE',$request->input('item') )->where('type', $Service->form_type)->first();
+
+    if (!$form_id) {
+       return response()->json(['message'=>'We donot have details for this item.'], 400);
+    }
+
     if ($Service->form_type !=2) {
-    $form_id = Items::where("name", 'LIKE','%'.$request->input('item').'%' )->where('type', $Service->form_type)->first();
+   
     $units=false;
     $weight=1;
     }else{
@@ -214,9 +220,7 @@ class OrderController extends Controller
       $weight=0;
       $form_id = Items::where('status', 1)->where('type', $Service->form_type)->first();
     }
-    if (!$form_id) {
-       return response()->json(['message'=>'We donot have details for this item.'], 400);
-    }
+    
 
     if ($Service->form_type ==2 ) {
       $form_id = Items::where('type', 2)->first();
@@ -510,10 +514,10 @@ class OrderController extends Controller
       
       if(!$prices){
         $prices = ServicePrice::where('service_id', $request->input('service'))
-                  ->whereIn('parameter', $addons_input)
-                ->where('location','like' , 'global')->where('service_type', 0)->sum('value');
+                  ->whereIn('parameter', $addons_input)->where('location','like' , 'global')->where('service_type', 0)->sum('value');
       }
     }
+    
     if(Service::where(['id'=>$request->input('service'), 'selected'=>1])->count()){
       $prices = 0;
     }

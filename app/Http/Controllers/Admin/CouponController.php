@@ -122,7 +122,6 @@ class CouponController extends Controller
      */
     public function destroy($id)
     {     $delete = Items::where(['id'=>decrypt($id)])->delete();
-        //  $delete = UserAddress::where(['user_id'=>decrypt($id)])->delete();
           return response()->json(["message"=>"Frenchise deleted!"], 200);
     }
 }

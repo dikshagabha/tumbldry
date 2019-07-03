@@ -185,6 +185,7 @@ $(document).ready(function(){
 
              $(".select").show();
              $(".add").hide();
+             $("#service").val(data.service).trigger("chosen:updated");
               
           }
           $('body').waitMe('hide');
@@ -201,6 +202,7 @@ $(document).ready(function(){
           }else{
             error(data.responseJSON.message);
             $(".select").hide();
+            $("#service").val('').trigger("chosen:updated");
             $(".add").show();
             $('#name').val('').prop('readonly', false);
             $('#email').val('').prop('readonly', false);

@@ -87,7 +87,7 @@ class PickupController extends Controller
                                  'store_id'=> $id, 'request_time'=>$date->setTimezone('UTC'),
                                 'request_mode'=>1, 'status'=>1, 'service'=>$request->input('service'),
                                 'start_time'=>$request->input('start_time'), 'end_time'=>$request->input('end_time')]);
-        //if ($id) {
+        if ($id) {
           // Send Notification to store
           not::dispatch($pickup, 1);
           $options = array(
@@ -114,11 +114,10 @@ class PickupController extends Controller
             $mes = str_replace('@id@', $pickup->id, $mes);
             CommonRepository::sendmessage($request->input('phone_number'), $mes);          
         }
-        
 
         DB::commit();
-        return response()->json(["message"=>"Pickup Request successfull !", 'redirectTo'=>route('pickup-request.index')], 200);
-        }catch (\Exception $e) {
+        return response()->json(["message"=>"Pickup Request successfull !", 'redirectTo'=>route('store-pickup-request.index')], 200);
+      }catch (\Exception $e) {
             DB::rollback();
             return response()->json(["message"=>$e->getMessage()], 400);
         }

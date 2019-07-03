@@ -48,6 +48,10 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
                   <a href="{{route('manage-customer.destroy', encrypt( $user->id))}}" class="delete" data-token="{{csrf_token()}}" title="delete"> 
                     <button type="gradient" color="danger" class="btn btn-danger"> <i class="fa fa-trash"></i></button>
                   </a>
+
+                  <a href="{{route('store.customerDetails',($user->id))}}" title="edit">
+                    <button type="gradient" color="warning" class="btn btn-warning" >Orders Details</button>
+                  </a>
               </td>
             </tr>
               @php

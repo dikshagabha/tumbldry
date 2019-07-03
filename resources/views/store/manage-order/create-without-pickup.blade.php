@@ -99,6 +99,25 @@
 
   </div>
 </div>
+<div id="detailsmodal" class="modal" role="dialog">
+  <div class="modal-dialog modal-lg">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">        
+        <h4 class="modal-title">Order Details</h4>
+      </div>
+      <div class="modal-body">
+        <div id="detailsbody">
+            
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
+</div>
 
 @endsection
 
@@ -200,7 +219,7 @@ $(document).ready(function(){
               $('#name_order').val(data.customer['name']).prop('readonly', true);
             $('#email_order').val(data.customer['email']).prop('readonly', true);
             $('#phone_number').val(data.customer['phone_number']).prop('readonly', true);
-
+            $("#service").val(data.service).trigger("chosen:updated");
               $('#address_order').text(data.customer.address);
               $("#customer_id").val(data.customer.id);
               $("#address_id").val(data.customer.address_id);
@@ -208,7 +227,8 @@ $(document).ready(function(){
                 $('#address_order').text(data.address.address);
                 $("#address_id").val(data.address.id);
              }
-
+             $(".customer-details").attr('href', data.customer_details);
+             $(".customer-details-div").show();
              $(".select").show();
              $(".add").hide();
               
@@ -225,9 +245,10 @@ $(document).ready(function(){
                         $("#"+key+"_error").html(errors.errors[key][0])
                       }
           }else{
-            error(data.responseJSON.message);
+            $(".customer-details-div").hide();
             $(".select").hide();
             $(".add").show();
+            $("#service").val('').trigger("chosen:updated");
             $('#name_order').val('').prop('readonly', false);
             $('#email_order').val('').prop('readonly', false);
             $('#phone_number').val('').prop('readonly', false);
@@ -239,6 +260,19 @@ $(document).ready(function(){
         }
 
       })
+  })
+
+  $(document).on('click', '.customer-details', function(e){
+    e.preventDefault();
+    current=$(this);
+    $.ajax({
+      url:current.attr('href'),
+      success:function (data) {
+        $('#detailsbody').html(data);
+        $('#detailsmodal').modal('show');
+      }
+    })
+
   })
 
   $(document).on('click', '#search-user', function(e){
