@@ -150,7 +150,7 @@ class StoreController extends Controller
      
      if ($id==1) {
          $validatedData = $request->validate([
-          'email' => 'bail|required|email|unique:users,email',
+          'email' => 'bail|nullable|email|unique:users,email',
           'name' => 'bail|required|min:2|max:50|string',
           'user_id'=>['bail', 'nullable', 'numeric'],
           'store_name' => 'bail|nullable|min:2|max:50|string',
@@ -162,7 +162,7 @@ class StoreController extends Controller
      }
       else if($id==2){
         $validatedData = $request->validate([
-          'email' => 'bail|required|email|unique:users,email',
+          'email' => 'bail|nullable|email|unique:users,email',
           'name' => 'bail|required|min:2|max:50|string',
           
           'user_id'=>['bail','nullable', 'numeric'],
@@ -182,7 +182,7 @@ class StoreController extends Controller
       }
      else if($id==3){
       $validatedData = $request->validate([
-          'email' => 'bail|required|email|unique:users,email',
+          'email' => 'bail|nullable|email|unique:users,email',
           'name' => 'bail|required|min:2|max:50|string',
           'user_id'=>['bail','nullable', 'numeric'],
           'store_name' => 'bail|nullable|min:2|max:50|string',
@@ -210,7 +210,7 @@ class StoreController extends Controller
 
      else if($id==4){
       $validatedData = $request->validate([
-          'email' => 'bail|required|email|unique:users,email',
+          'email' => 'bail|nullable|email|unique:users,email',
           'name' => 'bail|required|min:2|max:50|string',
           
           'user_id'=>['bail','nullable', 'numeric'],
@@ -245,11 +245,9 @@ class StoreController extends Controller
           'property_type', 'store_size', 'store_rent', 'rent_enhacement', 'rent_enhacement_percent', 
           'landlord_name', 'landlord_number'));
         return response()->json(["message"=>'Data stored temporarly'], 200);
-     }
-
-     else if($id==4){
+     }else if($id==4){
       $validatedData = $request->validate([
-          'email' => 'bail|required|email|unique:users,email',
+          'email' => 'bail|nullable|email|unique:users,email',
           'name' => 'bail|required|min:2|max:50|string',
           
           'user_id'=>['bail', 'nullable', 'numeric'],
@@ -276,6 +274,54 @@ class StoreController extends Controller
           'rent_enhacement_percent'=>'bail|required_if:property_type,1|nullable|numeric|min:1|max:99',
           'landlord_name' => 'bail|required_if:property_type,1|nullable|min:2|max:50|string',
           'landlord_number' => 'bail|required_if:property_type,1|nullable|min:2|max:999999999|numeric',
+
+          'address_proof' => 'bail|nullable|file|mimes:pdf,png,jpg,jpeg|max:10000',
+          'gst_certificate' => 'bail|nullable|file|mimes:pdf,png,jpg,jpeg|max:10000',
+          'bank_passbook' => 'bail|nullable|file|mimes:pdf,png,jpg,jpeg|max:10000',
+          'cheque' => 'bail|nullable|file|mimes:pdf,png,jpg,jpeg|max:10000',
+          'pan' => 'bail|nullable|file|mimes:pdf,png,jpg,jpeg|max:10000',
+          'id_proof' => 'bail|nullable|file|mimes:pdf,png,jpg,jpeg|max:10000',
+          'loi_copy' => 'bail|nullable|file|mimes:pdf,png,jpg,jpeg|max:10000',
+          'transaction_details' => 'bail|nullable|file|mimes:pdf,png,jpg,jpeg|max:10000',
+          'agreement_copy' => 'bail|nullable|file|mimes:pdf,png,jpg,jpeg|max:10000',
+          'rent_agreement' => 'bail|nullable|file|mimes:pdf,png,jpg,jpeg|max:10000',
+        ]);
+    }
+
+     else if($id==5){
+      $validatedData = $request->validate([
+          'email' => 'bail|nullable|email|unique:users,email',
+          'name' => 'bail|required|min:2|max:50|string',
+          
+          'user_id'=>['bail', 'nullable', 'numeric'],
+          'address'=>'bail|nullable|string|min:2|max:50',
+          'city'=>'bail|nullable|string|min:2|max:50',
+          'state'=>'bail|nullable|string|min:2|max:50',
+          'pin'=>'bail|nullable|numeric|min:2|max:999999',
+          'latitude'=>'bail|nullable|numeric|min:-180|max:180',
+          'longitude'=>'bail|nullable|numeric|min:-180|max:180',
+          'landmark'=>'bail|nullable|string|min:2|max:200',
+
+          'store_name' => 'bail|nullable|min:2|max:50|string',
+          'phone_number' => 'bail|required|unique:users,phone_number|min:2|max:999999999',
+          'machine_count'=>'bail|nullable|numeric|min:1|max:9999',
+          'boiler_count'=>'bail|nullable|numeric|min:1|max:9999',
+          'machine_type'=>'bail|nullable|string|min:1|max:500',
+          'boiler_type'=>'bail|nullable|string|min:1|max:500',
+          'iron_count'=>'bail|nullable|numeric|min:1|max:9999',
+          
+          'property_type'=>'bail|required|numeric|min:1|max:2',
+          'store_size'=>'bail|required_if:property_type,1|nullable|numeric|min:1|max:9999',
+          'store_rent'=>'bail|required_if:property_type,1|nullable|numeric|min:1|max:9999',
+          'rent_enhacement'=>'bail|required_if:property_type,1|nullable|numeric|min:1|max:9999',
+          'rent_enhacement_percent'=>'bail|required_if:property_type,1|nullable|numeric|min:1|max:99',
+          'landlord_name' => 'bail|required_if:property_type,1|nullable|min:2|max:50|string',
+          'landlord_number' => 'bail|required_if:property_type,1|nullable|min:2|max:999999999|numeric',
+
+          'dry_clean_share'=>'bail|nullable|numeric|min:1|max:100',
+          'store_size'=>'bail|nullable|numeric|min:1|max:100',
+          'store_rent'=>'bail|nullable|numeric|min:1|max:100',
+         
 
           'address_proof' => 'bail|nullable|file|mimes:pdf,png,jpg,jpeg|max:10000',
           'gst_certificate' => 'bail|nullable|file|mimes:pdf,png,jpg,jpeg|max:10000',

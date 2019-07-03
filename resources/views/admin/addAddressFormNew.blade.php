@@ -1,4 +1,4 @@
-<form action="{{route('admin.setSessionAddress')}}" method="post" id="formAddress">
+<form action="{{route('admin.setSessionAddresses')}}" method="post" id="formAddress">
   <div class="row">
   <div class="col-sm-6 col-md-6 col-lg-6">
     <div class="form-group-inner">

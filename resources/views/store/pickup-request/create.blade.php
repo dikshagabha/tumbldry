@@ -335,6 +335,69 @@ $(document).ready(function(){
     })
   })
  
+ $(document).on("click", "#add_address", function(e){
+      e.preventDefault();
+      $("#selectAddressModal").modal('hide');
+      $('#addressModal').modal('show');
+      //$('#formAddress')[0].reset();
+    })
+
+   $(document).on("click", "#select_address", function(e){
+      e.preventDefault();
+      current = $(this);
+
+       $.ajax({
+        url: current.data('url'),
+        type:'get',
+        data: {'user_id' : $('#customer_id').val()},     
+        success: function(data){
+          $('#selectAddressForm').html(data.view);
+          $("#selectAddressModal").modal('show');
+          $('body').waitMe('hide');
+        }
+    })
+    })
+
+   $(document).on("click", ".address", function(e){
+      e.preventDefault();
+      current = $(this);
+
+      $('#address_id').val(current.data('id'));
+
+      $('#address_form').text(current.data('value'));
+
+       $("#selectAddressModal").modal('hide');
+    })
+
+   $(document).on("click", "#add_new_address", function(e){
+    e.preventDefault();
+    var form = $('#formAddress')[0];
+    var data = new FormData(form);
+    data.append('user_id', $('#customer_id').val());
+    
+    $(".error").html("");    
+    $.ajax({
+      url: $('#formAddress').attr('action'),
+      type:'post',
+      data: data,
+      cache: false,
+      processData: false,  
+      contentType: false,      
+      success: function(data){
+        success(data.message);
+        if (data.data) 
+        {
+          for (var key in data.data) {
+              $("#"+key+'_form').text(data.data[key]);
+          }
+        }
+        $('#address_id').val(data.data.address_id);
+        $("#addressModal").modal('hide');
+        $('body').waitMe('hide');
+      }
+    })
+  })
+ 
   $(document).on('click', '#add_frenchise', function(e){
     e.preventDefault();
     $('body').waitMe();

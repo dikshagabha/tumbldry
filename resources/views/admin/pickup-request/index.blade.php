@@ -14,33 +14,11 @@
                 <div class="col-md-9">
                 </div>
                 <div class="col-md-3">
-                  <a href="{{route('pickup-request.create')}}"><button class="btn btn-danger">Add Pickup Request</button></a>
+                  <a href="{{route('admin-pickup-request.create')}}"><button class="btn btn-danger">Add Pickup Request</button></a>
                 </div>
               </div>
               <br>
-               <!-- <div class="">
-                {{ Form::open(['method' => 'get', 'id' => 'store-search', 'name' => 'serach_form']) }}
-                <div class="form-group-inner">
-                    <div class="row">
-                      <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
-                      </div>
-                         <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
-                          {{ Form::text('search', '', ['class' => 'form-control', 'placeholder' => 'Search by Name or E-mail or Phone', 'maxlength'=>'50']) }}
-                         </div>
-                         <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
-                          {{ Form::select('sort_type', ['' => 'Select Status', '1' => 'Active', '0' => 'Inactive'], null, ['class' => 'form-control', 'id' => 'sort_type']) }}
-                           
-                         </div>
-                         <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
-                          <button type="submit" id="search-button" class="btn btn-success margin-bottom-20">Filter</button>
-                        <button type="submit" id="reset-button" class="btn btn-danger margin-bottom-20">Reset</button>
-                         </div>
-                       </div>
-                  </div>
-                  {{ Form::close() }}
-              </div> -->
-
-              <br>
+             
               <div id="dataList">
                 
                @include('admin.pickup-request.list')

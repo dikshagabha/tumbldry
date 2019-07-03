@@ -60,34 +60,24 @@ class PickupController extends Controller
 
       try{
         DB::beginTransaction();
-        if ($request->input('customer_id')==null) {
+        if($request->input('customer_id')==null) {
           $user = User::create(['name'=>$request->input('name'), 
                         'email'=>$request->input('email'),
                         'phone_number'=>$request->input('phone_number'),  
                         'role'=> 4
                         ]);
-          $address = Address::create(['address'=>$request->input('address'),
-                            'pin'=>$request->input('pin'),
-                            'city'=>$request->input('city'),
-                            'state'=>$request->input('state'),
-                            'user_id'=>$user->id,
-                            'latitude'=>$request->input('latitude'),
-                            'longitude'=>$request->input('longitude'),
-                            'landmark'=>$request->input('landmark')
-                          ]);
+
+          $address = session()->get('address');
+          $address['user_id'] = $user->id;
+          $address = Address::create($address);
 
           $request->merge(['customer_id' => $user->id]);
           $request->merge(['address_id' => $address->id]);
         }
-
-
         $pin = $request->input('pin');
-
         $address = Address::where('pin', $pin)->pluck('user_id')->toArray();  
-
         $address = User::where(['role'=> 3, 'status'=>1])->whereIn('id', $address)->first();
-
-        if (!$address) {
+        if (!$address ) {
           $origLat = $request->input('latitude');
           $origLon = $request->input('longitude');
           $dist = 10; 
@@ -101,23 +91,32 @@ class PickupController extends Controller
                       and latitude between ($origLat-($dist/69)) 
                       and ($origLat+($dist/69)) 
                          ORDER BY distance limit 1"; 
-          $address = Address::whereRaw($whereRaw)
+         
+          if ($origLat && $origLon) {
+            $address = Address::whereRaw($whereRaw)
                       ->select($query)->pluck('user_id')->toArray();
+          }
+          
         }
 
-
-        $address = User::where(['role'=> 3, 'status'=>1])->whereIn('id', $address)->first();
+        if ($address) {
+          $address = User::where(['role'=> 3, 'status'=>1])->whereIn('id', $address)->first();
+        }
+       
         
         $id=null;
         if ($address) {
           $id=$address->id;
         }
+        //dd($request->header('timezone'));
+        $date = Carbon::createFromFormat('Y-m-d', $request->input('request_time'), $request->header('timezone'));
+       // dd($date);
 
-        $date = Carbon::createFromFormat('Y-m-d H:i', $request->input('request_time'), $request->header('timezone'));
         $pickup = PickupRequest::create(['customer_id'=>$request->input('customer_id'),
                                 'address'=>$request->input('address_id'),
                                  'store_id'=>$id, 'request_time'=>$date->setTimezone('UTC'),
-                                'request_mode'=>1, 'status'=>1, 'service'=>$request->input('service')]);
+                                 'request_mode'=>1, 'status'=>1, 'service'=>$request->input('service'),
+                                'start_time'=>$request->input('start_time'), 'end_time'=>$request->input('end_time') ]);
 
         //dd($pickup);
         if ($id) {
@@ -136,12 +135,21 @@ class PickupController extends Controller
 
 
             $data['message'] = $request->input('name')." has requested a pickup.";
-            $pusher->trigger('my-channel', 'notification'.$id, $data);            
+            $pusher->trigger('my-channel', 'notification'.$id, $data); 
+
+            $message = SMSTemplate::where('title', 'like','%Pick Up Scheduled%')->select('description')->first();
+            //dd($message);
+            $message = $message->description;
+
+            $mes = str_replace('@customer_name@', $request->input('name'), $message);
+
+            $mes = str_replace('@id@', $pickup->id, $mes);
+            CommonRepository::sendmessage($request->input('phone_number'), $mes);            
         }
         
 
         DB::commit();
-        return response()->json(["message"=>"Pickup Request successfull !", 'redirectTo'=>route('pickup-request.index')], 200);
+        return response()->json(["message"=>"Pickup Request successfull !", 'redirectTo'=>route('admin-pickup-request.index')], 200);
         }catch (\Exception $e) {
             DB::rollback();
             return response()->json(["message"=>$e->getMessage()], 400);
@@ -214,7 +222,39 @@ class PickupController extends Controller
 
 
     }
+    public function setSessionAddresses(Request $request)
+    { 
 
+      $data = $request->only('address', 'city', 'state', 'pin', 'landmark', 'latitude', 'longitude');
+     
+     if ($request->input('user_id')) {
+       $data['user_id']=$request->input('user_id');
+       $address = Address::create($data);
+       $data['address_id']=$address->id;
+     }
+
+     $data = session()->put('address', $data);
+
+     $data = session()->get('address');
+     if ($data) {
+      return response()->json(["message"=>'Address Saved', 'data'=> $data], 200);
+     }
+     return response()->json(["message"=>'Address Not Saved', 'data'=>$data], 400);
+    }
+
+    public function deleteSessionAddresses(Request $request){
+    $items = session('address');
+    $index = $request->input('data-id')-1;
+    
+    unset($items[$index]);
+
+    $items = array_values($items);
+    session()->put("address", $items);
+
+    $data = session('address');
+   
+    return response()->json(['message'=>'Address Deleted', 'view'=> view('store.showMultipleAddressess', compact('data'))->render()], 200);
+    }
 
 
 }

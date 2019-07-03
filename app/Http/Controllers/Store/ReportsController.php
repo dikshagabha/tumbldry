@@ -229,7 +229,15 @@ class ReportsController extends Controller
       $shares = UserFranchiseShare::where('user_id', $this->user->id)->first();
       $items  = Items::where('type', 11)->get();
 
-      $payments = UserPayments::whereIn('order_id', $items->pluck('id'))->where('type', 21)->get();
+      $payments = UserPayments::whereIn('order_id', $items->pluck('id'))
+                  ->where('user_id', $this->user->id)
+                  ->where('type', 51)
+                  ->when($request->filled('start_date'), function ($q) use($request){
+                      $q->where('created_at', '>=',$request->input('start_date'));
+                  })
+                  ->when($request->filled('end_date'), function ($q) use($request){
+                      $q->where('created_at', '<=',$request->input('end_date'));
+                  })->get();
 
       $total_billing = $payments->sum('price');
       if (!$shares) {

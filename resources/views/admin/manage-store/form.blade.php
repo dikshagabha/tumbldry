@@ -596,15 +596,80 @@
     </div>
   </div>
 
-  <div class="card">
+   <div class="card">
     <div class="card-header" id="headingSix">
       <h5 class="mb-0">
-        <button class="btn  btn-default collapsed 6"  disabled type="button" data-toggle="collapse" data-target="#collapseSix" aria-expanded="false" aria-controls="collapseSix">
-          Account Information
+        <button class="btn btn-default collapsed 6" disabled type="button" data-toggle="collapse" data-target="#collapseSix" aria-expanded="false" aria-controls="collapseSix">
+          Franchise Share in Revenue
         </button>
       </h5>
     </div>
     <div id="collapseSix" class="collapse" aria-labelledby="headingSix" data-parent="#accordionExample">
+      <div class="card-body">
+         <div class="row">
+           <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
+          <div class="all-form-element-inner">
+            <div class="form-group-inner">
+              <div class="row">
+                   <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                     <label class="login2 pull-right pull-right-pro">Dry Clean</label>
+                   </div>
+                   <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+                     {!! Form::text('dry_clean_share',null,array('class' => 'form-control', 'maxlength'=>"5")) !!}
+                      <span class="error" id="dry_clean_share_error"></span>
+                   </div>
+                 </div>
+            </div>            
+            <br>
+            <div class="form-group-inner">
+              <div class="row">
+                   <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                     <label class="login2 pull-right pull-right-pro">Laundary</label>
+                   </div>
+                   <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+                     {!! Form::text('laundary_share',null,array('class' => 'form-control', 'maxlength'=>"5")) !!}
+                      <span class="error" id="laundary_share_error"></span>
+                   </div>
+                 </div>
+            </div>
+            <br>
+            <div class="form-group-inner">
+              <div class="row">
+                   <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                     <label class="login2 pull-right pull-right-pro">Other Services</label>
+                   </div>
+                   <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+                     {!! Form::text('other_services_share',null,array('class' => 'form-control', 'maxlength'=>"5")) !!}
+                      <span class="error" id="other_services_share_error"></span>
+                   </div>
+                 </div>
+            </div>
+           <div class="form-group-inner">
+             <div class="row">
+               <div class="col-lg-3 col-md-3 col-sm-3">
+               </div>
+               <div class="col-lg-3 col-md-3 col-sm-3">
+                </div>
+               <div class="col-lg-5 col-md-5 col-sm-5">
+                 <button type="button" class="btn btn-primary next" data-id="6" data-url="{{route('admin.store.add', 5)}}">Next</button>
+               </div>
+              </div>
+            </div>
+          </div>
+       </div>
+     </div>
+       </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header" id="headingSeven">
+      <h5 class="mb-0">
+        <button class="btn  btn-default collapsed 7"  disabled type="button" data-toggle="collapse" data-target="#collapseSeven" aria-expanded="false" aria-controls="collapseSix">
+          Account Information
+        </button>
+      </h5>
+    </div>
+    <div id="collapseSeven" class="collapse" aria-labelledby="headingSeven" data-parent="#accordionExample">
       <div class="card-body">
         <div class="row">
            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
@@ -707,11 +772,11 @@
                </div>
                <div class="col-lg-3 col-md-3 col-sm-3">
                 <a href="{{route('manage-store.index')}}">
-                  <button type="button" class="btn btn-default" data-id="5" data-url="{{route('admin.store.add', 5)}}">Cancel</button>
+                  <button type="button" class="btn btn-default" data-id="7" data-url="{{route('admin.store.add', 5)}}">Cancel</button>
                 </a>
                 </div>
                <div class="col-lg-5 col-md-5 col-sm-5">
-                 <button type="button" class="btn btn-primary" data-id="6" data-url="{{route('admin.store.add', 6)}}" id="add_frenchise">Save</button>
+                 <button type="button" class="btn btn-primary" data-id="7" data-url="{{route('admin.store.add', 6)}}" id="add_frenchise">Save</button>
                </div>
               </div>
             </div>

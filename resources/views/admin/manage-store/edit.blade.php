@@ -54,8 +54,8 @@
 $(document).ready(function(){
 
   
-  $('#collapseTwo, #collapseThree, #collapseFour, #collapseFive , #collapseSix').addClass('show');
-  $('.1, .2, .3, .4, .5, .6').prop('disabled', false);
+  $('#collapseTwo, #collapseThree, #collapseFour, #collapseFive , #collapseSix , #collapseSeven').addClass('show');
+  $('.1, .2, .3, .4, .5, .6, .7').prop('disabled', false);
 
 	$('#parent').chosen();
 

@@ -34,20 +34,33 @@ Route::prefix('admin')->group(function () {
       'manage-frenchise' => 'Admin\FranchiseController',
       'manage-store' => 'Admin\StoreController',
       'manage-service' => 'Admin\ServiceController',
-      'pickup-request' => 'Admin\PickupController',
+      'admin-pickup-request' => 'Admin\PickupController',
       'manage-vendor' => 'Admin\VendorController',
+      'admin-manage-plans' => 'Admin\PlansController',
+      'manage-supplies' => 'Admin\SuppliesController',
+      'edit-coupons' => 'Admin\CouponController',
     ]);
     
+   
     Route::post('/vendor/status/{id}', 'Admin\VendorController@status')->name('manage-vendor.status');
 
-      Route::post('set-providers-session', 'Admin\VendorController@setSessionProviders')->name('admin.postAddSessionProviders');
+    Route::get('/billing/excel', 'Admin\BillingController@downloadExcel')->name('billing.downloadExcel');
+    Route::get('/billing', 'Admin\BillingController@index')->name('billing.index');
+    Route::post('/billing', 'Admin\BillingController@importBilling')->name('billing.importBilling');
+    Route::post('/carry-forward', 'Admin\BillingController@carryForward')->name('billing.carryForward');
+
+    Route::post('set-providers-session', 'Admin\VendorController@setSessionProviders')->name('admin.postAddSessionProviders');
     Route::post('/store/status/{id}', 'Admin\StoreController@status')->name('manage-store.status');
+    Route::post('/pickp/assign-store/{id}', 'HomeController@assignStore')->name('admin.assignStore');
 
     Route::post('/add-store/{id}', 'Admin\StoreController@saveSession')->name('admin.store.add');
     // Address Routes
+    
     Route::get('/address', 'HomeController@addAddress')->name('admin.addAddress');
+    
     Route::post('/address', 'HomeController@postAddAddress')->name('admin.postAddAddress');
-    Route::post('/session-address', 'HomeController@setSessionAddress')->name('admin.setSessionAddress');
+    
+    
     Route::get('/edit-address', 'HomeController@editAddress')->name('admin.editAddress');
     Route::post('/edit-address', 'HomeController@postEditAddress')->name('admin.postEditAddress');
 
@@ -74,6 +87,11 @@ Route::prefix('admin')->group(function () {
 
   });
 });
+
+ Route::resources([
+      'admin-pickup-request' => 'Admin\PickupController'
+    ]);
+ Route::post('/admin-session-address', 'Admin\PickupController@setSessionAddresses')->name('admin.setSessionAddresses');
 
  
   Route::get('/payment/{id}', 'PaymentLinkController@pay')->name('order.pay');

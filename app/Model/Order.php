@@ -68,8 +68,6 @@ class Order extends Model
         if ($this->status==5) {
             return "Out for Delivery";
         }
-
-        
     }
  	public function getCustomerPhoneNumberAttribute(){
  		if ($this->customer()->count()) 

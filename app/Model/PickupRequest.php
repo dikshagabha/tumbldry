@@ -106,4 +106,11 @@ class PickupRequest extends Model
     	}
         return "N/A";
     }
+     public function getStorePhoneAttribute()
+    {
+        if ($this->store()->count()) {
+            return $this->store()->first()->phone_number;
+        }
+        return "N/A";
+    }
 }

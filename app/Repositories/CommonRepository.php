@@ -139,7 +139,9 @@ class CommonRepository extends BaseRepository
 
         if ($ser->form_type==2) {
             if($last_order->where('service_id', $service_id)->count()){
+                  
                   $service_details = Coupon::where('coupon', '=' ,'Laundary Discount')->get();
+                  
                   $service_details = $service_details->whereIn('parameter','>=', $last_order->where('service_id', $service_id)->first()->items->sum('quantity'));
                       //$service_details = ($service_details->where('value', $current_order_details['weight']));  
                       if ($service_details->count()){

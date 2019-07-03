@@ -7,6 +7,8 @@ use Auth;
 use App\Model\Location;
 use App\Model\Service;
 use App\Model\Address;
+use App\Model\Order;
+use App\Model\PickupRequest;
 use App\User;
 
 use App\Model\ServicePrice;
@@ -27,8 +29,10 @@ class HomeController extends Controller
      public $user;
     public function __construct()
     {
-        $this->middleware('auth');
-        $this->user=Auth::user();
+       $this->middleware(function($request, $next) {
+              $this->user = Auth::user();
+              return $next($request);
+          });
     }
 
     /**
@@ -36,18 +40,28 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index()
+    public function index(Request $request)
     {
        $user = User::get();
        $service = Service::count();
-
-        $cities = Location::groupBy('city_name')->selectRaw('city_name')->orderBy('city_name', 'asc')->pluck('city_name', 'city_name');
-
+       $timezone = $request->session()->get('user_timezone', 'Asia/Calcutta');
+       $cities = Location::groupBy('city_name')->selectRaw('city_name')->orderBy('city_name', 'asc')->pluck('city_name', 'city_name');
+        $pending = PickupRequest::where('store_id', null)->paginate(10);
         $cities['global']='Global';
+        $stores = $user->where('role', 3)->pluck('name', 'id');
 
-        $types = [1=>"Dry Clean", 2=>"Laundary", 3=>'Car Clean'];
+        $types = [1=>"Dry Clean", 2=>"Laundary", 3=>'Car Clean', 4=>'Shoe Clean', 5=>'Sofa Clean', 6=>'Home Clean'];
       
-        return view('admin.dashboard', compact('user', 'service', 'cities', 'types' ));
+        return view('admin.dashboard', compact('user', 'service', 'cities', 'types', 'pending', 'timezone', 'stores'));
+    }
+
+    public function assignStore(Request $request, $id)
+    {
+      $pickup = PickupRequest::where('id', $id)->update($request->only('store_id'));
+      if ($pickup) {
+        return response()->json(["message"=>"Pickup Assigned"], 200);
+      }
+      return response()->json(["message"=>"Something went wrong."], 400);
     }
 
     public function getServices(Request $request)
@@ -142,16 +156,19 @@ class HomeController extends Controller
       public function findUser(Request $request)
       {
         
-        $validatedData = $request->validate([
-          'phone_number' => 'bail|required|numeric|min:2|max:9999999999',
+        
+      $validatedData = $request->validate([
+          'phone_number' => 'bail|required|numeric|digits_between:8,15',
           ]);
 
-        $customer = User::where('phone_number', 'like', '%'.$request->input('phone_number').'%')->first();
-        
-        if ($customer) {
-          return response()->json(["message"=>"User Found!!", "user" => $customer], 200);
-        }
-          return response()->json(["message"=>"User Not Found!!"], 400);
+      $customer = User::where(['deleted_at'=>null])
+                  ->where('phone_number', 'like', $request->input('phone_number'))->with('wallet', 'addresses')->first();
+      
+      if ($customer) {
+       
+        return response()->json(["message"=>"User Found!!", "user" => $customer], 200);
+      }
+        return response()->json(["message"=>"User Not Found!!"], 400);
 
       }
 
@@ -163,9 +180,10 @@ class HomeController extends Controller
         return response()->json(['message' => 'Timezone set successfully!'], 200);
       }
 
-      public function setSessionAddress(sessionAddressRequest $request)
+      public function setSessionAddress(Request $request)
     { 
      $data = $request->only('address', 'city', 'state', 'pin', 'landmark', 'latitude', 'longitude');
+     
      if ($request->input('user_id')) {
        $data['user_id']=$request->input('user_id');
        $address = Address::create($data);
