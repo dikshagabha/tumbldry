@@ -41,10 +41,16 @@
 	              <td>
 	                  
 	                  @if($user->request_time)
-	                    {{$user->request_time->setTimezone($timezone)->format('y/m/d')}} ({{$user->start_time}} - {{$user->end_time}})
-	                  @else
-	                    --
-	                  @endif
+                 
+                    {{$user->request_time->format('d/m/Y')}}
+                    
+                    {{ $user->start_time->format('h:i a')}} -
+
+                    {{$user->end_time->format('h:i a')}}
+                 
+                  @else
+                    --
+                  @endif
 	              </td>
 	              <td>
 	                {{Form::select("runner_id",$runners, $user->assigned_to, ["class"=>"runner_select form-control", 'placeholder'=>"Select Runner", 'href'=>route('store.assign-runner'), 'data-id'=>$user->id ])}}

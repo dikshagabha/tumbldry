@@ -13,6 +13,7 @@ use App\User;
 use DB;
 use Pusher;
 use Carbon\Carbon;
+use App\Repositories\CommonRepository;
 class PickupController extends Controller
 {
     /**
@@ -41,11 +42,12 @@ class PickupController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
       $activePage = 'pickup-request';
       $titlePage  = 'Pickup Request';
       $services = Service::pluck('name', 'id');
+      
       return view('admin.pickup-request.create', compact('users', 'activePage', 'titlePage', 'services'));
     }
 

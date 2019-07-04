@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class PickupRequest extends Model
 {
     protected $fillable = ['customer_id', 'store_id', 'address', 'request_mode', 'status', 'service', 'assigned_to', 'request_time', 'start_time', 'end_time'];
-    protected $dates = ['created_at', 'updated_at', 'deleted_at','request_time'];
+    protected $dates = ['created_at', 'updated_at', 'deleted_at','request_time', 'start_time', 'end_time'];
     
 
     protected $appends = ['runner_name', 'customer_name','customer_email', 'service_name', 'customer_phone', 'customer_address_string'];

@@ -61,9 +61,6 @@ class PlansController extends Controller
        
 
       $user = Plan::create($request->only('name', 'type', 'price', 'end_date', 'description'));
-
-      //$add = UserAddress::create(['user_id'=>$user->id, 'address_id'=>$request->input('address_id')]);
-
       return response()->json(["message"=>"Frenchise Added", "redirectTo"=>route('admin-manage-plans.index')], 200);
     }
 
@@ -105,9 +102,6 @@ class PlansController extends Controller
     public function update(PlansRequest $request, $id)
     {
       $user = Plan::where('id', decrypt($id))->update($request->only('name', 'type', 'price', 'end_date', 'description'));
-      //$delete = UserAddress::where(['user_id'=>decrypt($id)])->delete();
-      //$add = UserAddress::create(['user_id'=>decrypt($id), 'address_id'=>$request->input('address_id')]);
-
       return response()->json(["message"=>"Plan Updated", "redirectTo"=>route('admin-manage-plans.index')], 200);
     }
 
@@ -119,7 +113,6 @@ class PlansController extends Controller
      */
     public function destroy($id)
     {     $delete = Plan::where(['id'=>decrypt($id)])->delete();
-        //  $delete = UserAddress::where(['user_id'=>decrypt($id)])->delete();
           return response()->json(["message"=>"Plan deleted!"], 200);
     }
 }
