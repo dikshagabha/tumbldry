@@ -186,11 +186,6 @@
     }
   })
 
-
-
-
-
-
 $(document).ready(function(){
 	 $(document).on("change",".runner_select",function(e) {
       e.preventDefault();
@@ -211,7 +206,7 @@ $(document).ready(function(){
                 //$('.runner_select').chosen("destroy").chosen();
                 var current_page = $(".pagination").find('.active').text();
                 load_listings(location.href+'?page='+current_page, 'serach_form');
-                //window.location.reload()
+                window.location.reload()
               },
             })
       }     

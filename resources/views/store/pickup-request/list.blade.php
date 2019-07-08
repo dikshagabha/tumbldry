@@ -38,11 +38,12 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
                   @if($user->request_time)
                  
                     {{$user->request_time->format('d/m/Y')}}
-                    
+                    @if($user->start_time)
                     {{ $user->start_time->format('h:i a')}} -
-
+                    @endif
+                    @if($user->end_time)
                     {{$user->end_time->format('h:i a')}}
-                 
+                    @endif
                   @else
                     --
                   @endif

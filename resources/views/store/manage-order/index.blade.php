@@ -51,7 +51,7 @@
         <h4 class="modal-title">Order Items</h4>
       </div>
       <div class="modal-body">
-        <div id="printGrnForm">
+        <div class="printGrnForm">
             
         </div>
       </div>
@@ -125,7 +125,7 @@ $(document).ready(function(){
         //data: $('#addonForm'+current.data('id')+' :input').serializeArray(),
         cache: false,
         success: function(data){
-          $("#printGrnForm").html(data.view);
+          $(".printGrnForm").html(data.view);
           $("#selectGrnModal").modal('show');
         }
       })
@@ -309,7 +309,8 @@ $(document).ready(function(){
   $(document).on("click","#grnBtn",function(e) {
       e.preventDefault();
       $('body').waitMe();
-      console.log($('#grnForm').serializeArray())
+      console.log($('.printGrnForm :input').serializeArray());
+
       current = $(this)
       $.ajax({
         url:current.data('url'),
@@ -318,7 +319,7 @@ $(document).ready(function(){
             xhrFields: {
                 responseType: 'blob'
             },
-        data: $('#grnForm :input').serializeArray(),
+        data: $('.printGrnForm :input').serializeArray(),
         success:function(data){
           $('body').waitMe('hide');
 
@@ -338,13 +339,13 @@ $(document).ready(function(){
       e.preventDefault();
       $('body').waitMe();
       
-      console.log($('#grnForm :input').serializeArray());
+      console.log($('.printGrnForm :input').serializeArray());
 
       current = $(this)
       $.ajax({
         url:current.data('url'),
         method:'post',
-        data: $('#grnForm :input').serializeArray(),
+        data: $('.printGrnForm :input').serializeArray(),
         success:function(data){
           $('body').waitMe('hide');
           var current_page = $(".pagination").find('.active').text();
