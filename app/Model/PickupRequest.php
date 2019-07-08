@@ -23,12 +23,28 @@ class PickupRequest extends Model
             return "Pending";
         }
 
-         if ($this->status==2) {
+        if ($this->status==2) {
             return "Assigned";
         }
 
         if ($this->status==3) {
-            return "Canceled";
+            return "Accepted by runner";
+        }
+
+        if ($this->status==4) {
+            return "Canceled by runner";
+        }
+
+        if ($this->status==6) {
+            return "Out for pickup by runner";
+        }
+
+        if ($this->status==5) {
+            return "Recieved by runner";
+        }
+
+        if ($this->status==6) {
+            return "Recieved by store";
         }
     }
 
@@ -74,6 +90,14 @@ class PickupRequest extends Model
     public function getServiceNameAttribute()
     {
      	return $this->service()->first()->name; //some logic to return numbers
+    }
+
+     public function getServiceShortNameAttribute()
+    {
+        if ($this->service()->first()->short_code) {
+           return $this->service()->first()->short_code;
+        }
+        return $this->service()->first()->name; //some logic to return numbers
     }
 
 

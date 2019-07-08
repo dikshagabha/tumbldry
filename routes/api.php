@@ -41,14 +41,19 @@ Route::group([
     Route::get('get-jobs', 'PickupController@getJobs');
 
     Route::get('pickup-details', 'PickupController@getPickupDetails');
+    
+    //Pickup Status
+    Route::get('pickup/cancel-request', 'PickupController@cancelRequest');
+    Route::get('pickup/accept-request', 'PickupController@acceptRequest');
+    Route::get('pickup/out-for-pickup', 'PickupController@outforpickupRequest');
+    Route::get('pickup/recieved-pickup', 'PickupController@recievedrunnerpickupRequest');
+    Route::get('pickup/delivered-pickup', 'PickupController@deliveredpickupRequest');
 
     Route::post('customer/register', 'CustomerController@store');
 
     Route::get('order-details', 'PickupController@getOrderDetails');
     Route::get('last-order-details', 'PickupController@getLastOrderDetails');
     
-    Route::post('cancel-request', 'PickupController@cancelRequest');
-
     Route::get('search-customer', 'CustomerController@searchCustomer');
     Route::get('send-payment-link/{id}', 'OrderController@sendLink');
 

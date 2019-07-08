@@ -143,8 +143,53 @@ class PickupController extends Controller
         }else{
             return response()->json($response, 200);
         }
-        // $http_status = $response['http_status'];
-        // unset($response['http_status']);
-        // return response()->json($response, $http_status);
     }
+
+    public function acceptRequest(Request $request)
+    {
+        $id = $request->input('id');
+        $response = PickupPickupRepository::acceptRequest($request, $this->user, $id);
+        if($request->input('callback'))
+        {
+            echo $request->input('callback')."(".json_encode($response).")";
+        }else{
+            return response()->json($response, 200);
+        }
+    }
+
+    public function outforpickupRequest(Request $request)
+    {
+        $id = $request->input('id');
+        $response = PickupPickupRepository::outforpickupRequest($request, $this->user, $id);
+        if($request->input('callback'))
+        {
+            echo $request->input('callback')."(".json_encode($response).")";
+        }else{
+            return response()->json($response, 200);
+        }
+    }
+    public function recievedrunnerpickupRequest(Request $request)
+    {
+        $id = $request->input('id');
+        $response = PickupPickupRepository::recievedrunnerpickupRequest($request, $this->user, $id);
+        if($request->input('callback'))
+        {
+            echo $request->input('callback')."(".json_encode($response).")";
+        }else{
+            return response()->json($response, 200);
+        }
+    }
+    public function deliveredpickupRequest(Request $request)
+    {
+        $id = $request->input('id');
+        $response = PickupPickupRepository::deliveredpickupRequest($request, $this->user, $id);
+        if($request->input('callback'))
+        {
+            echo $request->input('callback')."(".json_encode($response).")";
+        }else{
+            return response()->json($response, 200);
+        }
+    }
+
+
 }

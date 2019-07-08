@@ -27,7 +27,7 @@ class StorePickupRequest extends FormRequest
     public function rules(Request $request)
     {
           return [
-            'name'=>['bail','required', 'string', 'min:2', 'max:100',  new CheckName],
+            'name'=>['bail','required', 'string', 'min:2', 'max:25',  new CheckName],
             'phone_number'=>['bail','required','numeric', 'min:2', 'max:9999999999'],
             'service'=>'bail|required|numeric',
             'request_time'=>'bail|required|string',

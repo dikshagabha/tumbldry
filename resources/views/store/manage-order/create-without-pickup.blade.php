@@ -251,7 +251,7 @@ $(document).ready(function(){
             $("#service").val('').trigger("chosen:updated");
             $('#name_order').val('').prop('readonly', false);
             $('#email_order').val('').prop('readonly', false);
-            $('#phone_number').val('').prop('readonly', false);
+            $('#phone_number').prop('readonly', false);
             $('#address_order').text('');
             $("#customer_id").val("");
             $("#address_id").val("");

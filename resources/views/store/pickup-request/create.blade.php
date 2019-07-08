@@ -203,7 +203,7 @@ $(document).ready(function(){
             $(".add").show();
             $('#name').val('').prop('readonly', false);
             $('#email').val('').prop('readonly', false);
-            $('#phone').val('').prop('readonly', false);
+            $('#phone').prop('readonly', false);
             $('#address_form').text('');
             $("#customer_id").val("");
             $("#address_id").val("");

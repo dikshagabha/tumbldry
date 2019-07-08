@@ -2,14 +2,23 @@
 $i = ($users->currentpage() - 1) * $users->perPage() + 1;
 @endphp
  @if($users->count())
-  <table class="table table-borderless dataTable table-responsive" > 
+  <table class="table table-borderless dataTable table-responsive" style="
+    font-size: 12px;
+    padding: 0 !important;
+"> 
       <thead>
         <tr>
          <!--  <th>S No</th> -->
           <th width="5%">Order</th>
           <th width="5%">Customer Id</th>
-          <th>Service</th>
-          <th>Delivery Mode</th>
+          <th style="
+    padding-left: 20px;
+    padding-right: 22px;
+">Service</th>
+          <th style="
+    display: inline-block;
+    padding-left: 29px;
+    padding-right: 24px;">Delivery Mode</th>
           <th>Payment</th>
           <th>Order Date</th>
           <th>Estimated Time</th>
@@ -36,7 +45,12 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
               {{$user->customer_id}}
             </td>
             <td>
+              @if($user->service->short_code)
+              {{$user->service->short_code}}
+              @else
+
               {{$user->service->name}}
+              @endif
             </td>
             <td>
               @if($user->delivery_mode==1) Self Pickup 
@@ -50,7 +64,9 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
 
             <td>
               @if($user->payment()->count())
-                @foreach($user->payment()->where('type', '!=', 0)->get() as $pay)
+
+                Paid
+               <!--  @foreach($user->payment()->where('type', '!=', 0)->get() as $pay)
                   @if($pay->type==1)                     
                     Cash
                   @elseif($pay->type==2)
@@ -63,9 +79,9 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
                     Loyality Points
                   @endif
                   ({{$pay->price}} Rs),  
-                  @endforeach
+                  @endforeach -->
                 @else
-                  --
+                  Pending
                 @endif
             </td>
 

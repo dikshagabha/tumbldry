@@ -1,4 +1,4 @@
-@extends('store.layouts.app')
+@extends('store.layout-new.app')
 
 @section('title', 'Order Payment')
 
@@ -7,7 +7,7 @@
 
 <vs-row vs-justify="center">
   <vs-col type="flex" vs-justify="center" vs-align="center" vs-w="11">
-    <vs-card>
+   <!--  <vs-card> -->
 
 		<vs-breadcrumb
 		:items="
@@ -101,7 +101,7 @@
       <div slot="footer">
 
       </div>
-    </vs-card>
+    <!-- </vs-card> -->
   </vs-col>
 </vs-row>
 

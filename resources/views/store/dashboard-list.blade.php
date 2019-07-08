@@ -8,15 +8,19 @@
 	  </div>
 	  <div>    
 	  @if($users->count())
-	      <table class="table dataTable table-borderless" style="overflow-x:auto;">
+	      <table class="table dataTable table-borderless table-responsive
+	      " style="
+    font-size: 12px;
+    padding: 0 !important;
+">
 	          <thead>
 	            <tr>
 	              <th>Id</th>
 	              <th>Phone Number</th>
-	              <th width="20%">Name</th>
+	              <th style="padding-right:30px;padding-left:30px">Name</th>
 	              <th>Service</th>
-	              <th>Pickup Time</th>
-	              <th width="20%">AssignedTo</th>
+	              <th style="padding-right:75px;padding-left:75px">Pickup Time</th>
+	              <th style="padding-right:50px;padding-left:50px">AssignedTo</th>
 	            </tr>
 	          </thead>
 	          <tbody>
@@ -35,14 +39,14 @@
 	              </td>
 	              
 	              <td>
-	               	{{$user->service_name}}
+	               	{{$user->service_short_name}}
 	              </td>
 
 	              <td>
 	                  
 	                  @if($user->request_time)
                  
-                    {{$user->request_time->format('d/m/Y')}}
+                    {{$user->request_time->format('d/m/y')}}
                     
                     {{ $user->start_time->format('h:i a')}} -
 
@@ -100,15 +104,18 @@
 	  <div>
 	  <br>
 	     @if($pending->count())
-	      <table class="table dataTable  table-borderless" style="overflow-x:auto;">
+	      <table class="table dataTable  table-borderless table-responsive" style="
+    font-size: 12px;
+    padding: 0 !important;
+">
 	          <thead>
 	            <tr>
 	              <th>Id</th>
 	              <th>Phone Number</th>
-	              <th width="20%">Name</th>
+	              <th style="padding-right:30px;padding-left:30px">Name</th>
 	              <th>Service</th>
-	              <th>Pickup Time</th>
-	              <th width="20%">AssignedTo</th>
+	              <th style="padding-right:80px;padding-left:80px">Pickup Time</th>
+	              <th style="padding-right:20px;padding-left:20px">AssignedTo</th>
 	            </tr>
 	          </thead>
 	          <tbody>
@@ -125,13 +132,13 @@
 	              </td>
 	              
 	              <td>
-	               	{{$user->service_name}}
+	               	{{$user->service_short_name}}
 	              </td>
 
 	              <td>
 	                  
 	                  @if($user->request_time)
-	                    {{$user->request_time->setTimezone($timezone)->format('y/m/d')}} ({{$user->start_time}} - {{$user->end_time}})
+	                    {{$user->request_time->setTimezone($timezone)->format('y/m/d')}} ({{$user->start_time->format('h:i a')}} - {{$user->end_time->format('h:i a')}})
 	                  @else
 	                    --
 	                  @endif
