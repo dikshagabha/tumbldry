@@ -16404,7 +16404,7 @@ body {
     border-bottom: 1px solid #c8ced3;
 }
 
-.btn {
+/*.btn {
       margin: 5px;      
       font-family: "Arial Black", Gadget, sans-serif;
       padding: 5px;
@@ -16429,4 +16429,4 @@ body {
     .btn-information {background-image: linear-gradient(to right, #00d2ff 0%, #3a7bd5 51%, #00d2ff 100%)}
     
     .btn-light {background-image: linear-gradient(to right, blue 0%, indigo 51%, violet 100%)}
-    
+    */
