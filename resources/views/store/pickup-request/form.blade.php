@@ -65,18 +65,37 @@
             <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
               <label class="login2 pull-right pull-right-pro">Pickup Time</label>
             </div>
-            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-               <input type="text" id="picker" name="request_time" class="form-control" placeholder="Date">                 
+            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+               <input type="text" id="picker" name="request_time" href  = "{{route('store.getSlots')}}" class="form-control" placeholder="Date">                 
                <span class="error" id="request_time_error"></span>
             </div>  
-             <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-               <input type="text" id="picker_start" name="start_time" placeholder="From" class="form-control">                 
-               <span class="error" id="start_time_error"></span>
+           
+            <input type="hidden" id="start" name="start_time"  >
+            <input type="hidden" id="end" name="end_time"  >
+        </div>
+      </div>
+      <br>
+
+      <div class="form-group-inner" id="slots" style="display:none">
+        <div class="row">
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+              <label class="login2 pull-right pull-right-pro">Slots</label>
             </div>
-             <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-               <input type="text" id="picker_end" name="end_time" placeholder="To" class="form-control">                 
-               <span class="error" id="start_time_error"></span>
-            </div>  
+            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12" id="slotsData">
+               
+            </div>
+
+
+
+        </div>
+         <div class="row">
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+              <label class="login2 pull-right pull-right-pro"></label>
+            </div>
+            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12" id="slotsData">
+              <span class="error" id="start_time_error"></span><br>
+              <span class="error" id="end_time_error"></span>  
+            </div>
         </div>
       </div>
       <br>

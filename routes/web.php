@@ -147,6 +147,8 @@ Route::prefix('store')->namespace('Store')->group(function () {
 
           Route::get('order/payment/{id}', 'PaymentController@getPaymentMode')->name('store.paymentmodes');
 
+          Route::get('get-slots', 'PickupController@getSlots')->name('store.getSlots');
+
 
           Route::get('order/send-payment-link', 'PaymentController@sendPaymentLink')->name('store.sendPaymentLink');
           

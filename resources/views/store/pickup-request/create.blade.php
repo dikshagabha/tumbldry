@@ -122,30 +122,27 @@ $(document).ready(function(){
     defaultDate:moment(),
     minDate:moment().add(3, 'hours').format("YYYY-MM-DD HH:mm:ss")
   });
-  $("#picker_start").flatpickr({
-    enableTime: true,
-    noCalendar: true,
-    dateFormat: "H:i",
-    minDate:moment().format("HH:mm"),
-    defaultDate:moment().format("HH:mm"),
-    onChange:function(data, time){
-      $("#picker_end").flatpickr({
-        enableTime: true,
-        noCalendar: true,
-        minDate:time,
-        defaultDate:time,
-      });
-    }
-  });
 
- $("#picker_end").flatpickr({
-    enableTime: true,
-    noCalendar: true,
-    dateFormat: "H:i",
-    minDate:moment().format("HH:mm"),
-   // defaultDate:moment().format("HH:mm"),
+  $(document).on('change', '#picker', function(e){
+    e.preventDefault();
+    //alert();
+    $.ajax({
+      url:$('#picker').attr('href'),
+      data:{'date': $("#picker").val()},
+      success: function(data){
+          $('#slotsData').html(data);
+          $('#slots').show();
+      }
+    })
+  })
 
-  });
+  $(document).on('change', '.slots', function(e){
+    e.preventDefault();
+    current = $(this);
+    $('#start').val(current.data('start'));
+    $('#end').val(current.data('end'));
+  })
+ 
 
 
   $('input[type=radio][name=property_type]').change(function() {
@@ -414,7 +411,7 @@ $(document).ready(function(){
       data: data,    
       success: function(data){
         success(data.message);
-        window.location=data.redirectTo;
+        //window.location=data.redirectTo;
         $('body').waitMe('hide');
       }
     })

@@ -110,6 +110,36 @@ class CommonRepository extends BaseRepository
         return $users;
     }
 
+    public static function create_slots($request, $date){
+        
+        $current_date = Carbon::parse($date);        
+        $timezone = $request->session()->get('user_timezone', 'Asia/Calcutta');       
+        $curent_timezone = $current_date->setTimezone($timezone);
+
+        $now_date = Carbon::now()->setTimezone($timezone);
+
+        $start_time = $curent_timezone->copy()->setTime(8, 0, 0);
+        $end_time = $curent_timezone->copy()->setTime(18, 0, 0);
+        
+        $slots = [];
+        $user_start = $curent_timezone->copy()->addHours(2);
+        
+
+        while ($start_time->lt($end_time)) {
+          array_push($slots, [$start_time->copy(), $start_time->copy()->addHours(2)]);
+          $start_time->addHours(2);
+        }
+
+        foreach ($slots as $key => $value) {
+          if ( $now_date->lt($value[1]) && $now_date->gt($value[0]) ) {
+            for ($i=$key; $i >=0 ; $i--) { 
+              unset($slots[$i]);
+            }
+          }
+        }
+        return $slots;
+    }
+
     public static function get_valid_coupon($customer_phone, $service_id, $current_order_details){
         $customer = User::where('phone_number', $customer_phone)->first();
         $validCoupons = [];

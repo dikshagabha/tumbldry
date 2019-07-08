@@ -46,12 +46,33 @@ class PickupController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
       $activePage = 'pickup-request';
       $titlePage  = 'Pickup Request';
       $services = Service::where('type', 1)->pluck('name', 'id');
-      return view('store.pickup-request.create', compact('users', 'activePage', 'titlePage', 'services'));
+      
+      return view('store.pickup-request.create', compact('users', 'activePage', 'titlePage', 'services', 'slots'));
+    }
+
+    public function getSlots(Request $request){
+      $slots = CommonRepository::create_slots($request, $request->input('date'));
+      
+      $pickups  = PickupRequest::where('store_id', Auth::user()->id)->whereDate('created_at', '=',$request->input('date'))->get();
+      if ($pickups->count()) {
+        $n = User::where('user_id', Auth::user()->id)->where('role', 5)->count();
+        $allowed = 4*$n;
+          foreach ($slots as $key => $slot) {
+            //dd($slot[0]->toDateTimeString());
+            $pickup_count = $pickups->where('start_time', '=',$slot[0]->toDateTimeString())->where('end_time','=',$slot[1]->toDateTimeString())->count();
+            
+            if ($pickup_count >= $allowed) {
+              unset($slots[$key]);
+            }
+          }
+      }
+        
+      return view('store.pickup-request.slots', compact('slots'));  
     }
 
     /**
@@ -80,6 +101,7 @@ class PickupController extends Controller
           $request->merge(['address_id' => $address->id]);
         }
         $id= Auth::user()->id;
+        //dd($request->input('start_time'));
 
         $date = Carbon::createFromFormat('Y-m-d', $request->input('request_time'), $request->header('timezone'));
         $pickup = PickupRequest::create(['customer_id'=>$request->input('customer_id'),
