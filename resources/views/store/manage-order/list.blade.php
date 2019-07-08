@@ -72,13 +72,13 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
             <td>
               @if($user->date_of_arrival)
 
-              {{$user->date_of_arrival->format('y/m/d h:i a')}}
+              {{$user->date_of_arrival->setTimezone($timezone)->format('y/m/d')}}
               @else
               --
               @endif
             </td>
             <td>
-              {{$user->created_at->setTimezone($timezone)->addDays(2)->format('y/m/d h:i a')}}
+              {{$user->created_at->setTimezone($timezone)->addDays(2)->format('y/m/d')}}
             </td>
             <td>
              {{$user->status_name}}

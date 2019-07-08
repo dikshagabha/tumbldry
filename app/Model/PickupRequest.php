@@ -87,8 +87,10 @@ class PickupRequest extends Model
 
     public function getCustomerAddressStringAttribute()
     {
-        $data = $this->customer_address()->first();
-        return $data->address; //some logic to return numbers
+        if ($this->customer_address()->first()) {
+           return $this->customer_address()->first()->address; //some logic to return numbers
+        }
+        return ""; 
     }
 
     public function getCustomerNameAttribute()
