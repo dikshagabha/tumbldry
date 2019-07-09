@@ -3,11 +3,7 @@ $i=1;
 @endphp
 <hr>
 @if(count($items))
-<!-- <div class="row">
-  	<div class="col-lg-7 col-md-7 col-sm-7 col-xs-7">	
-	 -->
-
-	 <table>
+<table>
 <tr>
 	 <td width="60%" valign="top">	
 	<table class="table table-borderless table-dark ">
@@ -55,8 +51,7 @@ $i=1;
 					<td colspan="5">	
 					 <div id="addonForm{{$i}}" class="form">
 							@foreach($item['addons'] as $addon)
-									
-									@if($item['units'])
+								@if($item['units'])
 									<input type="checkbox" id="{{$addon['name'].'_'.$addon->id.'_'.$i}}" 
 									value="{{ $addon['id'] }}" name="addon{{$i}}[]"  class="addOn"
 									data-url = "{{route('store.addonItemSession')}}" title="Add Addon" data-id='{{$i}}'
@@ -128,7 +123,7 @@ $i=1;
 	<td  valign="top">
 	@if( $items[0]['weight'] )
 		<div style="float: right">
-			<table class="table-dark">
+			<table class="table table-dark">
 				<thead>
 					<!-- <td width="50%"><h4>Item</h4></td>
 					<td width="50%"><h4>Price</h4></td> -->
@@ -148,7 +143,7 @@ $i=1;
 						CGST (9%)
 					</td>
 					<td style="text-align: center;" >
-						{{ $price_data['cgst'] }}
+						{{ $price_data['cgst'] }} Rs
 					</td>
 				</tr>
 				<tr>
@@ -156,14 +151,18 @@ $i=1;
 						GST (9%)
 					</td>
 					<td style="text-align: center;" >
-						{{ $price_data['gst'] }}
+						{{ $price_data['gst'] }} Rs
 					</td>
 				</tr>
 				<tr >
 					<td style="text-align: center;" >Coupon</td>
 					<td style="text-align: center;     width: 41%;" ><input type="text" name="coupon" id="coupon" class="form-control" value="{{$coupon_discount['coupon']}}" >
 					<span class="error" id="coupon_error"></span></td>
-					<td style="text-align: center;" ><button type="button" class="btn btn-danger" data-url="{{route('store.couponItemSession')}}" id="couponBtn">Apply</button></td>
+					<td style="text-align: center;" >
+						@if($coupon_discount['coupon'])<button type="button" class="btn btn-danger couponBtn" data-url="{{route('store.deleteCouponDiscount')}}" class="couponBtn"><i class="fa fa-trash"></i></button>
+						@endif
+
+						<button type="button" class="btn btn-danger couponBtn" data-url="{{route('store.couponItemSession')}}" class="couponBtn">Apply</button></td>
 
 				</tr>
 				@if($coupon_discount['coupon'])
@@ -184,7 +183,7 @@ $i=1;
 						TOTAL PRICE:
 					
 						@if($price_data['total_price'])
-							{{$price_data['total_price']}}
+							{{$price_data['total_price']}} Rs
 						@else
 							N/A
 						@endif
@@ -192,7 +191,7 @@ $i=1;
 				</tr>
 				 @if(isset($wallet['wallet']))
 				<tr>
-					<td colspan="3" style="text-align: center;">Customer Wallet: {{ $wallet['wallet']->price}} Rs</td>
+					<td colspan="3" style="text-align: center;">Customer Wallet: {{ round($wallet['wallet']->price, 2)}} Rs</td>
 				</tr>
 				@endif 
 				<tr >

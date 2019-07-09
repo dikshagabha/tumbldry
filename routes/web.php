@@ -181,6 +181,8 @@ Route::prefix('store')->namespace('Store')->group(function () {
           Route::post('set-addresses-session', 'CustomerController@setSessionAddresses')->name('store.addCustomerAddresses');
 
           Route::post('store-service-input', 'OrderController@setServiceInput')->name('store.service.input');
+
+          Route::post('delete-coupon-discount', 'OrderController@deleteCouponDiscount')->name('store.deleteCouponDiscount');
           
           Route::post('delete-addresses-session', 'CustomerController@deleteSessionAddresses')->name('store.deleteCustomerAddresses');
 

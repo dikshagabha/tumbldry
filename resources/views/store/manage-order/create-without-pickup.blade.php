@@ -431,7 +431,7 @@ $(document).ready(function(){
       success: function(data){
         success(data.message);
         window.location = data.redirectTo;
-        $('body').windowaitMe('hide');
+        $('body').waitMe('hide');
       }
     })
   
@@ -558,7 +558,7 @@ $(document).ready(function(){
     })
   })
 
-  $(document).on("click", "#couponBtn", function(e){
+  $(document).on("click", ".couponBtn", function(e){
     e.preventDefault();
     $(".error").html(""); 
     current = $(this);   

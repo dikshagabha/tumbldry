@@ -81,7 +81,7 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
                   ({{$pay->price}} Rs),  
                   @endforeach -->
                 @else
-                  Pending
+                  <a href="{{ route('store.paymentmodes', $user->id)}}">Pending</a>
                 @endif
             </td>
 
