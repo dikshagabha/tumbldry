@@ -88,9 +88,9 @@
              reduce:true,
           }
         })
-  $(document).ready(function(){
 
-    user_id = "{{Auth::user()->id}}";
+$(document).ready(function(){
+  user_id = "{{Auth::user()->id}}";
     var pusher = new Pusher("{{env('PUSHER_APP_KEY')}}", {
       cluster: 'ap2',
       forceTLS: true
@@ -98,11 +98,16 @@
 
    var channel = pusher.subscribe('my-channel');
     channel.bind('notification'+user_id, function(data) {
+      
         $(".notif-count").text(parseInt($(".notif-count").text())+1);
-        console.log(data.message);
-        $(".timeline").prepend("<li><p>"+data.message+"</p></li>");
-        load_listings(location.href);
+        //console.log(data.message);
+        $(".notifications-dropdown-menu").prepend("<div class='col-md-12 notification' style='font-size: 12px;background: #fdfdfd;position:relative;padding: 10px;border-bottom: 1px solid #c8ced3;' > "+data.message+"</div>");
+        //load_listings(location.href);
       });
+
+  
+
+    
   })
 </script>
 @endauth

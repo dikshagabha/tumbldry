@@ -12,6 +12,7 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
               <th>Address</th>
 	            <th> Service </th>
               <th> Pickup Time </th>
+              <th> Status </th>
               <th> Order </th>
             </tr>
           </thead>
@@ -48,6 +49,10 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
                     --
                   @endif
                 </td>
+
+              <td>
+                  {{$user->status_text}}
+              </td>
 
                 <td>
              

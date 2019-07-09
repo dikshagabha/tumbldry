@@ -10,7 +10,8 @@ use App\Model\{
     Order
 };
 use App\Repositories\CommonRepository;
-
+use App\Jobs\NotificationsUser as not;
+use Pusher;
 /**
  * Class PickupPickupRepository.
  */
@@ -29,7 +30,7 @@ class PickupPickupRepository extends BaseRepository
     {
         //$pickups = PickupRequest::where('assigned_to', $user->id)->latest()->paginate(10);
 
-        $jobs = UserJobs::where('user_id', $user->id)->where(['type'=> 1])->where('status', '!=', )->with('store_details', 'order_details')->get();
+        $jobs = UserJobs::where('user_id', $user->id)->where(['type'=> 1])->with('store_details', 'order_details')->get();
         
         if ($jobs) {
             return ["message"=>"Pickup Found", "data"=>$jobs, 'http_status'=>200, 'code'=>1, 'msg'=>'Success', 'details'=>[
@@ -85,31 +86,30 @@ class PickupPickupRepository extends BaseRepository
 
     public static function cancelRequest($request, $user, $id)
     {
-        $jobs = PickupRequest::where('id', $id)->get();
+        $jobs = PickupRequest::where('id', $id)->first();
         $jobs->status = 4;
 
         UserJobs::where('user_id', $user->id)->where(['type'=> 1])->where('order_id', $id)->update(['status'=>3]);
-        $jobs->save();
+        
 
-        if ($jobs) {
+        if ($jobs->save()) {
           // Send Notification to store
-          not::dispatch($pickup, 1);
-          $options = array(
+          not::dispatch($jobs, 2);
+
+           $options = array(
               'cluster' => 'ap2',
               'useTLS' => true
             );
             $pusher = new Pusher\Pusher(
-              env('PUSHER_APP_KEY'),
-              env('PUSHER_KEY'),
-              env('PUSHER_APP_ID'),
+              '104302283d3c873072cc',
+              'c5075016e7abb14b7a0e',
+              '774754',
               $options
             );
 
 
-            $data['message'] = $jobs->runner_name." has canceled pickup". $id .".";
-            $pusher->trigger('my-channel', 'notification'.$jobs->store_id, $data);
-
-
+           $data['message'] = $jobs->runner_name." has canceled pickup ". $id .".";
+           $push = $pusher->trigger('my-channel', 'notification'. $jobs->store_id, $data);
             return ["message"=>"Pickup Details", "data"=>$jobs, 'http_status'=>200, 'http_status'=>200, 'code'=>1, 'msg'=>'Success','details'   =>[
                         'data'=>$jobs]
                     ];            
@@ -119,7 +119,7 @@ class PickupPickupRepository extends BaseRepository
 
     public static function acceptRequest($request, $user, $id)
     {
-        $jobs = PickupRequest::where('id', $id)->get();
+        $jobs = PickupRequest::where('id', $id)->first();
         $jobs->status = 3;
 
         UserJobs::where('user_id', $user->id)->where(['type'=> 1])->where('order_id', $id)->update(['status'=>2]);
@@ -127,15 +127,15 @@ class PickupPickupRepository extends BaseRepository
 
         if ($jobs) {
           // Send Notification to store
-          not::dispatch($pickup, 1);
+          not::dispatch($jobs, 3);
           $options = array(
               'cluster' => 'ap2',
               'useTLS' => true
             );
             $pusher = new Pusher\Pusher(
-              env('PUSHER_APP_KEY'),
-              env('PUSHER_KEY'),
-              env('PUSHER_APP_ID'),
+              '104302283d3c873072cc',
+              'c5075016e7abb14b7a0e',
+              '774754',
               $options
             );
 
@@ -152,25 +152,26 @@ class PickupPickupRepository extends BaseRepository
     }
     public static function outforpickupRequest($request, $user, $id)
     {
-        $jobs = PickupRequest::where('id', $id)->get();
-        $jobs->status = 5;
+        $jobs = PickupRequest::where('id', $id)->first();
+        $jobs->status = 6;
 
         UserJobs::where('user_id', $user->id)->where(['type'=> 1])->where('order_id', $id)->update(['status'=>4]);
         $jobs->save();
 
         if ($jobs) {
           // Send Notification to store
-          not::dispatch($pickup, 1);
+          not::dispatch($jobs, 4);
           $options = array(
               'cluster' => 'ap2',
               'useTLS' => true
             );
             $pusher = new Pusher\Pusher(
-              env('PUSHER_APP_KEY'),
-              env('PUSHER_KEY'),
-              env('PUSHER_APP_ID'),
+              '104302283d3c873072cc',
+              'c5075016e7abb14b7a0e',
+              '774754',
               $options
             );
+
             $data['message'] = $jobs->runner_name." is out for pickup id=".$id.".";
             $pusher->trigger('my-channel', 'notification'.$jobs->store_id, $data);
 
@@ -183,26 +184,27 @@ class PickupPickupRepository extends BaseRepository
     }
     public static function recievedrunnerpickupRequest($request, $user, $id)
     {
-        $jobs = PickupRequest::where('id', $id)->get();
-        $jobs->status = 6;
+        $jobs = PickupRequest::where('id', $id)->first();
+        $jobs->status = 5;
 
         UserJobs::where('user_id', $user->id)->where(['type'=> 1])->where('order_id', $id)->update(['status'=>5]);
         $jobs->save();
 
         if ($jobs) {
           // Send Notification to store
-          not::dispatch($pickup, 1);
+          not::dispatch($jobs, 5);
           $options = array(
               'cluster' => 'ap2',
               'useTLS' => true
             );
             $pusher = new Pusher\Pusher(
-              env('PUSHER_APP_KEY'),
-              env('PUSHER_KEY'),
-              env('PUSHER_APP_ID'),
+              '104302283d3c873072cc',
+              'c5075016e7abb14b7a0e',
+              '774754',
               $options
             );
-            $data['message'] = $jobs->runner_name." is out for pickup id=".$id.".";
+
+            $data['message'] = $jobs->runner_name." has recieved pickup id=".$id.".";
             $pusher->trigger('my-channel', 'notification'.$jobs->store_id, $data);
 
 
@@ -215,7 +217,7 @@ class PickupPickupRepository extends BaseRepository
 
     public static function deliveredpickupRequest($request, $user, $id)
     {
-        $jobs = PickupRequest::where('id', $id)->get();
+        $jobs = PickupRequest::where('id', $id)->first();
         $jobs->status = 7;
 
         UserJobs::where('user_id', $user->id)->where(['type'=> 1])->where('order_id', $id)->update(['status'=>7]);
@@ -223,20 +225,18 @@ class PickupPickupRepository extends BaseRepository
 
         if ($jobs) {
           // Send Notification to store
-          not::dispatch($pickup, 1);
+          not::dispatch($jobs, 6);
           $options = array(
               'cluster' => 'ap2',
               'useTLS' => true
             );
             $pusher = new Pusher\Pusher(
-              env('PUSHER_APP_KEY'),
-              env('PUSHER_KEY'),
-              env('PUSHER_APP_ID'),
+              '104302283d3c873072cc',
+              'c5075016e7abb14b7a0e',
+              '774754',
               $options
             );
-
-
-            $data['message'] = $jobs->runner_name." is out for pickup id=".$id.".";
+            $data['message'] = $jobs->runner_name."has delivered pickup id=".$id.".";
             $pusher->trigger('my-channel', 'notification'.$jobs->store_id, $data);
 
 
