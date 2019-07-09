@@ -43,7 +43,7 @@ class PickupRequest extends Model
             return "Recieved by runner";
         }
 
-        if ($this->status==6) {
+        if ($this->status==7) {
             return "Recieved by store";
         }
     }

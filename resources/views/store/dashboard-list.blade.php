@@ -105,9 +105,9 @@
 	  <br>
 	     @if($pending->count())
 	      <table class="table dataTable  table-borderless table-responsive" style="
-    font-size: 12px;
-    padding: 0 !important;
-">
+			font-size: 12px;
+			padding: 0 !important;
+		">
 	          <thead>
 	            <tr>
 	              <th>Id</th>
