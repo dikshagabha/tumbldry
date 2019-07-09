@@ -274,11 +274,12 @@ class OrderController extends Controller
     $cgst = $total_price*($this->cgst/100);
     $gst = $total_price*($this->gst/100);
     $coupon_discount = 0;
+    
     $coupon = CommonRepository::get_valid_coupon($request->input('phone'), $request->input('service'), null);
     if(!session()->get('coupon_discount')) {
       if($coupon) {
         if ($coupon['type']==2) {
-          $coupon_discount = $total_price*$coupon['value']/100;
+          $coupon_discount = ($total_price + $cgst + $gst)*$coupon['value']/100;
         }else{
           $coupon_discount = $price*$coupon['value']/100;
         }
@@ -524,19 +525,8 @@ class OrderController extends Controller
       $prices = 0;
     }
 
-    $items[$index]['addon_estimated_price'] = $prices;
-    
-
-    // if (!count($addons_input)) {
-    //   $items[$index]['estimated_price'] = $items[$index]['estimated_price'] - 
-    // }
-    
-
-    
+    $items[$index]['addon_estimated_price'] = $prices;    
     $items[$index]['estimated_price'] =  ( $items[$index]['price'] * $request->input('weight') ) + $items[$index]['addon_estimated_price'];
-  
-    //dd($items[$index]['price'] * $request->input('weight'));
-
     session()->put("add_order_items", $items);
 
     $items = session('add_order_items');
@@ -595,21 +585,21 @@ class OrderController extends Controller
        if ($value) {
          $total_price = $total_price + $value['estimated_price'];
        }
-     }
-    if ($coupon->coupon_price) {
-      $discount = $coupon->coupon_price;
-    }
-    else{
-      $discount = ($coupon->coupon_percent*$total_price/100);
     }
 
-    $discount = $discount+session('coupon_discount')['user_discount'];
-    
-    $coupon_discount = ['discount'=>$discount, 'coupon'=>$coupon->coupon, 'user_discount'=>session('coupon_discount')['user_discount']];
-    session()->put("coupon_discount", $coupon_discount);
-    
     $cgst = $total_price*($this->cgst/100);
     $gst = $total_price*($this->gst/100);
+
+
+    $discount = ($coupon->coupon_price*($total_price+$cgst+$gst)/100);
+   
+    $discount = $discount+session('coupon_discount')['user_discount'];
+    
+    $coupon_discount = ['discount'=>$coupon->coupon_price*($total_price+$cgst+$gst)/100, 'coupon'=>$coupon->coupon, 'user_discount'=>                   session('coupon_discount')['user_discount']];
+    session()->put("coupon_discount", $coupon_discount);
+    
+    
+
     $price_data = ['estimated_price'=> $total_price, 'cgst'=>$cgst, 'gst'=>$gst, 
                                 'total_price'=>$total_price+$cgst+$gst-$discount];
     session()->put('prices', $price_data);
@@ -654,6 +644,7 @@ class OrderController extends Controller
       
     //dd($coupon_discount['discount']);
     $discount = $coupon_discount['discount']+$coupon_discount['user_discount'];
+    
     session()->put("coupon_discount", ['coupon'=>$coupon_discount['coupon'], 
                                         'discount'=>$coupon_discount['discount'], 'percent'=>$coupon_discount['percent'],'user_discount'=> $coupon_discount['user_discount']]);
    
@@ -662,6 +653,34 @@ class OrderController extends Controller
                                 'total_price'=>$total_price+$cgst+$gst-$discount];
    session()->put('prices', $price_data);
    $wallet = session()->get('customer_details');
+   
+   return response()->json(['message'=>'Items Updated', 'view'=>view('store.manage-order.items-view', compact('items','price_data', 'coupon_discount', 'wallet'))->render(), 'items'=>$items], 200);
+  }
+
+
+  public function deleteCouponDiscount(Request $request){
+   
+    $items = session('add_order_items');
+    
+    $total_price = 0;
+    foreach ($items as $key => $value) {
+       if ($value) {
+         $total_price = $total_price + $value['estimated_price'];
+       }
+    }
+    $coupon_discount = session()->get('coupon_discount');  
+    $cgst = $total_price*($this->cgst/100);
+    $gst = $total_price*($this->gst/100);    
+    $total = $total_price+$cgst+$gst;
+
+    session()->put("coupon_discount", ['coupon'=>null, 
+                                        'discount'=>null, 'percent'=>null,'user_discount'=> $coupon_discount['user_discount']]);
+
+    $coupon_discount = session()->get('coupon_discount');  
+    $price_data = ['estimated_price'=> $total_price, 'cgst'=>$cgst, 'gst'=>$gst, 
+                                'total_price'=>$total_price+$cgst+$gst];
+    session()->put('prices', $price_data);
+    $wallet = session()->get('customer_details');
    
    return response()->json(['message'=>'Items Updated', 'view'=>view('store.manage-order.items-view', compact('items','price_data', 'coupon_discount', 'wallet'))->render(), 'items'=>$items], 200);
   }
@@ -735,42 +754,58 @@ class OrderController extends Controller
                                'discount'=>$coupon_discount['user_discount'], 'service_id'=>$request->input('service'),
                                'delivery_mode'=>$request->input('delivery_mode'), 'status'=>2, 'date_of_arrival'=>Carbon::now()
                             ]);
-      foreach ($items as $item) {
-          $item['order_id']=$order->id;
-          $item['status'] = 3;
-          $orderitem = OrderItems::create($item); 
-          $itemData = [];
-          
-          foreach ($item['selected_addons'] as $key => $value) 
-          {
-           
-            array_push($itemData, ['order_id'=>$order->id, 'item_id'=>$orderitem->id, 'addon_id'=>$value, 'created_at'=>Carbon::now(),
-              'updated_at'=>Carbon::now(), 'image'=>null]);
-          }
 
-          if ($item['images']) {
-           foreach ($item['images'] as $key => $value) 
-          {
-             //print_r($value);
-            array_push($itemData, ['order_id'=>$order->id, 'item_id'=>$orderitem->id, 'image'=>$value, 'created_at'=>Carbon::now(), 'updated_at'=>Carbon::now(), 'addon_id'=>null]);
-          }
-          }
-          
-          //die;
-          $order_items = OrderItemImage::insert($itemData);
+       $item_val = 1;
+      foreach ($items as $item) {
+       // print_r($item['quantity']);
+        $quantity = $item['quantity'];
+
+          for ($i=1; $i <= $quantity; $i++) { 
+            $item['quantity']=1;
+            $item['order_id']=$order->id;
+            $item['status'] = 3;
+            $item['item_value']=$item_val;
+            $item_val++;
+
+            $orderitem = OrderItems::create($item);
+            $itemData = [];
+
+            foreach ($item['selected_addons'] as $key => $value) 
+            {
+             
+              array_push($itemData, ['order_id'=>$order->id, 'item_id'=>$orderitem->id, 'addon_id'=>$value, 'created_at'=>Carbon::now(),
+                'updated_at'=>Carbon::now(), 'image'=>null]);
+            }
+
+            if ($item['images']) {
+             foreach ($item['images'] as $key => $value) 
+            {
+               //print_r($value);
+              array_push($itemData, ['order_id'=>$order->id, 'item_id'=>$orderitem->id, 'image'=>$value, 'created_at'=>Carbon::now(), 'updated_at'=>Carbon::now(), 'addon_id'=>null]);
+            }
+            }
+            $order_items = OrderItemImage::insert($itemData);
+          } 
       }
+
       $message = SMSTemplate::where('title', 'like','%Order Created%')->select('description')->first();
       //dd($message);
       $message = $message->description;
 
+
+
       $mes = str_replace('@customer_name@', $request->input('name'), $message);
 
       $mes = str_replace('@order_id@', $order->id, $mes);
-      $mes = str_replace('@total_clothes@', $order->id, $mes);
-      
-      $mes = str_replace(' ', ' ', $mes);
+      $mes = str_replace('@total_clothes@', $order->items->sum('quantity'), $mes);
+      $weight = '';
+      if ($order->items->first()->weight) {
+        $weight = $order->items->first()->weight;
+      }
+      $mes = str_replace('@weight@', $order->items->first()->weight, $mes);
+      $mes = str_replace('@service@', $order->service->name, $mes);
 
-      CommonRepository::sendmessage($request->input('phone_number'), $mes);
+      $res = CommonRepository::sendmessage($request->input('phone_number'), $mes);
       DB::commit();
       return response()->json([ 'redirectTo'=>route('store.paymentmodes', $order->id), 'message'=>'Order has been created Successfully'], 200); 
    } catch (Exception $e) {
@@ -821,16 +856,19 @@ class OrderController extends Controller
     if (!$request->input('grn')) {
       return response()->json(['message'=> 'Please select an item'], 400);
     }
-    $orders = OrderItems::whereIn('id', $request->input('grn'))->with('order')->with(['itemimage'=>function($q){
+    $orders = OrderItems::where('order_id', $request->input('order_id'))->with('order')->with(['itemimage'=>function($q){
        $q->with('addons');
       }])->get();
-     $user = $this->user;
+    $total = $orders->sum('quantity');
+
+    $orders = $orders->whereIn('id', $request->input('grn'));
+    $user = $this->user;
+    
+    $update_status = OrderItems::whereIn("id", $request->input('grn'))->where('status', '!=', 2)->update(['status'=> 4]);
+    $order_update = Order::where('id', $request->input('order_id'))->update(['status'=>3]);
      
-     $update_status = OrderItems::whereIn("id", $request->input('grn'))->where('status', '!=', 2)->update(['status'=> 4]);
-     $order_update = Order::where('id', $request->input('order_id'))->update(['status'=>3]);
-     
-     $pdf = PDF::loadView('store.grn.grn', compact('orders', 'user'))->setPaper('a5');
-     return ($pdf->download('invoice.pdf'));
+    $pdf = PDF::loadView('store.grn.grn', compact('orders', 'user', 'total'))->setPaper('a5');
+    return ($pdf->download('invoice.pdf'));
   }
 
 
@@ -841,7 +879,7 @@ class OrderController extends Controller
      $status=3;
     }
 
-   //dd($status);
+   //dd($status);totaltotal
     $orders = OrderItems::where('id', $id)->with('order')->first();
     if ($status==3) {
       if ($orders->service->form_type != 2) {
