@@ -39,7 +39,9 @@
           <i class="fa fa-money" aria-hidden="true"></i> Rates
         </a>
       </li>
-      <li class="nav-title">Reports</li>
+     
+
+      <ul class="nav-title">Reports
         <li class="nav-item ">
           <a class="nav-link" href="{{ route('store.customer-reports') }}">
             <i class="fa fa-check-circle-o" aria-hidden="true"></i>  Customer
@@ -58,7 +60,8 @@
           <li class="nav-item ">
           <a class="nav-link" href="{{ route('store.settlement-reports') }}">
             <i class="fa fa-money" aria-hidden="true"></i> Settlement Sheet</a>
-          </li>      
+          </li>
+      </ul>     
     </ul>
   </nav>
 </div>

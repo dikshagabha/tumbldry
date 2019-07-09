@@ -10,6 +10,7 @@
 
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 <link rel="stylesheet" type="text/css" href=" https://printjs-4de6.kxcdn.com/print.min.css">
+ <link rel="stylesheet" href="{{ asset('css/jcf.css') }}">
 <style type="text/css">
   .table td {
   text-align: center;   
@@ -129,6 +130,9 @@
 <script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
 
 <script src="{{ asset('js/jquery.dm-uploader.min.js') }}"></script>
+<script src="{{asset('js/jcf/jcf.js')}}"></script>
+<script src="{{asset('js/jcf/jcf.radio.js')}}"></script>
+<script src="{{asset('js/jcf/jcf.file.js')}}"></script>
 
 <script>
 
@@ -136,6 +140,7 @@
 $(document).ready(function(){ 
   
   $("#service").chosen();
+  jcf.replaceAll();
   $('[data-fancybox="fancy"]').fancybox();
   var path = "{{ route('store.get-items') }}";  
   $( "#item" ).autocomplete({
@@ -169,6 +174,7 @@ $(document).ready(function(){
         success: function(data){
           success(data.message);
           $(".ItemsAdded").html(data.view);
+            jcf.replaceAll();
           $('body').waitMe('hide');
         }
       })
@@ -193,10 +199,22 @@ $(document).ready(function(){
         success: function(data){
           success(data.message);
           $(".ItemsAdded").html(data.view);
+            jcf.replaceAll();
           $('body').waitMe('hide');
         },
         error: function(data){
-          error("Invalid File");
+
+          if(data.status==422){
+            $('body').waitMe('hide');
+              var errors = data.responseJSON;
+              for (var key in errors.errors) {
+                console.log(errors.errors[key][0]);
+                  error(errors.errors[key][0]);
+                }
+          }else{
+            error("Invalid File");
+          }
+          
           $('body').waitMe('hide');
         }
       })
@@ -227,6 +245,16 @@ $(document).ready(function(){
                 $('#address_order').text(data.address.address);
                 $("#address_id").val(data.address.id);
              }
+
+             if (data.items) {
+                html = '';
+                data.items.forEach(function(item) {
+                     html = html + '<button class="item_name btn btn-primary">'+item+'</button> ';
+                  });
+
+                $('#prev_items').html(html);
+            
+            }
              $(".customer-details").attr('href', data.customer_details);
              $(".customer-details-div").show();
              $(".select").show();
@@ -262,6 +290,24 @@ $(document).ready(function(){
       })
   })
 
+  $(document).on('click', '.item_name', function(e){
+    e.preventDefault();
+    current= $(this);
+    $.ajax({
+      url:$("#add_item").attr('href'),
+      data:{'service':$('#service').val(), 'item':current.text(), 'customer':$('#customer_id').val(),
+              'name':$('#name_order').val(), 'phone':$('#phone_order').val()},
+      type:'post',
+      success:function(data) {
+        $(".ItemsAdded").html(data.view);
+          jcf.replaceAll();
+      }
+    })
+
+  })
+
+
+
   $(document).on('click', '.customer-details', function(e){
     e.preventDefault();
     current=$(this);
@@ -288,14 +334,18 @@ $(document).ready(function(){
           success(data.message);
           if (data.customer) 
           {
-              $('#name_order').val(data.customer['name']).prop('readonly', true);
+            $('#name_order').val(data.customer['name']).prop('readonly', true);
             $('#email_order').val(data.customer['email']).prop('readonly', true);
             $('#phone_number').val(data.customer['phone_number']).prop('readonly', true);
 
-              $('#address_order').text(data.customer.address);
-              $("#customer_id").val(data.customer.id);
-              $("#address_id").val(data.customer.address_id);
-              if (data.address) {
+            $('#address_order').text(data.customer.address);
+            $("#customer_id").val(data.customer.id);
+             console.log(data.items);
+            $("#address_id").val(data.customer.address_id);
+            
+            
+
+            if (data.address) {
                 $('#address_order').text(data.address.address);
                 $("#address_id").val(data.address.id);
              }
@@ -388,6 +438,7 @@ $(document).ready(function(){
         //success(data.message);
         $('#select_box').html(data.view);
         $(".ItemsAdded").html('');
+          jcf.replaceAll();
         if (data.form_type==1 || data.form_type==2) {
           $( "#item" ).autocomplete({
                   source: function( request, response ) {
@@ -437,7 +488,7 @@ $(document).ready(function(){
   
   })
 
-  $(document).on('click', '#add_item', function(e){
+  $(document).on('change', '#item', function(e){
     e.preventDefault();
     $('body').waitMe();
     
@@ -448,6 +499,8 @@ $(document).ready(function(){
       type:'post',
       success:function(data) {
         $(".ItemsAdded").html(data.view);
+          jcf.replaceAll();
+        $('#item').val('');
       }
     })
     //$("#addressModal").modal('show');
@@ -497,29 +550,12 @@ $(document).ready(function(){
       success: function(data){
         success(data.message);
         $(".ItemsAdded").html(data.view);
+          jcf.replaceAll();
         $('body').waitMe('hide');
       }
     })
   })
 
-  // $(".quantity").change(function(e) {
-  //     e.preventDefault();
-  //     $(".error").html(""); 
-  //     current = $(this);   
-  //     $.ajax({
-  //       url: current.data('url'),
-  //       type:'post',
-  //       data: {'data-id': current.data('id'), 'quantity':$('.quantityVal_'+current.data('id')).val(), 
-  //                 'service':current.data('service'), 
-  //               'add':current.data('add')},
-  //       cache: false,
-  //       success: function(data){
-  //         success(data.message);
-  //         $(".ItemsAdded").html(data.view);
-  //         $('body').waitMe('hide');
-  //       }
-  //     })
-  //   });
 
   $(document).on("change", ".quantity", function(e){
     e.preventDefault();
@@ -553,6 +589,7 @@ $(document).ready(function(){
       success: function(data){
         success(data.message);
         $(".ItemsAdded").html(data.view);
+          jcf.replaceAll();
         $('body').waitMe('hide');
       }
     })
@@ -570,6 +607,7 @@ $(document).ready(function(){
       success: function(data){
         success(data.message);
         $(".ItemsAdded").html(data.view);
+          jcf.replaceAll();
         $('body').waitMe('hide');
       }
     })
@@ -586,7 +624,7 @@ $(document).ready(function(){
       cache: false,
       success: function(data){
         success(data.message);
-        $(".ItemsAdded").html(data.view);
+        $(".ItemsAdded").html(data.view);  jcf.replaceAll();
         $('body').waitMe('hide');
       }
     })

@@ -16430,3 +16430,31 @@ body {
     
     .btn-light {background-image: linear-gradient(to right, blue 0%, indigo 51%, violet 100%)}
     */
+
+    .jcf-file .jcf-fake-input {
+    display: inline-block;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    vertical-align: top;
+    overflow: hidden;
+    border: 1px solid #777;
+    padding: 0 8px;
+    font-size: 13px;
+    line-height: 28px;
+    height: 28px;
+    width: 125px;
+    color: black;
+}
+
+.jcf-file .jcf-upload-button {
+    display: inline-block;
+    vertical-align: top;
+    white-space: nowrap;
+    overflow: hidden;
+    border: 1px solid #777;
+    margin: 0 0 0 -1px;
+    padding: 0 10px;
+    line-height: 28px;
+    height: 28px;
+    color: black;
+}
