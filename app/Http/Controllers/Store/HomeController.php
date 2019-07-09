@@ -9,6 +9,7 @@ use App\Model\PickupRequest;
 use App\Model\Address;
 use App\Model\Order;
 use App\Model\StoreFields;
+use App\Model\OrderItems;
 use App\User;
 use Auth;
 use App\Notifications\StoreNotifications;
@@ -143,9 +144,14 @@ class HomeController extends Controller
       $customer = User::where(['role'=> 4, 'deleted_at'=>null])
                   ->where('phone_number', 'like', $request->input('phone_number'))->with('wallet', 'addresses')->first();
         $service = null;
+        $items=null;
       if ($customer) {
         $address = $customer->addresses;
-        $orders = Order::where('customer_id', $customer->id)->latest()->first();
+        
+        $orders = Order::where('customer_id', $customer->id)->latest()->limit(5)->get();
+       // dd( );
+        $items = OrderItems::whereIn('order_id', $orders->pluck('id')->toArray())->select('item')->distinct()->limit(5)->pluck('item');
+        $orders = $orders->first();
         if ($orders) {
             $address = null;
 
@@ -159,7 +165,7 @@ class HomeController extends Controller
         session()->put('customer_details', ['user'=>$customer, 'wallet'=>$wallet]);
       
         return response()->json(["message"=>"Customer Found!!", "customer" => $customer, 'wallet'=>$wallet, 
-                                        'service'=>$service,
+                                        'service'=>$service, 'items'=>$items,
                                   'address'=>$address, 'customer_details'=>route('store.latestcustomerDetails', $customer->id)], 200);
       }
         return response()->json(["message"=>"Customer Not Found!!"], 400);

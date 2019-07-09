@@ -14,7 +14,7 @@
                 <span class="error" id="phone_number_error"></span>
                 <!-- <span class="badge badge-dark" id="wallet"></span> -->
                 <div class="customer-details-div" style="display: none" >
-                  <a href="#" class="customer-details">Order Details</a>
+                  <a href="#" class="customer-details">History</a>
                 </div> 
               </div>           
 
@@ -90,17 +90,30 @@
           </div>
         </div>
 
+        <br>
+
+        <div class="form-group-inner">
+          <div class="row">
+               <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                 <label class="login2 pull-right pull-right-pro">Items</label>
+               </div>
+               <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
+                 <div id="prev_items"></div>
+               </div>
+          </div>
+        </div>
+
 
         <br>
          <div class="form-group-inner">
           <div class="row">
-               <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
-                 <!-- <label class="login2 pull-right pull-right-pro">Search Item</label> -->
+               <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                 <label class="login2 pull-right pull-right-pro">Search Items</label>
                </div>
                
                
-               <!-- <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9"> -->
-                <div class="col-lg-8 col-md-8 col-sm-8 col-xs-82">
+               <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
+                <!-- <div class="col-lg-8 col-md-8 col-sm-8 col-xs-82"> -->
                 <div id="select_box">
                    
                    <!-- {!! Form::text('item',null,array('class' => 'form-control', "maxlength"=>50, "id"=>'item', 'placeholder'=>'Search Item')) !!} -->
@@ -116,8 +129,10 @@
                 </div>
                  <span class="error" id="item_error"></span>
                  </div>
-                 <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
-                  <a href="{{route('store.addItemSession')}}" id="add_item"><button type="button" class="btn btn-success"> <i class="fa fa-plus"></i> </button></a>
+                 <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2" style="display: none">
+                  <a href="{{route('store.addItemSession')}}" id="add_item">
+                    <button type="button" class="btn btn-success"> <i class="fa fa-plus"></i>
+                     </button></a>
                 <!-- {!! Form::Submit('<i class="fa fa-search"></i>',array('class' => 'btn btn-succes', "maxlength"=>50, "id"=>'item')) !!} -->
                 </div>
                </div>

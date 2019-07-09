@@ -50,7 +50,7 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
                   </a>
 
                   <a href="{{route('store.customerDetails',($user->id))}}" title="edit">
-                    <button type="gradient" color="warning" class="btn btn-warning" >Orders Details</button>
+                    <button type="gradient" color="warning" class="btn btn-warning" >History</button>
                   </a>
               </td>
             </tr>
