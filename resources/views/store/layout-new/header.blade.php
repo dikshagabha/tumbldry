@@ -18,7 +18,7 @@
           </a>
         </li>
         <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg notifications-dropdown-menu">              
-        @foreach(Auth::user()->notifications()->limit(5)->get() as $notifications)
+        @foreach(Auth::user()->notifications()->latest()->limit(5)->get() as $notifications)
            <div class="col-md-12 notification" style="font-size: 12px;
               background: #fdfdfd;
               position: relative;

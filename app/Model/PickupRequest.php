@@ -10,7 +10,8 @@ class PickupRequest extends Model
     protected $dates = ['created_at', 'updated_at', 'deleted_at','request_time', 'start_time', 'end_time'];
     
 
-    protected $appends = ['runner_name', 'customer_name','customer_email', 'service_name', 'customer_phone', 'customer_address_string'];
+    protected $appends = ['runner_name', 'customer_name','customer_email', 'service_name', 'customer_phone', 'customer_address_string',
+                            'status_text'];
 
     public function customer()
     {
@@ -19,7 +20,7 @@ class PickupRequest extends Model
 
     public function getStatusTextAttribute()
     {
-        if ($this->status==1) {
+       if ($this->status==1) {
             return "Pending";
         }
 
