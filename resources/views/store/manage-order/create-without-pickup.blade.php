@@ -571,6 +571,7 @@ $(document).ready(function(){
       cache: false,
       success: function(data){
         success(data.message);
+        jcf.replaceAll();
         $(".ItemsAdded").html(data.view);
         $('body').waitMe('hide');
       }

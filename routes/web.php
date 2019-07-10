@@ -47,9 +47,19 @@ Route::prefix('admin')->group(function () {
     Route::get('/billing/excel', 'Admin\BillingController@downloadExcel')->name('billing.downloadExcel');
     Route::get('/billing', 'Admin\BillingController@index')->name('billing.index');
     Route::post('/billing', 'Admin\BillingController@importBilling')->name('billing.importBilling');
-    Route::post('/carry-forward', 'Admin\BillingController@carryForward')->name('billing.carryForward');
+    Route::post('/carry-forward/{type}', 'Admin\BillingController@carryForward')->name('billing.carryForward');
 
     Route::post('set-providers-session', 'Admin\VendorController@setSessionProviders')->name('admin.postAddSessionProviders');
+
+    Route::get('/rate-card-sheet', 'Admin\RateCardController@getRateCardSheet')->name('admin.getRateCardSheet');
+    
+    Route::get('/rate-card-demo-sheet', 'Admin\RateCardController@getRateCardDemoSheet')->name('admin.getRateCardDemoSheet');
+
+    Route::get('/rate-card-route', 'Admin\RateCardController@getRateRoute')->name('getRateRoute');
+    
+    Route::post('/rate-card-sheet', 'Admin\RateCardController@postRateCardSheet')->name('admin.getRateCardSheet');
+
+
     Route::post('/store/status/{id}', 'Admin\StoreController@status')->name('manage-store.status');
     Route::post('/pickp/assign-store/{id}', 'HomeController@assignStore')->name('admin.assignStore');
 

@@ -156,13 +156,13 @@ $i=1;
 				</tr>
 				<tr >
 					<td style="text-align: center;" >Coupon</td>
-					<td style="text-align: center;     width: 41%;" ><input type="text" name="coupon" id="coupon" class="form-control" value="{{$coupon_discount['coupon']}}" >
+					<td style="text-align: center;     width: 41%; " ><input type="text" name="coupon" id="coupon" class="form-control" value="{{$coupon_discount['coupon']}}" >
 					<span class="error" id="coupon_error"></span></td>
 					<td style="text-align: center;" >
-						@if($coupon_discount['coupon'])<button type="button" class="btn btn-danger couponBtn" data-url="{{route('store.deleteCouponDiscount')}}" class="couponBtn"><i class="fa fa-trash"></i></button>
+						@if($coupon_discount['coupon'])<button type="button" class="btn btn-danger couponBtn" data-url="{{route('store.deleteCouponDiscount')}}" class="couponBtn" style="padding: 0;"><i class="fa fa-trash"></i></button>
 						@endif
 
-						<button type="button" class="btn btn-danger couponBtn" data-url="{{route('store.couponItemSession')}}" class="couponBtn">Apply</button></td>
+						<button type="button" class="btn btn-danger couponBtn" style="padding: 0;" data-url="{{route('store.couponItemSession')}}" class="couponBtn">Apply</button></td>
 
 				</tr>
 				@if($coupon_discount['coupon'])

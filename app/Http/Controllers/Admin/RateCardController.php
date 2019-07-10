@@ -12,6 +12,9 @@ use App\Model\Location;
 use App\Model\Items;
 use DB;
 use App\Http\Requests\Admin\StoreRateCard;
+use Excel;
+use App\Exports\DemoRateCard;
+use App\Imports\RateCardImport;
 class RateCardController extends Controller
 {
     public function getRateCard(Request $request)
@@ -166,4 +169,41 @@ class RateCardController extends Controller
         $file_path = public_path('excel/demo.xlsx');
         return response()->download($file_path);
     }
+
+    public function getRateCardSheet(Request $request)
+    {
+
+        $activePage = "ratecardsheet";
+        $titlePage = "Rate Card";
+        $type = $request->input('type');
+        $cities = Location::groupBy('city_name')->selectRaw('city_name')->orderBy('city_name', 'asc')->pluck('city_name', 'city_name');
+
+        $cities['global']='Global';
+        
+        $services = Service::orderBy('name', 'asc')->where('type', 1)->pluck('name', 'id');
+        $selected = null;
+
+
+        return view('admin.rate-card.get-sheet', compact('activePage', 'titlePage', 'cities', 'services'));
+        
+    }
+    public function postRateCardSheet(Request $request)
+    {
+      
+       $import = Excel::import(new RateCardImport($request->input('service'), $request->input('city')), $request->file('sheet'));
+       return response()->json(['message'=>'Data Imported.'], 200);
+
+    }
+
+    public function getRateCardDemoSheet(Request $request)
+    {
+        return  Excel::download(new DemoRateCard($request->input('service')), 'sheet.xlsx');
+    }
+    public function getRateRoute(Request $request)
+    {
+
+        return response()->json(["message"=>"Sucess", 'route'=>route('admin.getRateCardDemoSheet', ['service'=>$request->input('service')])], 200);
+        
+    }
+
 }

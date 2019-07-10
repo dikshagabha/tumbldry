@@ -9,27 +9,21 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
       <thead>
         <tr>
          <!--  <th>S No</th> -->
-          <th width="5%">Order</th>
-          <th width="5%">Customer Id</th>
-          <th style="
-    padding-left: 20px;
-    padding-right: 22px;
-">Service</th>
-          <th style="
-    display: inline-block;
-    padding-left: 29px;
-    padding-right: 24px;">Delivery Mode</th>
-          <th>Payment</th>
-          <th>Order Date</th>
-          <th>Estimated Time</th>
-          <th>Order Status</th>
-          <th>Print Grn</th>
-          <th>Processed Items</th>
-          <th>Assign Runner</th>
-          <th>Invoice</th>
-          <th>Delivery Challan</th>
-          <th>Payment Reciept</th>
-          <th>View</th>
+          <th style="width:9%;">Order</th>
+          <th  style=" width:9%;">Customer Id</th>
+          <th  style="">Service</th>
+          <th  >Delivery Mode</th>
+          <th  style="">Payment</th>
+          <th  style="">Order Date</th>
+          <th  style="width:15%;">Estimated Time</th>
+          <th  style="">Order Status</th>
+          <th  style="width:10%;">Print Grn</th>
+          <th  style="width:15%;">Processed Items</th>
+          <th  >Assign Runner</th>
+          <th  >Invoice</th>
+          <th  >Delivery Challan</th>
+          <th  >Payment Reciept</th>
+          <th  >View</th>
 
         </tr>
       </thead>
@@ -102,7 +96,7 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
             <td>
                @if($user->service->form_type == 1 || $user->service->form_type == 2)
                  <a href="{{ route('store.getItemsForm', ['id'=>$user->id, 'type'=>1]) }}" class="print_grn"  title ="Print Grn" data-order_id="{{$user->id}}"> 
-                    <button class="btn btn-danger"> <i class="fa fa-print"></i> </button>
+                    <button class="btn btn-danger" style="padding: 0px 4px;"> <i class="fa fa-print"></i> </button>
                  </a>
                @else
                --
@@ -111,7 +105,7 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
 
              <td>
               <a href="{{ route('store.getItemsForm', ['id'=>$user->id, 'type'=>2]) }}" class="print_grn" title ="Mark items processed" data-order_id="{{$user->id}}"> 
-                    <button type="gradient" color="blue" class="btn btn-information"><i class="fa fa-check"></i> </button>
+                    <button type="gradient" color="blue" class="btn btn-information" style="padding: 0px 4px;"><i class="fa fa-check"></i> </button>
               </a>
               </td> 
 
@@ -121,7 +115,7 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
              @if($user->delivery_mode==2 && $user->items()->where('status', 2)->count() > 0)
                  @if(!$user->delivery_runner_id)
                   <a href="{{ route('store.assignDeliver', $user->id) }}" class="deliver" data-order_id="{{$user->id}}"> 
-                      <button type="gradient" color="light" class="btn btn-light"> <i class="fa fa-car"></i> </button>
+                      <button type="gradient" color="light" class="btn btn-light" style="padding: 0px 4px;"> <i class="fa fa-car"></i> </button>
                   </a>
                   @else
                     {{$user->runner_name}}
@@ -135,7 +129,7 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
               
                 @if($user->items()->where('status', 2)->count() == $user->items()->count())
                   <a href="{{ route('store.printInvoice', $user->id) }}" class="print_invoice"> 
-                    <button type="gradient" color="warning" class="btn btn-warning"> <i class="fa fa-file-pdf-o"></i> </button></a>
+                    <button type="gradient" color="warning" class="btn btn-warning" style="padding: 0px 4px;"> <i class="fa fa-file-pdf-o"></i> </button></a>
                 @else
                   --
                 @endif
@@ -146,7 +140,7 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
                 
                 @if( $user->items()->where('status', 2)->count()> 0 && $user->items()->where('status', 2)->count()< $user->items()->count())
                   <a href="{{ route('store.printInvoice', $user->id) }}" class="print_invoice"> 
-                    <button type="gradient" color="information" class="btn btn-info"> <i class="fa fa-file-pdf-o"></i> </button></a>
+                    <button type="gradient" color="information" class="btn btn-info" style="padding: 0px 4px;"> <i class="fa fa-file-pdf-o"></i> </button></a>
                 @else
                   --
                 @endif
@@ -158,7 +152,7 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
                 @if($user->payment()->count())
                   <a href="{{ route('store.printInvoice', $user->id) }}" class="print_invoice"> 
                   
-                    <button type="gradient" color="dark" class="btn btn btn-dark"> <i class="fa fa-file-pdf-o"></i> </button>
+                    <button type="gradient" color="dark" class="btn btn btn-dark" style="padding: 0px 4px;"> <i class="fa fa-file-pdf-o"></i> </button>
                   
                   </a>
                 @else
@@ -169,7 +163,7 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
 
             <td>
                 <a  class="view" title="view order details" href="{{route('store.getOrderDetails', $user->id)}}">
-                  <button type="gradient" color="success" class="btn btn-success"> <i class="fa fa-eye"></i> </button>
+                  <button type="gradient" color="success" class="btn btn-success" style="padding: 0px 4px;"> <i class="fa fa-eye"></i> </button>
                 </a>
 
 

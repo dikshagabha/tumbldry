@@ -121,6 +121,14 @@
         </div>
       </li>  
 
+      <li class="nav-item{{ $activePage == 'ratecardsheet' ? ' active' : '' }}">
+        <a class="nav-link" href="{{ route('admin.getRateCardSheet') }}">
+          <i><img style="width:25px" src="{{ asset('images/icons/pickup.png') }}"></i>
+          <p>{{ __('Upload Rate Card Sheet') }}</p>
+          
+        </a>
+      </li>  
+
       <li class="nav-item{{ $activePage == 'pickup-request' ? ' active' : '' }}">
         <a class="nav-link" href="{{ route('admin-pickup-request.index') }}">
           <i><img style="width:25px" src="{{ asset('images/icons/pickup.png') }}"></i>

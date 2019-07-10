@@ -47,14 +47,19 @@ class BillingController extends Controller
         return response()->json(['message'=>'Data Imported.'], 200);
     }
 
-    public function carryForward(Request $request)
+    public function carryForward(Request $request, $type)
     {
         $request->validate([
             'user'=>'bail|required|numeric',
             'price'=>'bail|required|numeric|min:1|max:30000'
         ]);
+        $type=53;
+        if ($type==1) {
+            $type=52;
+        }
+
        UserPayments::insert(['user_id'=>$request->input('user'), 'order_id'=>0,
-                             'price'=>$request->input('price'), 'to_id'=>Auth::user()->id, 'type'=>52, 'created_at'=>Carbon::now(), 'modified_at'=>Carbon::now()]);
+                             'price'=>$request->input('price'), 'to_id'=>Auth::user()->id, 'type'=>$type, 'created_at'=>Carbon::now(), 'updated_at'=>Carbon::now()]);
 
        return response()->json(['message'=>'Data Saved.'], 200);
     }

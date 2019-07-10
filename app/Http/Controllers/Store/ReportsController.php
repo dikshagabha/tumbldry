@@ -240,6 +240,25 @@ class ReportsController extends Controller
                   })->get();
 
       $total_billing = $payments->sum('price');
+      $payments_store = UserPayments::where('user_id', $this->user->id)
+                  ->where('type', 52)
+                  ->when($request->filled('start_date'), function ($q) use($request){
+                      $q->where('created_at', '>=',$request->input('start_date'));
+                  })
+                  ->when($request->filled('end_date'), function ($q) use($request){
+                      $q->where('created_at', '<=',$request->input('end_date'));
+                  })->sum('price');
+      $payments_admin = UserPayments::where('user_id', $this->user->id)
+                  ->where('type', 53)
+                  ->when($request->filled('start_date'), function ($q) use($request){
+                      $q->where('created_at', '>=',$request->input('start_date'));
+                  })
+                  ->when($request->filled('end_date'), function ($q) use($request){
+                      $q->where('created_at', '<=',$request->input('end_date'));
+                  })->sum('price');
+
+      
+
       if (!$shares) {
         $shares = UserFranchiseShare::where('user_id', 0)->first();
       }
