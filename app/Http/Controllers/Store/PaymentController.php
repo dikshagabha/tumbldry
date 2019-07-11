@@ -45,41 +45,53 @@ class PaymentController extends Controller
           return $next($request);
       });
     }
-    public function pay(Request $request, $id){
-      $order = Order::where('id', $id)->first();
+    public function pay(Request $request, $id, $type){
+      if ($type==1) {
+        $order = Order::where('id', $id)->first();
+        $amount = $order->total_price;
+        $name  = $order->customer->name;
+        $add = $order->customer_address;
+        $city = $order->address->city;
+        $state=$order->address->state,
+        $pin = $order->address->pin,
+      }else
+      {
+        $order = UserPlan::where('id', $id)->first();
+        $amount = $order->total_price;
+        $name  = $order->customer->name;
+        $add = $order->customer->address;
+        $city = $order->customer->city;
+        $state=$order->customer->state,
+        $pin = $order->customer->pin,
+      }
+      
       $parameters = [
         'tid' => time().rand(111,999),
         'order_id' => $id,        
         'amount' => $order->total_price,
-        'billing_name'=>$order->customer->name,
-        'billing_address'=>$order->customer_address,
+        'billing_name'=>,
+        'billing_address'=>,
         'billing_city'=>$order->address->city,
         'billing_state'=>$order->address->state,
         'billing_zip'=>$order->address->pin,
         'billing_country'=>"India",
         'billing_tel'=>$order->customer->phone_number,
         'billing_email'=>$order->customer->email,
-
-        'delivery_name'=>$order->customer->name,
-        'delivery_address'=>$order->customer_address,
-        'delivery_city'=>$order->address->city,
-        'delivery_state'=>$order->address->state,
-        'delivery_zip'=>$order->address->pin,
-        'delivery_country'=>"India",
-        'delivery_tel'=>$order->customer->phone_number,
-        'delivery_email'=>$order->customer->email,
-        
+        'merchant_param1'=>$type,        
       ];
-      
       $order = Payment::prepare($parameters);
       return Payment::process($order);
     }
+
+
 
     public function response(Request $request)
     {
 
 
         $response = Payment::response($request);
+
+        dd($response);
 
         $order = Order::where('id', $response['order_id'])->first();
         
@@ -260,6 +272,13 @@ class PaymentController extends Controller
         'payment_mode'=>'bail|required|array',
         'order_id'=>'bail|required|numeric'
        ]);
+
+       if ($request->input('send_link')) {
+         $validate=$request->validate([
+          'phone_number'=>'bail|required|numeric|digits_between:8,15']);
+         $response =  CommonRepository::sendmessage($request->input('phone_number'), "Hello,\n Please use link for payment ".route('order.pay', $order_id));
+         return response()->json(["message"=>"Payment Success", 'redirectTo'=>route('store.create-order.index')], 200);
+       }
 
       try{
             $plan = UserPlan::where('id', $request->input('order_id'))->first();

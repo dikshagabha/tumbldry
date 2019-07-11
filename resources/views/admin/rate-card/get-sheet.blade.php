@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Manage Store')
+@section('title', 'Manage Rate Cards')
 
 @section('content')
 @section('css')
@@ -30,7 +30,6 @@
                           <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
                             {{ Form::select('service', $services, null, ['class' => 'form-control', 'id' => 'select-service', 'placeholder'=>'Select Service', 'data-url'=>route('getRateRoute')]) }}
                             <span class="error" id="service_error"></span>
-                             
                            </div>
 
                            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
@@ -50,8 +49,10 @@
                         <label class="login2 pull-right pull-right-pro">Upload Sheet</label>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                        {{Form::file('sheet',['class'=>"form-control", 'id'=>'save_amount', 'data-type'=>'2'])}} 
-                        {{Form::close()}}
+                        {{Form::file('sheet', ['class'=>"form-control", 'id'=>'save_amount', 'data-type'=>'2'])}} 
+                        
+                        <span class="error" id="sheet_error"></span>
+                             
                     </div>
                 </div>
             </div>
@@ -62,7 +63,7 @@
                     </div>
                     <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
                         {{Form::submit('Upload',['class'=>"btn btn-success save_amount", 'id'=>'save_amount', 'data-type'=>'2'])}} 
-                        {{Form::close()}}
+                        
                     </div>
                 </div>
             </div>
@@ -77,7 +78,7 @@
 
 @push('js')
 <script src="{{asset('js/jcf/jcf.js')}}"></script>
-<script src="{{asset('js/jcf/jcf.checkbox.js')}}"></script>
+<script src="{{asset('js/jcf/jcf.file.js')}}"></script>
 <script src="{{asset('js/chosen/chosen.jquery.min.js')}}"></script>
 <script>
 $(document).ready(function(){
@@ -89,6 +90,7 @@ $(document).ready(function(){
     {
       $('#demo_sheet').hide();
       $('body').waitMe();
+       $(".error").html('')
       $.ajax({
           url:$('#select-service').data('url'),
           data:$('#addFrenchise').serializeArray(),
@@ -104,6 +106,8 @@ $(document).ready(function(){
 
      $(document).on('click', '#save_amount', function(e)
     {
+      e.preventDefault();
+      $(".error").html('')
       var form = $('#addFrenchise')[0];
         var data = new FormData(form);
 
@@ -116,6 +120,8 @@ $(document).ready(function(){
           success: function(data){
             $('body').waitMe('hide');
             form.reset();
+            $('#select-service').trigger('chosen:updated');
+            $('#select-city').trigger('chosen:updated');
            }
       })
     })

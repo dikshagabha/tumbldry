@@ -190,6 +190,12 @@ class RateCardController extends Controller
     public function postRateCardSheet(Request $request)
     {
       
+        $request->validate([
+            'service'=>'bail|required|numeric',
+            'city'=>'bail|required|string',
+            'sheet'=>'bail|required|file'
+        ]);
+
        $import = Excel::import(new RateCardImport($request->input('service'), $request->input('city')), $request->file('sheet'));
        return response()->json(['message'=>'Data Imported.'], 200);
 
@@ -197,11 +203,12 @@ class RateCardController extends Controller
 
     public function getRateCardDemoSheet(Request $request)
     {
+        $request->validate([
+            'service'=>'bail|required|numeric']);
         return  Excel::download(new DemoRateCard($request->input('service')), 'sheet.xlsx');
     }
     public function getRateRoute(Request $request)
     {
-
         return response()->json(["message"=>"Sucess", 'route'=>route('admin.getRateCardDemoSheet', ['service'=>$request->input('service')])], 200);
         
     }

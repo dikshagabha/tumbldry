@@ -10,12 +10,20 @@
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12">
                 <div class="card card-stats">
-                    <div>            
-                        <a href = "{{route('billing.downloadExcel')}}" >
-                        <button id="export" data-url="{{route('billing.downloadExcel')}}" class="btn btn-link">Demo Excel</button></a>
-                    </div>
-                    <br>                    
+                    <br>          
                     <div>
+                        <div class="form-group-inner">
+                                    <div class="row">
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                            <label class="login2 pull-right pull-right-pro" >
+                                                <h4>Import Billing</h4>
+                                            </label>
+                                        </div>
+                                        <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+                                            
+                                        </div>
+                                    </div>
+                                </div>
                       {{Form::open(['route'=>'billing.importBilling', 'method'=>'post', 'id'=>'addFrenchise', 'name'=>'form_data'])}}
                         <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
                             <div class="form-group-inner">
@@ -37,6 +45,7 @@
                                     </div>
                                     <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
                                         {{Form::file('sheet',['class'=>"form-control", 'placeholder'=>"Select Store"])}} 
+                                        <a href = "{{route('billing.downloadExcel')}}" >(Demo Excel)</a>
                                         <span class="error" id="sheet_error"></span>
                                     </div>
                                 </div>
@@ -103,6 +112,28 @@
                                 <div class="form-group-inner">
                                     <div class="row">
                                         <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                                            <!-- <label class="login2 pull-right pull-right-pro">Amount</label> -->
+                                        </div>
+                                        <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+                                            OR                                            
+                                        </div>
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="form-group-inner">
+                                    <div class="row">
+                                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                                            <label class="login2 pull-right pull-right-pro">Uplaod Sheet</label>
+                                        </div>
+                                        <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+                                            {{Form::file('sheet',['class'=>"form-control", 'placeholder'=>"Select Store"])}} <a href="{{route('admin.democarry')}}">(Demo Excel)</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="form-group-inner">
+                                    <div class="row">
+                                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
                                             <label class="login2 pull-right pull-right-pro"></label>
                                         </div>
                                         <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
@@ -147,6 +178,28 @@
                                         <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
                                             {{Form::text('price',null,['class'=>"form-control"])}} 
                                            
+                                        </div>
+                                    </div>
+                                </div>
+                                 <br>
+                                <div class="form-group-inner">
+                                    <div class="row">
+                                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                                            <!-- <label class="login2 pull-right pull-right-pro">Amount</label> -->
+                                        </div>
+                                        <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+                                            OR                                            
+                                        </div>
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="form-group-inner">
+                                    <div class="row">
+                                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                                            <label class="login2 pull-right pull-right-pro">Uplaod Sheet</label>
+                                        </div>
+                                        <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+                                            {{Form::file('sheet',['class'=>"form-control", 'placeholder'=>"Select Store"])}} <a href="{{route('admin.democarry')}}">(Demo Excel)</a>
                                         </div>
                                     </div>
                                 </div>

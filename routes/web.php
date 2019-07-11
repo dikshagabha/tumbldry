@@ -44,6 +44,7 @@ Route::prefix('admin')->group(function () {
    
     Route::post('/vendor/status/{id}', 'Admin\VendorController@status')->name('manage-vendor.status');
 
+    Route::get('/carry-forward/demo', 'Admin\BillingController@demoCarry')->name('admin.democarry');
     Route::get('/billing/excel', 'Admin\BillingController@downloadExcel')->name('billing.downloadExcel');
     Route::get('/billing', 'Admin\BillingController@index')->name('billing.index');
     Route::post('/billing', 'Admin\BillingController@importBilling')->name('billing.importBilling');
@@ -104,12 +105,10 @@ Route::prefix('admin')->group(function () {
  Route::post('/admin-session-address', 'Admin\PickupController@setSessionAddresses')->name('admin.setSessionAddresses');
 
  
-  Route::get('/payment/{id}', 'PaymentLinkController@pay')->name('order.pay');
- 
-  
-     Route::post('/payment/response', 'PaymentLinkController@response')->name('pay');
-    Route::post('/payment/cancel', 'PaymentLinkController@cancel')->name('pay');
-    Route::get('/payment/success', 'PaymentLinkController@success')->name('pay');
+  Route::get('/payment/{id}/{type}', 'PaymentLinkController@pay')->name('order.pay');
+  Route::post('/payment/response', 'PaymentLinkController@response')->name('pay');
+  Route::post('/payment/cancel', 'PaymentLinkController@cancel')->name('pay');
+  Route::get('/payment/success', 'PaymentLinkController@success')->name('pay');
   
 
 Route::prefix('store')->namespace('Store')->group(function () {

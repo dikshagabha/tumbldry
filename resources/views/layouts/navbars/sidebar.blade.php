@@ -123,7 +123,7 @@
 
       <li class="nav-item{{ $activePage == 'ratecardsheet' ? ' active' : '' }}">
         <a class="nav-link" href="{{ route('admin.getRateCardSheet') }}">
-          <i><img style="width:25px" src="{{ asset('images/icons/pickup.png') }}"></i>
+          <i><img style="width:25px" src="{{ asset('images/icons/coins.png') }}"></i>
           <p>{{ __('Upload Rate Card Sheet') }}</p>
           
         </a>
