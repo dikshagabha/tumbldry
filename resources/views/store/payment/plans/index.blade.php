@@ -51,8 +51,38 @@
 		          			</div>
 		          		</td>
 		          	</tr>
+		          	<tr>
+		          		<td> <label for = 'transaction_id'>Card Payment</label>
+		          		</td>
 
-		          
+		          		<td> 
+		          			<input type="checkbox" name="payment_mode[]" value="4" id="transaction_id" class="mode">  
+		          			<div class="4 input" id="4" style="display: none">
+		          				<input type="text" name="transaction_id" placeholder="Transaction Id" id="transaction_id" class="form-control">
+		          				<span class="error" id="transaction_id_error"></span>
+		          				<input type="text" name="card_price" placeholder="Price" id="card_pay" class="form-control">
+		          				<span class="error" id="card_price_error"></span>
+		          			</div>
+		          		</td>
+		          	</tr>
+
+		          	<tr>
+		          		
+		          			<td><label for = 'payment_link'>Send Payment Link to Phone</label></td>
+
+		          			<td><input type="checkbox" name="send_link" value="5" id="payment_link" class="mode">
+
+		          				<div class="5 input" id="5" style="display: none">
+		          				
+		          					<input type="text" name="phone_number"
+		          					 value="{{$order->customer->phone_number}}" placeholder="Phone Number" id="phone" class="form-control">
+		          					<span class="error" id="transaction_id_error"></span>
+		          				
+		          			</div>
+		          			</td>
+
+		          		
+		          	</tr>	          
 		          	
 		        </table>
 		        <input type="hidden" name="order_id" value="{{$order->id}}">
