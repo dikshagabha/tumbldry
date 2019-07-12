@@ -45,43 +45,43 @@ class PaymentController extends Controller
           return $next($request);
       });
     }
-    public function pay(Request $request, $id, $type){
-      if ($type==1) {
-        $order = Order::where('id', $id)->first();
-        $amount = $order->total_price;
-        $name  = $order->customer->name;
-        $add = $order->customer_address;
-        $city = $order->address->city;
-        $state=$order->address->state,
-        $pin = $order->address->pin,
-      }else
-      {
-        $order = UserPlan::where('id', $id)->first();
-        $amount = $order->total_price;
-        $name  = $order->customer->name;
-        $add = $order->customer->address;
-        $city = $order->customer->city;
-        $state=$order->customer->state,
-        $pin = $order->customer->pin,
-      }
-      
-      $parameters = [
-        'tid' => time().rand(111,999),
-        'order_id' => $id,        
-        'amount' => $order->total_price,
-        'billing_name'=>,
-        'billing_address'=>,
-        'billing_city'=>$order->address->city,
-        'billing_state'=>$order->address->state,
-        'billing_zip'=>$order->address->pin,
-        'billing_country'=>"India",
-        'billing_tel'=>$order->customer->phone_number,
-        'billing_email'=>$order->customer->email,
-        'merchant_param1'=>$type,        
-      ];
-      $order = Payment::prepare($parameters);
-      return Payment::process($order);
-    }
+    // public function pay(Request $request, $id, $type){
+    //   if ($type==1) {
+    //     $order = Order::where('id', $id)->first();
+    //     $amount = $order->total_price;
+    //     $name  = $order->customer->name;
+    //     $add = $order->customer_address;
+    //     $city = $order->address->city;
+    //     $state=$order->address->state,
+    //     $pin = $order->address->pin,
+    //   }else
+    //   {
+    //     $order = UserPlan::where('id', $id)->first();
+    //     $amount = $order->price;
+    //     $name  = $order->customer->name;
+    //     $add = $order->customer->address;
+    //     $city = $order->customer->city;
+    //     $state=$order->customer->state,
+    //     $pin = $order->customer->pin,
+    //   }
+    //   dd($order);
+    //   $parameters = [
+    //     'tid' => time().rand(111,999),
+    //     'order_id' => $id,        
+    //     'amount' => $order->total_price,
+    //     'billing_name'=>,
+    //     'billing_address'=>,
+    //     'billing_city'=>$order->address->city,
+    //     'billing_state'=>$order->address->state,
+    //     'billing_zip'=>$order->address->pin,
+    //     'billing_country'=>"India",
+    //     'billing_tel'=>$order->customer->phone_number,
+    //     'billing_email'=>$order->customer->email,
+    //     'merchant_param1'=>$type,        
+    //   ];
+    //   $order = Payment::prepare($parameters);
+    //   return Payment::process($order);
+    // }
 
 
 
@@ -89,20 +89,19 @@ class PaymentController extends Controller
     {
 
 
-        $response = Payment::response($request);
+         $response = Payment::response($request);
 
-        dd($response);
-
-        $order = Order::where('id', $response['order_id'])->first();
+         dd($response);
+        // $order = Order::where('id', $response['order_id'])->first();
         
-        UserPayments::insert( ['order_id'=>$response['order_id'], 'price'=>$response['amount'],
-                              'to_id'=>$order->store_id, 'type'=>5, 'payment_mode'=>$response['payment_mode'],
-                              'transaction_id'=>$response['tracking_id'],
-                              'user_id'=>$order->customer_id, 'created_at'=>Carbon::now(),
-                               'updated_at'=>Carbon::now()
-                            ]);
+        // UserPayments::insert( ['order_id'=>$response['order_id'], 'price'=>$response['amount'],
+        //                       'to_id'=>$order->store_id, 'type'=>5, 'payment_mode'=>$response['payment_mode'],
+        //                       'transaction_id'=>$response['tracking_id'],
+        //                       'user_id'=>$order->customer_id, 'created_at'=>Carbon::now(),
+        //                        'updated_at'=>Carbon::now()
+        //                     ]);
 
-        return view('success');
+        // return view('success');
     
     }  
 
@@ -143,14 +142,15 @@ class PaymentController extends Controller
        if ($request->input('send_link')) {
          $validate=$request->validate([
           'phone_number'=>'bail|required|numeric|digits_between:8,15']);
-         $response =  CommonRepository::sendmessage($request->input('phone_number'), "Hello, \n Please use link for payment ".route('order.pay', $order_id));
+         $response =  CommonRepository::sendmessage($request->input('phone_number'), "Hello, \n Please use link for payment ".route('order.pay' , [$order_id, 1]));
          return response()->json(["message"=>"Payment Success", 'redirectTo'=>route('store.create-order.index')], 200);
        }
        $request->validate([
         'payment_mode'=>'bail|required|array',
         'order_id'=>'bail|required|numeric'
        ]);
-      try{$order = Order::where('id', $request->input('order_id'))->first();
+      try{
+            $order = Order::where('id', $request->input('order_id'))->first();
             $payment_modes = $request->input('payment_mode');
             $userwallet = UserWallet::where('user_id', $order->customer_id)->first();
 
@@ -171,7 +171,7 @@ class PaymentController extends Controller
                 return response()->json(["message"=>"Please enter valid price."], 400);
               }
             }
-            $cash_pay = $wallet_pay = $loyality_pay=$card_pay=0;
+            $cash_pay = $wallet_pay = $loyality_pay = $card_pay=0;
             if (in_array(1, $request->input('payment_mode'))) {
               $cash_pay = $request->input('cash_pay');
             }
@@ -192,12 +192,8 @@ class PaymentController extends Controller
             }
             if ($cash_pay+$loyality_pay+$wallet_pay+$card_pay != $order->total_price) {
               return response()->json(["message"=>"Please enter valid price."], 400);
-            }
-
-          
-      
-            $paymentData = [];
-            
+            }    
+            $paymentData = [];            
             if (in_array(1, $request->input('payment_mode'))) {
               array_push($paymentData , [
                                     'order_id'=>$order->id, 'price'=>$request->input('cash_pay'),
@@ -205,8 +201,7 @@ class PaymentController extends Controller
                                      'user_id'=>$order->customer_id, 'created_at'=>Carbon::now(),
                                      'updated_at'=>Carbon::now()
                                   ]);
-            }
-      
+            }      
             if (in_array(2, $request->input('payment_mode'))) {
               array_push($paymentData , [
                                     'order_id'=>$order->id, 'price'=>$request->input('wallet_pay'),
@@ -268,17 +263,26 @@ class PaymentController extends Controller
 
 
     public function plansPayment(Request $request){
+      $order_id =  $request->input('order_id');
+       if ($request->input('send_link')) {
+         $validate=$request->validate([
+          'phone_number'=>'bail|required|numeric|digits_between:8,15']);
+         $response =  CommonRepository::sendmessage($request->input('phone_number'), "Hello,\n Please use link for payment ".route('order.pay', [$order_id, 2]));
+         return response()->json(["message"=>"Payment Success", 'redirectTo'=>route('manage-plans.index')], 200);
+       }
+
        $request->validate([
         'payment_mode'=>'bail|required|array',
         'order_id'=>'bail|required|numeric'
        ]);
-
-       if ($request->input('send_link')) {
-         $validate=$request->validate([
-          'phone_number'=>'bail|required|numeric|digits_between:8,15']);
-         $response =  CommonRepository::sendmessage($request->input('phone_number'), "Hello,\n Please use link for payment ".route('order.pay', $order_id));
-         return response()->json(["message"=>"Payment Success", 'redirectTo'=>route('store.create-order.index')], 200);
-       }
+       if (in_array(4, $request->input('payment_mode'))) {
+              $request->validate([
+                'transaction_id'=>'bail|required|string|min:1|max:50',
+                'card_price'=>'bail|required|numeric|min:1|max:20000000'
+               ]);
+              $card_pay = $request->input('card_price');
+            }
+      
 
       try{
             $plan = UserPlan::where('id', $request->input('order_id'))->first();
@@ -292,6 +296,7 @@ class PaymentController extends Controller
             $wallet->price= $wallet->price+$plan->price;      
             $paymentData = [];
             
+            
             if (in_array(1, $request->input('payment_mode'))) {
               array_push($paymentData , [
                                     'order_id'=>$plan->id, 'price'=>$request->input('cash_pay'),
@@ -300,8 +305,17 @@ class PaymentController extends Controller
                                      'updated_at'=>Carbon::now()
                                   ]);
             }
+
+             if (in_array(4, $request->input('payment_mode'))) {
+              array_push($paymentData , [
+                                    'order_id'=>$plan->id, 'price'=>$request->input('card_price'),
+                                    'to_id'=>Auth::user()->id, 'type'=>14, 
+                                    'transaction_id'=>$request->input('transaction_id'),
+                                    'user_id'=>$plan->user_id, 'created_at'=>Carbon::now(),
+                                     'updated_at'=>Carbon::now()
+                                  ]);
       
-           
+           }
       
             $payment= UserPayments::insert($paymentData);
             $wallet->save();
