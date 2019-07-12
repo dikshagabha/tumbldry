@@ -43,10 +43,10 @@
                 <div class="input-group mb-3">
                   <div class="input-group-prepend">
                     <span class="input-group-text">
-                      <i class="fa fa-user"></i>
+                      <i class="fa fa-user size_class"></i>
                     </span>
                   </div>
-                   <input type="text" class="form-control" placeholder="Phone Number" name="phone_number">
+                   <input type="text" class="form-control size_class" placeholder="Phone Number" name="phone_number">
                    <!-- <span class="error" id="email_error"></span> -->
                                    
                 </div>
@@ -70,12 +70,12 @@
                 </div> -->
                 <div class="row">
                   <div class="col-6">
-                    <button class="btn btn-primary px-4" type="button" id="login">Send Message</button>
+                    <button class="btn btn-primary size_class" type="button" id="login">Send Message</button>
                   </div>
                   </form>
-                 <!--  <div class="col-6 text-right">
-                    <a href=" {{ route('store.forget-password')}} "><button class="btn-link px-0" type="button">Forgot password?</button></a>
-                  </div> -->
+                  <div class="col-6 text-right">
+                    <a href=" {{ route('store.login')}} ">Login</a>
+                  </div>
                 </div>
               </div>
             </div>

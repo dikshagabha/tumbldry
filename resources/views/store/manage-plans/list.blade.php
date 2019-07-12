@@ -10,8 +10,8 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
               <th>Plan Id</th>
               <th>Phone Number</th>
               <th>Name</th>
-              <th>Valid From</th>
-              <th>Valid To</th>
+              <th>Amount</th>
+              <!-- <th>Valid To</th> -->
              </tr>
           </thead>
           <tbody>
@@ -28,12 +28,9 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
                 {{$user->name}}
               </td>
               <td>
-                {{$user->valid_from}}
+                {{$user->price}} Rs
               </td>
-
-              <td>
-                {{$user->valid_to}}
-              </td>
+            
              </tr>
               @php
                 $i++;

@@ -32,10 +32,7 @@
                             <span class="error" id="service_error"></span>
                            </div>
 
-                           <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
-                            <a href="" id="demo_sheet" style="display: none">
-                              <span class="btn btn-information" id="demo_sheet" title="Download Demo Excel"> <i class="fa fa-download"></i></span> </a>
-                           </div>
+                           
                          
                        </div>
                   </div>
@@ -50,7 +47,8 @@
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
                         {{Form::file('sheet', ['class'=>"form-control", 'id'=>'save_amount', 'data-type'=>'2'])}} 
-                        
+                        <a href="" id="demo_sheet" style="display: none">
+                              (Demo Sheet)</a>
                         <span class="error" id="sheet_error"></span>
                              
                     </div>
@@ -63,6 +61,7 @@
                     </div>
                     <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
                         {{Form::submit('Upload',['class'=>"btn btn-success save_amount", 'id'=>'save_amount', 'data-type'=>'2'])}} 
+                        
                         
                     </div>
                 </div>
@@ -82,7 +81,7 @@
 <script src="{{asset('js/chosen/chosen.jquery.min.js')}}"></script>
 <script>
 $(document).ready(function(){
-	  jcf.replaceAll();
+	 // jcf.replaceAll();
     $('#select-service').chosen();
     $('#select-city').chosen();
 
@@ -104,7 +103,7 @@ $(document).ready(function(){
       })
     })
 
-     $(document).on('click', '#save_amount', function(e)
+     $(document).on('click', '.save_amount', function(e)
     {
       e.preventDefault();
       $(".error").html('')

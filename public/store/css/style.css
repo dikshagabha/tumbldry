@@ -16458,3 +16458,10 @@ body {
     height: 28px;
     color: black;
 }
+.size_class{
+  font-size: 15px
+}
+
+.fa {
+    margin: 5px;
+}

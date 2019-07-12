@@ -6,6 +6,8 @@ class UserPlan extends Model
 {
     protected $fillable = ['user_id', 'plan_id', 'valid_from', 'valid_to', 'store_id', 'status'];
 
+    protected $dates = ['valid_to', 'valid_from'];
+
     public function customer(){
     	return $this->hasOne('App\User', 'id', 'user_id');
     } 

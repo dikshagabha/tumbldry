@@ -7,12 +7,12 @@
                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
                  <label class="login2 pull-right pull-right-pro">Phone Number</label>
                </div>
-               <div class="col-lg-7 col-md-7 col-sm-7 col-xs-7">
+               <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
                 {!! Form::text('phone_number',null,array('class' => 'form-control', "maxlength"=>20,
                                 "id"=>'phone',  "placeholder"=>"Phone Number")) !!}
                 <span class="error" id="phone_number_error"></span>
                </div>
-               <div class="col-md-2 col-lg-2 col-sm-2">
+               <div class="col-md-2 col-lg-2 col-sm-2" style="display: none;">
                    <button type="button" class="btn btn-detail" id="search-user" data-url = "{{route('store.findCustomer')}}"><i class="fa fa-search"></i></button>
               </div>
               <input type="hidden" name="customer_id" id="customer_id">
