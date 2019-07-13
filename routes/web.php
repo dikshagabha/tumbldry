@@ -92,18 +92,24 @@ Route::prefix('admin')->group(function () {
     Route::post('/find-customer', 'Admin\PickupController@findCustomer')->name('admin.findCustomer');
     Route::post('/find-user', 'HomeController@findUser')->name('admin.findUser');
     
-    Route::post('set-address-session', 'CustomerController@setSessionAddress')->name('store.postAddSessionAddress');
-      
+    Route::post('set-address-session', 'Admin\CustomerController@setSessionAddress')->name('store.postAddSessionAddress');
+    
+    Route::post('pickup/suggest', 'Admin\PickupController@storeSuggestions')->name('admin.pickup.suggestions');
+     
     Route::post('/logout', 'Auth\LoginController@logout')->name('admin.logout');
+
+    Route::resources([
+      'admin-pickup-request' => 'Admin\PickupController'
+    ]);
+   Route::post('/admin-session-address', 'Admin\PickupController@setSessionAddresses')->name('admin.setSessionAddresses');
+
+   Route::get('get-customer-addresses', 'Admin\PickupController@getCustomerAddresses')->name('admin.getCustomerAddresses');
+
 
   });
 });
 
- Route::resources([
-      'admin-pickup-request' => 'Admin\PickupController'
-    ]);
- Route::post('/admin-session-address', 'Admin\PickupController@setSessionAddresses')->name('admin.setSessionAddresses');
-
+ 
  
   Route::get('/payment/{id}/{type}', 'PaymentLinkController@pay')->name('order.pay');
   Route::post('/payment/response', 'PaymentLinkController@response')->name('pay');

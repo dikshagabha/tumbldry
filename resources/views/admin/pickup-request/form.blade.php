@@ -61,28 +61,7 @@
           </div>
         </div>
     <br>
-    <div class="form-group-inner">
-        <div class="row">
-            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-              <label class="login2 pull-right pull-right-pro">Pickup Time</label>
-            </div>
-            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-               <input type="text" id="picker" name="request_time" class="form-control" placeholder="Date">                 
-               <span class="error" id="request_time_error"></span>
-            </div>  
-             <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-               <input type="text" id="picker_start" name="start_time" placeholder="From" class="form-control">                 
-               <span class="error" id="start_time_error"></span>
-            </div>
-             <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-               <input type="text" id="picker_end" name="end_time" placeholder="To" class="form-control">                 
-               <span class="error" id="start_time_error"></span>
-            </div>  
-        </div>
-      </div>
-      <br>
-
-      <div class="form-group-inner">
+     <div class="form-group-inner">
           <div class="row">
                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
                  <label class="login2 pull-right pull-right-pro">Address</label>
@@ -97,7 +76,7 @@
                 </div>
 
                 <div class="col-lg-2 col-md-2 col-sm-2 select" style="display: none">
-                  <button type="button" class="btn btn-warning" id="select_address"  data-url= "{{ route('store.getCustomerAddresses') }}" title="select Address"><i class="fa fa-home"></i> </button>                
+                  <button type="button" class="btn btn-warning" id="select_address"  data-url= "{{ route('admin.getCustomerAddresses') }}" title="select Address"><i class="fa fa-home"></i> </button>                
                 </div>
                 <div class="col-lg-2 col-md-2 col-sm-2 add"  >
                   <button type="button" class="btn btn-warning" id="add_address"><i class="fa fa-plus"></i> </button>
@@ -106,7 +85,49 @@
           </div>
         </div>
         <br>
-        
+    <div class="form-group-inner">
+        <div class="row">
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+              <label class="login2 pull-right pull-right-pro">Pickup Time</label>
+            </div>
+            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+               <input type="text" id="picker" name="request_time" data-url='{{route("admin.pickup.suggestions")}}' class="form-control" placeholder="Date">                 
+               <span class="error" id="request_time_error"></span>
+            </div>  
+            <!--  <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+               <input type="text" id="picker_start" name="start_time" placeholder="From" class="form-control">                 
+               <span class="error" id="start_time_error"></span>
+            </div>
+             <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+               <input type="text" id="picker_end" name="end_time" placeholder="To" class="form-control">                 
+               <span class="error" id="start_time_error"></span>
+            </div>   -->
+        </div>
+      </div>
+      <br>
+
+     
+
+
+        <br>
+         <div class="form-group-inner">
+          <div class="row">
+               <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                 <label class="login2 pull-right pull-right-pro">Stores</label>
+               </div>
+               
+               <div class="col-lg-7 col-md-7 col-sm-7 col-xs-7 ">
+                  <div class="store_data">
+                  </div>
+                  <span class="error" id="store_id_error"></span>
+                  <span class="error" id="start_error"></span>
+                  <span class="error" id="end_error"></span>
+                   {!! Form::hidden('store_id', null,['id'=>'store_id']) !!}
+                    {!! Form::hidden('start', null, ['id'=>'start']) !!}
+                    {!! Form::hidden('end', null, ['id'=>'end']) !!}
+                </div>               
+          </div>
+        </div>
      
     </div>
   </div>

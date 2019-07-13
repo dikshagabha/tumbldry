@@ -33,8 +33,8 @@ class StorePickupRequest extends FormRequest
             'phone_number'=>['bail','required','numeric', 'min:2', 'digits_between:8,15'],
             'service'=>'bail|required|numeric',
             'request_time'=>'bail|required|string',
-            'end_time'=>'bail|required|string',
-            'start_time'=>'bail|required|string',
+            'end'=>'bail|required|string',
+            'start'=>'bail|required|string',
         ];
         
       

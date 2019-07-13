@@ -59,7 +59,7 @@
       </div>
       <div class="modal-body">
         <div id="addressForm">
-             @include('admin.addAddressForm')
+             @include('admin.addAddressFormNew')
             
         </div>
       </div>
@@ -112,8 +112,21 @@ $(document).ready(function(){
 	 $('#service').chosen();
   $("#picker").flatpickr({enableTime: false,
     defaultDate:moment(),
-    minDate:moment().add(3, 'hours').format("YYYY-MM-DD HH:mm:ss")
-  });
+    minDate:moment().add(3, 'hours').format("YYYY-MM-DD HH:mm:ss"),
+    onChange:function(selectedDates, dateStr, instance) {
+        //console.log(selectedDates);
+        $.ajax({
+          url:$('#picker').attr('data-url'),
+          data:{'address_id':$('#address_id').val(), 'date':$('#picker').val()},
+          method:'post',
+          success:function(data){
+            console.log(data);
+            $('.store_data').html(data);
+          }
+        });
+      }
+    });
+
   $("#picker_start").flatpickr({
     enableTime: true,
     noCalendar: true,
@@ -130,6 +143,31 @@ $(document).ready(function(){
     }
   });
 
+   $(document).on('change', '.slots_pick', function(e){
+    e.preventDefault();
+    current = $(this);
+
+    $('#start').val(current.data('start'));
+    $('#end').val(current.data('end'));
+    $('#store_id').val(current.data('store'));
+  })
+
+   $(document).on('change', '.address_form', function(e){
+    e.preventDefault();
+    current = $(this);
+    $.ajax({
+          url:$('#picker').attr('data-url'),
+          data:{'address_id':$('#address_id').val(), 'date':$('#picker').val()},
+          method:'post',
+          success:function(data){
+            console.log(data);
+            $('.store_data').html(data);
+          }
+        });
+    
+  })
+ 
+
  $("#picker_end").flatpickr({
     enableTime: true,
     noCalendar: true,
@@ -139,66 +177,9 @@ $(document).ready(function(){
 
   });
 
-
-    $(document).on('focusout', '#phone', function(e){
-    
-      e.preventDefault(); 
-      $(".error").html("")
-      $('body').waitMe(); 
-      
-      $.ajax({
-        url: $('#search-user').data('url'),
-        type:'post',
-        data: {'phone_number':$('#phone').val()},
-        success: function(data){
-          success(data.message);
-          if (data.customer) 
-          {
-              $('#name').val(data.customer['name']).prop('readonly', true);
-            $('#email').val(data.customer['email']).prop('readonly', true);
-            $('#phone').val(data.customer['phone_number']).prop('readonly', true);
-
-              $('#address_form').text(data.customer.address);
-              $("#customer_id").val(data.customer.id);
-              $("#address_id").val(data.customer.address_id);
-              if (data.address) {
-                $('#address').text(data.address.address);
-                $("#address_id").val(data.address.id);
-             }
-
-             $(".select").show();
-             $(".add").hide();
-              
-          }
-          $('body').waitMe('hide');
-        },
-        error: function(data){
-
-           if (data.status==422) {
-            $('body').waitMe('hide');
-                    var errors = data.responseJSON;
-                    for (var key in errors.errors) {
-                      console.log(errors.errors[key][0])
-                        $("#"+key+"_error").html(errors.errors[key][0])
-                      }
-          }else{
-            error(data.responseJSON.message);
-            $(".select").hide();
-            $(".add").show();
-            $('#name').val('').prop('readonly', false);
-            $('#email').val('').prop('readonly', false);
-            $('#phone').val('').prop('readonly', false);
-            $('#address_form').text('');
-            $("#customer_id").val("");
-            $("#address_id").val("");
-             $('body').waitMe('hide');
-           }
-        }
-
-      })
-  })
-
-  $(document).on('click', '#search-user', function(e){
+  
+  $(document).on('focusout', '#phone', function(e){
+  
     e.preventDefault(); 
     $(".error").html("")
     $('body').waitMe(); 
@@ -211,33 +192,49 @@ $(document).ready(function(){
         success(data.message);
         if (data.customer) 
         {
-          for (var key in data.customer) {
-              $("#"+key).val(data.customer[key]);
-              $("#"+key).prop('readonly', true);
-            }
+            $('#name').val(data.customer['name']).prop('readonly', true);
+          $('#email').val(data.customer['email']).prop('readonly', true);
+          $('#phone').val(data.customer['phone_number']).prop('readonly', true);
+
+            $('#address_form').text(data.customer.address);
             $("#customer_id").val(data.customer.id);
             $("#address_id").val(data.customer.address_id);
-        }
-        else{
-          
-           $("#name").val("").prop('readonly', false);
-           $("#address").val("").prop('readonly', false); 
-            $("#city").val("").prop('readonly', false);
-           $("#state").val("").prop('readonly', false);
-            $("#pin").val("").prop('readonly', false);
-           $("#email").val("").prop('readonly', false);
-            $("#latitude").val("").prop('readonly', false);
-           $("#longitude").val("").prop('readonly', false);
-           $("#landmark").val("").prop('readonly', false);
-           $("#customer_id").val("");
-           $("#address_id").val("");
+            if (data.address) {
+              $('#address').text(data.address.address);
+              $("#address_id").val(data.address.id);
+           }
+
+           $(".select").show();
+           $(".add").hide();
+            
         }
         $('body').waitMe('hide');
+      },
+      error: function(data){
+
+         if (data.status==422) {
+          $('body').waitMe('hide');
+                  var errors = data.responseJSON;
+                  for (var key in errors.errors) {
+                    console.log(errors.errors[key][0])
+                      $("#"+key+"_error").html(errors.errors[key][0])
+                    }
+        }else{
+          error(data.responseJSON.message);
+          $(".select").hide();
+          $(".add").show();
+          $('#name').val('').prop('readonly', false);
+          $('#email').val('').prop('readonly', false);
+          $('#phone').val('').prop('readonly', false);
+          $('#address_form').text('');
+          $("#customer_id").val("");
+          $("#address_id").val("");
+           $('body').waitMe('hide');
+         }
       }
 
     })
-  })
- 
+  }) 
   $(document).on('click', '#add_frenchise', function(e){
     e.preventDefault();
     $('body').waitMe();
@@ -309,7 +306,9 @@ $(document).ready(function(){
       processData: false,  
       contentType: false,      
       success: function(data){
+        console.log(data);
         success(data.message);
+
         if (data.data) 
         {
           for (var key in data.data) {
@@ -317,6 +316,7 @@ $(document).ready(function(){
           }
         }
         $('#address_id').val(data.data.address_id);
+
         $("#addressModal").modal('hide');
         $('body').waitMe('hide');
       }
