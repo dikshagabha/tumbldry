@@ -33,7 +33,7 @@ $i = 1;
                 @endif
               </td> -->
               <td>
-                  {{$user->created_at->setTimezone($timezone)->format('y/m/d h:i a')}}
+                  {{$user->created_at->setTimezone($timezone)->format('y/m/d')}}
                   
               </td>
              <!--  <td>                  
