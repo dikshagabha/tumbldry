@@ -8,14 +8,15 @@ use App\User;
 use App\Model\{
   PickupRequest,
   Address,
-  Order
+  Order,
+  UserPayments
 };
 use Auth;
 use App\Repositories\Customer\HomeRepository;
 
 use Mail;
 use App\Mail\Runner\SendPassword;
-
+use Carbon\Carbon;
 use App\Http\Requests\Customer\Auth\RegisterRequest;
 use App\Http\Requests\Customer\Auth\AddressRequest;
 use App\Http\Requests\Customer\Auth\UpdateRequest;
@@ -235,11 +236,20 @@ class CustomerController extends Controller
       $pending = $orders->where('status', '!=', 6);
       $delivered = $orders->where('status', 6);
       $total = $orders->count();
-       $timezone = $request->session()->get('user_timezone', 'Asia/Calcutta');
+
+      $customer = User::where('id', $id)->first();
+      $from = $customer->created_at;
+      $to = Carbon::now();
+      $diff_in_months = $to->diffInMonths($from);
+      
+      $price = UserPayments::where('user_id', $id)->where('to_id', $this->user->id)->get()->sum('price');
+
+      $revenue = round($price/$diff_in_months, 2);
+      $timezone = $request->session()->get('user_timezone', 'Asia/Calcutta');
       if ($request->ajax()) {
-        return view('store.manage-customer.details-list', compact('orders', 'pending', 'total', 'activePage', 'titlePage','timezone', 'delivered'));
+        return view('store.manage-customer.details-list', compact('orders','customer','revenue', 'pending', 'total', 'activePage', 'titlePage','timezone', 'delivered'));
       }
-        return view('store.manage-customer.details', compact('orders', 'pending', 'total', 'activePage', 'titlePage','timezone', 'delivered'));
+        return view('store.manage-customer.details', compact('orders', 'revenue', 'customer','pending', 'total', 'activePage', 'titlePage','timezone', 'delivered'));
 
     }
 
@@ -247,14 +257,28 @@ class CustomerController extends Controller
       $activePage = 'customer';
       $titlePage = 'Customer Details';
       $orders = Order::where(['customer_id'=>$id, 'store_id'=>$this->user->id])->latest()->get();
+
       $pending = Order::where(['customer_id'=>$id, 'store_id'=>$this->user->id])->where('status', '!=', 6)->latest()->limit(5)->get();
       $delivered = Order::where(['customer_id'=>$id, 'store_id'=>$this->user->id])->where('status', 6)->latest()->limit(5)->get();
+      
       $total = $orders->count();
-       $timezone = $request->session()->get('user_timezone', 'Asia/Calcutta');
+      $timezone = $request->session()->get('user_timezone', 'Asia/Calcutta');
+      
+      $customer = User::where('id', $id)->first();
+      $from = $customer->created_at;
+      $to = Carbon::now();
+      $diff_in_months = $to->diffInMonths($from);
+      
+      $price = UserPayments::where('user_id', $id)->where('to_id', $this->user->id)->get()->sum('price');
+
+      //dd($price);
+      $revenue = round($price/$diff_in_months, 2);
+
+
       if ($request->ajax()) {
-        return view('store.manage-customer.details-list', compact('orders', 'pending', 'total', 'activePage', 'titlePage','timezone', 'delivered', 'id'));
+        return view('store.manage-customer.details-list', compact('orders', 'customer','revenue', 'pending', 'total', 'activePage', 'titlePage','timezone', 'delivered', 'id'));
       }
-        return view('store.manage-customer.details', compact('orders', 'pending', 'total', 'activePage', 'titlePage','timezone', 'delivered'
+        return view('store.manage-customer.details', compact('orders','customer' ,'pending','revenue', 'total', 'activePage', 'titlePage','timezone', 'delivered'
       , 'id'));
 
     }

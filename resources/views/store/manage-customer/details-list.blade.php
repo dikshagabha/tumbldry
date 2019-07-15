@@ -1,5 +1,11 @@
-Total number of Orders: {{$total}}
-<a href="{{ route('store.customerDetails', $id)}}">(Details)</a>
+
+<h3>{{$customer->name}}</h3> 
+      <strong>(Customer Since {{$customer->created_at->setTimezone($timezone)->format('d/m/Y')}})</strong>
+      <br>
+       Total number of Orders: {{$total}}<a href="{{ route('store.customerDetails', $id)}}">(Details)</a><br>
+       Average revenue: {{$revenue}} Rs
+
+
 <hr>
 <h4>Pending Orders</h4>
 <table class="table table-bordered">

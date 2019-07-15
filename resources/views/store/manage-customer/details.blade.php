@@ -7,13 +7,15 @@
 <vs-row vs-justify="center">
   <vs-col type="flex" vs-justify="center" vs-align="center" vs-w="11">
       <div slot="header">
-        <h3>
-          Customer Details
-        </h3>
+        
+        <hr>
       </div>
       <div>
-      
-       Total number of Orders: {{$total}}
+      <h3>{{$customer->name}}</h3> 
+      <strong>(Customer Since {{$customer->created_at->setTimezone($timezone)->format('d/m/Y')}})</strong>
+      <br>
+       Total number of Orders: {{$total}}<br>
+       Average revenue: {{$revenue}} Rs
 <hr>
 <h4>Pending Orders</h4>
 <table class="table table-bordered">
