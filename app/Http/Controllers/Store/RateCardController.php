@@ -69,7 +69,7 @@ class RateCardController extends Controller
     {
       
     	$services = Service::where(['type'=>1, 'status'=>1])->get();
-    	$types = [1=>"Dry Clean", 2=>"Laundary", 3=>'Car Clean'];
+    	$types = [1=>"Dry Clean", 2=>"Laundary", 3=>'Car Clean', 4=>'Shoe Clean', 5=>'Sofa Clean', 6=>'Home Clean'];
     	return view("store.rate-card.index", compact('services', 'types')) ;
     }
 
