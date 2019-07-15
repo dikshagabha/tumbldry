@@ -10,6 +10,7 @@ use App\Http\Requests\Admin\AddAddressRequest;
 use App\Model\PickupRequest;
 use App\Model\Service;
 use App\Model\Address;
+use App\Model\SMSTemplate;
 use App\User;
 use DB;
 use Pusher;
@@ -123,8 +124,8 @@ class PickupController extends Controller
                                 'start_time'=>$request->input('start'), 'end_time'=>$request->input('end') ]);
 
         //dd($pickup);
-        if ($id) {
-          // Send Notification to store
+        // if ($req) {
+        //   // Send Notification to store
           not::dispatch($pickup, 1);
           $options = array(
               'cluster' => 'ap2',
@@ -139,7 +140,7 @@ class PickupController extends Controller
 
 
             $data['message'] = $request->input('name')." has requested a pickup.";
-            $pusher->trigger('my-channel', 'notification'.$id, $data); 
+            $pusher->trigger('my-channel', 'notification'.$request->input('store_id'), $data); 
 
             $message = SMSTemplate::where('title', 'like','%Pick Up Scheduled%')->select('description')->first();
             //dd($message);
@@ -149,7 +150,7 @@ class PickupController extends Controller
 
             $mes = str_replace('@id@', $pickup->id, $mes);
             CommonRepository::sendmessage($request->input('phone_number'), $mes);            
-        }
+        //}
         DB::commit();
         return response()->json(["message"=>"Pickup Request successfull !", 'redirectTo'=>route('admin-pickup-request.index')], 200);
         }catch (\Exception $e) {

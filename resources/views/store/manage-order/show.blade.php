@@ -38,7 +38,7 @@ Items:
 <table class="table table-bordered">
 	<tr>
 		<th>Item</th>
-		<th>Quantity</th>
+		<!-- <th>Quantity</th> -->
 		<th>Service</th>
 		@if($order->service->form_type == 1 || $order->service->form_type == 2)
 		<th class="table-modal">
@@ -51,9 +51,9 @@ Items:
 	
 	@foreach($order->items as $item)
 	<tr>
-		<td class="table-modal">{{$item->item}}</td>
-		<td class="table-modal">{{round($item->quantity, 2)}}</td>
-		
+		<td class="table-modal">{{$item->item}} ({{$item->item_value}}/{{$order->items->count()}})</td>
+		<!-- <td class="table-modal">{{round($item->quantity, 2)}}</td>
+		 -->
 		<td class="table-modal">{{$item->service_name}}</td>
 		@if($order->service->form_type == 1 || $order->service->form_type == 2)
 		<td>
