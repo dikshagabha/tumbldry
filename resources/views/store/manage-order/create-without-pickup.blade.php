@@ -442,6 +442,7 @@ $(document).ready(function(){
         if (data.form_type==1 || data.form_type==2) {
           $( "#item" ).autocomplete({
                   source: function( request, response ) {
+                      
                       $.ajax({
                           dataType: "json",
                           type : 'Get',
@@ -491,7 +492,7 @@ $(document).ready(function(){
   $(document).on('change', '#item', function(e){
     e.preventDefault();
     $('body').waitMe();
-    
+    $('.error').html('');
     $.ajax({
       url:$("#add_item").attr('href'),
       data:{'service':$('#service').val(), 'item':$('#item').val(), 'customer':$('#customer_id').val(),
