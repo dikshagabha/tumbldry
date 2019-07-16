@@ -115,7 +115,7 @@
                                     
                                     @if($user->request_time)
                                       {{$user->request_time->setTimezone($timezone)->format('y/m/d')}}
-                                      {{$user->start_time}} - {{$user->end_time}}
+                                      {{$user->start_time->format('h:i a')}} - {{$user->end_time->format('h:i a')}}
                                     @else
                                       --
                                     @endif
