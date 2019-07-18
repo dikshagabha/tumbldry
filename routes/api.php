@@ -56,11 +56,8 @@ Route::group([
     
     Route::get('search-customer', 'CustomerController@searchCustomer');
     Route::get('send-payment-link/{id}', 'OrderController@sendLink');
-
-
-    // Route::post('refresh', 'AuthController@refresh');
-    // Route::post('me', 'AuthController@me');
-
+    
+    Route::get('order/create', 'OrderController@createOrder');
 });
 
 Route::group([

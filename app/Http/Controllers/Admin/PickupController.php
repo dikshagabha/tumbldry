@@ -9,7 +9,12 @@ use App\Http\Requests\Admin\StorePickupRequest;
 use App\Http\Requests\Admin\AddAddressRequest;
 use App\Model\PickupRequest;
 use App\Model\Service;
-use App\Model\Address;
+
+use App\Model\{
+  Address,
+  Order,
+  OrderItems
+};
 use App\Model\SMSTemplate;
 use App\User;
 use DB;
@@ -208,15 +213,47 @@ class PickupController extends Controller
 
     public function findCustomer(Request $request)
     {
-      $validatedData = $request->validate([
-          'phone_number' => 'bail|required|numeric|min:2|max:9999999999',
-          ]);
+      // $validatedData = $request->validate([
+      //     'phone_number' => 'bail|required|numeric|min:2|max:9999999999',
+      //     ]);
 
-      $customer = User::where('role', 4)
-                  ->where('phone_number', 'like', '%'.$request->input('phone_number').'%')->first();
+      // $customer = User::where('role', 4)
+      //             ->where('phone_number', 'like', '%'.$request->input('phone_number').'%')->first();
       
+      // if ($customer) {
+      //   return response()->json(["message"=>"Customer Found!!", "customer" => $customer], 200);
+      // }
+      //   return response()->json(["message"=>"Customer Not Found!!"], 400);
+
+      $validatedData = $request->validate([
+          'phone_number' => 'bail|required|numeric|digits_between:8,15',
+          ]);
+      $customer = User::where(['role'=> 4, 'deleted_at'=>null])
+                  ->where('phone_number', 'like', $request->input('phone_number'))->with('wallet', 'addresses')->first();
+        $service = null;
+        $items=null;
       if ($customer) {
-        return response()->json(["message"=>"Customer Found!!", "customer" => $customer], 200);
+        $address = $customer->addresses;
+        
+        $orders = Order::where('customer_id', $customer->id)->latest()->limit(5)->get();
+       // dd( );
+        $items = OrderItems::whereIn('order_id', $orders->pluck('id')->toArray())->select('item')->distinct()->limit(5)->pluck('item');
+        $orders = $orders->first();
+        if ($orders) {
+            $address = null;
+
+            if ($orders->count()) {
+             $service = $orders->service_id;
+             $address = Address::where('id', $orders->address_id)->first();
+            }
+           
+        }
+      $wallet = $customer->wallet;
+        session()->put('customer_details', ['user'=>$customer, 'wallet'=>$wallet]);
+      
+        return response()->json(["message"=>"Customer Found!!", "customer" => $customer, 'wallet'=>$wallet, 
+                                        'service'=>$service, 'items'=>$items,
+                                  'address'=>$address, 'customer_details'=>route('store.latestcustomerDetails', $customer->id)], 200);
       }
         return response()->json(["message"=>"Customer Not Found!!"], 400);
 

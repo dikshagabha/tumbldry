@@ -692,6 +692,7 @@ class OrderController extends Controller
   public function store(Request $request, $id=null){
    $user=$this->user;
    $validatedData = $request->validate(['delivery_mode'=>'bail|required|integer']);
+   
    if ($id) {
      $id = decrypt($id);     
      $pickup = PickupRequest::where("id", $id)->first();
@@ -712,7 +713,7 @@ class OrderController extends Controller
     }else{
       $validatedData = $request->validate([
         'name'=>['bail','required', 'string', 'min:2', 'max:25', new CheckName],
-        'phone_number'=>['bail','required','numeric', 'unique:users,phone_number,'.$id, 'min:2', 'digits_between:8,15']
+        'phone_number'=>['bail','required','numeric', 'unique:users,phone_number', 'min:2', 'digits_between:8,15']
       ]);
       $user = User::create(['name'=>$request->input('name'), 
                       'email'=>$request->input('email'),

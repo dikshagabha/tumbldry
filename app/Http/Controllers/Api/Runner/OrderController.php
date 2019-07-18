@@ -74,6 +74,20 @@ class OrderController extends Controller
         // return response()->json($response, $http_status);
     }
 
+    public function createOrder(Request $request)
+    {
+        $response = OrderRepository::createOrder($request, $this->user, 1);
+        if($request->input('callback'))
+        {
+            echo $request->input('callback')."(".json_encode($response).")";
+        }else{
+            return response()->json($response, 200);
+        }
+        // $http_status = $response['http_status'];
+        // unset($response['http_status']);
+        // return response()->json($response, $http_status);
+    }
+
     public function servicePrice(Request $request)
     {
         $request->validate(['service_id'=>'bail|required|numeric',

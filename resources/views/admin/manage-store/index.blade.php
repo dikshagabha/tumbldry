@@ -211,8 +211,9 @@ $(document).ready(function(){
   $(document).on('click', '.view', function(e){
     e.preventDefault();
     $('body').waitMe();
+    current = $('.view');
     $.ajax({
-      url: $('.view').attr('href'),
+      url: current.attr('href'),
       type:"get",
       success: function(data){
         $('body').waitMe("hide");        

@@ -140,7 +140,8 @@ class HomeRepository extends BaseRepository
 	         }
 
 	         
-	        $images =  UserImages::where('user_id', $id)->update($img_array);
+	        $images =  UserImages::where('user_id', $id)->delete();
+	        $images = UserImages::insert($img_array);
 
 
 	        $account =  UserFranchiseShare::where(['user_id'=> $id, 'type'=>1])->update(['percent'=>$request->input('laundary_share')]);

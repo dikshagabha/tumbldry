@@ -196,14 +196,15 @@ $(document).ready(function(){
           $('#email').val(data.customer['email']).prop('readonly', true);
           $('#phone').val(data.customer['phone_number']).prop('readonly', true);
 
-            $('#address_form').text(data.customer.address);
+            $('#address_form').text(data.address.address);
             $("#customer_id").val(data.customer.id);
-            $("#address_id").val(data.customer.address_id);
+            $("#address_id").val(data.address.id);
+            $('#service').val(data.service).trigger("chosen:updated");  
+
             if (data.address) {
               $('#address').text(data.address.address);
               $("#address_id").val(data.address.id);
            }
-
            $(".select").show();
            $(".add").hide();
             
