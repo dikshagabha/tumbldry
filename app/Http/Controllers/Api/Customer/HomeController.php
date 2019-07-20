@@ -12,6 +12,8 @@ use App\Model\{
     Address
 };
 
+use App\Http\Requests\Customer\Auth\AddressRequest;
+
 class HomeController extends Controller
 {
     
@@ -50,5 +52,16 @@ class HomeController extends Controller
           return response()->json(['message'=>'Address Found.', 'data'=>$address], 200);
       }
       return response()->json(['message'=>'Address Not Found.'], 400);
+    }
+    public function saveAddress(AddressRequest $request)
+    {
+      $data = $request->only('address', 'state', 'city', 'pin', 'latitude', 'longitude');
+      $data['user_id']=$this->user->id;
+      $address = Address::create($data);
+
+      if ($address) {
+          return response()->json(['message'=>'Address Saved.', 'data'=>$address], 200);
+      }
+      return response()->json(['message'=>'Address Not Saved.'], 400);
     }
 }

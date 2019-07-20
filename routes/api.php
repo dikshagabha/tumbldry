@@ -66,9 +66,12 @@ Route::group([
     'prefix' => 'v1/customer'
 
 ], function ($router) {
-
     Route::get('otp', 'AuthController@sendOtp');
     Route::get('addresses', 'HomeController@getcustomeraddresses');
     Route::get('update', 'HomeController@update');
     Route::post('login', 'AuthController@login');
+
+    Route::post('save-address', 'HomeController@saveAddress');
+    Route::get('store-suggestions', 'PickupController@storeSuggestions');
+    Route::post('create-pickup', 'PickupController@createPickup');
 });
