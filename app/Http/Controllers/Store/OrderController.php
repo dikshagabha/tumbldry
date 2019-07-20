@@ -884,6 +884,7 @@ class OrderController extends Controller
 
    //dd($status);totaltotal
     $orders = OrderItems::where('id', $id)->with('order')->first();
+    
     if ($status==3) {
       if ($orders->service->form_type != 2) {
           // Vendor Assignment
@@ -903,11 +904,20 @@ class OrderController extends Controller
               'service_id'=>$orders->service_id]);
           }
           
-        }  
-    }
-    $orders->status= $status;
-    $orders->save();
 
+        }  
+        // Mark Order recieved
+        $order= Order::where('id', $orders->order_id)->first();
+        $items = $order->items()->where('status', '!=', '1')->count();
+       
+        if (!$items) {
+          $order->status = 2;
+          $order->save();
+        }
+
+      $orders->status= $status;
+      $orders->save();
+    }
     if($orders){
       return response()->json(['message'=> 'Items Updated'], 200);
     }
