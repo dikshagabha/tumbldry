@@ -137,9 +137,9 @@ class HomeRepository extends BaseRepository
             }
         }
         if (!$user) {
-            $user = User::create(['phone_number'=>$request->input('phone_number')]);
+            $user = User::create(['phone_number'=>$request->input('phone_number'), 'role'=>4]);
         }
-        $res = CommonRepository::sendmessage($request->input('phone_number'), "Hi $user->name,\n The otp for your login is ".$otp.".");
+        $res = CommonRepository::sendmessage($request->input('phone_number'), "Hi, The otp for your login is ".$otp.".");
 
         $user->password = bcrypt($otp);
         $user->save();
