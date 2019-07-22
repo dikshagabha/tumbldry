@@ -7,7 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Repositories\Customer\{
     HomeRepository
 };
-
+use App\Model\Service;
 use App\Http\Requests\Runner\Auth\LoginRequest;
 use App\Http\Requests\Runner\Auth\RegisterRequest;
 
@@ -52,5 +52,13 @@ class AuthController extends Controller
         $response = HomeRepository::verifyotp($request);
         $http_status = $response['http_status'];
         return response()->json($response, $http_status);
+    }
+
+    public function services(Request $request)
+    {
+        $services = Service::where('status', 1)->get();
+        $addon = $services->where('type', 2);
+        $srvice = $services->where('type', 1);
+        return response()->json(['services'=>$srvice, 'addons'=>$addon, 'message'=>'Success'], 200);
     }
 }

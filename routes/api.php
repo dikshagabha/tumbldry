@@ -70,7 +70,8 @@ Route::group([
     Route::get('addresses', 'HomeController@getcustomeraddresses');
     Route::get('update', 'HomeController@update');
     Route::post('login', 'AuthController@login');
-
+    
+    Route::get('services', 'AuthController@services');
     Route::post('save-address', 'HomeController@saveAddress');
     Route::get('store-suggestions', 'PickupController@storeSuggestions');
     Route::post('create-pickup', 'PickupController@createPickup');
