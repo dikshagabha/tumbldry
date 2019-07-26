@@ -10,9 +10,9 @@ $i = ($users->currentpage() - 1) * $users->perPage() + 1;
       <tr>
         <th>S No</th>
         <th>Frenchise Name</th>
-        <th>Contact Person Name</th>
-        <th>Contact Person Email</th>
-        <th>Contact Person Phone Number</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Phone Number</th>
        <th>Status</th>
         <th>Options</th>
       </tr>

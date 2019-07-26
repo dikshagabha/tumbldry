@@ -14,6 +14,7 @@ use App\Model\StoreFields;
 use App\Model\UserFranchiseShare;
 use DB;
 use Carbon\Carbon;
+use App\Repositories\CommonRepository;
 /**
  * Class HomeRepository.
  */
@@ -31,9 +32,9 @@ class HomeRepository extends BaseRepository
     {
 	    try {
 	        DB::beginTransaction();
-
+	        $pswd=CommonRepository::random_str();
 	        $user = User::create(['name'=>$request->input('name'), 'role'=>3, 'email'=> $request->input('email')
-	                            , 'phone_number'=> $request->input('phone_number'), 'store_name'=> $request->input('store_name'), 'user_id'=>$request->input('user_id'), 'status'=>1]);
+	                            , 'phone_number'=> $request->input('phone_number'),'password'=>bcrypt($pswd), 'store_name'=> $request->input('store_name'), 'user_id'=>$request->input('user_id'), 'status'=>1]);
 	        $machines =  UserMachines::create([
 	                                          'user_id'=>$user->id,
 	                                          'machine_count'=>$request->input('machine_count'),
@@ -95,6 +96,7 @@ class HomeRepository extends BaseRepository
   	    	['type'=>3, 'user_id'=>$user->id, 'percent'=>$request->input('other_services_share'), 'created_at'=>Carbon::now()]];
 
   	    	UserFranchiseShare::insert($fen_data);
+  	    	CommonRepository::sendmessage($request->input('phone_number'), 'Welcome to Tumbedry. The password for your account is $pswd');
 	        DB::commit();
 	        return ["message"=>"Store Added", 'redirectTo'=>route('manage-store.index'), 'http_status'=>200];
 	    }

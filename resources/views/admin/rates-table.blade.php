@@ -10,7 +10,7 @@
         <tr>
         <td>{{$price->item_name}}</td>
         @if($type==1)<td> {{$price->quantity}} </td> @endif
-        <td>{{$price->value}} Rs</td>
+        <td>{{round($price->value, 2)}} Rs</td>
         </tr>
       @endforeach
     </tbody>

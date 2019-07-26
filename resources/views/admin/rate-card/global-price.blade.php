@@ -29,7 +29,7 @@
             @endphp
        
            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
-              <input type="text" class="form-control" name="price[]"  value="{{$pri}}" placeholder="Price"/>            
+              <input type="text" class="form-control" name="price[]"  value="{{round($pri, 2)}}" placeholder="Price"/>            
            </div>
          </div>
       @endforeach

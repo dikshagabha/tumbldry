@@ -89,7 +89,7 @@
               <h4 class="card-title">Pending Pickups..</h4>
               <div class="card-category">
                 
-                  <div class="row">
+                  <div class="">
                     @if($pending->count())
                     <table class=" table table-borderless">
                       
