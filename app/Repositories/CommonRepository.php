@@ -27,6 +27,50 @@ class CommonRepository extends BaseRepository
         //return YourModel::class;
     }
 
+
+    public static function sendNotificationToDevice($data)
+    {
+        $headers = [
+            'Authorization: key=AIzaSyDNx0p6DXyFGZf5_9yhZNNnc1Em7hF48IM',
+            'Content-Type: application/json'
+        ];
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+
+        foreach ($data as $data) {
+            $data['message'] = ucwords($data['message']);
+            $msg = [
+                'body' => $data['message'],
+                'data' => $data['data'],
+                'title' => $data['title'],
+                'icon' => 'myicon',
+                'sound' => 'mySound'
+            ];
+
+            if (!is_array($data['token'])) {
+                $data['token'] = [$data['token']];
+            }
+
+            $device_tokens = array_chunk($data['token'], 1000);
+            foreach ($device_tokens as $device_token) {
+                $fields = [
+                    'registration_ids' => $device_token,
+                    'notification' => $msg,
+                    'data' => array_merge($data['data'], ['action' => 'OPEN_ACTIVITY_1'])
+                ];
+                // echo "<pre>"; print_r($fields); die('fff');
+                curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fields));
+                $result = curl_exec($ch);
+            }
+        }
+        curl_close($ch);
+    }
+
     public static function random_str($length=8, $keyspace = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ')
 	{
 	    $pieces = [];

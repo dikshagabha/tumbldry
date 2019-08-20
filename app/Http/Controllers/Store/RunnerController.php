@@ -16,6 +16,8 @@ use App\Mail\Runner\SendPassword;
 use App\Http\Requests\Runner\Auth\RegisterRequest;
 use App\Http\Requests\Runner\Auth\UpdateRequest;
 use DB;
+use App\Repositories\CommonRepository;
+
 class RunnerController extends Controller
 {
 
@@ -170,7 +172,15 @@ class RunnerController extends Controller
     public function assignRunner(Request $request)
     {
          $delete = PickupRequest::where(['id'=>$request->input('id')])->update(['assigned_to'=>$request->input('assigned_to'), 'status'=>2]);
+
+
           $job = UserJobs::create(["order_id"=>$request->input('id'), 'type'=>1, 'user_id'=>$request->input('assigned_to'), 'assigned_by'=>$this->user->id]);
+          
+          $user=User::where('id', $request->input('assigned_to'))->first();
+
+          CommonRepository::sendNotificationToDevice(['message'=>'You have been assigned pickup id'.$request->input('id').'.',
+                                                      'data'=>$job, 'token'=>$user->device_token]);
+
           if($delete){
             return response()->json(["message"=>"Runner Assigned!"], 200);
           }
